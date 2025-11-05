@@ -205,6 +205,31 @@ class _CashierScreenState extends State<CashierScreen>
     final saleProvider = context.watch<SaleProvider>();
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Cashier'),
+        actions: [
+          // Cart icon with badge
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: Badge(
+              label: Text('${saleProvider.cartItemCount}'),
+              isLabelVisible: saleProvider.cartItemCount > 0,
+              child: IconButton(
+                icon: const Icon(Icons.shopping_cart),
+                onPressed: () {
+                  // Cart is always visible, this is just visual feedback
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('${saleProvider.cartItemCount} items in cart'),
+                      duration: const Duration(milliseconds: 800),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
       body: Row(
         children: [
           // Products section
@@ -472,27 +497,90 @@ class _ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 2,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Product image placeholder
+            // Product image
             Expanded(
-              child: Container(
-                color: Colors.blue.shade50,
-                child: Icon(
-                  Icons.inventory_2,
-                  size: 48,
-                  color: Colors.blue.shade200,
-                ),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  product.imageUrl != null && product.imageUrl!.isNotEmpty
+                      ? Image.network(
+                          product.imageUrl!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Colors.blue.shade50,
+                              child: Icon(
+                                Icons.inventory_2,
+                                size: 64,
+                                color: Colors.blue.shade200,
+                              ),
+                            );
+                          },
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Container(
+                              color: Colors.grey.shade100,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : Container(
+                          color: Colors.blue.shade50,
+                          child: Icon(
+                            Icons.inventory_2,
+                            size: 64,
+                            color: Colors.blue.shade200,
+                          ),
+                        ),
+                  // Stock badge
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: product.quantity > 10
+                            ? Colors.green
+                            : product.quantity > 0
+                                ? Colors.orange
+                                : Colors.red,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        '${product.quantity}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
 
             // Product info
-            Padding(
-              padding: const EdgeInsets.all(8),
+            Container(
+              padding: const EdgeInsets.all(12),
+              color: Colors.white,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -500,24 +588,29 @@ class _ProductCard extends StatelessWidget {
                     product.name,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
+                      fontSize: 14,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'SAR ${product.price.toStringAsFixed(2)}',
-                    style: TextStyle(
-                      color: Colors.green.shade700,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                  const SizedBox(height: 8),
+                  // Price with emphasis
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
                     ),
-                  ),
-                  Text(
-                    'Stock: ${product.quantity}',
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                      fontSize: 12,
+                    decoration: BoxDecoration(
+                      color: Colors.green.shade50,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      'SAR ${product.price.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        color: Colors.green.shade700,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
