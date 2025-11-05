@@ -1,0 +1,68 @@
+name: retail_management
+description: A comprehensive Flutter retail management application with offline support, invoice printing, and role-based access control.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State Management
+  provider: ^6.1.1
+
+  # Local Database
+  sqflite: ^2.3.0
+  path: ^1.8.3
+  path_provider: ^2.1.1
+
+  # QR Code Generation
+  qr_flutter: ^4.1.0
+
+  # PDF Generation for Invoices
+  pdf: ^3.10.7
+  printing: ^5.11.1
+
+  # Networking for Sync
+  http: ^1.1.0
+  connectivity_plus: ^5.0.2
+
+  # Shared Preferences for Local Storage
+  shared_preferences: ^2.2.2
+
+  # UUID Generation
+  uuid: ^4.2.2
+
+  # Date Formatting
+  intl: ^0.19.0
+
+  # Image Picker (for logo)
+  image_picker: ^1.0.5
+
+  # Responsive Design
+  flutter_screenutil: ^5.9.0
+
+  # Icons
+  cupertino_icons: ^1.0.6
+
+  # Animations
+  animations: ^2.0.11
+
+  # Permission Handler
+  permission_handler: ^11.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+flutter:
+  uses-material-design: true
+
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/fonts/
