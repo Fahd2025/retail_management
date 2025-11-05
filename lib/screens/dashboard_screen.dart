@@ -85,7 +85,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Logo
-          if (_companyInfo?.logoPath != null && _companyInfo!.logoPath!.isNotEmpty)
+          if (_companyInfo?.logoPath != null &&
+              _companyInfo!.logoPath!.isNotEmpty)
             Container(
               height: 60,
               width: 60,
@@ -155,44 +156,44 @@ class _DashboardScreenState extends State<DashboardScreen> {
         backgroundColor: Colors.blue.shade700,
         foregroundColor: Colors.white,
         actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 16,
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    user.role == UserRole.admin
-                        ? Icons.admin_panel_settings
-                        : Icons.person,
-                    size: 18,
-                    color: Colors.blue.shade700,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      user.fullName,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      user.role == UserRole.admin ? 'Admin' : 'Cashier',
-                      style: const TextStyle(
-                        fontSize: 11,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 16),
+          //   child: Row(
+          //     children: [
+          //       CircleAvatar(
+          //         radius: 16,
+          //         backgroundColor: Colors.white,
+          //         child: Icon(
+          //           user.role == UserRole.admin
+          //               ? Icons.admin_panel_settings
+          //               : Icons.person,
+          //           size: 18,
+          //           color: Colors.blue.shade700,
+          //         ),
+          //       ),
+          //       const SizedBox(width: 8),
+          //       Column(
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         mainAxisAlignment: MainAxisAlignment.center,
+          //         children: [
+          //           Text(
+          //             user.fullName,
+          //             style: const TextStyle(
+          //               fontSize: 14,
+          //               fontWeight: FontWeight.bold,
+          //             ),
+          //           ),
+          //           Text(
+          //             user.role == UserRole.admin ? 'Admin' : 'Cashier',
+          //             style: const TextStyle(
+          //               fontSize: 11,
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
       drawer: Drawer(
@@ -210,13 +211,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   return ListTile(
                     leading: Icon(
                       item['icon'] as IconData,
-                      color: isSelected ? Colors.blue.shade700 : Colors.grey.shade700,
+                      color: isSelected
+                          ? Colors.blue.shade700
+                          : Colors.grey.shade700,
                     ),
                     title: Text(
                       item['label'] as String,
                       style: TextStyle(
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                        color: isSelected ? Colors.blue.shade700 : Colors.grey.shade700,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
+                        color: isSelected
+                            ? Colors.blue.shade700
+                            : Colors.grey.shade700,
                       ),
                     ),
                     selected: isSelected,
