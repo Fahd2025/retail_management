@@ -2,6 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
+import '../providers/product_provider.dart';
+import '../providers/customer_provider.dart';
+import '../providers/sale_provider.dart';
 import '../models/user.dart';
 import '../models/company_info.dart';
 import '../database/database_helper.dart';
@@ -21,6 +24,10 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
   CompanyInfo? _companyInfo;
+
+  // GlobalKeys for screen access
+  final GlobalKey<_ProductsScreenState> _productsKey = GlobalKey();
+  final GlobalKey<_CustomersScreenState> _customersKey = GlobalKey();
 
   @override
   void initState() {
@@ -42,12 +49,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   List<Widget> _getScreens(UserRole role) {
     if (role == UserRole.admin) {
-      return const [
-        CashierScreen(),
-        ProductsScreen(),
-        CustomersScreen(),
-        SalesScreen(),
-        SettingsScreen(),
+      return [
+        const CashierScreen(),
+        ProductsScreen(key: _productsKey),
+        CustomersScreen(key: _customersKey),
+        const SalesScreen(),
+        const SettingsScreen(),
       ];
     } else {
       // Cashier only has access to cashier screen and sales
@@ -72,6 +79,104 @@ class _DashboardScreenState extends State<DashboardScreen> {
         {'icon': Icons.point_of_sale, 'label': 'Cashier'},
         {'icon': Icons.receipt_long, 'label': 'Sales'},
       ];
+    }
+  }
+
+  PreferredSizeWidget _buildAppBar(List<Map<String, dynamic>> navItems) {
+    // Build AppBar based on selected screen
+    switch (_selectedIndex) {
+      case 0: // Cashier Screen
+        return AppBar(
+          title: const Text('Point of Sale'),
+          backgroundColor: Colors.blue.shade700,
+          foregroundColor: Colors.white,
+        );
+      case 1: // Products or Sales Screen (depends on user role)
+        final label = navItems[_selectedIndex]['label'] as String;
+        if (label == 'Products') {
+          return AppBar(
+            title: const Text('Products Management'),
+            backgroundColor: Colors.blue.shade700,
+            foregroundColor: Colors.white,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () {
+                  _productsKey.currentState?.showProductDialog();
+                },
+                tooltip: 'Add Product',
+              ),
+              IconButton(
+                icon: const Icon(Icons.refresh),
+                onPressed: () {
+                  context.read<ProductProvider>().loadProducts();
+                },
+                tooltip: 'Refresh',
+              ),
+            ],
+          );
+        } else {
+          // Sales screen for cashier role
+          return AppBar(
+            title: const Text('Sales History'),
+            backgroundColor: Colors.blue.shade700,
+            foregroundColor: Colors.white,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.refresh),
+                onPressed: () {
+                  context.read<SaleProvider>().loadSales();
+                },
+              ),
+            ],
+          );
+        }
+      case 2: // Customers Screen (admin only)
+        return AppBar(
+          title: const Text('Customers Management'),
+          backgroundColor: Colors.blue.shade700,
+          foregroundColor: Colors.white,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                _customersKey.currentState?.showCustomerDialog();
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: () {
+                context.read<CustomerProvider>().loadCustomers();
+              },
+            ),
+          ],
+        );
+      case 3: // Sales Screen (admin only)
+        return AppBar(
+          title: const Text('Sales History'),
+          backgroundColor: Colors.blue.shade700,
+          foregroundColor: Colors.white,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: () {
+                context.read<SaleProvider>().loadSales();
+              },
+            ),
+          ],
+        );
+      case 4: // Settings Screen (admin only)
+        return AppBar(
+          title: const Text('Settings'),
+          backgroundColor: Colors.blue.shade700,
+          foregroundColor: Colors.white,
+        );
+      default:
+        return AppBar(
+          title: Text(navItems[_selectedIndex]['label'] as String),
+          backgroundColor: Colors.blue.shade700,
+          foregroundColor: Colors.white,
+        );
     }
   }
 
@@ -151,51 +256,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final navItems = _getNavigationItems(user.role);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(navItems[_selectedIndex]['label'] as String),
-        backgroundColor: Colors.blue.shade700,
-        foregroundColor: Colors.white,
-        actions: [
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: 16),
-          //   child: Row(
-          //     children: [
-          //       CircleAvatar(
-          //         radius: 16,
-          //         backgroundColor: Colors.white,
-          //         child: Icon(
-          //           user.role == UserRole.admin
-          //               ? Icons.admin_panel_settings
-          //               : Icons.person,
-          //           size: 18,
-          //           color: Colors.blue.shade700,
-          //         ),
-          //       ),
-          //       const SizedBox(width: 8),
-          //       Column(
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         mainAxisAlignment: MainAxisAlignment.center,
-          //         children: [
-          //           Text(
-          //             user.fullName,
-          //             style: const TextStyle(
-          //               fontSize: 14,
-          //               fontWeight: FontWeight.bold,
-          //             ),
-          //           ),
-          //           Text(
-          //             user.role == UserRole.admin ? 'Admin' : 'Cashier',
-          //             style: const TextStyle(
-          //               fontSize: 11,
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ],
-          //   ),
-          // ),
-        ],
-      ),
+      appBar: _buildAppBar(navItems),
       drawer: Drawer(
         child: Column(
           children: [

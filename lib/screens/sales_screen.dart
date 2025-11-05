@@ -98,15 +98,6 @@ class _SalesScreenState extends State<SalesScreen> {
     final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sales History'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadSales,
-          ),
-        ],
-      ),
       body: Consumer<SaleProvider>(
         builder: (context, provider, _) {
           if (provider.isLoading) {

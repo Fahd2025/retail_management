@@ -21,7 +21,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
     await context.read<CustomerProvider>().loadCustomers();
   }
 
-  Future<void> _showCustomerDialog([Customer? customer]) async {
+  Future<void> showCustomerDialog([Customer? customer]) async {
     await showDialog(
       context: context,
       builder: (context) => _CustomerDialog(customer: customer),
@@ -31,19 +31,6 @@ class _CustomersScreenState extends State<CustomersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Customers Management'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _showCustomerDialog(),
-          ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadCustomers,
-          ),
-        ],
-      ),
       body: Consumer<CustomerProvider>(
         builder: (context, provider, _) {
           if (provider.isLoading) {
@@ -60,7 +47,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                   const Text('No customers found'),
                   const SizedBox(height: 16),
                   ElevatedButton.icon(
-                    onPressed: () => _showCustomerDialog(),
+                    onPressed: () => showCustomerDialog(),
                     icon: const Icon(Icons.add),
                     label: const Text('Add Customer'),
                   ),
@@ -97,7 +84,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.edit),
-                        onPressed: () => _showCustomerDialog(customer),
+                        onPressed: () => showCustomerDialog(customer),
                       ),
                       IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),
