@@ -205,29 +205,6 @@ class _CashierScreenState extends State<CashierScreen>
     final saleProvider = context.watch<SaleProvider>();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Point of Sale'),
-        actions: [
-          // Barcode scanner
-          Container(
-            width: 300,
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: TextField(
-              controller: _barcodeController,
-              decoration: InputDecoration(
-                hintText: 'Scan barcode...',
-                prefixIcon: const Icon(Icons.qr_code_scanner),
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-              ),
-              onSubmitted: (_) => _scanBarcode(),
-            ),
-          ),
-        ],
-      ),
       body: SingleChildScrollView(
         child: Row(
           children: [
@@ -236,6 +213,25 @@ class _CashierScreenState extends State<CashierScreen>
               flex: 2,
               child: Column(
                 children: [
+                  // Barcode scanner (moved from AppBar)
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    color: Colors.white,
+                    child: TextField(
+                      controller: _barcodeController,
+                      decoration: InputDecoration(
+                        hintText: 'Scan or enter barcode...',
+                        prefixIcon: const Icon(Icons.qr_code_scanner),
+                        fillColor: Colors.grey.shade50,
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                      ),
+                      onSubmitted: (_) => _scanBarcode(),
+                    ),
+                  ),
                   // Category tabs
                   Container(
                     height: 60,

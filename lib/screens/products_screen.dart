@@ -21,7 +21,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     await context.read<ProductProvider>().loadProducts();
   }
 
-  Future<void> _showProductDialog([Product? product]) async {
+  Future<void> showProductDialog([Product? product]) async {
     await showDialog(
       context: context,
       builder: (context) => _ProductDialog(product: product),
@@ -31,21 +31,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Products Management'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _showProductDialog(),
-            tooltip: 'Add Product',
-          ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadProducts,
-            tooltip: 'Refresh',
-          ),
-        ],
-      ),
       body: Consumer<ProductProvider>(
         builder: (context, provider, _) {
           if (provider.isLoading) {
@@ -62,7 +47,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   const Text('No products found'),
                   const SizedBox(height: 16),
                   ElevatedButton.icon(
-                    onPressed: () => _showProductDialog(),
+                    onPressed: () => showProductDialog(),
                     icon: const Icon(Icons.add),
                     label: const Text('Add Product'),
                   ),
@@ -101,7 +86,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         children: [
                           IconButton(
                             icon: const Icon(Icons.edit, size: 20),
-                            onPressed: () => _showProductDialog(product),
+                            onPressed: () => showProductDialog(product),
                           ),
                           IconButton(
                             icon: const Icon(Icons.delete, size: 20, color: Colors.red),
