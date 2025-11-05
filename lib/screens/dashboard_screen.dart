@@ -26,8 +26,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   CompanyInfo? _companyInfo;
 
   // GlobalKeys for screen access
-  final GlobalKey<_ProductsScreenState> _productsKey = GlobalKey();
-  final GlobalKey<_CustomersScreenState> _customersKey = GlobalKey();
+  final GlobalKey<State<ProductsScreen>> _productsKey = GlobalKey<State<ProductsScreen>>();
+  final GlobalKey<State<CustomersScreen>> _customersKey = GlobalKey<State<CustomersScreen>>();
 
   @override
   void initState() {
@@ -102,7 +102,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: () {
-                  _productsKey.currentState?.showProductDialog();
+                  (_productsKey.currentState as dynamic)?.showProductDialog();
                 },
                 tooltip: 'Add Product',
               ),
@@ -140,7 +140,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {
-                _customersKey.currentState?.showCustomerDialog();
+                (_customersKey.currentState as dynamic)?.showCustomerDialog();
               },
             ),
             IconButton(
