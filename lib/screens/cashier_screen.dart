@@ -205,251 +205,249 @@ class _CashierScreenState extends State<CashierScreen>
     final saleProvider = context.watch<SaleProvider>();
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Row(
-          children: [
-            // Products section
-            Expanded(
-              flex: 2,
-              child: Column(
-                children: [
-                  // Barcode scanner (moved from AppBar)
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    color: Colors.white,
-                    child: TextField(
-                      controller: _barcodeController,
-                      decoration: InputDecoration(
-                        hintText: 'Scan or enter barcode...',
-                        prefixIcon: const Icon(Icons.qr_code_scanner),
-                        fillColor: Colors.grey.shade50,
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+      body: Row(
+        children: [
+          // Products section
+          Expanded(
+            flex: 2,
+            child: Column(
+              children: [
+                // Barcode scanner
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  color: Colors.white,
+                  child: TextField(
+                    controller: _barcodeController,
+                    decoration: InputDecoration(
+                      hintText: 'Scan or enter barcode...',
+                      prefixIcon: const Icon(Icons.qr_code_scanner),
+                      fillColor: Colors.grey.shade50,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      onSubmitted: (_) => _scanBarcode(),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                     ),
+                    onSubmitted: (_) => _scanBarcode(),
                   ),
-                  // Category tabs
-                  Container(
-                    height: 60,
-                    color: Colors.white,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.all(8),
-                      itemCount: categories.length,
-                      itemBuilder: (context, index) {
-                        final category = categories[index];
-                        final isSelected = category == _selectedCategory;
-
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: FilterChip(
-                            label: Text(category),
-                            selected: isSelected,
-                            onSelected: (_) {
-                              setState(() => _selectedCategory = category);
-                              _loadProductsByCategory();
-                            },
-                            selectedColor: Colors.blue,
-                            labelStyle: TextStyle(
-                              color: isSelected ? Colors.white : Colors.black,
-                              fontWeight: isSelected
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-
-                  // Products grid
-                  Expanded(
-                    child: AnimatedBuilder(
-                      animation: _animationController,
-                      builder: (context, child) {
-                        return GridView.builder(
-                          padding: const EdgeInsets.all(16),
-                          gridDelegate:
-                              const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 200,
-                            childAspectRatio: 0.85,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                          ),
-                          itemCount: _displayedProducts.length,
-                          itemBuilder: (context, index) {
-                            final product = _displayedProducts[index];
-
-                            return FadeTransition(
-                              opacity: _animationController,
-                              child: ScaleTransition(
-                                scale:
-                                    Tween<double>(begin: 0.8, end: 1.0).animate(
-                                  CurvedAnimation(
-                                    parent: _animationController,
-                                    curve: Interval(
-                                      index * 0.1,
-                                      1.0,
-                                      curve: Curves.easeOut,
-                                    ),
-                                  ),
-                                ),
-                                child: _ProductCard(
-                                  product: product,
-                                  onTap: () => _addProductToCart(product),
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Cart section
-            Container(
-              width: 400,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 10,
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  // Cart header
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    color: Colors.blue.shade50,
-                    child: Row(
-                      children: [
-                        const Icon(Icons.shopping_cart),
-                        const SizedBox(width: 8),
-                        const Text(
-                          'Cart',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          '${saleProvider.cartItemCount} items',
-                          style: TextStyle(color: Colors.grey.shade600),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // Customer selection
-                  Padding(
+                ),
+                // Category tabs
+                Container(
+                  height: 60,
+                  color: Colors.white,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.all(8),
-                    child: _CustomerSelector(
-                      selectedCustomer: _selectedCustomer,
-                      onCustomerSelected: (customer) {
-                        setState(() => _selectedCustomer = customer);
-                      },
-                    ),
-                  ),
+                    itemCount: categories.length,
+                    itemBuilder: (context, index) {
+                      final category = categories[index];
+                      final isSelected = category == _selectedCategory;
 
-                  // Cart items
-                  Expanded(
-                    child: saleProvider.cartItems.isEmpty
-                        ? Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.shopping_cart_outlined,
-                                  size: 64,
-                                  color: Colors.grey.shade300,
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  'Cart is empty',
-                                  style: TextStyle(
-                                    color: Colors.grey.shade600,
-                                    fontSize: 16,
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: FilterChip(
+                          label: Text(category),
+                          selected: isSelected,
+                          onSelected: (_) {
+                            setState(() => _selectedCategory = category);
+                            _loadProductsByCategory();
+                          },
+                          selectedColor: Colors.blue,
+                          labelStyle: TextStyle(
+                            color: isSelected ? Colors.white : Colors.black,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+                // Products grid
+                Expanded(
+                  child: AnimatedBuilder(
+                    animation: _animationController,
+                    builder: (context, child) {
+                      return GridView.builder(
+                        padding: const EdgeInsets.all(16),
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 200,
+                          childAspectRatio: 0.85,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                        ),
+                        itemCount: _displayedProducts.length,
+                        itemBuilder: (context, index) {
+                          final product = _displayedProducts[index];
+
+                          return FadeTransition(
+                            opacity: _animationController,
+                            child: ScaleTransition(
+                              scale:
+                                  Tween<double>(begin: 0.8, end: 1.0).animate(
+                                CurvedAnimation(
+                                  parent: _animationController,
+                                  curve: Interval(
+                                    index * 0.1,
+                                    1.0,
+                                    curve: Curves.easeOut,
                                   ),
                                 ),
-                              ],
-                            ),
-                          )
-                        : ListView.builder(
-                            itemCount: saleProvider.cartItems.length,
-                            itemBuilder: (context, index) {
-                              final item = saleProvider.cartItems[index];
-                              return _CartItem(item: item);
-                            },
-                          ),
-                  ),
-
-                  // Cart summary
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      border: Border(
-                        top: BorderSide(color: Colors.grey.shade300),
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        _SummaryRow('Subtotal:', saleProvider.cartSubtotal),
-                        const SizedBox(height: 8),
-                        _SummaryRow('VAT:', saleProvider.cartVatAmount),
-                        const Divider(),
-                        _SummaryRow(
-                          'Total:',
-                          saleProvider.cartTotal,
-                          isBold: true,
-                          fontSize: 20,
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: OutlinedButton(
-                                onPressed: saleProvider.cartItems.isEmpty
-                                    ? null
-                                    : () => saleProvider.clearCart(),
-                                child: const Text('Clear'),
+                              ),
+                              child: _ProductCard(
+                                product: product,
+                                onTap: () => _addProductToCart(product),
                               ),
                             ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              flex: 2,
-                              child: ElevatedButton(
-                                onPressed: saleProvider.cartItems.isEmpty
-                                    ? null
-                                    : _checkout,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green,
-                                  foregroundColor: Colors.white,
-                                ),
-                                child: const Text('Checkout'),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          );
+                        },
+                      );
+                    },
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+
+          // Cart section
+          Container(
+            width: 400,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                // Cart header
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  color: Colors.blue.shade50,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.shopping_cart),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'Cart',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const Spacer(),
+                      Text(
+                        '${saleProvider.cartItemCount} items',
+                        style: TextStyle(color: Colors.grey.shade600),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Customer selection
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: _CustomerSelector(
+                    selectedCustomer: _selectedCustomer,
+                    onCustomerSelected: (customer) {
+                      setState(() => _selectedCustomer = customer);
+                    },
+                  ),
+                ),
+
+                // Cart items
+                Expanded(
+                  child: saleProvider.cartItems.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.shopping_cart_outlined,
+                                size: 64,
+                                color: Colors.grey.shade300,
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'Cart is empty',
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: saleProvider.cartItems.length,
+                          itemBuilder: (context, index) {
+                            final item = saleProvider.cartItems[index];
+                            return _CartItem(item: item);
+                          },
+                        ),
+                ),
+
+                // Cart summary
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    border: Border(
+                      top: BorderSide(color: Colors.grey.shade300),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      _SummaryRow('Subtotal:', saleProvider.cartSubtotal),
+                      const SizedBox(height: 8),
+                      _SummaryRow('VAT:', saleProvider.cartVatAmount),
+                      const Divider(),
+                      _SummaryRow(
+                        'Total:',
+                        saleProvider.cartTotal,
+                        isBold: true,
+                        fontSize: 20,
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: saleProvider.cartItems.isEmpty
+                                  ? null
+                                  : () => saleProvider.clearCart(),
+                              child: const Text('Clear'),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            flex: 2,
+                            child: ElevatedButton(
+                              onPressed: saleProvider.cartItems.isEmpty
+                                  ? null
+                                  : _checkout,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                foregroundColor: Colors.white,
+                              ),
+                              child: const Text('Checkout'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
