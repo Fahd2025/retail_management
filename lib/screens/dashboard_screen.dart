@@ -26,6 +26,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   CompanyInfo? _companyInfo;
 
   // GlobalKeys for screen access
+  final GlobalKey<State<CashierScreen>> _cashierKey = GlobalKey<State<CashierScreen>>();
   final GlobalKey<State<ProductsScreen>> _productsKey = GlobalKey<State<ProductsScreen>>();
   final GlobalKey<State<CustomersScreen>> _customersKey = GlobalKey<State<CustomersScreen>>();
 
@@ -50,7 +51,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<Widget> _getScreens(UserRole role) {
     if (role == UserRole.admin) {
       return [
-        const CashierScreen(),
+        CashierScreen(key: _cashierKey),
         ProductsScreen(key: _productsKey),
         CustomersScreen(key: _customersKey),
         const SalesScreen(),
@@ -58,9 +59,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ];
     } else {
       // Cashier only has access to cashier screen and sales
-      return const [
-        CashierScreen(),
-        SalesScreen(),
+      return [
+        CashierScreen(key: _cashierKey),
+        const SalesScreen(),
       ];
     }
   }
@@ -86,10 +87,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // Build AppBar based on selected screen
     switch (_selectedIndex) {
       case 0: // Cashier Screen
+        final saleProvider = context.watch<SaleProvider>();
         return AppBar(
           title: const Text('Point of Sale'),
           backgroundColor: Colors.blue.shade700,
           foregroundColor: Colors.white,
+          actions: [
+            // Cart icon with badge
+            Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: Badge(
+                label: Text('${saleProvider.cartItemCount}'),
+                isLabelVisible: saleProvider.cartItemCount > 0,
+                child: IconButton(
+                  icon: const Icon(Icons.shopping_cart),
+                  onPressed: () {
+                    (_cashierKey.currentState as dynamic)?.toggleCart();
+                  },
+                ),
+              ),
+            ),
+          ],
         );
       case 1: // Products or Sales Screen (depends on user role)
         final label = navItems[_selectedIndex]['label'] as String;

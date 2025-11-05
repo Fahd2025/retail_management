@@ -25,6 +25,8 @@ class _CashierScreenState extends State<CashierScreen>
   List<Product> _displayedProducts = [];
   final _barcodeController = TextEditingController();
   late AnimationController _animationController;
+  late AnimationController _cartAnimationController;
+  late Animation<Offset> _cartSlideAnimation;
   Customer? _selectedCustomer;
   bool _isCartVisible = false;
 
@@ -35,7 +37,30 @@ class _CashierScreenState extends State<CashierScreen>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
+    _cartAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    _cartSlideAnimation = Tween<Offset>(
+      begin: const Offset(1.0, 0.0), // Start off-screen to the right
+      end: Offset.zero, // End at normal position
+    ).animate(CurvedAnimation(
+      parent: _cartAnimationController,
+      curve: Curves.easeInOut,
+    ));
     _loadData();
+  }
+
+  // Public method to toggle cart visibility (can be called from parent)
+  void toggleCart() {
+    setState(() {
+      _isCartVisible = !_isCartVisible;
+      if (_isCartVisible) {
+        _cartAnimationController.forward();
+      } else {
+        _cartAnimationController.reverse();
+      }
+    });
   }
 
   Future<void> _loadData() async {
@@ -206,27 +231,6 @@ class _CashierScreenState extends State<CashierScreen>
     final saleProvider = context.watch<SaleProvider>();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Cashier'),
-        actions: [
-          // Cart icon with badge
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: Badge(
-              label: Text('${saleProvider.cartItemCount}'),
-              isLabelVisible: saleProvider.cartItemCount > 0,
-              child: IconButton(
-                icon: const Icon(Icons.shopping_cart),
-                onPressed: () {
-                  setState(() {
-                    _isCartVisible = !_isCartVisible;
-                  });
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isTablet = constraints.maxWidth >= 600;
@@ -340,20 +344,22 @@ class _CashierScreenState extends State<CashierScreen>
                   ),
                 ),
 
-              // Cart section - conditionally visible based on _isCartVisible
+              // Cart section - conditionally visible based on _isCartVisible with slide animation
               if (_isCartVisible)
-                Container(
-                  width: isTablet ? 400 : constraints.maxWidth,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 10,
-                      ),
-                    ],
-                  ),
-                  child: Column(
+                SlideTransition(
+                  position: _cartSlideAnimation,
+                  child: Container(
+                    width: isTablet ? 400 : constraints.maxWidth,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 10,
+                        ),
+                      ],
+                    ),
+                    child: Column(
                     children: [
                       // Cart header
                       Container(
@@ -476,6 +482,7 @@ class _CashierScreenState extends State<CashierScreen>
                     ],
                   ),
                 ),
+              ),
             ],
           );
         },
@@ -487,6 +494,7 @@ class _CashierScreenState extends State<CashierScreen>
   void dispose() {
     _barcodeController.dispose();
     _animationController.dispose();
+    _cartAnimationController.dispose();
     super.dispose();
   }
 }
