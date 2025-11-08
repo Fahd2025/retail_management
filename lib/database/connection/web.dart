@@ -1,21 +1,10 @@
 import 'package:drift/drift.dart';
-import 'package:drift/wasm.dart';
+import 'package:drift/web.dart';
 
-/// Opens a connection to the database for web platforms using WASM
+/// Opens a connection to the database for web platforms using IndexedDB
 QueryExecutor connect() {
-  return LazyDatabase(() async {
-    final db = await WasmDatabase.open(
-      databaseName: 'retail_management.db',
-      sqlite3Uri: Uri.parse('sqlite3.wasm'),
-      driftWorkerUri: Uri.parse('drift_worker.dart.js'),
-    );
-
-    if (db.missingFeatures.isNotEmpty) {
-      // Log missing features for debugging
-      print('Using database with missing features: ${db.missingFeatures}');
-    }
-
-    return db.resolvedExecutor;
-  });
+  return WebDatabase.withStorage(
+    DriftWebStorage.indexedDb('retail_management_db', inWebWorker: false)
+  );
 }
 

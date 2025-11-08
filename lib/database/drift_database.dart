@@ -127,7 +127,15 @@ class CompanyInfoTable extends Table {
 
 @DriftDatabase(tables: [Users, Products, Customers, Sales, SaleItems, CompanyInfoTable])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(impl.connect());
+  // Singleton pattern
+  static AppDatabase? _instance;
+
+  AppDatabase._internal() : super(impl.connect());
+
+  factory AppDatabase() {
+    _instance ??= AppDatabase._internal();
+    return _instance!;
+  }
 
   @override
   int get schemaVersion => 1;
