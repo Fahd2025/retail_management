@@ -8,7 +8,7 @@ import '../models/product.dart';
 import '../models/sale.dart';
 import '../models/customer.dart';
 import '../services/invoice_service.dart';
-import '../database/drift_database.dart';
+import '../database/drift_database.dart' hide Product, Customer, Sale, SaleItem;
 import '../models/company_info.dart';
 import 'package:uuid/uuid.dart';
 

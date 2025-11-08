@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
-import '../database/drift_database.dart';
+import '../database/drift_database.dart' hide User;
 import '../models/user.dart';
 import 'package:uuid/uuid.dart';
 

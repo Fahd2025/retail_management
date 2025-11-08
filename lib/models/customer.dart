@@ -124,6 +124,9 @@ class SaudiAddress {
     );
   }
 
+  // Alias for fromJson (used by Drift database)
+  factory SaudiAddress.fromString(String str) => SaudiAddress.fromJson(str);
+
   String get formattedAddress {
     final parts = <String>[];
     if (buildingNumber?.isNotEmpty ?? false) parts.add('Building: $buildingNumber');

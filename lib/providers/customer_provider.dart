@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 import '../models/customer.dart';
-import '../database/drift_database.dart';
+import '../database/drift_database.dart' hide Customer;
 
 class CustomerProvider with ChangeNotifier {
   final AppDatabase _db = AppDatabase();
