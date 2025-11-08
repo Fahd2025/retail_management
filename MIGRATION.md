@@ -21,11 +21,12 @@ sqflite: ^2.3.0
 
 # ADDED
 drift: ^2.14.0
-sqlite3_flutter_libs: ^0.5.0
+sqlite3_flutter_libs: ^0.5.0  # For mobile platforms
 
 # DEV DEPENDENCIES ADDED
 drift_dev: ^2.14.0
 build_runner: ^2.4.0
+drift_wasm: ^2.14.0  # WASM support for web (NEW!)
 ```
 
 #### New Files Created
@@ -36,7 +37,7 @@ build_runner: ^2.4.0
   - Helper methods to convert between Drift rows and model objects
 - `lib/database/connection/connection.dart` - Platform-agnostic connection stub
 - `lib/database/connection/native.dart` - Native database connection for mobile/desktop
-- `lib/database/connection/web.dart` - Web database connection using IndexedDB
+- `lib/database/connection/web.dart` - Web database connection using WASM (modern approach)
 - `lib/database/connection/unsupported.dart` - Fallback for unsupported platforms
 
 #### Files Updated
@@ -110,6 +111,13 @@ flutter pub run build_runner build --delete-conflicting-outputs
 ```
 
 This will generate `lib/database/drift_database.g.dart` which contains the auto-generated Drift code.
+
+### Step 2.5: Setup WASM for Web (First time only)
+```bash
+dart run drift_wasm setup
+```
+
+This copies the required WASM files (`sqlite3.wasm` and `drift_worker.js`) to the `web/` directory. This is needed for the web version to work properly. Run this once after initial setup or when updating Drift.
 
 ### Step 3: Run the Application
 
@@ -200,10 +208,11 @@ The Drift database maintains the same schema as the previous sqflite implementat
 
 ### Web Deployment
 When deploying to web, ensure you:
-1. Build with `flutter build web`
-2. The generated files will be in `build/web/`
-3. Deploy the entire `build/web/` directory to your web server
-4. Drift uses IndexedDB for web storage (no additional configuration needed)
+1. Run `dart run drift_wasm setup` to copy WASM files (if not done already)
+2. Build with `flutter build web`
+3. The generated files will be in `build/web/`
+4. Deploy the entire `build/web/` directory to your web server (including `sqlite3.wasm` and `drift_worker.js`)
+5. Drift uses WASM-based SQLite for web storage (better performance than IndexedDB)
 
 ### Development Workflow
 When modifying database schema:

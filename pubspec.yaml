@@ -60,6 +60,7 @@ dev_dependencies:
   flutter_lints: ^3.0.1
   drift_dev: ^2.14.0
   build_runner: ^2.4.0
+  drift_wasm: ^2.14.0  # WASM support for web
 
 flutter:
   uses-material-design: true
