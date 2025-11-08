@@ -5,7 +5,7 @@ import '../providers/sale_provider.dart';
 import '../providers/auth_provider.dart';
 import '../models/sale.dart';
 import '../services/invoice_service.dart';
-import '../database/database_helper.dart';
+import '../database/drift_database.dart';
 
 class SalesScreen extends StatefulWidget {
   const SalesScreen({super.key});
@@ -27,7 +27,7 @@ class _SalesScreenState extends State<SalesScreen> {
 
   Future<void> _reprintInvoice(Sale sale) async {
     try {
-      final db = DatabaseHelper.instance;
+      final db = AppDatabase();
       final companyInfo = await db.getCompanyInfo();
 
       if (companyInfo == null) {
@@ -56,6 +56,142 @@ class _SalesScreenState extends State<SalesScreen> {
         );
       }
     }
+  }
+
+  Widget _buildSaleCard(Sale sale, DateFormat dateFormat, BuildContext context) {
+    final statusColor = sale.status == SaleStatus.completed
+        ? Colors.green
+        : sale.status == SaleStatus.returned
+            ? Colors.orange
+            : Colors.red;
+
+    return Card(
+      child: ExpansionTile(
+        leading: CircleAvatar(
+          backgroundColor: statusColor.withOpacity(0.2),
+          child: Icon(Icons.receipt, color: statusColor),
+        ),
+        title: Text(
+          'Invoice: ${sale.invoiceNumber}',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Date: ${dateFormat.format(sale.saleDate)}'),
+            Text('Total: SAR ${sale.totalAmount.toStringAsFixed(2)}'),
+            Text(
+              'Status: ${sale.status.toString().split('.').last.toUpperCase()}',
+              style: TextStyle(color: statusColor),
+            ),
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.print),
+              onPressed: () => _reprintInvoice(sale),
+              tooltip: 'Reprint',
+            ),
+            if (sale.status == SaleStatus.completed &&
+                context.read<AuthProvider>().isAdmin)
+              IconButton(
+                icon: const Icon(Icons.undo, color: Colors.orange),
+                onPressed: () => _returnSale(sale),
+                tooltip: 'Return',
+              ),
+          ],
+        ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Items:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                ...sale.items.map((item) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            '${item.productName} x ${item.quantity}',
+                          ),
+                        ),
+                        Text(
+                          'SAR ${item.total.toStringAsFixed(2)}',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+                const Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Subtotal:'),
+                    Text('SAR ${sale.subtotal.toStringAsFixed(2)}'),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('VAT:'),
+                    Text('SAR ${sale.vatAmount.toStringAsFixed(2)}'),
+                  ],
+                ),
+                const Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Total:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      'SAR ${sale.totalAmount.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+                if (sale.paidAmount > 0) ...[
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Paid:'),
+                      Text('SAR ${sale.paidAmount.toStringAsFixed(2)}'),
+                    ],
+                  ),
+                  if (sale.changeAmount > 0)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Change:'),
+                        Text('SAR ${sale.changeAmount.toStringAsFixed(2)}'),
+                      ],
+                    ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _returnSale(Sale sale) async {
@@ -117,145 +253,38 @@ class _SalesScreenState extends State<SalesScreen> {
             );
           }
 
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: provider.sales.length,
-            itemBuilder: (context, index) {
-              final sale = provider.sales[index];
-              final statusColor = sale.status == SaleStatus.completed
-                  ? Colors.green
-                  : sale.status == SaleStatus.returned
-                      ? Colors.orange
-                      : Colors.red;
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final isWideScreen = constraints.maxWidth >= 900;
 
-              return Card(
-                margin: const EdgeInsets.only(bottom: 8),
-                child: ExpansionTile(
-                  leading: CircleAvatar(
-                    backgroundColor: statusColor.withOpacity(0.2),
-                    child: Icon(Icons.receipt, color: statusColor),
+              if (isWideScreen) {
+                // Desktop: Grid layout with 2 columns
+                return GridView.builder(
+                  padding: const EdgeInsets.all(16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 2.5,
                   ),
-                  title: Text(
-                    'Invoice: ${sale.invoiceNumber}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Date: ${dateFormat.format(sale.saleDate)}'),
-                      Text('Total: SAR ${sale.totalAmount.toStringAsFixed(2)}'),
-                      Text(
-                        'Status: ${sale.status.toString().split('.').last.toUpperCase()}',
-                        style: TextStyle(color: statusColor),
-                      ),
-                    ],
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.print),
-                        onPressed: () => _reprintInvoice(sale),
-                        tooltip: 'Reprint',
-                      ),
-                      if (sale.status == SaleStatus.completed &&
-                          context.read<AuthProvider>().isAdmin)
-                        IconButton(
-                          icon: const Icon(Icons.undo, color: Colors.orange),
-                          onPressed: () => _returnSale(sale),
-                          tooltip: 'Return',
-                        ),
-                    ],
-                  ),
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Items:',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 8),
-                          ...sale.items.map((item) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      '${item.productName} x ${item.quantity}',
-                                    ),
-                                  ),
-                                  Text(
-                                    'SAR ${item.total.toStringAsFixed(2)}',
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                          const Divider(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text('Subtotal:'),
-                              Text('SAR ${sale.subtotal.toStringAsFixed(2)}'),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text('VAT:'),
-                              Text('SAR ${sale.vatAmount.toStringAsFixed(2)}'),
-                            ],
-                          ),
-                          const Divider(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Total:',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                'SAR ${sale.totalAmount.toStringAsFixed(2)}',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                          if (sale.paidAmount > 0) ...[
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text('Paid:'),
-                                Text('SAR ${sale.paidAmount.toStringAsFixed(2)}'),
-                              ],
-                            ),
-                            if (sale.changeAmount > 0)
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('Change:'),
-                                  Text('SAR ${sale.changeAmount.toStringAsFixed(2)}'),
-                                ],
-                              ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
+                  itemCount: provider.sales.length,
+                  itemBuilder: (context, index) {
+                    return _buildSaleCard(provider.sales[index], dateFormat, context);
+                  },
+                );
+              } else {
+                // Mobile/Tablet: List layout
+                return ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: provider.sales.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: _buildSaleCard(provider.sales[index], dateFormat, context),
+                    );
+                  },
+                );
+              }
             },
           );
         },

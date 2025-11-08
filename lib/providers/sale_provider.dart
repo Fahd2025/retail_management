@@ -3,10 +3,10 @@ import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
 import '../models/sale.dart';
 import '../models/product.dart';
-import '../database/database_helper.dart';
+import '../database/drift_database.dart';
 
 class SaleProvider with ChangeNotifier {
-  final DatabaseHelper _db = DatabaseHelper.instance;
+  final AppDatabase _db = AppDatabase();
   final Uuid _uuid = const Uuid();
 
   List<Sale> _sales = [];

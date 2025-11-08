@@ -7,7 +7,7 @@ import '../providers/customer_provider.dart';
 import '../providers/sale_provider.dart';
 import '../models/user.dart';
 import '../models/company_info.dart';
-import '../database/database_helper.dart';
+import '../database/drift_database.dart';
 import 'cashier_screen.dart';
 import 'products_screen.dart';
 import 'customers_screen.dart';
@@ -38,7 +38,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<void> _loadCompanyInfo() async {
     try {
-      final db = DatabaseHelper.instance;
+      final db = AppDatabase();
       final info = await db.getCompanyInfo();
       if (mounted) {
         setState(() => _companyInfo = info);

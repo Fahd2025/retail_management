@@ -8,7 +8,7 @@ import '../models/product.dart';
 import '../models/sale.dart';
 import '../models/customer.dart';
 import '../services/invoice_service.dart';
-import '../database/database_helper.dart';
+import '../database/drift_database.dart';
 import '../models/company_info.dart';
 import 'package:uuid/uuid.dart';
 
@@ -181,7 +181,7 @@ class _CashierScreenState extends State<CashierScreen>
 
   Future<void> _printInvoice(Sale sale) async {
     try {
-      final db = DatabaseHelper.instance;
+      final db = AppDatabase();
       final companyInfo = await db.getCompanyInfo();
 
       if (companyInfo == null) {

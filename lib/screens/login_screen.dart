@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
-import '../database/database_helper.dart';
+import '../database/drift_database.dart';
 import '../models/user.dart';
 import 'package:uuid/uuid.dart';
 
@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _isInitializing = true);
 
     try {
-      final db = DatabaseHelper.instance;
+      final db = AppDatabase();
       final users = await db.getAllUsers();
 
       // Create default users if none exist

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../database/database_helper.dart';
+import '../database/drift_database.dart';
 import '../models/company_info.dart';
 import '../services/sync_service.dart';
 import 'package:uuid/uuid.dart';
@@ -44,7 +44,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final db = DatabaseHelper.instance;
+      final db = AppDatabase();
       final info = await db.getCompanyInfo();
 
       if (info != null) {
@@ -74,7 +74,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final db = DatabaseHelper.instance;
+      final db = AppDatabase();
       const uuid = Uuid();
 
       final companyInfo = CompanyInfo(
@@ -151,89 +151,218 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     else
                       Form(
                         key: _formKey,
-                        child: Column(
-                          children: [
-                            TextFormField(
-                              controller: _nameController,
-                              decoration: const InputDecoration(
-                                labelText: 'Company Name (English) *',
-                              ),
-                              validator: (v) =>
-                                  v?.isEmpty ?? true ? 'Required' : null,
-                            ),
-                            const SizedBox(height: 16),
-                            TextFormField(
-                              controller: _nameArabicController,
-                              decoration: const InputDecoration(
-                                labelText: 'Company Name (Arabic) *',
-                              ),
-                              validator: (v) =>
-                                  v?.isEmpty ?? true ? 'Required' : null,
-                            ),
-                            const SizedBox(height: 16),
-                            TextFormField(
-                              controller: _addressController,
-                              decoration: const InputDecoration(
-                                labelText: 'Address (English) *',
-                              ),
-                              maxLines: 2,
-                              validator: (v) =>
-                                  v?.isEmpty ?? true ? 'Required' : null,
-                            ),
-                            const SizedBox(height: 16),
-                            TextFormField(
-                              controller: _addressArabicController,
-                              decoration: const InputDecoration(
-                                labelText: 'Address (Arabic) *',
-                              ),
-                              maxLines: 2,
-                              validator: (v) =>
-                                  v?.isEmpty ?? true ? 'Required' : null,
-                            ),
-                            const SizedBox(height: 16),
-                            TextFormField(
-                              controller: _phoneController,
-                              decoration: const InputDecoration(
-                                labelText: 'Phone *',
-                              ),
-                              validator: (v) =>
-                                  v?.isEmpty ?? true ? 'Required' : null,
-                            ),
-                            const SizedBox(height: 16),
-                            TextFormField(
-                              controller: _emailController,
-                              decoration: const InputDecoration(
-                                labelText: 'Email',
-                              ),
-                              keyboardType: TextInputType.emailAddress,
-                            ),
-                            const SizedBox(height: 16),
-                            TextFormField(
-                              controller: _vatNumberController,
-                              decoration: const InputDecoration(
-                                labelText: 'VAT Number *',
-                              ),
-                              validator: (v) =>
-                                  v?.isEmpty ?? true ? 'Required' : null,
-                            ),
-                            const SizedBox(height: 16),
-                            TextFormField(
-                              controller: _crnNumberController,
-                              decoration: const InputDecoration(
-                                labelText: 'CRN Number *',
-                              ),
-                              validator: (v) =>
-                                  v?.isEmpty ?? true ? 'Required' : null,
-                            ),
-                            const SizedBox(height: 24),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: _saveCompanyInfo,
-                                child: const Text('Save Company Information'),
-                              ),
-                            ),
-                          ],
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            final isWideScreen = constraints.maxWidth >= 800;
+
+                            if (isWideScreen) {
+                              // Desktop: Two-column layout
+                              return Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: TextFormField(
+                                          controller: _nameController,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Company Name (English) *',
+                                          ),
+                                          validator: (v) =>
+                                              v?.isEmpty ?? true ? 'Required' : null,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        child: TextFormField(
+                                          controller: _nameArabicController,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Company Name (Arabic) *',
+                                          ),
+                                          validator: (v) =>
+                                              v?.isEmpty ?? true ? 'Required' : null,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: TextFormField(
+                                          controller: _addressController,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Address (English) *',
+                                          ),
+                                          maxLines: 2,
+                                          validator: (v) =>
+                                              v?.isEmpty ?? true ? 'Required' : null,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        child: TextFormField(
+                                          controller: _addressArabicController,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Address (Arabic) *',
+                                          ),
+                                          maxLines: 2,
+                                          validator: (v) =>
+                                              v?.isEmpty ?? true ? 'Required' : null,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextFormField(
+                                          controller: _phoneController,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Phone *',
+                                          ),
+                                          validator: (v) =>
+                                              v?.isEmpty ?? true ? 'Required' : null,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        child: TextFormField(
+                                          controller: _emailController,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Email',
+                                          ),
+                                          keyboardType: TextInputType.emailAddress,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextFormField(
+                                          controller: _vatNumberController,
+                                          decoration: const InputDecoration(
+                                            labelText: 'VAT Number *',
+                                          ),
+                                          validator: (v) =>
+                                              v?.isEmpty ?? true ? 'Required' : null,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        child: TextFormField(
+                                          controller: _crnNumberController,
+                                          decoration: const InputDecoration(
+                                            labelText: 'CRN Number *',
+                                          ),
+                                          validator: (v) =>
+                                              v?.isEmpty ?? true ? 'Required' : null,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 24),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      onPressed: _saveCompanyInfo,
+                                      child: const Text('Save Company Information'),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            } else {
+                              // Mobile: Single column layout
+                              return Column(
+                                children: [
+                                  TextFormField(
+                                    controller: _nameController,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Company Name (English) *',
+                                    ),
+                                    validator: (v) =>
+                                        v?.isEmpty ?? true ? 'Required' : null,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  TextFormField(
+                                    controller: _nameArabicController,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Company Name (Arabic) *',
+                                    ),
+                                    validator: (v) =>
+                                        v?.isEmpty ?? true ? 'Required' : null,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  TextFormField(
+                                    controller: _addressController,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Address (English) *',
+                                    ),
+                                    maxLines: 2,
+                                    validator: (v) =>
+                                        v?.isEmpty ?? true ? 'Required' : null,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  TextFormField(
+                                    controller: _addressArabicController,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Address (Arabic) *',
+                                    ),
+                                    maxLines: 2,
+                                    validator: (v) =>
+                                        v?.isEmpty ?? true ? 'Required' : null,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  TextFormField(
+                                    controller: _phoneController,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Phone *',
+                                    ),
+                                    validator: (v) =>
+                                        v?.isEmpty ?? true ? 'Required' : null,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  TextFormField(
+                                    controller: _emailController,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Email',
+                                    ),
+                                    keyboardType: TextInputType.emailAddress,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  TextFormField(
+                                    controller: _vatNumberController,
+                                    decoration: const InputDecoration(
+                                      labelText: 'VAT Number *',
+                                    ),
+                                    validator: (v) =>
+                                        v?.isEmpty ?? true ? 'Required' : null,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  TextFormField(
+                                    controller: _crnNumberController,
+                                    decoration: const InputDecoration(
+                                      labelText: 'CRN Number *',
+                                    ),
+                                    validator: (v) =>
+                                        v?.isEmpty ?? true ? 'Required' : null,
+                                  ),
+                                  const SizedBox(height: 24),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      onPressed: _saveCompanyInfo,
+                                      child: const Text('Save Company Information'),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                          },
                         ),
                       ),
                   ],

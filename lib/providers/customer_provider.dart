@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 import '../models/customer.dart';
-import '../database/database_helper.dart';
+import '../database/drift_database.dart';
 
 class CustomerProvider with ChangeNotifier {
-  final DatabaseHelper _db = DatabaseHelper.instance;
+  final AppDatabase _db = AppDatabase();
   final Uuid _uuid = const Uuid();
 
   List<Customer> _customers = [];

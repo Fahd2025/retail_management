@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import '../database/database_helper.dart';
+import '../database/drift_database.dart';
 
 class SyncService {
-  final DatabaseHelper _db = DatabaseHelper.instance;
+  final AppDatabase _db = AppDatabase();
   final Connectivity _connectivity = Connectivity();
 
   StreamSubscription? _connectivitySubscription;
