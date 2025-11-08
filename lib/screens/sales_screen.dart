@@ -5,7 +5,7 @@ import '../providers/sale_provider.dart';
 import '../providers/auth_provider.dart';
 import '../models/sale.dart';
 import '../services/invoice_service.dart';
-import '../database/drift_database.dart';
+import '../database/drift_database.dart' hide Sale;
 
 class SalesScreen extends StatefulWidget {
   const SalesScreen({super.key});

@@ -3,7 +3,7 @@ import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
 import '../models/sale.dart';
 import '../models/product.dart';
-import '../database/drift_database.dart';
+import '../database/drift_database.dart' hide Product, Sale, SaleItem;
 
 class SaleProvider with ChangeNotifier {
   final AppDatabase _db = AppDatabase();
