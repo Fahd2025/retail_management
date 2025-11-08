@@ -15,7 +15,8 @@ dependencies:
 
   # Local Database - Drift (supports Web and Mobile)
   drift: ^2.14.0
-  sqlite3_flutter_libs: ^0.5.0
+  drift_wasm: ^2.14.0  # WASM support for web
+  sqlite3_flutter_libs: ^0.5.0  # For mobile platforms
   path_provider: ^2.1.1
   path: ^1.8.3
 
@@ -60,7 +61,6 @@ dev_dependencies:
   flutter_lints: ^3.0.1
   drift_dev: ^2.14.0
   build_runner: ^2.4.0
-  drift_wasm: ^2.14.0  # WASM support for web
 
 flutter:
   uses-material-design: true
