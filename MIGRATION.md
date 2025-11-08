@@ -34,6 +34,10 @@ build_runner: ^2.4.0
   - AppDatabase class with all CRUD operations
   - Type-safe query methods
   - Helper methods to convert between Drift rows and model objects
+- `lib/database/connection/connection.dart` - Platform-agnostic connection stub
+- `lib/database/connection/native.dart` - Native database connection for mobile/desktop
+- `lib/database/connection/web.dart` - Web database connection using IndexedDB
+- `lib/database/connection/unsupported.dart` - Fallback for unsupported platforms
 
 #### Files Updated
 All database references updated from `DatabaseHelper` to `AppDatabase`:

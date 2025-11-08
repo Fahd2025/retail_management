@@ -1,13 +1,10 @@
-import 'dart:io';
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as p;
 import '../models/user.dart' as models;
 import '../models/product.dart' as models;
 import '../models/customer.dart' as models;
 import '../models/sale.dart' as models;
 import '../models/company_info.dart' as models;
+import 'connection/connection.dart' as impl;
 
 part 'drift_database.g.dart';
 
@@ -130,7 +127,7 @@ class CompanyInfoTable extends Table {
 
 @DriftDatabase(tables: [Users, Products, Customers, Sales, SaleItems, CompanyInfoTable])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(_openConnection());
+  AppDatabase() : super(impl.connect());
 
   @override
   int get schemaVersion => 1;
@@ -607,12 +604,4 @@ class AppDatabase extends _$AppDatabase {
       updatedAt: DateTime.parse(row.updatedAt),
     );
   }
-}
-
-LazyDatabase _openConnection() {
-  return LazyDatabase(() async {
-    final dbFolder = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dbFolder.path, 'retail_management.db'));
-    return NativeDatabase(file);
-  });
 }
