@@ -26,7 +26,9 @@ sqlite3_flutter_libs: ^0.5.0  # For mobile platforms
 # DEV DEPENDENCIES ADDED
 drift_dev: ^2.14.0
 build_runner: ^2.4.0
-drift_wasm: ^2.14.0  # WASM support for web (NEW!)
+
+# ADDED FOR WEB SUPPORT
+sqlite3: ^2.1.0  # WASM-based SQLite for web
 ```
 
 #### New Files Created
@@ -114,10 +116,10 @@ This will generate `lib/database/drift_database.g.dart` which contains the auto-
 
 ### Step 2.5: Setup WASM for Web (First time only)
 ```bash
-dart run drift_wasm setup
+dart run sqlite3:wasm_setup
 ```
 
-This copies the required WASM files (`sqlite3.wasm` and `drift_worker.js`) to the `web/` directory. This is needed for the web version to work properly. Run this once after initial setup or when updating Drift.
+This copies the required `sqlite3.wasm` file to the `web/` directory. This is needed for the web version to work properly. Run this once after initial setup or when updating the sqlite3 package.
 
 ### Step 3: Run the Application
 
@@ -208,11 +210,11 @@ The Drift database maintains the same schema as the previous sqflite implementat
 
 ### Web Deployment
 When deploying to web, ensure you:
-1. Run `dart run drift_wasm setup` to copy WASM files (if not done already)
+1. Run `dart run sqlite3:wasm_setup` to copy WASM files (if not done already)
 2. Build with `flutter build web`
 3. The generated files will be in `build/web/`
-4. Deploy the entire `build/web/` directory to your web server (including `sqlite3.wasm` and `drift_worker.js`)
-5. Drift uses WASM-based SQLite for web storage (better performance than IndexedDB)
+4. Deploy the entire `build/web/` directory to your web server (including `sqlite3.wasm`)
+5. Drift uses WASM-based SQLite for web storage with IndexedDB file system (better performance than plain IndexedDB)
 
 ### Development Workflow
 When modifying database schema:
