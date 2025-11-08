@@ -13,10 +13,11 @@ dependencies:
   # State Management
   provider: ^6.1.1
 
-  # Local Database
-  sqflite: ^2.3.0
-  path: ^1.8.3
+  # Local Database - Drift (supports Web and Mobile)
+  drift: ^2.14.0
+  sqlite3_flutter_libs: ^0.5.0
   path_provider: ^2.1.1
+  path: ^1.8.3
 
   # QR Code Generation
   qr_flutter: ^4.1.0
@@ -57,6 +58,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
+  drift_dev: ^2.14.0
+  build_runner: ^2.4.0
 
 flutter:
   uses-material-design: true

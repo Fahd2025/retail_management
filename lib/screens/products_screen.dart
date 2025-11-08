@@ -28,6 +28,63 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
+  Future<void> _deleteProduct(
+    BuildContext context,
+    ProductProvider provider,
+    Product product,
+  ) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Product'),
+        content: Text('Delete ${product.name}?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+            ),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true && mounted) {
+      await provider.deleteProduct(product.id);
+    }
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 80,
+            child: Text(
+              '$label:',
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(fontSize: 14),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,74 +113,125 @@ class _ProductsScreenState extends State<ProductsScreen> {
             );
           }
 
-          return SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                columns: const [
-                  DataColumn(label: Text('Name')),
-                  DataColumn(label: Text('Barcode')),
-                  DataColumn(label: Text('Category')),
-                  DataColumn(label: Text('Price')),
-                  DataColumn(label: Text('Cost')),
-                  DataColumn(label: Text('Stock')),
-                  DataColumn(label: Text('VAT %')),
-                  DataColumn(label: Text('Actions')),
-                ],
-                rows: provider.products.map((product) {
-                  return DataRow(cells: [
-                    DataCell(Text(product.name)),
-                    DataCell(Text(product.barcode)),
-                    DataCell(Text(product.category)),
-                    DataCell(Text('SAR ${product.price.toStringAsFixed(2)}')),
-                    DataCell(Text('SAR ${product.cost.toStringAsFixed(2)}')),
-                    DataCell(Text(product.quantity.toString())),
-                    DataCell(Text('${product.vatRate.toStringAsFixed(0)}%')),
-                    DataCell(
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit, size: 20),
-                            onPressed: () => showProductDialog(product),
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final isDesktop = constraints.maxWidth >= 800;
+
+              if (isDesktop) {
+                // Desktop/Tablet: DataTable layout
+                return SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      columns: const [
+                        DataColumn(label: Text('Name')),
+                        DataColumn(label: Text('Barcode')),
+                        DataColumn(label: Text('Category')),
+                        DataColumn(label: Text('Price')),
+                        DataColumn(label: Text('Cost')),
+                        DataColumn(label: Text('Stock')),
+                        DataColumn(label: Text('VAT %')),
+                        DataColumn(label: Text('Actions')),
+                      ],
+                      rows: provider.products.map((product) {
+                        return DataRow(cells: [
+                          DataCell(Text(product.name)),
+                          DataCell(Text(product.barcode)),
+                          DataCell(Text(product.category)),
+                          DataCell(Text('SAR ${product.price.toStringAsFixed(2)}')),
+                          DataCell(Text('SAR ${product.cost.toStringAsFixed(2)}')),
+                          DataCell(Text(product.quantity.toString())),
+                          DataCell(Text('${product.vatRate.toStringAsFixed(0)}%')),
+                          DataCell(
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.edit, size: 20),
+                                  onPressed: () => showProductDialog(product),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete, size: 20, color: Colors.red),
+                                  onPressed: () => _deleteProduct(context, provider, product),
+                                ),
+                              ],
+                            ),
                           ),
-                          IconButton(
-                            icon: const Icon(Icons.delete, size: 20, color: Colors.red),
-                            onPressed: () async {
-                              final confirm = await showDialog<bool>(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text('Delete Product'),
-                                  content: Text('Delete ${product.name}?'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context, false),
-                                      child: const Text('Cancel'),
+                        ]);
+                      }).toList(),
+                    ),
+                  ),
+                );
+              } else {
+                // Mobile: Card layout
+                return ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: provider.products.length,
+                  itemBuilder: (context, index) {
+                    final product = provider.products[index];
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      elevation: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    product.name,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                    ElevatedButton(
-                                      onPressed: () => Navigator.pop(context, true),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.red,
-                                      ),
-                                      child: const Text('Delete'),
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.edit, color: Colors.blue),
+                                      onPressed: () => showProductDialog(product),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete, color: Colors.red),
+                                      onPressed: () => _deleteProduct(context, provider, product),
                                     ),
                                   ],
                                 ),
-                              );
-
-                              if (confirm == true && mounted) {
-                                await provider.deleteProduct(product.id);
-                              }
-                            },
-                          ),
-                        ],
+                              ],
+                            ),
+                            const Divider(),
+                            const SizedBox(height: 8),
+                            _buildInfoRow('Category', product.category),
+                            _buildInfoRow('Barcode', product.barcode),
+                            _buildInfoRow('Price', 'SAR ${product.price.toStringAsFixed(2)}'),
+                            _buildInfoRow('Cost', 'SAR ${product.cost.toStringAsFixed(2)}'),
+                            _buildInfoRow('Stock', '${product.quantity} units'),
+                            _buildInfoRow('VAT', '${product.vatRate.toStringAsFixed(0)}%'),
+                            if (product.description != null && product.description!.isNotEmpty) ...[
+                              const SizedBox(height: 8),
+                              Text(
+                                product.description!,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey.shade600,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ]);
-                }).toList(),
-              ),
-            ),
+                    );
+                  },
+                );
+              }
+            },
           );
         },
       ),

@@ -1,13 +1,13 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
-import '../database/database_helper.dart';
+import '../database/drift_database.dart';
 
 class AuthService {
   static const String _keyUserId = 'user_id';
   static const String _keyUsername = 'username';
   static const String _keyRole = 'user_role';
 
-  final DatabaseHelper _db = DatabaseHelper.instance;
+  final AppDatabase _db = AppDatabase();
 
   Future<User?> login(String username, String password) async {
     final user = await _db.getUserByUsername(username);
