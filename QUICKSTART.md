@@ -16,7 +16,14 @@ flutter pub run build_runner build --delete-conflicting-outputs
 
 This will generate `lib/database/drift_database.g.dart`.
 
-### 3. Run the Application
+### 3. Setup WASM for Web (First time only)
+```bash
+dart run drift_wasm setup
+```
+
+This copies the required WASM files to the `web/` directory for web support. You only need to run this once or when updating Drift.
+
+### 4. Run the Application
 
 #### For Web (Chrome):
 ```bash
@@ -58,6 +65,13 @@ The app automatically creates default users on first run:
 ```bash
 flutter pub run build_runner build --delete-conflicting-outputs
 ```
+
+### Issue: Web build fails with WASM errors
+**Solution:** Setup WASM files for web:
+```bash
+dart run drift_wasm setup
+```
+This copies `sqlite3.wasm` and `drift_worker.js` to your `web/` directory.
 
 ### Issue: Build runner conflicts
 **Solution:** Clean and rebuild:
