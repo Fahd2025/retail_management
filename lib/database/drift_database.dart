@@ -147,7 +147,7 @@ class AppDatabase extends _$AppDatabase {
   );
 
   // User operations
-  Future<User> createUser(models.User user) async {
+  Future<models.User> createUser(models.User user) async {
     await into(users).insert(UsersCompanion(
       id: Value(user.id),
       username: Value(user.username),
