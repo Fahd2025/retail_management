@@ -45,7 +45,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   // Public method that can be called from dashboard
   void showCategoryDialog([models.Category? category]) {
     final nameController = TextEditingController(text: category?.name ?? '');
-    final descriptionController = TextEditingController(text: category?.description ?? '');
+    final descriptionController =
+        TextEditingController(text: category?.description ?? '');
     final formKey = GlobalKey<FormState>();
 
     showDialog(
@@ -154,7 +155,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     }
   }
 
-  Future<void> _deleteCategory(models.Category category, int productCount) async {
+  Future<void> _deleteCategory(
+      models.Category category, int productCount) async {
     if (productCount > 0) {
       // Show warning if category has products
       showDialog(
@@ -260,7 +262,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           vertical: 8,
                         ),
                         leading: CircleAvatar(
-                          backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                          backgroundColor: Theme.of(context)
+                              .primaryColor
+                              .withValues(alpha: 0.1),
                           child: Icon(
                             Icons.category,
                             color: Theme.of(context).primaryColor,
@@ -302,7 +306,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () => _deleteCategory(category, productCount),
+                              onPressed: () =>
+                                  _deleteCategory(category, productCount),
                               tooltip: 'Delete',
                             ),
                           ],

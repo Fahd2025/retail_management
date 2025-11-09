@@ -428,7 +428,7 @@ class _ProductDialogState extends State<_ProductDialog> {
                         ),
                       )
                     : DropdownButtonFormField<String>(
-                        value: _selectedCategoryId,
+                        initialValue: _selectedCategoryId,
                         decoration:
                             const InputDecoration(labelText: 'Category *'),
                         hint: const Text('Select a category'),

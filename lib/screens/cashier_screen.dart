@@ -10,7 +10,6 @@ import '../models/customer.dart';
 import '../services/invoice_service.dart';
 import '../database/drift_database.dart' hide Product, Customer, Sale, SaleItem;
 import '../models/company_info.dart';
-import '../models/category.dart';
 import 'package:uuid/uuid.dart';
 
 class CashierScreen extends StatefulWidget {
@@ -247,15 +246,6 @@ class _CashierScreenState extends State<CashierScreen>
   }
 
   @override
-  void dispose() {
-    _barcodeController.dispose();
-    _animationController.dispose();
-    _cartAnimationController.dispose();
-    _db.close();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final categories = context.watch<ProductProvider>().categories;
     final saleProvider = context.watch<SaleProvider>();
@@ -306,7 +296,8 @@ class _CashierScreenState extends State<CashierScreen>
                             final isSelected = category == _selectedCategory;
 
                             return Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4),
                               child: FilterChip(
                                 label: Text(_getCategoryName(category)),
                                 selected: isSelected,
@@ -316,7 +307,8 @@ class _CashierScreenState extends State<CashierScreen>
                                 },
                                 selectedColor: Colors.blue,
                                 labelStyle: TextStyle(
-                                  color: isSelected ? Colors.white : Colors.black,
+                                  color:
+                                      isSelected ? Colors.white : Colors.black,
                                   fontWeight: isSelected
                                       ? FontWeight.bold
                                       : FontWeight.normal,
@@ -384,135 +376,136 @@ class _CashierScreenState extends State<CashierScreen>
                       color: Colors.white,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withValues(alpha: 0.1),
                           blurRadius: 10,
                         ),
                       ],
                     ),
                     child: Column(
-                    children: [
-                      // Cart header
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        color: Colors.blue.shade50,
-                        child: Row(
-                          children: [
-                            const Icon(Icons.shopping_cart),
-                            const SizedBox(width: 8),
-                            const Text(
-                              'Cart',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const Spacer(),
-                            Text(
-                              '${saleProvider.cartItemCount} items',
-                              style: TextStyle(color: Colors.grey.shade600),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // Customer selection
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: _CustomerSelector(
-                          selectedCustomer: _selectedCustomer,
-                          onCustomerSelected: (customer) {
-                            setState(() => _selectedCustomer = customer);
-                          },
-                        ),
-                      ),
-
-                      // Cart items
-                      Expanded(
-                        child: saleProvider.cartItems.isEmpty
-                            ? Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.shopping_cart_outlined,
-                                      size: 64,
-                                      color: Colors.grey.shade300,
-                                    ),
-                                    const SizedBox(height: 16),
-                                    Text(
-                                      'Cart is empty',
-                                      style: TextStyle(
-                                        color: Colors.grey.shade600,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ],
+                      children: [
+                        // Cart header
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          color: Colors.blue.shade50,
+                          child: Row(
+                            children: [
+                              const Icon(Icons.shopping_cart),
+                              const SizedBox(width: 8),
+                              const Text(
+                                'Cart',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              )
-                            : ListView.builder(
-                                itemCount: saleProvider.cartItems.length,
-                                itemBuilder: (context, index) {
-                                  final item = saleProvider.cartItems[index];
-                                  return _CartItem(item: item);
-                                },
                               ),
-                      ),
-
-                      // Cart summary
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          border: Border(
-                            top: BorderSide(color: Colors.grey.shade300),
+                              const Spacer(),
+                              Text(
+                                '${saleProvider.cartItemCount} items',
+                                style: TextStyle(color: Colors.grey.shade600),
+                              ),
+                            ],
                           ),
                         ),
-                        child: Column(
-                          children: [
-                            _SummaryRow('Subtotal:', saleProvider.cartSubtotal),
-                            const SizedBox(height: 8),
-                            _SummaryRow('VAT:', saleProvider.cartVatAmount),
-                            const Divider(),
-                            _SummaryRow(
-                              'Total:',
-                              saleProvider.cartTotal,
-                              isBold: true,
-                              fontSize: 20,
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: OutlinedButton(
-                                    onPressed: saleProvider.cartItems.isEmpty
-                                        ? null
-                                        : () => saleProvider.clearCart(),
-                                    child: const Text('Clear'),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  flex: 2,
-                                  child: ElevatedButton(
-                                    onPressed: saleProvider.cartItems.isEmpty
-                                        ? null
-                                        : _checkout,
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.green,
-                                      foregroundColor: Colors.white,
-                                    ),
-                                    child: const Text('Checkout'),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+
+                        // Customer selection
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: _CustomerSelector(
+                            selectedCustomer: _selectedCustomer,
+                            onCustomerSelected: (customer) {
+                              setState(() => _selectedCustomer = customer);
+                            },
+                          ),
                         ),
-                      ),
-                    ],
+
+                        // Cart items
+                        Expanded(
+                          child: saleProvider.cartItems.isEmpty
+                              ? Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.shopping_cart_outlined,
+                                        size: 64,
+                                        color: Colors.grey.shade300,
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        'Cart is empty',
+                                        style: TextStyle(
+                                          color: Colors.grey.shade600,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : ListView.builder(
+                                  itemCount: saleProvider.cartItems.length,
+                                  itemBuilder: (context, index) {
+                                    final item = saleProvider.cartItems[index];
+                                    return _CartItem(item: item);
+                                  },
+                                ),
+                        ),
+
+                        // Cart summary
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            border: Border(
+                              top: BorderSide(color: Colors.grey.shade300),
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              _SummaryRow(
+                                  'Subtotal:', saleProvider.cartSubtotal),
+                              const SizedBox(height: 8),
+                              _SummaryRow('VAT:', saleProvider.cartVatAmount),
+                              const Divider(),
+                              _SummaryRow(
+                                'Total:',
+                                saleProvider.cartTotal,
+                                isBold: true,
+                                fontSize: 20,
+                              ),
+                              const SizedBox(height: 16),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: OutlinedButton(
+                                      onPressed: saleProvider.cartItems.isEmpty
+                                          ? null
+                                          : () => saleProvider.clearCart(),
+                                      child: const Text('Clear'),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    flex: 2,
+                                    child: ElevatedButton(
+                                      onPressed: saleProvider.cartItems.isEmpty
+                                          ? null
+                                          : _checkout,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.green,
+                                        foregroundColor: Colors.white,
+                                      ),
+                                      child: const Text('Checkout'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
             ],
           );
         },
@@ -525,6 +518,7 @@ class _CashierScreenState extends State<CashierScreen>
     _barcodeController.dispose();
     _animationController.dispose();
     _cartAnimationController.dispose();
+    _db.close();
     super.dispose();
   }
 }
@@ -573,7 +567,8 @@ class _ProductCard extends StatelessWidget {
                               color: Colors.grey.shade100,
                               child: Center(
                                 child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes != null
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
                                       ? loadingProgress.cumulativeBytesLoaded /
                                           loadingProgress.expectedTotalBytes!
                                       : null,

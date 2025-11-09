@@ -58,7 +58,8 @@ class _SalesScreenState extends State<SalesScreen> {
     }
   }
 
-  Widget _buildSaleCard(Sale sale, DateFormat dateFormat, BuildContext context) {
+  Widget _buildSaleCard(
+      Sale sale, DateFormat dateFormat, BuildContext context) {
     final statusColor = sale.status == SaleStatus.completed
         ? Colors.green
         : sale.status == SaleStatus.returned
@@ -68,7 +69,7 @@ class _SalesScreenState extends State<SalesScreen> {
     return Card(
       child: ExpansionTile(
         leading: CircleAvatar(
-          backgroundColor: statusColor.withOpacity(0.2),
+          backgroundColor: statusColor.withValues(alpha: 0.2),
           child: Icon(Icons.receipt, color: statusColor),
         ),
         title: Text(
@@ -245,7 +246,8 @@ class _SalesScreenState extends State<SalesScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.receipt_long, size: 64, color: Colors.grey.shade300),
+                  Icon(Icons.receipt_long,
+                      size: 64, color: Colors.grey.shade300),
                   const SizedBox(height: 16),
                   const Text('No sales found'),
                 ],
@@ -269,7 +271,8 @@ class _SalesScreenState extends State<SalesScreen> {
                   ),
                   itemCount: provider.sales.length,
                   itemBuilder: (context, index) {
-                    return _buildSaleCard(provider.sales[index], dateFormat, context);
+                    return _buildSaleCard(
+                        provider.sales[index], dateFormat, context);
                   },
                 );
               } else {
@@ -280,7 +283,8 @@ class _SalesScreenState extends State<SalesScreen> {
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 8),
-                      child: _buildSaleCard(provider.sales[index], dateFormat, context),
+                      child: _buildSaleCard(
+                          provider.sales[index], dateFormat, context),
                     );
                   },
                 );
