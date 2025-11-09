@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/product_provider.dart';
-import '../models/product.dart';
+import '../models/product.dart' as models;
 import '../models/category.dart';
 import '../database/drift_database.dart';
 
@@ -46,7 +46,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     return _categoryNames[categoryId] ?? categoryId;
   }
 
-  Future<void> showProductDialog([Product? product]) async {
+  Future<void> showProductDialog([models.Product? product]) async {
     await showDialog(
       context: context,
       builder: (context) => _ProductDialog(product: product),
@@ -56,7 +56,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   Future<void> _deleteProduct(
     BuildContext context,
     ProductProvider provider,
-    Product product,
+    models.Product product,
   ) async {
     final confirm = await showDialog<bool>(
       context: context,
@@ -124,7 +124,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.inventory_2, size: 64, color: Colors.grey.shade300),
+                  Icon(Icons.inventory_2,
+                      size: 64, color: Colors.grey.shade300),
                   const SizedBox(height: 16),
                   const Text('No products found'),
                   const SizedBox(height: 16),
@@ -164,10 +165,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           DataCell(Text(product.name)),
                           DataCell(Text(product.barcode)),
                           DataCell(Text(_getCategoryName(product.category))),
-                          DataCell(Text('SAR ${product.price.toStringAsFixed(2)}')),
-                          DataCell(Text('SAR ${product.cost.toStringAsFixed(2)}')),
+                          DataCell(
+                              Text('SAR ${product.price.toStringAsFixed(2)}')),
+                          DataCell(
+                              Text('SAR ${product.cost.toStringAsFixed(2)}')),
                           DataCell(Text(product.quantity.toString())),
-                          DataCell(Text('${product.vatRate.toStringAsFixed(0)}%')),
+                          DataCell(
+                              Text('${product.vatRate.toStringAsFixed(0)}%')),
                           DataCell(
                             Row(
                               mainAxisSize: MainAxisSize.min,
@@ -177,8 +181,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   onPressed: () => showProductDialog(product),
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.delete, size: 20, color: Colors.red),
-                                  onPressed: () => _deleteProduct(context, provider, product),
+                                  icon: const Icon(Icons.delete,
+                                      size: 20, color: Colors.red),
+                                  onPressed: () => _deleteProduct(
+                                      context, provider, product),
                                 ),
                               ],
                             ),
@@ -219,12 +225,16 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     IconButton(
-                                      icon: const Icon(Icons.edit, color: Colors.blue),
-                                      onPressed: () => showProductDialog(product),
+                                      icon: const Icon(Icons.edit,
+                                          color: Colors.blue),
+                                      onPressed: () =>
+                                          showProductDialog(product),
                                     ),
                                     IconButton(
-                                      icon: const Icon(Icons.delete, color: Colors.red),
-                                      onPressed: () => _deleteProduct(context, provider, product),
+                                      icon: const Icon(Icons.delete,
+                                          color: Colors.red),
+                                      onPressed: () => _deleteProduct(
+                                          context, provider, product),
                                     ),
                                   ],
                                 ),
@@ -232,13 +242,18 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             ),
                             const Divider(),
                             const SizedBox(height: 8),
-                            _buildInfoRow('Category', _getCategoryName(product.category)),
+                            _buildInfoRow(
+                                'Category', _getCategoryName(product.category)),
                             _buildInfoRow('Barcode', product.barcode),
-                            _buildInfoRow('Price', 'SAR ${product.price.toStringAsFixed(2)}'),
-                            _buildInfoRow('Cost', 'SAR ${product.cost.toStringAsFixed(2)}'),
+                            _buildInfoRow('Price',
+                                'SAR ${product.price.toStringAsFixed(2)}'),
+                            _buildInfoRow('Cost',
+                                'SAR ${product.cost.toStringAsFixed(2)}'),
                             _buildInfoRow('Stock', '${product.quantity} units'),
-                            _buildInfoRow('VAT', '${product.vatRate.toStringAsFixed(0)}%'),
-                            if (product.description != null && product.description!.isNotEmpty) ...[
+                            _buildInfoRow('VAT',
+                                '${product.vatRate.toStringAsFixed(0)}%'),
+                            if (product.description != null &&
+                                product.description!.isNotEmpty) ...[
                               const SizedBox(height: 8),
                               Text(
                                 product.description!,
@@ -265,7 +280,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
 }
 
 class _ProductDialog extends StatefulWidget {
-  final Product? product;
+  final models.Product? product;
 
   const _ProductDialog({this.product});
 
@@ -388,7 +403,8 @@ class _ProductDialogState extends State<_ProductDialog> {
               children: [
                 TextFormField(
                   controller: _nameController,
-                  decoration: const InputDecoration(labelText: 'Product Name *'),
+                  decoration:
+                      const InputDecoration(labelText: 'Product Name *'),
                   validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
                 ),
                 const SizedBox(height: 16),
@@ -407,7 +423,8 @@ class _ProductDialogState extends State<_ProductDialog> {
                       )
                     : DropdownButtonFormField<String>(
                         value: _selectedCategoryId,
-                        decoration: const InputDecoration(labelText: 'Category *'),
+                        decoration:
+                            const InputDecoration(labelText: 'Category *'),
                         hint: const Text('Select a category'),
                         isExpanded: true,
                         validator: (v) => v == null ? 'Required' : null,
@@ -431,9 +448,8 @@ class _ProductDialogState extends State<_ProductDialog> {
                         controller: _priceController,
                         decoration: const InputDecoration(labelText: 'Price *'),
                         keyboardType: TextInputType.number,
-                        validator: (v) => double.tryParse(v ?? '') == null
-                            ? 'Invalid'
-                            : null,
+                        validator: (v) =>
+                            double.tryParse(v ?? '') == null ? 'Invalid' : null,
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -442,9 +458,8 @@ class _ProductDialogState extends State<_ProductDialog> {
                         controller: _costController,
                         decoration: const InputDecoration(labelText: 'Cost *'),
                         keyboardType: TextInputType.number,
-                        validator: (v) => double.tryParse(v ?? '') == null
-                            ? 'Invalid'
-                            : null,
+                        validator: (v) =>
+                            double.tryParse(v ?? '') == null ? 'Invalid' : null,
                       ),
                     ),
                   ],
@@ -455,11 +470,11 @@ class _ProductDialogState extends State<_ProductDialog> {
                     Expanded(
                       child: TextFormField(
                         controller: _quantityController,
-                        decoration: const InputDecoration(labelText: 'Quantity *'),
+                        decoration:
+                            const InputDecoration(labelText: 'Quantity *'),
                         keyboardType: TextInputType.number,
-                        validator: (v) => int.tryParse(v ?? '') == null
-                            ? 'Invalid'
-                            : null,
+                        validator: (v) =>
+                            int.tryParse(v ?? '') == null ? 'Invalid' : null,
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -468,9 +483,8 @@ class _ProductDialogState extends State<_ProductDialog> {
                         controller: _vatRateController,
                         decoration: const InputDecoration(labelText: 'VAT % *'),
                         keyboardType: TextInputType.number,
-                        validator: (v) => double.tryParse(v ?? '') == null
-                            ? 'Invalid'
-                            : null,
+                        validator: (v) =>
+                            double.tryParse(v ?? '') == null ? 'Invalid' : null,
                       ),
                     ),
                   ],
