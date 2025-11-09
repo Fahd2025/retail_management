@@ -52,7 +52,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
     super.dispose();
   }
 
-  Future<void> showProductDialog([Product? product]) async {
   Future<void> showProductDialog([models.Product? product]) async {
     await showDialog(
       context: context,
