@@ -10,6 +10,7 @@ import '../models/customer.dart';
 import '../services/invoice_service.dart';
 import '../database/drift_database.dart' hide Product, Customer, Sale, SaleItem;
 import '../models/company_info.dart';
+import '../models/category.dart';
 import 'package:uuid/uuid.dart';
 
 class CashierScreen extends StatefulWidget {
@@ -21,8 +22,10 @@ class CashierScreen extends StatefulWidget {
 
 class _CashierScreenState extends State<CashierScreen>
     with TickerProviderStateMixin {
+  final AppDatabase _db = AppDatabase();
   String? _selectedCategory;
   List<Product> _displayedProducts = [];
+  Map<String, String> _categoryNames = {}; // Map category ID to name
   final _barcodeController = TextEditingController();
   late AnimationController _animationController;
   late AnimationController _cartAnimationController;
@@ -69,6 +72,20 @@ class _CashierScreenState extends State<CashierScreen>
     await productProvider.loadCategories();
     await context.read<CustomerProvider>().loadCustomers(activeOnly: true);
 
+    // Load category names
+    try {
+      final categories = await _db.getAllCategories(activeOnly: true);
+      if (mounted) {
+        setState(() {
+          _categoryNames = {
+            for (var category in categories) category.id: category.name
+          };
+        });
+      }
+    } catch (e) {
+      // Silently fail - will display IDs if categories can't be loaded
+    }
+
     if (mounted && productProvider.categories.isNotEmpty) {
       setState(() {
         _selectedCategory = productProvider.categories.first;
@@ -89,6 +106,10 @@ class _CashierScreenState extends State<CashierScreen>
     });
 
     _animationController.forward(from: 0);
+  }
+
+  String _getCategoryName(String categoryId) {
+    return _categoryNames[categoryId] ?? categoryId;
   }
 
   void _addProductToCart(Product product) {
@@ -226,6 +247,15 @@ class _CashierScreenState extends State<CashierScreen>
   }
 
   @override
+  void dispose() {
+    _barcodeController.dispose();
+    _animationController.dispose();
+    _cartAnimationController.dispose();
+    _db.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final categories = context.watch<ProductProvider>().categories;
     final saleProvider = context.watch<SaleProvider>();
@@ -278,7 +308,7 @@ class _CashierScreenState extends State<CashierScreen>
                             return Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 4),
                               child: FilterChip(
-                                label: Text(category),
+                                label: Text(_getCategoryName(category)),
                                 selected: isSelected,
                                 onSelected: (_) {
                                   setState(() => _selectedCategory = category);
