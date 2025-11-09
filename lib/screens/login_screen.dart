@@ -247,31 +247,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 },
                               ),
                             ),
-                            const SizedBox(height: 24),
-
-                            // Demo credentials
-                            Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.blue.shade50,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Demo Credentials:',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue.shade700,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  const Text('Admin: admin / admin123'),
-                                  const Text('Cashier: cashier / cashier123'),
-                                ],
-                              ),
-                            ),
                           ],
                         ),
                       ),
