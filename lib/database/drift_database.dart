@@ -240,6 +240,34 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
+  Future<int> deleteUser(String id) async {
+    return (delete(users)..where((tbl) => tbl.id.equals(id))).go();
+  }
+
+  Future<models.User?> getUserById(String id) async {
+    final query = select(users)..where((tbl) => tbl.id.equals(id));
+    final result = await query.getSingleOrNull();
+    if (result == null) return null;
+    return _userFromRow(result);
+  }
+
+  Future<Map<String, dynamic>> getUserSalesStats(String userId) async {
+    final query = select(sales)..where((tbl) => tbl.cashierId.equals(userId));
+    final userSales = await query.get();
+
+    int invoiceCount = userSales.length;
+    double totalSales = 0.0;
+
+    for (var sale in userSales) {
+      totalSales += sale.totalAmount;
+    }
+
+    return {
+      'invoiceCount': invoiceCount,
+      'totalSales': totalSales,
+    };
+  }
+
   // Product operations
   Future<models.Product> createProduct(models.Product product) async {
     await into(products).insert(ProductsCompanion(

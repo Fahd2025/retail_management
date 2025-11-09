@@ -5,6 +5,7 @@ import '../providers/auth_provider.dart';
 import '../providers/product_provider.dart';
 import '../providers/customer_provider.dart';
 import '../providers/sale_provider.dart';
+import '../providers/user_provider.dart';
 import '../models/user.dart';
 import '../models/company_info.dart';
 import '../database/drift_database.dart';
@@ -13,6 +14,7 @@ import 'products_screen.dart';
 import 'categories_screen.dart';
 import 'customers_screen.dart';
 import 'sales_screen.dart';
+import 'users_screen.dart';
 import 'settings_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -31,6 +33,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey<State<ProductsScreen>> _productsKey = GlobalKey<State<ProductsScreen>>();
   final GlobalKey<State<CategoriesScreen>> _categoriesKey = GlobalKey<State<CategoriesScreen>>();
   final GlobalKey<State<CustomersScreen>> _customersKey = GlobalKey<State<CustomersScreen>>();
+  final GlobalKey<State<UsersScreen>> _usersKey = GlobalKey<State<UsersScreen>>();
 
   @override
   void initState() {
@@ -58,6 +61,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         CategoriesScreen(key: _categoriesKey),
         CustomersScreen(key: _customersKey),
         const SalesScreen(),
+        UsersScreen(key: _usersKey),
         const SettingsScreen(),
       ];
     } else {
@@ -77,6 +81,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         {'icon': Icons.category, 'label': 'Categories'},
         {'icon': Icons.people, 'label': 'Customers'},
         {'icon': Icons.receipt_long, 'label': 'Sales'},
+        {'icon': Icons.person, 'label': 'Users'},
         {'icon': Icons.settings, 'label': 'Settings'},
       ];
     } else {
@@ -209,7 +214,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ],
         );
-      case 5: // Settings Screen (admin only)
+      case 5: // Users Screen (admin only)
+        return AppBar(
+          title: const Text('Users Management'),
+          backgroundColor: Colors.blue.shade700,
+          foregroundColor: Colors.white,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                (_usersKey.currentState as dynamic)?.showUserDialog();
+              },
+              tooltip: 'Add User',
+            ),
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: () {
+                context.read<UserProvider>().loadUsers();
+              },
+              tooltip: 'Refresh',
+            ),
+          ],
+        );
+      case 6: // Settings Screen (admin only)
         return AppBar(
           title: const Text('Settings'),
           backgroundColor: Colors.blue.shade700,
