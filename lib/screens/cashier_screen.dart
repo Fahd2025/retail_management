@@ -518,7 +518,7 @@ class _CashierScreenState extends State<CashierScreen>
     _barcodeController.dispose();
     _animationController.dispose();
     _cartAnimationController.dispose();
-    _db.close();
+    // Don't close the singleton database instance
     super.dispose();
   }
 }
