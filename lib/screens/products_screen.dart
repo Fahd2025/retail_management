@@ -13,6 +13,7 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
+  final AppDatabase _db = AppDatabase();
   Map<String, String> _categoryNames = {};
 
   @override
@@ -28,8 +29,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   Future<void> _loadCategories() async {
     try {
-      final db = context.read<AppDatabase>();
-      final categories = await db.getAllCategories();
+      final categories = await _db.getAllCategories();
       if (mounted) {
         setState(() {
           _categoryNames = {
@@ -46,6 +46,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
     return _categoryNames[categoryId] ?? categoryId;
   }
 
+  @override
+  void dispose() {
+    _db.close();
+    super.dispose();
+  }
+
+  Future<void> showProductDialog([Product? product]) async {
   Future<void> showProductDialog([models.Product? product]) async {
     await showDialog(
       context: context,
@@ -290,6 +297,7 @@ class _ProductDialog extends StatefulWidget {
 
 class _ProductDialogState extends State<_ProductDialog> {
   final _formKey = GlobalKey<FormState>();
+  final AppDatabase _db = AppDatabase();
   late TextEditingController _nameController;
   late TextEditingController _barcodeController;
   late TextEditingController _priceController;
@@ -328,8 +336,7 @@ class _ProductDialogState extends State<_ProductDialog> {
 
   Future<void> _loadCategories() async {
     try {
-      final db = context.read<AppDatabase>();
-      final categories = await db.getAllCategories(activeOnly: true);
+      final categories = await _db.getAllCategories(activeOnly: true);
       if (mounted) {
         setState(() {
           _categories = categories;
@@ -522,6 +529,7 @@ class _ProductDialogState extends State<_ProductDialog> {
     _quantityController.dispose();
     _vatRateController.dispose();
     _descriptionController.dispose();
+    _db.close();
     super.dispose();
   }
 }
