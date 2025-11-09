@@ -4,6 +4,7 @@ import '../models/product.dart' as models;
 import '../models/customer.dart' as models;
 import '../models/sale.dart' as models;
 import '../models/company_info.dart' as models;
+import '../models/category.dart' as models;
 import 'connection/connection.dart' as impl;
 
 part 'drift_database.g.dart';
@@ -23,6 +24,21 @@ class Users extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+// Categories table
+class Categories extends Table {
+  TextColumn get id => text()();
+  TextColumn get name => text()();
+  TextColumn get description => text().nullable()();
+  TextColumn get imageUrl => text().nullable()();
+  BoolColumn get isActive => boolean()();
+  TextColumn get createdAt => text()();
+  TextColumn get updatedAt => text()();
+  BoolColumn get needsSync => boolean()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
 // Products table
 class Products extends Table {
   TextColumn get id => text()();
@@ -32,7 +48,7 @@ class Products extends Table {
   RealColumn get price => real()();
   RealColumn get cost => real()();
   IntColumn get quantity => integer()();
-  TextColumn get category => text()();
+  TextColumn get categoryId => text().references(Categories, #id)();
   TextColumn get imageUrl => text().nullable()();
   BoolColumn get isActive => boolean()();
   RealColumn get vatRate => real()();
@@ -125,7 +141,7 @@ class CompanyInfoTable extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-@DriftDatabase(tables: [Users, Products, Customers, Sales, SaleItems, CompanyInfoTable])
+@DriftDatabase(tables: [Users, Categories, Products, Customers, Sales, SaleItems, CompanyInfoTable])
 class AppDatabase extends _$AppDatabase {
   // Singleton pattern
   static AppDatabase? _instance;
@@ -138,7 +154,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -147,10 +163,37 @@ class AppDatabase extends _$AppDatabase {
 
       // Create indexes
       await customStatement('CREATE INDEX idx_products_barcode ON products(barcode)');
-      await customStatement('CREATE INDEX idx_products_category ON products(category)');
+      await customStatement('CREATE INDEX idx_products_category_id ON products(category_id)');
       await customStatement('CREATE INDEX idx_sales_date ON sales(sale_date)');
       await customStatement('CREATE INDEX idx_sales_cashier ON sales(cashier_id)');
       await customStatement('CREATE INDEX idx_sale_items_sale ON sale_items(sale_id)');
+
+      // Seed initial data
+      await _seedInitialData();
+    },
+    onUpgrade: (Migrator m, int from, int to) async {
+      if (from == 1 && to == 2) {
+        // Create categories table
+        await m.createTable(categories);
+
+        // Add default categories
+        await _seedInitialCategories();
+
+        // Add categoryId column to products
+        await m.addColumn(products, products.categoryId);
+
+        // Migrate existing products to use the first category as default
+        final defaultCategory = await (select(categories)..limit(1)).getSingleOrNull();
+        if (defaultCategory != null) {
+          await customStatement(
+            'UPDATE products SET category_id = ? WHERE category_id IS NULL',
+            [defaultCategory.id],
+          );
+        }
+
+        // Update index
+        await customStatement('CREATE INDEX idx_products_category_id ON products(category_id)');
+      }
     },
   );
 
@@ -204,7 +247,7 @@ class AppDatabase extends _$AppDatabase {
       price: Value(product.price),
       cost: Value(product.cost),
       quantity: Value(product.quantity),
-      category: Value(product.category),
+      categoryId: Value(product.category),
       imageUrl: Value(product.imageUrl),
       isActive: Value(product.isActive),
       vatRate: Value(product.vatRate),
@@ -238,9 +281,9 @@ class AppDatabase extends _$AppDatabase {
     return result.map((row) => _productFromRow(row)).toList();
   }
 
-  Future<List<models.Product>> getProductsByCategory(String category) async {
+  Future<List<models.Product>> getProductsByCategory(String categoryId) async {
     final query = select(products)
-      ..where((tbl) => tbl.category.equals(category) & tbl.isActive.equals(true))
+      ..where((tbl) => tbl.categoryId.equals(categoryId) & tbl.isActive.equals(true))
       ..orderBy([(t) => OrderingTerm(expression: t.name)]);
     final result = await query.get();
     return result.map((row) => _productFromRow(row)).toList();
@@ -248,11 +291,11 @@ class AppDatabase extends _$AppDatabase {
 
   Future<List<String>> getProductCategories() async {
     final query = selectOnly(products, distinct: true)
-      ..addColumns([products.category])
+      ..addColumns([products.categoryId])
       ..where(products.isActive.equals(true))
-      ..orderBy([OrderingTerm(expression: products.category)]);
+      ..orderBy([OrderingTerm(expression: products.categoryId)]);
     final result = await query.get();
-    return result.map((row) => row.read(products.category)!).toList();
+    return result.map((row) => row.read(products.categoryId)!).toList();
   }
 
   Future<int> updateProduct(models.Product product) async {
@@ -264,7 +307,7 @@ class AppDatabase extends _$AppDatabase {
         price: Value(product.price),
         cost: Value(product.cost),
         quantity: Value(product.quantity),
-        category: Value(product.category),
+        categoryId: Value(product.category),
         imageUrl: Value(product.imageUrl),
         isActive: Value(product.isActive),
         vatRate: Value(product.vatRate),
@@ -522,7 +565,7 @@ class AppDatabase extends _$AppDatabase {
       price: row.price,
       cost: row.cost,
       quantity: row.quantity,
-      category: row.category,
+      category: row.categoryId,
       imageUrl: row.imageUrl,
       isActive: row.isActive,
       vatRate: row.vatRate,
@@ -611,5 +654,242 @@ class AppDatabase extends _$AppDatabase {
       createdAt: DateTime.parse(row.createdAt),
       updatedAt: DateTime.parse(row.updatedAt),
     );
+  }
+
+  models.Category _categoryFromRow(Category row) {
+    return models.Category(
+      id: row.id,
+      name: row.name,
+      description: row.description,
+      imageUrl: row.imageUrl,
+      isActive: row.isActive,
+      createdAt: DateTime.parse(row.createdAt),
+      updatedAt: DateTime.parse(row.updatedAt),
+      needsSync: row.needsSync,
+    );
+  }
+
+  // Category operations
+  Future<models.Category> createCategory(models.Category category) async {
+    await into(categories).insert(CategoriesCompanion(
+      id: Value(category.id),
+      name: Value(category.name),
+      description: Value(category.description),
+      imageUrl: Value(category.imageUrl),
+      isActive: Value(category.isActive),
+      createdAt: Value(category.createdAt.toIso8601String()),
+      updatedAt: Value(category.updatedAt.toIso8601String()),
+      needsSync: Value(category.needsSync),
+    ));
+    return category;
+  }
+
+  Future<models.Category?> getCategory(String id) async {
+    final query = select(categories)..where((tbl) => tbl.id.equals(id));
+    final result = await query.getSingleOrNull();
+    if (result == null) return null;
+    return _categoryFromRow(result);
+  }
+
+  Future<List<models.Category>> getAllCategories({bool activeOnly = false}) async {
+    final query = select(categories)..orderBy([(t) => OrderingTerm(expression: t.name)]);
+    if (activeOnly) {
+      query.where((tbl) => tbl.isActive.equals(true));
+    }
+    final result = await query.get();
+    return result.map((row) => _categoryFromRow(row)).toList();
+  }
+
+  Future<int> updateCategory(models.Category category) async {
+    return (update(categories)..where((tbl) => tbl.id.equals(category.id))).write(
+      CategoriesCompanion(
+        name: Value(category.name),
+        description: Value(category.description),
+        imageUrl: Value(category.imageUrl),
+        isActive: Value(category.isActive),
+        updatedAt: Value(DateTime.now().toIso8601String()),
+        needsSync: Value(category.needsSync),
+      ),
+    );
+  }
+
+  Future<int> deleteCategory(String id) async {
+    return (delete(categories)..where((tbl) => tbl.id.equals(id))).go();
+  }
+
+  // Get category with product count
+  Future<List<Map<String, dynamic>>> getCategoriesWithProductCount() async {
+    final categoriesList = await getAllCategories(activeOnly: true);
+    final result = <Map<String, dynamic>>[];
+
+    for (var category in categoriesList) {
+      final productCount = await (select(products)
+        ..where((tbl) => tbl.categoryId.equals(category.id) & tbl.isActive.equals(true)))
+        .get()
+        .then((rows) => rows.length);
+
+      result.add({
+        'category': category,
+        'productCount': productCount,
+      });
+    }
+
+    return result;
+  }
+
+  // Seed initial data
+  Future<void> _seedInitialData() async {
+    // Check if we already have data
+    final userCount = await (select(users)).get().then((rows) => rows.length);
+    if (userCount > 0) return; // Already seeded
+
+    await _seedInitialCategories();
+    await _seedInitialProducts();
+    await _seedInitialUser();
+  }
+
+  Future<void> _seedInitialCategories() async {
+    final now = DateTime.now();
+    final defaultCategories = [
+      models.Category(
+        id: 'cat-1',
+        name: 'Electronics',
+        description: 'Electronic devices and accessories',
+        isActive: true,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Category(
+        id: 'cat-2',
+        name: 'Clothing',
+        description: 'Apparel and fashion items',
+        isActive: true,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Category(
+        id: 'cat-3',
+        name: 'Food & Beverages',
+        description: 'Food items and drinks',
+        isActive: true,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Category(
+        id: 'cat-4',
+        name: 'Home & Garden',
+        description: 'Home improvement and garden supplies',
+        isActive: true,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Category(
+        id: 'cat-5',
+        name: 'Office Supplies',
+        description: 'Office and stationery items',
+        isActive: true,
+        createdAt: now,
+        updatedAt: now,
+      ),
+    ];
+
+    for (var category in defaultCategories) {
+      await createCategory(category);
+    }
+  }
+
+  Future<void> _seedInitialProducts() async {
+    final now = DateTime.now();
+    final defaultProducts = [
+      models.Product(
+        id: 'prod-1',
+        name: 'Wireless Mouse',
+        description: 'Ergonomic wireless mouse with USB receiver',
+        barcode: '1234567890001',
+        price: 45.00,
+        cost: 30.00,
+        quantity: 50,
+        category: 'cat-1', // Electronics
+        isActive: true,
+        vatRate: 15.0,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Product(
+        id: 'prod-2',
+        name: 'Notebook A4',
+        description: '200 pages ruled notebook',
+        barcode: '1234567890002',
+        price: 12.00,
+        cost: 7.00,
+        quantity: 100,
+        category: 'cat-5', // Office Supplies
+        isActive: true,
+        vatRate: 15.0,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Product(
+        id: 'prod-3',
+        name: 'T-Shirt - Medium',
+        description: 'Cotton t-shirt, medium size',
+        barcode: '1234567890003',
+        price: 35.00,
+        cost: 20.00,
+        quantity: 75,
+        category: 'cat-2', // Clothing
+        isActive: true,
+        vatRate: 15.0,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Product(
+        id: 'prod-4',
+        name: 'Water Bottle 1L',
+        description: 'Purified drinking water',
+        barcode: '1234567890004',
+        price: 3.50,
+        cost: 2.00,
+        quantity: 200,
+        category: 'cat-3', // Food & Beverages
+        isActive: true,
+        vatRate: 15.0,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Product(
+        id: 'prod-5',
+        name: 'Garden Shovel',
+        description: 'Heavy-duty garden shovel',
+        barcode: '1234567890005',
+        price: 55.00,
+        cost: 35.00,
+        quantity: 30,
+        category: 'cat-4', // Home & Garden
+        isActive: true,
+        vatRate: 15.0,
+        createdAt: now,
+        updatedAt: now,
+      ),
+    ];
+
+    for (var product in defaultProducts) {
+      await createProduct(product);
+    }
+  }
+
+  Future<void> _seedInitialUser() async {
+    final now = DateTime.now();
+    final adminUser = models.User(
+      id: 'user-1',
+      username: 'admin',
+      password: 'admin123', // In production, this should be hashed
+      fullName: 'System Administrator',
+      role: models.UserRole.admin,
+      isActive: true,
+      createdAt: now,
+    );
+
+    await createUser(adminUser);
   }
 }

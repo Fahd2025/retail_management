@@ -10,6 +10,7 @@ import '../models/company_info.dart';
 import '../database/drift_database.dart';
 import 'cashier_screen.dart';
 import 'products_screen.dart';
+import 'categories_screen.dart';
 import 'customers_screen.dart';
 import 'sales_screen.dart';
 import 'settings_screen.dart';
@@ -53,6 +54,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       return [
         CashierScreen(key: _cashierKey),
         ProductsScreen(key: _productsKey),
+        const CategoriesScreen(),
         CustomersScreen(key: _customersKey),
         const SalesScreen(),
         const SettingsScreen(),
@@ -71,6 +73,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       return const [
         {'icon': Icons.point_of_sale, 'label': 'Cashier'},
         {'icon': Icons.inventory, 'label': 'Products'},
+        {'icon': Icons.category, 'label': 'Categories'},
         {'icon': Icons.people, 'label': 'Customers'},
         {'icon': Icons.receipt_long, 'label': 'Sales'},
         {'icon': Icons.settings, 'label': 'Settings'},
@@ -149,7 +152,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ],
           );
         }
-      case 2: // Customers Screen (admin only)
+      case 2: // Categories Screen (admin only)
+        return AppBar(
+          title: const Text('Categories'),
+          backgroundColor: Colors.blue.shade700,
+          foregroundColor: Colors.white,
+        );
+      case 3: // Customers Screen (admin only)
         return AppBar(
           title: const Text('Customers Management'),
           backgroundColor: Colors.blue.shade700,
@@ -169,7 +178,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ],
         );
-      case 3: // Sales Screen (admin only)
+      case 4: // Sales Screen (admin only)
         return AppBar(
           title: const Text('Sales History'),
           backgroundColor: Colors.blue.shade700,
@@ -183,7 +192,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ],
         );
-      case 4: // Settings Screen (admin only)
+      case 5: // Settings Screen (admin only)
         return AppBar(
           title: const Text('Settings'),
           backgroundColor: Colors.blue.shade700,
