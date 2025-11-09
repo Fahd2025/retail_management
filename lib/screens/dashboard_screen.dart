@@ -29,6 +29,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   // GlobalKeys for screen access
   final GlobalKey<State<CashierScreen>> _cashierKey = GlobalKey<State<CashierScreen>>();
   final GlobalKey<State<ProductsScreen>> _productsKey = GlobalKey<State<ProductsScreen>>();
+  final GlobalKey<State<CategoriesScreen>> _categoriesKey = GlobalKey<State<CategoriesScreen>>();
   final GlobalKey<State<CustomersScreen>> _customersKey = GlobalKey<State<CustomersScreen>>();
 
   @override
@@ -54,7 +55,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       return [
         CashierScreen(key: _cashierKey),
         ProductsScreen(key: _productsKey),
-        const CategoriesScreen(),
+        CategoriesScreen(key: _categoriesKey),
         CustomersScreen(key: _customersKey),
         const SalesScreen(),
         const SettingsScreen(),
@@ -157,6 +158,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
           title: const Text('Categories'),
           backgroundColor: Colors.blue.shade700,
           foregroundColor: Colors.white,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                (_categoriesKey.currentState as dynamic)?.showCategoryDialog();
+              },
+              tooltip: 'Add Category',
+            ),
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: () {
+                (_categoriesKey.currentState as dynamic)?.loadCategories();
+              },
+              tooltip: 'Refresh',
+            ),
+          ],
         );
       case 3: // Customers Screen (admin only)
         return AppBar(

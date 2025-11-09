@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import '../database/drift_database.dart';
 import '../models/category.dart' as models;
 
@@ -17,10 +18,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   @override
   void initState() {
     super.initState();
-    _loadCategories();
+    loadCategories();
   }
 
-  Future<void> _loadCategories() async {
+  // Public method that can be called from dashboard
+  Future<void> loadCategories() async {
     setState(() => _isLoading = true);
     try {
       final data = await _database.getCategoriesWithProductCount();
@@ -40,115 +42,275 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Categories'),
+  // Public method that can be called from dashboard
+  void showCategoryDialog([models.Category? category]) {
+    final nameController = TextEditingController(text: category?.name ?? '');
+    final descriptionController = TextEditingController(text: category?.description ?? '');
+    final formKey = GlobalKey<FormState>();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(category == null ? 'Add Category' : 'Edit Category'),
+        content: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Name',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter a category name';
+                    }
+                    return null;
+                  },
+                  autofocus: true,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: descriptionController,
+                  decoration: const InputDecoration(
+                    labelText: 'Description (Optional)',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 3,
+                ),
+              ],
+            ),
+          ),
+        ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadCategories,
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              if (formKey.currentState!.validate()) {
+                Navigator.pop(context);
+                await _saveCategory(
+                  category,
+                  nameController.text.trim(),
+                  descriptionController.text.trim(),
+                );
+              }
+            },
+            child: Text(category == null ? 'Add' : 'Save'),
           ),
         ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _categoriesWithCount.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.category_outlined,
-                        size: 64,
+    );
+  }
+
+  Future<void> _saveCategory(
+    models.Category? existingCategory,
+    String name,
+    String description,
+  ) async {
+    try {
+      if (existingCategory == null) {
+        // Create new category
+        final newCategory = models.Category(
+          id: const Uuid().v4(),
+          name: name,
+          description: description.isEmpty ? null : description,
+          isActive: true,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        );
+        await _database.createCategory(newCategory);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Category added successfully')),
+          );
+        }
+      } else {
+        // Update existing category
+        final updatedCategory = existingCategory.copyWith(
+          name: name,
+          description: description.isEmpty ? null : description,
+          updatedAt: DateTime.now(),
+        );
+        await _database.updateCategory(updatedCategory);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Category updated successfully')),
+          );
+        }
+      }
+      await loadCategories();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error saving category: $e')),
+        );
+      }
+    }
+  }
+
+  Future<void> _deleteCategory(models.Category category, int productCount) async {
+    if (productCount > 0) {
+      // Show warning if category has products
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Cannot Delete Category'),
+          content: Text(
+            'This category has $productCount product(s). Please remove or reassign all products before deleting the category.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Category'),
+        content: Text('Are you sure you want to delete "${category.name}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        await _database.deleteCategory(category.id);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Category deleted successfully')),
+          );
+        }
+        await loadCategories();
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error deleting category: $e')),
+          );
+        }
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : _categoriesWithCount.isEmpty
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.category_outlined,
+                      size: 64,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'No categories found',
+                      style: TextStyle(
+                        fontSize: 18,
                         color: Colors.grey,
                       ),
-                      const SizedBox(height: 16),
-                      const Text(
-                        'No categories found',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey,
+                    ),
+                  ],
+                ),
+              )
+            : RefreshIndicator(
+                onRefresh: loadCategories,
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: _categoriesWithCount.length,
+                  itemBuilder: (context, index) {
+                    final data = _categoriesWithCount[index];
+                    final category = data['category'] as models.Category;
+                    final productCount = data['productCount'] as int;
+
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      elevation: 2,
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        leading: CircleAvatar(
+                          backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                          child: Icon(
+                            Icons.category,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        title: Text(
+                          category.name,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (category.description != null)
+                              Text(
+                                category.description!,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '$productCount product(s)',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit, color: Colors.blue),
+                              onPressed: () => showCategoryDialog(category),
+                              tooltip: 'Edit',
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () => _deleteCategory(category, productCount),
+                              tooltip: 'Delete',
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                )
-              : RefreshIndicator(
-                  onRefresh: _loadCategories,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: _categoriesWithCount.length,
-                    itemBuilder: (context, index) {
-                      final data = _categoriesWithCount[index];
-                      final category = data['category'] as models.Category;
-                      final productCount = data['productCount'] as int;
-
-                      return Card(
-                        margin: const EdgeInsets.only(bottom: 12),
-                        elevation: 2,
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          leading: CircleAvatar(
-                            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
-                            child: Icon(
-                              Icons.category,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                          title: Text(
-                            category.name,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                          subtitle: category.description != null
-                              ? Text(
-                                  category.description!,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                )
-                              : null,
-                          trailing: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  '$productCount',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                                const Text(
-                                  'Products',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                    );
+                  },
                 ),
-    );
+              );
   }
 }
