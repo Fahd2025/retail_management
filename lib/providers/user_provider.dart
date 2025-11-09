@@ -1,18 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
-import '../models/user.dart';
+import '../models/user.dart' as models;
 import '../database/drift_database.dart';
 
 class UserProvider with ChangeNotifier {
   final AppDatabase _db = AppDatabase();
   final Uuid _uuid = const Uuid();
 
-  List<User> _users = [];
+  List<models.User> _users = [];
   Map<String, Map<String, dynamic>> _userSalesStats = {};
   bool _isLoading = false;
   String? _errorMessage;
 
-  List<User> get users => _users;
+  List<models.User> get users => _users;
   Map<String, Map<String, dynamic>> get userSalesStats => _userSalesStats;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
@@ -40,7 +40,7 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<User?> getUserById(String id) async {
+  Future<models.User?> getUserById(String id) async {
     return await _db.getUserById(id);
   }
 
@@ -48,11 +48,11 @@ class UserProvider with ChangeNotifier {
     required String username,
     required String password,
     required String fullName,
-    required UserRole role,
+    required models.UserRole role,
     bool isActive = true,
   }) async {
     try {
-      final user = User(
+      final user = models.User(
         id: _uuid.v4(),
         username: username,
         password: password,
@@ -72,7 +72,7 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> updateUser(User user) async {
+  Future<bool> updateUser(models.User user) async {
     try {
       await _db.updateUser(user);
       await loadUsers();

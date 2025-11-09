@@ -54,7 +54,8 @@ class _UsersScreenState extends State<UsersScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Delete User'),
-        content: Text('Delete user ${user.username}? This action cannot be undone.'),
+        content:
+            Text('Delete user ${user.username}? This action cannot be undone.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -171,7 +172,9 @@ class _UsersScreenState extends State<UsersScreen> {
                           DataCell(
                             Chip(
                               label: Text(
-                                user.role == UserRole.admin ? 'Admin' : 'Cashier',
+                                user.role == UserRole.admin
+                                    ? 'Admin'
+                                    : 'Cashier',
                                 style: const TextStyle(fontSize: 12),
                               ),
                               backgroundColor: user.role == UserRole.admin
@@ -275,7 +278,8 @@ class _UsersScreenState extends State<UsersScreen> {
                               'Status',
                               user.isActive ? 'Active' : 'Inactive',
                             ),
-                            _buildInfoRow('Invoice Count', invoiceCount.toString()),
+                            _buildInfoRow(
+                                'Invoice Count', invoiceCount.toString()),
                             _buildInfoRow(
                               'Total Sales',
                               'SAR ${totalSales.toStringAsFixed(2)}',
@@ -316,9 +320,11 @@ class _UserDialogState extends State<_UserDialog> {
   @override
   void initState() {
     super.initState();
-    _usernameController = TextEditingController(text: widget.user?.username ?? '');
+    _usernameController =
+        TextEditingController(text: widget.user?.username ?? '');
     _passwordController = TextEditingController();
-    _fullNameController = TextEditingController(text: widget.user?.fullName ?? '');
+    _fullNameController =
+        TextEditingController(text: widget.user?.fullName ?? '');
     _selectedRole = widget.user?.role ?? UserRole.cashier;
     _isActive = widget.user?.isActive ?? true;
   }
@@ -372,9 +378,11 @@ class _UserDialogState extends State<_UserDialog> {
           ),
         );
       } else {
+        final errorMessage = provider.errorMessage ?? 'An error occurred';
+        print(errorMessage);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(provider.errorMessage ?? 'An error occurred'),
+            content: Text(errorMessage),
             backgroundColor: Colors.red,
           ),
         );
@@ -433,13 +441,10 @@ class _UserDialogState extends State<_UserDialog> {
                 ),
                 obscureText: true,
                 validator: (value) {
-                  if (widget.user == null &&
-                      (value == null || value.isEmpty)) {
+                  if (widget.user == null && (value == null || value.isEmpty)) {
                     return 'Password is required';
                   }
-                  if (value != null &&
-                      value.isNotEmpty &&
-                      value.length < 6) {
+                  if (value != null && value.isNotEmpty && value.length < 6) {
                     return 'Password must be at least 6 characters';
                   }
                   return null;
@@ -447,7 +452,7 @@ class _UserDialogState extends State<_UserDialog> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<UserRole>(
-                value: _selectedRole,
+                initialValue: _selectedRole,
                 decoration: const InputDecoration(
                   labelText: 'Role *',
                   border: OutlineInputBorder(),
