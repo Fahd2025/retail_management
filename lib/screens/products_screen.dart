@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/product_provider.dart';
 import '../models/product.dart';
+import '../models/category.dart';
+import '../database/drift_database.dart';
 
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({super.key});
@@ -11,14 +13,37 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
+  Map<String, String> _categoryNames = {};
+
   @override
   void initState() {
     super.initState();
     _loadProducts();
+    _loadCategories();
   }
 
   Future<void> _loadProducts() async {
     await context.read<ProductProvider>().loadProducts();
+  }
+
+  Future<void> _loadCategories() async {
+    try {
+      final db = context.read<AppDatabase>();
+      final categories = await db.getAllCategories();
+      if (mounted) {
+        setState(() {
+          _categoryNames = {
+            for (var category in categories) category.id: category.name
+          };
+        });
+      }
+    } catch (e) {
+      // Silently fail - will display IDs if categories can't be loaded
+    }
+  }
+
+  String _getCategoryName(String categoryId) {
+    return _categoryNames[categoryId] ?? categoryId;
   }
 
   Future<void> showProductDialog([Product? product]) async {
@@ -138,7 +163,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         return DataRow(cells: [
                           DataCell(Text(product.name)),
                           DataCell(Text(product.barcode)),
-                          DataCell(Text(product.category)),
+                          DataCell(Text(_getCategoryName(product.category))),
                           DataCell(Text('SAR ${product.price.toStringAsFixed(2)}')),
                           DataCell(Text('SAR ${product.cost.toStringAsFixed(2)}')),
                           DataCell(Text(product.quantity.toString())),
@@ -207,7 +232,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             ),
                             const Divider(),
                             const SizedBox(height: 8),
-                            _buildInfoRow('Category', product.category),
+                            _buildInfoRow('Category', _getCategoryName(product.category)),
                             _buildInfoRow('Barcode', product.barcode),
                             _buildInfoRow('Price', 'SAR ${product.price.toStringAsFixed(2)}'),
                             _buildInfoRow('Cost', 'SAR ${product.cost.toStringAsFixed(2)}'),
@@ -252,19 +277,22 @@ class _ProductDialogState extends State<_ProductDialog> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _barcodeController;
-  late TextEditingController _categoryController;
   late TextEditingController _priceController;
   late TextEditingController _costController;
   late TextEditingController _quantityController;
   late TextEditingController _vatRateController;
   late TextEditingController _descriptionController;
 
+  List<Category> _categories = [];
+  String? _selectedCategoryId;
+  bool _isLoadingCategories = true;
+
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.product?.name);
     _barcodeController = TextEditingController(text: widget.product?.barcode);
-    _categoryController = TextEditingController(text: widget.product?.category);
+    _selectedCategoryId = widget.product?.category;
     _priceController = TextEditingController(
       text: widget.product?.price.toString() ?? '0',
     );
@@ -280,6 +308,29 @@ class _ProductDialogState extends State<_ProductDialog> {
     _descriptionController = TextEditingController(
       text: widget.product?.description,
     );
+    _loadCategories();
+  }
+
+  Future<void> _loadCategories() async {
+    try {
+      final db = context.read<AppDatabase>();
+      final categories = await db.getAllCategories(activeOnly: true);
+      if (mounted) {
+        setState(() {
+          _categories = categories;
+          _isLoadingCategories = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoadingCategories = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load categories: $e')),
+        );
+      }
+    }
   }
 
   Future<void> _save() async {
@@ -292,7 +343,7 @@ class _ProductDialogState extends State<_ProductDialog> {
       success = await provider.addProduct(
         name: _nameController.text,
         barcode: _barcodeController.text,
-        category: _categoryController.text,
+        category: _selectedCategoryId!,
         price: double.parse(_priceController.text),
         cost: double.parse(_costController.text),
         quantity: int.parse(_quantityController.text),
@@ -306,7 +357,7 @@ class _ProductDialogState extends State<_ProductDialog> {
         widget.product!.copyWith(
           name: _nameController.text,
           barcode: _barcodeController.text,
-          category: _categoryController.text,
+          category: _selectedCategoryId!,
           price: double.parse(_priceController.text),
           cost: double.parse(_costController.text),
           quantity: int.parse(_quantityController.text),
@@ -347,11 +398,31 @@ class _ProductDialogState extends State<_ProductDialog> {
                   validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
                 ),
                 const SizedBox(height: 16),
-                TextFormField(
-                  controller: _categoryController,
-                  decoration: const InputDecoration(labelText: 'Category *'),
-                  validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
-                ),
+                _isLoadingCategories
+                    ? const Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : DropdownButtonFormField<String>(
+                        value: _selectedCategoryId,
+                        decoration: const InputDecoration(labelText: 'Category *'),
+                        hint: const Text('Select a category'),
+                        isExpanded: true,
+                        validator: (v) => v == null ? 'Required' : null,
+                        items: _categories.map((category) {
+                          return DropdownMenuItem<String>(
+                            value: category.id,
+                            child: Text(category.name),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedCategoryId = value;
+                          });
+                        },
+                      ),
                 const SizedBox(height: 16),
                 Row(
                   children: [
@@ -432,7 +503,6 @@ class _ProductDialogState extends State<_ProductDialog> {
   void dispose() {
     _nameController.dispose();
     _barcodeController.dispose();
-    _categoryController.dispose();
     _priceController.dispose();
     _costController.dispose();
     _quantityController.dispose();
