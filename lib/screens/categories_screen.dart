@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../database/drift_database.dart';
-import '../models/category.dart';
+import '../models/category.dart' as models;
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});
@@ -82,7 +82,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     itemCount: _categoriesWithCount.length,
                     itemBuilder: (context, index) {
                       final data = _categoriesWithCount[index];
-                      final category = data['category'] as Category;
+                      final category = data['category'] as models.Category;
                       final productCount = data['productCount'] as int;
 
                       return Card(
