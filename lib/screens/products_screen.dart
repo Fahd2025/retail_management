@@ -48,7 +48,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   @override
   void dispose() {
-    _db.close();
+    // Don't close the singleton database instance
     super.dispose();
   }
 
@@ -528,7 +528,7 @@ class _ProductDialogState extends State<_ProductDialog> {
     _quantityController.dispose();
     _vatRateController.dispose();
     _descriptionController.dispose();
-    _db.close();
+    // Don't close the singleton database instance
     super.dispose();
   }
 }
