@@ -25,7 +25,10 @@ class Users extends Table {
 }
 
 // Categories table
-class Categories extends Table {
+class CategoriesTable extends Table {
+  @override
+  String get tableName => 'categories';
+
   TextColumn get id => text()();
   TextColumn get name => text()();
   TextColumn get description => text().nullable()();
@@ -48,7 +51,7 @@ class Products extends Table {
   RealColumn get price => real()();
   RealColumn get cost => real()();
   IntColumn get quantity => integer()();
-  TextColumn get categoryId => text().references(Categories, #id)();
+  TextColumn get categoryId => text().references(CategoriesTable, #id)();
   TextColumn get imageUrl => text().nullable()();
   BoolColumn get isActive => boolean()();
   RealColumn get vatRate => real()();
@@ -141,7 +144,7 @@ class CompanyInfoTable extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-@DriftDatabase(tables: [Users, Categories, Products, Customers, Sales, SaleItems, CompanyInfoTable])
+@DriftDatabase(tables: [Users, CategoriesTable, Products, Customers, Sales, SaleItems, CompanyInfoTable])
 class AppDatabase extends _$AppDatabase {
   // Singleton pattern
   static AppDatabase? _instance;
@@ -174,7 +177,7 @@ class AppDatabase extends _$AppDatabase {
     onUpgrade: (Migrator m, int from, int to) async {
       if (from == 1 && to == 2) {
         // Create categories table
-        await m.createTable(categories);
+        await m.createTable(categoriesTable);
 
         // Add default categories
         await _seedInitialCategories();
@@ -183,7 +186,7 @@ class AppDatabase extends _$AppDatabase {
         await m.addColumn(products, products.categoryId);
 
         // Migrate existing products to use the first category as default
-        final defaultCategory = await (select(categories)..limit(1)).getSingleOrNull();
+        final defaultCategory = await (select(categoriesTable)..limit(1)).getSingleOrNull();
         if (defaultCategory != null) {
           await customStatement(
             'UPDATE products SET category_id = ? WHERE category_id IS NULL',
@@ -656,7 +659,7 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
-  models.Category _categoryFromRow(Category row) {
+  models.Category _categoryFromRow(CategoriesTableData row) {
     return models.Category(
       id: row.id,
       name: row.name,
@@ -671,7 +674,7 @@ class AppDatabase extends _$AppDatabase {
 
   // Category operations
   Future<models.Category> createCategory(models.Category category) async {
-    await into(categories).insert(CategoriesCompanion(
+    await into(categoriesTable).insert(CategoriesTableCompanion(
       id: Value(category.id),
       name: Value(category.name),
       description: Value(category.description),
@@ -685,14 +688,14 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<models.Category?> getCategory(String id) async {
-    final query = select(categories)..where((tbl) => tbl.id.equals(id));
+    final query = select(categoriesTable)..where((tbl) => tbl.id.equals(id));
     final result = await query.getSingleOrNull();
     if (result == null) return null;
     return _categoryFromRow(result);
   }
 
   Future<List<models.Category>> getAllCategories({bool activeOnly = false}) async {
-    final query = select(categories)..orderBy([(t) => OrderingTerm(expression: t.name)]);
+    final query = select(categoriesTable)..orderBy([(t) => OrderingTerm(expression: t.name)]);
     if (activeOnly) {
       query.where((tbl) => tbl.isActive.equals(true));
     }
@@ -701,8 +704,8 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<int> updateCategory(models.Category category) async {
-    return (update(categories)..where((tbl) => tbl.id.equals(category.id))).write(
-      CategoriesCompanion(
+    return (update(categoriesTable)..where((tbl) => tbl.id.equals(category.id))).write(
+      CategoriesTableCompanion(
         name: Value(category.name),
         description: Value(category.description),
         imageUrl: Value(category.imageUrl),
@@ -714,7 +717,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<int> deleteCategory(String id) async {
-    return (delete(categories)..where((tbl) => tbl.id.equals(id))).go();
+    return (delete(categoriesTable)..where((tbl) => tbl.id.equals(id))).go();
   }
 
   // Get category with product count
