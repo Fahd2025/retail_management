@@ -208,5 +208,40 @@
   "inventoryReport": "Inventory Report",
   "customerReport": "Customer Report",
   "generateReport": "Generate Report",
-  "reportPeriod": "Report Period"
+  "reportPeriod": "Report Period",
+
+  "companyInformation": "Company Information",
+  "companyNameEnglish": "Company Name (English)",
+  "companyNameArabic": "Company Name (Arabic)",
+  "addressEnglish": "Address (English)",
+  "addressArabic": "Address (Arabic)",
+  "required": "Required",
+  "vatNumber": "VAT Number",
+  "crnNumber": "CRN Number",
+  "saveCompanyInformation": "Save Company Information",
+  "companyInfoSavedSuccess": "Company info saved successfully",
+  "errorLoadingCompanyInfo": "Error loading company info: {error}",
+  "@errorLoadingCompanyInfo": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorSaving": "Error saving: {error}",
+  "@errorSaving": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "changesAppliedImmediately": "Changes will be applied immediately",
+  "dataSynchronization": "Data Synchronization",
+  "syncDescription": "Sync your local data with the cloud when internet connection is available.",
+  "syncing": "Syncing...",
+  "syncNow": "Sync Now",
+  "version": "Version",
+  "appVersion": "1.0.0",
+  "posWithOfflineSupport": "Point of Sale with Offline Support"
 }
