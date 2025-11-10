@@ -63,10 +63,9 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (e) {
       if (mounted) {
+        setState(() => _isInitializing = false);
         final l10n = AppLocalizations.of(context)!;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.initializationError(e.toString()))),
-        );
+        _showNotification(l10n.initializationError(e.toString()), true);
       }
     } finally {
       if (mounted) {
@@ -106,10 +105,11 @@ class _LoginScreenState extends State<LoginScreen> {
       if (success) {
         _showNotification(l10n.loginSuccess(username), false);
       } else {
-        _showNotification(
-          authProvider.errorMessage ?? l10n.loginFailed,
-          true,
-        );
+        // Use localized error message instead of the hardcoded one from provider
+        final errorMsg = authProvider.errorMessage?.contains('Invalid') == true
+            ? l10n.invalidCredentials
+            : l10n.loginFailed;
+        _showNotification(errorMsg, true);
       }
     }
   }
@@ -408,62 +408,84 @@ class _LoginScreenState extends State<LoginScreen> {
               top: 0,
               left: 0,
               right: 0,
-              child: Material(
-                elevation: 4,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 16,
-                  ),
-                  decoration: BoxDecoration(
-                    color: _isNotificationError
-                        ? Colors.red.shade50
-                        : Colors.green.shade50,
-                    border: Border(
-                      bottom: BorderSide(
-                        color: _isNotificationError
-                            ? Colors.red.shade200
-                            : Colors.green.shade200,
-                        width: 2,
+              child: SafeArea(
+                child: Material(
+                  elevation: 4,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
+                    decoration: BoxDecoration(
+                      color: _isNotificationError
+                          ? (themeProvider.isDarkMode
+                              ? Colors.red.shade900.withOpacity(0.9)
+                              : Colors.red.shade50)
+                          : (themeProvider.isDarkMode
+                              ? Colors.green.shade900.withOpacity(0.9)
+                              : Colors.green.shade50),
+                      border: Border(
+                        bottom: BorderSide(
+                          color: _isNotificationError
+                              ? (themeProvider.isDarkMode
+                                  ? Colors.red.shade700
+                                  : Colors.red.shade200)
+                              : (themeProvider.isDarkMode
+                                  ? Colors.green.shade700
+                                  : Colors.green.shade200),
+                          width: 2,
+                        ),
                       ),
                     ),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        _isNotificationError
-                            ? Icons.error_outline
-                            : Icons.check_circle_outline,
-                        color: _isNotificationError
-                            ? Colors.red.shade700
-                            : Colors.green.shade700,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          _notificationMessage!,
-                          style: TextStyle(
-                            color: _isNotificationError
-                                ? Colors.red.shade900
-                                : Colors.green.shade900,
-                            fontWeight: FontWeight.w500,
+                    child: Row(
+                      children: [
+                        Icon(
+                          _isNotificationError
+                              ? Icons.error_outline
+                              : Icons.check_circle_outline,
+                          color: _isNotificationError
+                              ? (themeProvider.isDarkMode
+                                  ? Colors.red.shade300
+                                  : Colors.red.shade700)
+                              : (themeProvider.isDarkMode
+                                  ? Colors.green.shade300
+                                  : Colors.green.shade700),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            _notificationMessage!,
+                            style: TextStyle(
+                              color: _isNotificationError
+                                  ? (themeProvider.isDarkMode
+                                      ? Colors.red.shade100
+                                      : Colors.red.shade900)
+                                  : (themeProvider.isDarkMode
+                                      ? Colors.green.shade100
+                                      : Colors.green.shade900),
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.close,
-                          color: _isNotificationError
-                              ? Colors.red.shade700
-                              : Colors.green.shade700,
+                        IconButton(
+                          icon: Icon(
+                            Icons.close,
+                            color: _isNotificationError
+                                ? (themeProvider.isDarkMode
+                                    ? Colors.red.shade300
+                                    : Colors.red.shade700)
+                                : (themeProvider.isDarkMode
+                                    ? Colors.green.shade300
+                                    : Colors.green.shade700),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _notificationMessage = null;
+                            });
+                          },
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _notificationMessage = null;
-                          });
-                        },
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
