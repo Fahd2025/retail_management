@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:retail_management/generated/l10n/app_localizations.dart';
-import 'providers/auth_provider.dart';
-import 'providers/product_provider.dart';
-import 'providers/customer_provider.dart';
-import 'providers/sale_provider.dart';
-import 'providers/user_provider.dart';
-import 'providers/theme_provider.dart';
-import 'providers/locale_provider.dart';
+import 'blocs/auth/auth_bloc.dart';
+import 'blocs/auth/auth_event.dart';
+import 'blocs/auth/auth_state.dart';
+import 'blocs/product/product_bloc.dart';
+import 'blocs/customer/customer_bloc.dart';
+import 'blocs/sale/sale_bloc.dart';
+import 'blocs/user/user_bloc.dart';
+import 'blocs/theme/theme_bloc.dart';
+import 'blocs/theme/theme_event.dart';
+import 'blocs/theme/theme_state.dart';
+import 'blocs/locale/locale_bloc.dart';
+import 'blocs/locale/locale_event.dart';
+import 'blocs/locale/locale_state.dart';
 import 'config/app_theme.dart';
 import 'screens/login_screen.dart';
 import 'screens/dashboard_screen.dart';
@@ -17,70 +23,72 @@ import 'screens/dashboard_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize theme and locale providers
-  final themeProvider = ThemeProvider();
-  final localeProvider = LocaleProvider();
+  // Initialize theme and locale blocs
+  final themeBloc = ThemeBloc()..add(const InitializeThemeEvent());
+  final localeBloc = LocaleBloc()..add(const InitializeLocaleEvent());
 
-  await Future.wait([
-    themeProvider.initialize(),
-    localeProvider.initialize(),
-  ]);
+  // Wait for initialization
+  await Future.delayed(const Duration(milliseconds: 100));
 
   runApp(MyApp(
-    themeProvider: themeProvider,
-    localeProvider: localeProvider,
+    themeBloc: themeBloc,
+    localeBloc: localeBloc,
   ));
 }
 
 class MyApp extends StatelessWidget {
-  final ThemeProvider themeProvider;
-  final LocaleProvider localeProvider;
+  final ThemeBloc themeBloc;
+  final LocaleBloc localeBloc;
 
   const MyApp({
     super.key,
-    required this.themeProvider,
-    required this.localeProvider,
+    required this.themeBloc,
+    required this.localeBloc,
   });
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
+    return MultiBlocProvider(
       providers: [
-        ChangeNotifierProvider.value(value: themeProvider),
-        ChangeNotifierProvider.value(value: localeProvider),
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => ProductProvider()),
-        ChangeNotifierProvider(create: (_) => CustomerProvider()),
-        ChangeNotifierProvider(create: (_) => SaleProvider()),
-        ChangeNotifierProvider(create: (_) => UserProvider()),
+        BlocProvider.value(value: themeBloc),
+        BlocProvider.value(value: localeBloc),
+        BlocProvider(create: (_) => AuthBloc()),
+        BlocProvider(create: (_) => ProductBloc()),
+        BlocProvider(create: (_) => CustomerBloc()),
+        BlocProvider(create: (_) => SaleBloc()),
+        BlocProvider(create: (_) => UserBloc()),
       ],
-      child: Consumer2<ThemeProvider, LocaleProvider>(
-        builder: (context, themeProvider, localeProvider, child) {
-          return ScreenUtilInit(
-            designSize: const Size(1920, 1080), // Desktop/Tablet design size
-            minTextAdapt: true,
-            splitScreenMode: true,
-            builder: (context, child) {
-              return MaterialApp(
-                title: 'Retail Management System',
-                debugShowCheckedModeBanner: false,
+      child: BlocBuilder<ThemeBloc, ThemeState>(
+        builder: (context, themeState) {
+          return BlocBuilder<LocaleBloc, LocaleState>(
+            builder: (context, localeState) {
+              return ScreenUtilInit(
+                designSize: const Size(1920, 1080), // Desktop/Tablet design size
+                minTextAdapt: true,
+                splitScreenMode: true,
+                builder: (context, child) {
+                  return MaterialApp(
+                    title: 'Retail Management System',
+                    debugShowCheckedModeBanner: false,
 
-                // Theme configuration
-                theme: AppTheme.lightTheme,
-                darkTheme: AppTheme.darkTheme,
-                themeMode: themeProvider.themeMode,
+                    // Theme configuration
+                    theme: AppTheme.lightTheme,
+                    darkTheme: AppTheme.darkTheme,
+                    themeMode: themeState.themeMode,
 
-                // Localization configuration
-                locale: localeProvider.locale,
-                supportedLocales: LocaleProvider.supportedLocales,
-                localizationsDelegates: [
-                  AppLocalizations.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
+                    // Localization configuration
+                    locale: localeState.locale,
+                    supportedLocales: LocaleState.supportedLocales,
+                    localizationsDelegates: [
+                      AppLocalizations.delegate,
+                      GlobalMaterialLocalizations.delegate,
+                      GlobalWidgetsLocalizations.delegate,
+                      GlobalCupertinoLocalizations.delegate,
+                    ],
 
-                home: const AuthWrapper(),
+                    home: const AuthWrapper(),
+                  );
+                },
               );
             },
           );
@@ -105,15 +113,15 @@ class _AuthWrapperState extends State<AuthWrapper> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<AuthProvider>().checkAuthStatus();
+      context.read<AuthBloc>().add(const CheckAuthStatusEvent());
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProvider>(
-      builder: (context, authProvider, _) {
-        if (authProvider.isLoading) {
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, authState) {
+        if (authState is AuthLoading) {
           return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
@@ -121,11 +129,11 @@ class _AuthWrapperState extends State<AuthWrapper> {
           );
         }
 
-        if (authProvider.isLoggedIn) {
+        if (authState is Authenticated) {
           return const DashboardScreen();
         }
 
-        // Use key to preserve LoginScreen state when Consumer rebuilds
+        // Use key to preserve LoginScreen state when BlocBuilder rebuilds
         return LoginScreen(key: _loginScreenKey);
       },
     );

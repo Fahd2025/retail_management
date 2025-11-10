@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:retail_management/generated/l10n/app_localizations.dart';
-import '../providers/user_provider.dart';
-import '../providers/auth_provider.dart';
+import '../blocs/user/user_bloc.dart';
+import '../blocs/user/user_event.dart';
+import '../blocs/user/user_state.dart';
+import '../blocs/auth/auth_bloc.dart';
+import '../blocs/auth/auth_state.dart';
 import '../models/user.dart';
 
 class UsersScreen extends StatefulWidget {
@@ -20,7 +23,7 @@ class _UsersScreenState extends State<UsersScreen> {
   }
 
   Future<void> _loadUsers() async {
-    await context.read<UserProvider>().loadUsers();
+    context.read<UserBloc>().add(const LoadUsersEvent());
   }
 
   Future<void> showUserDialog([User? user]) async {
@@ -32,11 +35,10 @@ class _UsersScreenState extends State<UsersScreen> {
 
   Future<void> _deleteUser(
     BuildContext context,
-    UserProvider provider,
     User user,
   ) async {
-    final authProvider = context.read<AuthProvider>();
-    final currentUser = authProvider.currentUser;
+    final authState = context.read<AuthBloc>().state;
+    final currentUser = authState is AuthAuthenticated ? authState.user : null;
 
     // Prevent deleting self
     if (currentUser?.id == user.id) {
@@ -75,18 +77,7 @@ class _UsersScreenState extends State<UsersScreen> {
     );
 
     if (confirm == true && mounted) {
-      final success = await provider.deleteUser(user.id);
-      if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(success
-                ? l10n.userDeletedSuccess
-                : l10n.failedToDeleteUser),
-            backgroundColor: success ? Colors.green : Colors.red,
-          ),
-        );
-      }
+      context.read<UserBloc>().add(DeleteUserEvent(user.id));
     }
   }
 
@@ -119,13 +110,37 @@ class _UsersScreenState extends State<UsersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<UserProvider>(
-        builder: (context, provider, _) {
-          if (provider.isLoading) {
+      body: BlocConsumer<UserBloc, UserState>(
+        listener: (context, state) {
+          if (state is UserOperationSuccess) {
+            final l10n = AppLocalizations.of(context)!;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.green,
+              ),
+            );
+            // Reload users after successful operation
+            context.read<UserBloc>().add(const LoadUsersEvent());
+          } else if (state is UserError) {
+            final l10n = AppLocalizations.of(context)!;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is UserLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (provider.users.isEmpty) {
+          final users = state is UserLoaded ? state.users : <User>[];
+          final userSalesStats = state is UserLoaded ? state.userSalesStats : <String, Map<String, dynamic>>{};
+
+          if (users.isEmpty && state is! UserLoading) {
             final l10n = AppLocalizations.of(context)!;
             return Center(
               child: Column(
@@ -166,8 +181,8 @@ class _UsersScreenState extends State<UsersScreen> {
                         DataColumn(label: Text(l10n.totalSales)),
                         DataColumn(label: Text(l10n.actions)),
                       ],
-                      rows: provider.users.map((user) {
-                        final stats = provider.userSalesStats[user.id] ?? {};
+                      rows: users.map((user) {
+                        final stats = userSalesStats[user.id] ?? {};
                         final invoiceCount = stats['invoiceCount'] ?? 0;
                         final totalSales = stats['totalSales'] ?? 0.0;
 
@@ -214,7 +229,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                   icon: const Icon(Icons.delete,
                                       size: 20, color: Colors.red),
                                   onPressed: () =>
-                                      _deleteUser(context, provider, user),
+                                      _deleteUser(context, user),
                                 ),
                               ],
                             ),
@@ -228,10 +243,10 @@ class _UsersScreenState extends State<UsersScreen> {
                 // Mobile: Card layout
                 return ListView.builder(
                   padding: const EdgeInsets.all(16),
-                  itemCount: provider.users.length,
+                  itemCount: users.length,
                   itemBuilder: (context, index) {
-                    final user = provider.users[index];
-                    final stats = provider.userSalesStats[user.id] ?? {};
+                    final user = users[index];
+                    final stats = userSalesStats[user.id] ?? {};
                     final invoiceCount = stats['invoiceCount'] ?? 0;
                     final totalSales = stats['totalSales'] ?? 0.0;
 
@@ -267,7 +282,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                       icon: const Icon(Icons.delete,
                                           color: Colors.red),
                                       onPressed: () =>
-                                          _deleteUser(context, provider, user),
+                                          _deleteUser(context, user),
                                     ),
                                   ],
                                 ),
@@ -345,17 +360,16 @@ class _UserDialogState extends State<_UserDialog> {
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final provider = context.read<UserProvider>();
-    bool success;
-
     if (widget.user == null) {
       // Create new user
-      success = await provider.addUser(
-        username: _usernameController.text.trim(),
-        password: _passwordController.text,
-        fullName: _fullNameController.text.trim(),
-        role: _selectedRole,
-        isActive: _isActive,
+      context.read<UserBloc>().add(
+        AddUserEvent(
+          username: _usernameController.text.trim(),
+          password: _passwordController.text,
+          fullName: _fullNameController.text.trim(),
+          role: _selectedRole,
+          isActive: _isActive,
+        ),
       );
     } else {
       // Update existing user
@@ -368,32 +382,11 @@ class _UserDialogState extends State<_UserDialog> {
         role: _selectedRole,
         isActive: _isActive,
       );
-      success = await provider.updateUser(updatedUser);
+      context.read<UserBloc>().add(UpdateUserEvent(updatedUser));
     }
 
     if (mounted) {
-      if (success) {
-        Navigator.pop(context);
-        final l10n = AppLocalizations.of(context)!;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(widget.user == null
-                ? l10n.userCreatedSuccess
-                : l10n.userUpdatedSuccess),
-            backgroundColor: Colors.green,
-          ),
-        );
-      } else {
-        final l10n = AppLocalizations.of(context)!;
-        final errorMessage = provider.errorMessage ?? l10n.anErrorOccurred;
-        print(errorMessage);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMessage),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      Navigator.pop(context);
     }
   }
 

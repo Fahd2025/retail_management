@@ -1,12 +1,19 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:retail_management/generated/l10n/app_localizations.dart';
-import '../providers/auth_provider.dart';
-import '../providers/product_provider.dart';
-import '../providers/customer_provider.dart';
-import '../providers/sale_provider.dart';
-import '../providers/user_provider.dart';
+import '../blocs/auth/auth_bloc.dart';
+import '../blocs/auth/auth_event.dart';
+import '../blocs/auth/auth_state.dart';
+import '../blocs/product/product_bloc.dart';
+import '../blocs/product/product_event.dart';
+import '../blocs/customer/customer_bloc.dart';
+import '../blocs/customer/customer_event.dart';
+import '../blocs/sale/sale_bloc.dart';
+import '../blocs/sale/sale_event.dart';
+import '../blocs/sale/sale_state.dart';
+import '../blocs/user/user_bloc.dart';
+import '../blocs/user/user_event.dart';
 import '../models/user.dart';
 import '../models/company_info.dart';
 import '../database/drift_database.dart';
@@ -99,27 +106,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // Build AppBar based on selected screen
     switch (_selectedIndex) {
       case 0: // Cashier Screen
-        final saleProvider = context.watch<SaleProvider>();
-        return AppBar(
-          title: Text(l10n.pointOfSale),
-          backgroundColor: Colors.blue.shade700,
-          foregroundColor: Colors.white,
-          actions: [
-            // Cart icon with badge
-            Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: Badge(
-                label: Text('${saleProvider.cartItemCount}'),
-                isLabelVisible: saleProvider.cartItemCount > 0,
-                child: IconButton(
-                  icon: const Icon(Icons.shopping_cart),
-                  onPressed: () {
-                    (_cashierKey.currentState as dynamic)?.toggleCart();
-                  },
+        return BlocBuilder<SaleBloc, SaleState>(
+          builder: (context, saleState) {
+            int cartItemCount = 0;
+            if (saleState is SaleLoaded) {
+              cartItemCount = saleState.cartItemCount;
+            } else if (saleState is SaleError) {
+              cartItemCount = saleState.cartItemCount;
+            } else if (saleState is SaleOperationSuccess) {
+              cartItemCount = saleState.cartItemCount;
+            }
+
+            return AppBar(
+              title: Text(l10n.pointOfSale),
+              backgroundColor: Colors.blue.shade700,
+              foregroundColor: Colors.white,
+              actions: [
+                // Cart icon with badge
+                Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: Badge(
+                    label: Text('$cartItemCount'),
+                    isLabelVisible: cartItemCount > 0,
+                    child: IconButton(
+                      icon: const Icon(Icons.shopping_cart),
+                      onPressed: () {
+                        (_cashierKey.currentState as dynamic)?.toggleCart();
+                      },
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ],
+              ],
+            );
+          },
         );
       case 1: // Products or Sales Screen (depends on user role)
         final label = navItems[_selectedIndex]['label'] as String;
@@ -139,7 +158,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               IconButton(
                 icon: const Icon(Icons.refresh),
                 onPressed: () {
-                  context.read<ProductProvider>().loadProducts();
+                  context.read<ProductBloc>().add(const LoadProductsEvent());
                 },
                 tooltip: l10n.refresh,
               ),
@@ -155,7 +174,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               IconButton(
                 icon: const Icon(Icons.refresh),
                 onPressed: () {
-                  context.read<SaleProvider>().loadSales();
+                  context.read<SaleBloc>().add(const LoadSalesEvent());
                 },
                 tooltip: l10n.refresh,
               ),
@@ -199,7 +218,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: () {
-                context.read<CustomerProvider>().loadCustomers();
+                context.read<CustomerBloc>().add(const LoadCustomersEvent());
               },
             ),
           ],
@@ -213,7 +232,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: () {
-                context.read<SaleProvider>().loadSales();
+                context.read<SaleBloc>().add(const LoadSalesEvent());
               },
             ),
           ],
@@ -234,7 +253,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: () {
-                context.read<UserProvider>().loadUsers();
+                context.read<UserBloc>().add(const LoadUsersEvent());
               },
               tooltip: l10n.refresh,
             ),
@@ -322,15 +341,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = context.watch<AuthProvider>();
-    final user = authProvider.currentUser;
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, authState) {
+        if (authState is! Authenticated) {
+          return const SizedBox();
+        }
 
-    if (user == null) return const SizedBox();
+        final user = authState.user;
+        final screens = _getScreens(user.role);
+        final navItems = _getNavigationItems(user.role, context);
 
-    final screens = _getScreens(user.role);
-    final navItems = _getNavigationItems(user.role, context);
-
-    return Scaffold(
+        return Scaffold(
       appBar: _buildAppBar(navItems, context),
       drawer: Drawer(
         child: Column(
@@ -404,7 +425,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                 if (confirm == true && mounted) {
                   Navigator.pop(context); // Close drawer
-                  await authProvider.logout();
+                  context.read<AuthBloc>().add(const LogoutEvent());
                 }
               },
             ),
@@ -413,6 +434,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
       body: screens[_selectedIndex],
+    );
+      },
     );
   }
 }

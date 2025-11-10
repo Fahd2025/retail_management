@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:retail_management/generated/l10n/app_localizations.dart';
-import '../providers/customer_provider.dart';
-import '../providers/sale_provider.dart';
+import '../blocs/customer/customer_bloc.dart';
+import '../blocs/customer/customer_event.dart';
+import '../blocs/customer/customer_state.dart';
+import '../blocs/sale/sale_bloc.dart';
 import '../models/customer.dart' as models;
 import '../models/company_info.dart';
 import '../database/drift_database.dart';
@@ -24,7 +26,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
   }
 
   Future<void> _loadCustomers() async {
-    await context.read<CustomerProvider>().loadCustomers();
+    context.read<CustomerBloc>().add(const LoadCustomersEvent());
   }
 
   Future<void> showCustomerDialog([models.Customer? customer]) async {
@@ -45,13 +47,22 @@ class _CustomersScreenState extends State<CustomersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<CustomerProvider>(
-        builder: (context, provider, _) {
-          if (provider.isLoading) {
+      body: BlocBuilder<CustomerBloc, CustomerState>(
+        builder: (context, state) {
+          if (state is CustomerLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (provider.customers.isEmpty) {
+          List<models.Customer> customers = [];
+          if (state is CustomerLoaded) {
+            customers = state.customers;
+          } else if (state is CustomerError) {
+            customers = state.customers;
+          } else if (state is CustomerOperationSuccess) {
+            customers = state.customers;
+          }
+
+          if (customers.isEmpty) {
             final l10n = AppLocalizations.of(context)!;
             return Center(
               child: Column(
@@ -73,9 +84,9 @@ class _CustomersScreenState extends State<CustomersScreen> {
 
           return ListView.builder(
             padding: const EdgeInsets.all(16),
-            itemCount: provider.customers.length,
+            itemCount: customers.length,
             itemBuilder: (context, index) {
-              final customer = provider.customers[index];
+              final customer = customers[index];
               return Card(
                 margin: const EdgeInsets.only(bottom: 8),
                 child: ExpansionTile(
@@ -97,9 +108,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                             .vatLabel2(customer.vatNumber!)),
                       const SizedBox(height: 4),
                       FutureBuilder<Map<String, dynamic>>(
-                        future: context
-                            .read<SaleProvider>()
-                            .getCustomerStatistics(customer.id),
+                        future: AppDatabase().getCustomerSalesStatistics(customer.id),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             final stats = snapshot.data!;
@@ -164,7 +173,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           );
 
                           if (confirm == true && mounted) {
-                            await provider.deleteCustomer(customer.id);
+                            context.read<CustomerBloc>().add(DeleteCustomerEvent(customer.id));
                           }
                         },
                       ),
@@ -237,7 +246,7 @@ class _CustomerDialogState extends State<_CustomerDialog> {
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final provider = context.read<CustomerProvider>();
+    final bloc = context.read<CustomerBloc>();
 
     final saudiAddress = models.SaudiAddress(
       buildingNumber:
@@ -255,9 +264,8 @@ class _CustomerDialogState extends State<_CustomerDialog> {
           : _additionalNumberController.text,
     );
 
-    bool success;
     if (widget.customer == null) {
-      success = await provider.addCustomer(
+      bloc.add(AddCustomerEvent(
         name: _nameController.text,
         email: _emailController.text.isEmpty ? null : _emailController.text,
         phone: _phoneController.text.isEmpty ? null : _phoneController.text,
@@ -268,9 +276,9 @@ class _CustomerDialogState extends State<_CustomerDialog> {
             ? null
             : _crnNumberController.text,
         saudiAddress: saudiAddress,
-      );
+      ));
     } else {
-      success = await provider.updateCustomer(
+      bloc.add(UpdateCustomerEvent(
         widget.customer!.copyWith(
           name: _nameController.text,
           email: _emailController.text.isEmpty ? null : _emailController.text,
@@ -283,10 +291,10 @@ class _CustomerDialogState extends State<_CustomerDialog> {
               : _crnNumberController.text,
           saudiAddress: saudiAddress,
         ),
-      );
+      ));
     }
 
-    if (success && mounted) {
+    if (mounted) {
       Navigator.pop(context);
     }
   }
@@ -516,7 +524,6 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
 
     try {
       final db = AppDatabase();
-      final saleProvider = context.read<SaleProvider>();
       final exportService = CustomerInvoiceExportService();
       final l10n = AppLocalizations.of(context)!;
 
@@ -532,7 +539,7 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
       }
 
       // Get sales for customer with date filter
-      final sales = await saleProvider.getCustomerSales(
+      final sales = await db.getSalesByCustomer(
         widget.customer.id,
         startDate: _startDate,
         endDate: _endDate,
@@ -653,14 +660,12 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
             const SizedBox(height: 16),
             FutureBuilder<List<dynamic>>(
               future: Future.wait([
-                context.read<SaleProvider>().getCustomerSales(
+                AppDatabase().getSalesByCustomer(
                       widget.customer.id,
                       startDate: _startDate,
                       endDate: _endDate,
                     ),
-                context
-                    .read<SaleProvider>()
-                    .getCustomerStatistics(widget.customer.id),
+                AppDatabase().getCustomerSalesStatistics(widget.customer.id),
               ]),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {

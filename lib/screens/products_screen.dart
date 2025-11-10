@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:retail_management/generated/l10n/app_localizations.dart';
-import '../providers/product_provider.dart';
+import '../blocs/product/product_bloc.dart';
+import '../blocs/product/product_event.dart';
+import '../blocs/product/product_state.dart';
 import '../models/product.dart' as models;
 import '../models/category.dart';
 import '../database/drift_database.dart';
@@ -25,7 +27,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Future<void> _loadProducts() async {
-    await context.read<ProductProvider>().loadProducts();
+    context.read<ProductBloc>().add(const LoadProductsEvent());
   }
 
   Future<void> _loadCategories() async {
@@ -62,7 +64,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   Future<void> _deleteProduct(
     BuildContext context,
-    ProductProvider provider,
     models.Product product,
   ) async {
     final l10n = AppLocalizations.of(context)!;
@@ -88,7 +89,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
 
     if (confirm == true && mounted) {
-      await provider.deleteProduct(product.id);
+      context.read<ProductBloc>().add(DeleteProductEvent(product.id));
     }
   }
 
@@ -121,13 +122,22 @@ class _ProductsScreenState extends State<ProductsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<ProductProvider>(
-        builder: (context, provider, _) {
-          if (provider.isLoading) {
+      body: BlocBuilder<ProductBloc, ProductState>(
+        builder: (context, state) {
+          if (state is ProductLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (provider.products.isEmpty) {
+          List<models.Product> products = [];
+          if (state is ProductLoaded) {
+            products = state.products;
+          } else if (state is ProductError) {
+            products = state.products;
+          } else if (state is ProductOperationSuccess) {
+            products = state.products;
+          }
+
+          if (products.isEmpty) {
             final l10n = AppLocalizations.of(context)!;
             return Center(
               child: Column(
@@ -170,7 +180,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         DataColumn(label: Text(l10n.vat)),
                         DataColumn(label: Text(l10n.actions)),
                       ],
-                      rows: provider.products.map((product) {
+                      rows: products.map((product) {
                         return DataRow(cells: [
                           DataCell(Text(product.name)),
                           DataCell(Text(product.barcode)),
@@ -194,7 +204,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   icon: const Icon(Icons.delete,
                                       size: 20, color: Colors.red),
                                   onPressed: () => _deleteProduct(
-                                      context, provider, product),
+                                      context, product),
                                 ),
                               ],
                             ),
@@ -208,9 +218,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 // Mobile: Card layout
                 return ListView.builder(
                   padding: const EdgeInsets.all(16),
-                  itemCount: provider.products.length,
+                  itemCount: products.length,
                   itemBuilder: (context, index) {
-                    final product = provider.products[index];
+                    final product = products[index];
                     return Card(
                       margin: const EdgeInsets.only(bottom: 12),
                       elevation: 2,
@@ -244,7 +254,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                       icon: const Icon(Icons.delete,
                                           color: Colors.red),
                                       onPressed: () => _deleteProduct(
-                                          context, provider, product),
+                                          context, product),
                                     ),
                                   ],
                                 ),
@@ -362,11 +372,8 @@ class _ProductDialogState extends State<_ProductDialog> {
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final provider = context.read<ProductProvider>();
-    bool success;
-
     if (widget.product == null) {
-      success = await provider.addProduct(
+      context.read<ProductBloc>().add(AddProductEvent(
         name: _nameController.text,
         barcode: _barcodeController.text,
         category: _selectedCategoryId!,
@@ -377,9 +384,9 @@ class _ProductDialogState extends State<_ProductDialog> {
         description: _descriptionController.text.isEmpty
             ? null
             : _descriptionController.text,
-      );
+      ));
     } else {
-      success = await provider.updateProduct(
+      context.read<ProductBloc>().add(UpdateProductEvent(
         widget.product!.copyWith(
           name: _nameController.text,
           barcode: _barcodeController.text,
@@ -392,10 +399,12 @@ class _ProductDialogState extends State<_ProductDialog> {
               ? null
               : _descriptionController.text,
         ),
-      );
+      ));
     }
 
-    if (success && mounted) {
+    // Wait for operation to complete
+    await Future.delayed(const Duration(milliseconds: 100));
+    if (mounted) {
       Navigator.pop(context);
     }
   }

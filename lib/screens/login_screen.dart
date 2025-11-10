@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:retail_management/generated/l10n/app_localizations.dart';
-import '../providers/auth_provider.dart';
-import '../providers/theme_provider.dart';
-import '../providers/locale_provider.dart';
+import '../blocs/auth/auth_bloc.dart';
+import '../blocs/auth/auth_event.dart';
+import '../blocs/auth/auth_state.dart';
+import '../blocs/theme/theme_bloc.dart';
+import '../blocs/theme/theme_event.dart';
+import '../blocs/theme/theme_state.dart';
+import '../blocs/locale/locale_bloc.dart';
+import '../blocs/locale/locale_event.dart';
+import '../blocs/locale/locale_state.dart';
 import '../database/drift_database.dart' hide User;
 import '../models/user.dart';
 import 'package:uuid/uuid.dart';
@@ -94,42 +100,33 @@ class _LoginScreenState extends State<LoginScreen> {
     // Prevent default form submission (important for web)
     if (!_formKey.currentState!.validate()) return;
 
-    final authProvider = context.read<AuthProvider>();
     final username = _usernameController.text.trim();
+    final password = _passwordController.text;
 
-    try {
-      final success = await authProvider.login(
-        username,
-        _passwordController.text,
-      );
-
-      if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
-        if (success) {
-          _showNotification(l10n.loginSuccess(username), false);
-        } else {
-          // Use localized error message instead of the hardcoded one from provider
-          final errorMsg = authProvider.errorMessage?.contains('Invalid') == true
-              ? l10n.invalidCredentials
-              : l10n.loginFailed;
-          _showNotification(errorMsg, true);
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
-        _showNotification(l10n.loginFailed, true);
-      }
-    }
+    context.read<AuthBloc>().add(LoginEvent(
+      username: username,
+      password: password,
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final themeProvider = context.watch<ThemeProvider>();
-    final localeProvider = context.watch<LocaleProvider>();
 
-    return Scaffold(
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is Authenticated) {
+          final username = state.user.username;
+          _showNotification(l10n.loginSuccess(username), false);
+        } else if (state is AuthError) {
+          // Use localized error message instead of the hardcoded one from bloc
+          final errorMsg = state.message.contains('Invalid')
+              ? l10n.invalidCredentials
+              : l10n.loginFailed;
+          _showNotification(errorMsg, true);
+        }
+      },
+      child: Scaffold(
       body: Stack(
         children: [
           Container(
@@ -158,65 +155,73 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         // Theme and Language Switchers Row
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            // Theme Switcher
-                            Tooltip(
-                              message: l10n.switchTheme,
-                              child: IconButton(
-                                icon: Icon(
-                                  themeProvider.isDarkMode
-                                      ? Icons.light_mode
-                                      : Icons.dark_mode,
-                                ),
-                                onPressed: () async {
-                                  await themeProvider.toggleTheme();
-                                },
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            // Language Switcher
-                            Tooltip(
-                              message: l10n.switchLanguage,
-                              child: PopupMenuButton<String>(
-                                icon: const Icon(Icons.language),
-                                onSelected: (String value) async {
-                                  if (value == 'en') {
-                                    await localeProvider.setEnglish();
-                                  } else {
-                                    await localeProvider.setArabic();
-                                  }
-                                },
-                                itemBuilder: (BuildContext context) => [
-                                  PopupMenuItem(
-                                    value: 'en',
-                                    child: Row(
-                                      children: [
-                                        if (localeProvider.isEnglish)
-                                          const Icon(Icons.check, size: 18),
-                                        if (localeProvider.isEnglish)
-                                          const SizedBox(width: 8),
-                                        const Text('English'),
-                                      ],
+                        BlocBuilder<ThemeBloc, ThemeState>(
+                          builder: (context, themeState) {
+                            return BlocBuilder<LocaleBloc, LocaleState>(
+                              builder: (context, localeState) {
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    // Theme Switcher
+                                    Tooltip(
+                                      message: l10n.switchTheme,
+                                      child: IconButton(
+                                        icon: Icon(
+                                          themeState.isDarkMode
+                                              ? Icons.light_mode
+                                              : Icons.dark_mode,
+                                        ),
+                                        onPressed: () {
+                                          context.read<ThemeBloc>().add(const ToggleThemeEvent());
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                  PopupMenuItem(
-                                    value: 'ar',
-                                    child: Row(
-                                      children: [
-                                        if (localeProvider.isArabic)
-                                          const Icon(Icons.check, size: 18),
-                                        if (localeProvider.isArabic)
-                                          const SizedBox(width: 8),
-                                        const Text('العربية'),
-                                      ],
+                                    const SizedBox(width: 8),
+                                    // Language Switcher
+                                    Tooltip(
+                                      message: l10n.switchLanguage,
+                                      child: PopupMenuButton<String>(
+                                        icon: const Icon(Icons.language),
+                                        onSelected: (String value) {
+                                          if (value == 'en') {
+                                            context.read<LocaleBloc>().add(const SetEnglishEvent());
+                                          } else {
+                                            context.read<LocaleBloc>().add(const SetArabicEvent());
+                                          }
+                                        },
+                                        itemBuilder: (BuildContext context) => [
+                                          PopupMenuItem(
+                                            value: 'en',
+                                            child: Row(
+                                              children: [
+                                                if (localeState.isEnglish)
+                                                  const Icon(Icons.check, size: 18),
+                                                if (localeState.isEnglish)
+                                                  const SizedBox(width: 8),
+                                                const Text('English'),
+                                              ],
+                                            ),
+                                          ),
+                                          PopupMenuItem(
+                                            value: 'ar',
+                                            child: Row(
+                                              children: [
+                                                if (localeState.isArabic)
+                                                  const Icon(Icons.check, size: 18),
+                                                if (localeState.isArabic)
+                                                  const SizedBox(width: 8),
+                                                const Text('العربية'),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                                  ],
+                                );
+                              },
+                            );
+                          },
                         ),
                         const SizedBox(height: 8),
                     // Logo/Icon
@@ -378,12 +383,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             // Login button
                             SizedBox(
                               width: double.infinity,
-                              child: Consumer<AuthProvider>(
-                                builder: (context, authProvider, _) {
+                              child: BlocBuilder<AuthBloc, AuthState>(
+                                builder: (context, state) {
+                                  final isLoading = state is AuthLoading;
                                   return ElevatedButton(
-                                    onPressed: authProvider.isLoading
-                                        ? null
-                                        : _login,
+                                    onPressed: isLoading ? null : _login,
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.blue.shade700,
                                       foregroundColor: Colors.white,
@@ -391,7 +395,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         vertical: 16,
                                       ),
                                     ),
-                                    child: authProvider.isLoading
+                                    child: isLoading
                                         ? const SizedBox(
                                             height: 20,
                                             width: 20,
@@ -424,93 +428,98 @@ class _LoginScreenState extends State<LoginScreen> {
 
           // Notification Bar
           if (_notificationMessage != null)
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: SafeArea(
-                child: Material(
-                  elevation: 4,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 16,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _isNotificationError
-                          ? (themeProvider.isDarkMode
-                              ? Colors.red.shade900.withOpacity(0.9)
-                              : Colors.red.shade50)
-                          : (themeProvider.isDarkMode
-                              ? Colors.green.shade900.withOpacity(0.9)
-                              : Colors.green.shade50),
-                      border: Border(
-                        bottom: BorderSide(
-                          color: _isNotificationError
-                              ? (themeProvider.isDarkMode
-                                  ? Colors.red.shade700
-                                  : Colors.red.shade200)
-                              : (themeProvider.isDarkMode
-                                  ? Colors.green.shade700
-                                  : Colors.green.shade200),
-                          width: 2,
+            BlocBuilder<ThemeBloc, ThemeState>(
+              builder: (context, themeState) {
+                return Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: SafeArea(
+                    child: Material(
+                      elevation: 4,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 16,
                         ),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          _isNotificationError
-                              ? Icons.error_outline
-                              : Icons.check_circle_outline,
+                        decoration: BoxDecoration(
                           color: _isNotificationError
-                              ? (themeProvider.isDarkMode
-                                  ? Colors.red.shade300
-                                  : Colors.red.shade700)
-                              : (themeProvider.isDarkMode
-                                  ? Colors.green.shade300
-                                  : Colors.green.shade700),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            _notificationMessage!,
-                            style: TextStyle(
+                              ? (themeState.isDarkMode
+                                  ? Colors.red.shade900.withOpacity(0.9)
+                                  : Colors.red.shade50)
+                              : (themeState.isDarkMode
+                                  ? Colors.green.shade900.withOpacity(0.9)
+                                  : Colors.green.shade50),
+                          border: Border(
+                            bottom: BorderSide(
                               color: _isNotificationError
-                                  ? (themeProvider.isDarkMode
-                                      ? Colors.red.shade100
-                                      : Colors.red.shade900)
-                                  : (themeProvider.isDarkMode
-                                      ? Colors.green.shade100
-                                      : Colors.green.shade900),
-                              fontWeight: FontWeight.w500,
+                                  ? (themeState.isDarkMode
+                                      ? Colors.red.shade700
+                                      : Colors.red.shade200)
+                                  : (themeState.isDarkMode
+                                      ? Colors.green.shade700
+                                      : Colors.green.shade200),
+                              width: 2,
                             ),
                           ),
                         ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.close,
-                            color: _isNotificationError
-                                ? (themeProvider.isDarkMode
-                                    ? Colors.red.shade300
-                                    : Colors.red.shade700)
-                                : (themeProvider.isDarkMode
-                                    ? Colors.green.shade300
-                                    : Colors.green.shade700),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _notificationMessage = null;
-                            });
-                          },
+                        child: Row(
+                          children: [
+                            Icon(
+                              _isNotificationError
+                                  ? Icons.error_outline
+                                  : Icons.check_circle_outline,
+                              color: _isNotificationError
+                                  ? (themeState.isDarkMode
+                                      ? Colors.red.shade300
+                                      : Colors.red.shade700)
+                                  : (themeState.isDarkMode
+                                      ? Colors.green.shade300
+                                      : Colors.green.shade700),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                _notificationMessage!,
+                                style: TextStyle(
+                                  color: _isNotificationError
+                                      ? (themeState.isDarkMode
+                                          ? Colors.red.shade100
+                                          : Colors.red.shade900)
+                                      : (themeState.isDarkMode
+                                          ? Colors.green.shade100
+                                          : Colors.green.shade900),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                Icons.close,
+                                color: _isNotificationError
+                                    ? (themeState.isDarkMode
+                                        ? Colors.red.shade300
+                                        : Colors.red.shade700)
+                                    : (themeState.isDarkMode
+                                        ? Colors.green.shade300
+                                        : Colors.green.shade700),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _notificationMessage = null;
+                                });
+                              },
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
         ],
+      ),
       ),
     );
   }
