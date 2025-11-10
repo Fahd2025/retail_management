@@ -304,7 +304,8 @@ class AppTheme {
           elevation: 2,
           backgroundColor: DarkThemeColors.primary,
           foregroundColor: DarkThemeColors.onPrimary,
-          disabledBackgroundColor: DarkThemeColors.surfaceVariant.withOpacity(0.12),
+          disabledBackgroundColor:
+              DarkThemeColors.surfaceVariant.withOpacity(0.12),
           disabledForegroundColor: DarkThemeColors.textDisabled,
           shadowColor: DarkThemeColors.shadow,
           padding: const EdgeInsets.symmetric(
@@ -453,7 +454,8 @@ class AppTheme {
         selectedItemColor: DarkThemeColors.primary,
         unselectedItemColor: DarkThemeColors.onSurfaceVariant,
         selectedLabelStyle: AppTypography.labelSmall(DarkThemeColors.primary),
-        unselectedLabelStyle: AppTypography.labelSmall(DarkThemeColors.onSurfaceVariant),
+        unselectedLabelStyle:
+            AppTypography.labelSmall(DarkThemeColors.onSurfaceVariant),
         showSelectedLabels: true,
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,
@@ -471,8 +473,10 @@ class AppTheme {
           color: DarkThemeColors.onSurfaceVariant,
           size: 24,
         ),
-        selectedLabelTextStyle: AppTypography.labelMedium(DarkThemeColors.primary),
-        unselectedLabelTextStyle: AppTypography.labelMedium(DarkThemeColors.onSurfaceVariant),
+        selectedLabelTextStyle:
+            AppTypography.labelMedium(DarkThemeColors.primary),
+        unselectedLabelTextStyle:
+            AppTypography.labelMedium(DarkThemeColors.onSurfaceVariant),
         elevation: 0,
       ),
 
@@ -484,8 +488,10 @@ class AppTheme {
         iconColor: DarkThemeColors.onSurfaceVariant,
         textColor: DarkThemeColors.onSurface,
         titleTextStyle: AppTypography.bodyLarge(DarkThemeColors.onSurface),
-        subtitleTextStyle: AppTypography.bodyMedium(DarkThemeColors.onSurfaceVariant),
-        leadingAndTrailingTextStyle: AppTypography.labelSmall(DarkThemeColors.onSurfaceVariant),
+        subtitleTextStyle:
+            AppTypography.bodyMedium(DarkThemeColors.onSurfaceVariant),
+        leadingAndTrailingTextStyle:
+            AppTypography.labelSmall(DarkThemeColors.onSurfaceVariant),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 8,
@@ -504,7 +510,8 @@ class AppTheme {
         secondarySelectedColor: DarkThemeColors.secondaryContainer,
         shadowColor: DarkThemeColors.shadow,
         labelStyle: AppTypography.labelMedium(DarkThemeColors.onSurfaceVariant),
-        secondaryLabelStyle: AppTypography.labelMedium(DarkThemeColors.onSurfaceVariant),
+        secondaryLabelStyle:
+            AppTypography.labelMedium(DarkThemeColors.onSurfaceVariant),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         labelPadding: const EdgeInsets.symmetric(horizontal: 8),
         shape: RoundedRectangleBorder(
@@ -527,7 +534,8 @@ class AppTheme {
           return Colors.transparent;
         }),
         dataTextStyle: AppTypography.bodyMedium(DarkThemeColors.onSurface),
-        headingTextStyle: AppTypography.titleSmall(DarkThemeColors.onSurfaceVariant),
+        headingTextStyle:
+            AppTypography.titleSmall(DarkThemeColors.onSurfaceVariant),
         headingRowColor: MaterialStateProperty.all(
           DarkThemeColors.surfaceVariant.withOpacity(0.5),
         ),
@@ -562,7 +570,8 @@ class AppTheme {
           borderRadius: BorderRadius.circular(28),
         ),
         titleTextStyle: AppTypography.headlineSmall(DarkThemeColors.onSurface),
-        contentTextStyle: AppTypography.bodyMedium(DarkThemeColors.onSurfaceVariant),
+        contentTextStyle:
+            AppTypography.bodyMedium(DarkThemeColors.onSurfaceVariant),
         actionsPadding: const EdgeInsets.all(24),
       ),
 
@@ -676,7 +685,8 @@ class AppTheme {
         thumbColor: DarkThemeColors.primary,
         overlayColor: DarkThemeColors.primary.withOpacity(0.12),
         valueIndicatorColor: DarkThemeColors.primary,
-        valueIndicatorTextStyle: AppTypography.labelMedium(DarkThemeColors.onPrimary),
+        valueIndicatorTextStyle:
+            AppTypography.labelMedium(DarkThemeColors.onPrimary),
       ),
 
       // ==================== PROGRESS INDICATOR THEME ====================
@@ -708,11 +718,12 @@ class AppTheme {
       ),
 
       // ==================== TAB BAR THEME ====================
-      tabBarTheme: TabBarTheme(
+      tabBarTheme: TabBarThemeData(
         labelColor: DarkThemeColors.primary,
         unselectedLabelColor: DarkThemeColors.onSurfaceVariant,
         labelStyle: AppTypography.titleSmall(DarkThemeColors.primary),
-        unselectedLabelStyle: AppTypography.titleSmall(DarkThemeColors.onSurfaceVariant),
+        unselectedLabelStyle:
+            AppTypography.titleSmall(DarkThemeColors.onSurfaceVariant),
         indicator: const UnderlineTabIndicator(
           borderSide: BorderSide(
             color: DarkThemeColors.primary,
@@ -795,8 +806,10 @@ class AppTheme {
         surfaceTintColor: DarkThemeColors.primary,
         headerBackgroundColor: DarkThemeColors.primaryContainer,
         headerForegroundColor: DarkThemeColors.onPrimaryContainer,
-        headerHeadlineStyle: AppTypography.headlineLarge(DarkThemeColors.onPrimaryContainer),
-        headerHelpStyle: AppTypography.labelMedium(DarkThemeColors.onPrimaryContainer),
+        headerHeadlineStyle:
+            AppTypography.headlineLarge(DarkThemeColors.onPrimaryContainer),
+        headerHelpStyle:
+            AppTypography.labelMedium(DarkThemeColors.onPrimaryContainer),
         weekdayStyle: AppTypography.bodySmall(DarkThemeColors.onSurfaceVariant),
         dayStyle: AppTypography.bodyMedium(DarkThemeColors.onSurface),
         shape: RoundedRectangleBorder(
@@ -807,7 +820,8 @@ class AppTheme {
 
       // ==================== SEARCH BAR THEME ====================
       searchBarTheme: SearchBarThemeData(
-        backgroundColor: MaterialStateProperty.all(DarkThemeColors.surfaceVariant),
+        backgroundColor:
+            MaterialStateProperty.all(DarkThemeColors.surfaceVariant),
         surfaceTintColor: MaterialStateProperty.all(DarkThemeColors.primary),
         elevation: MaterialStateProperty.all(2),
         shadowColor: MaterialStateProperty.all(DarkThemeColors.shadow),
