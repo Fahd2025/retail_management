@@ -6,7 +6,7 @@ import '../services/sync_service.dart';
 import '../providers/theme_provider.dart';
 import '../providers/locale_provider.dart';
 import 'package:uuid/uuid.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:retail_management/generated/l10n/app_localizations.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
