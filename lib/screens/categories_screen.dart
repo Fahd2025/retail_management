@@ -36,8 +36,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading categories: $e')),
+          SnackBar(content: Text(l10n.errorSavingCategory(e.toString()))),
         );
       }
     }
@@ -45,6 +46,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   // Public method that can be called from dashboard
   void showCategoryDialog([models.Category? category]) {
+    final l10n = AppLocalizations.of(context)!;
     final nameController = TextEditingController(text: category?.name ?? '');
     final descriptionController =
         TextEditingController(text: category?.description ?? '');
@@ -53,7 +55,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(category == null ? 'Add Category' : 'Edit Category'),
+        title: Text(category == null ? l10n.addCategory : l10n.editCategory),
         content: Form(
           key: formKey,
           child: SingleChildScrollView(
@@ -62,13 +64,13 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               children: [
                 TextFormField(
                   controller: nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Name',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: l10n.nameFieldLabel,
+                    border: const OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter a category name';
+                      return l10n.pleaseEnterCategoryName;
                     }
                     return null;
                   },
@@ -77,9 +79,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: descriptionController,
-                  decoration: const InputDecoration(
-                    labelText: 'Description (Optional)',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: l10n.descriptionOptional,
+                    border: const OutlineInputBorder(),
                   ),
                   maxLines: 3,
                 ),
@@ -103,7 +105,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 );
               }
             },
-            child: Text(category == null ? 'Add' : 'Save'),
+            child: Text(category == null ? l10n.add : l10n.save),
           ),
         ],
       ),
@@ -128,8 +130,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         );
         await _database.createCategory(newCategory);
         if (mounted) {
+          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Category added successfully')),
+            SnackBar(content: Text(l10n.categoryAddedSuccess)),
           );
         }
       } else {
@@ -141,16 +144,18 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         );
         await _database.updateCategory(updatedCategory);
         if (mounted) {
+          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Category updated successfully')),
+            SnackBar(content: Text(l10n.categoryUpdatedSuccess)),
           );
         }
       }
       await loadCategories();
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error saving category: $e')),
+          SnackBar(content: Text(l10n.errorSavingCategory(e.toString()))),
         );
       }
     }
@@ -202,15 +207,17 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       try {
         await _database.deleteCategory(category.id);
         if (mounted) {
+          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Category deleted successfully')),
+            SnackBar(content: Text(l10n.categoryDeletedSuccess)),
           );
         }
         await loadCategories();
       } catch (e) {
         if (mounted) {
+          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error deleting category: $e')),
+            SnackBar(content: Text(l10n.errorDeletingCategory(e.toString()))),
           );
         }
       }
@@ -219,6 +226,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return _isLoading
         ? const Center(child: CircularProgressIndicator())
         : _categoriesWithCount.isEmpty
@@ -232,9 +240,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       color: Colors.grey,
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'No categories found',
-                      style: TextStyle(
+                    Text(
+                      l10n.noCategoriesFound,
+                      style: const TextStyle(
                         fontSize: 18,
                         color: Colors.grey,
                       ),
@@ -287,7 +295,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                               ),
                             const SizedBox(height: 4),
                             Text(
-                              '$productCount product(s)',
+                              l10n.productCount(productCount),
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey.shade600,
@@ -301,13 +309,13 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             IconButton(
                               icon: const Icon(Icons.edit, color: Colors.blue),
                               onPressed: () => showCategoryDialog(category),
-                              tooltip: 'Edit',
+                              tooltip: l10n.tooltipEdit,
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete, color: Colors.red),
                               onPressed: () =>
                                   _deleteCategory(category, productCount),
-                              tooltip: 'Delete',
+                              tooltip: l10n.tooltipDelete,
                             ),
                           ],
                         ),

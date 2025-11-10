@@ -253,14 +253,14 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             const Divider(),
                             const SizedBox(height: 8),
                             _buildInfoRow(
-                                'Category', _getCategoryName(product.category)),
-                            _buildInfoRow('Barcode', product.barcode),
-                            _buildInfoRow('Price',
+                                l10n.category, _getCategoryName(product.category)),
+                            _buildInfoRow(l10n.barcode, product.barcode),
+                            _buildInfoRow(l10n.price,
                                 'SAR ${product.price.toStringAsFixed(2)}'),
-                            _buildInfoRow('Cost',
+                            _buildInfoRow(l10n.cost,
                                 'SAR ${product.cost.toStringAsFixed(2)}'),
-                            _buildInfoRow('Stock', '${product.quantity} units'),
-                            _buildInfoRow('VAT',
+                            _buildInfoRow(l10n.stock, '${product.quantity} ${l10n.units}'),
+                            _buildInfoRow(l10n.vat,
                                 '${product.vatRate.toStringAsFixed(0)}%'),
                             if (product.description != null &&
                                 product.description!.isNotEmpty) ...[
@@ -351,8 +351,9 @@ class _ProductDialogState extends State<_ProductDialog> {
         setState(() {
           _isLoadingCategories = false;
         });
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load categories: $e')),
+          SnackBar(content: Text(l10n.failedToLoadCategories(e.toString()))),
         );
       }
     }
@@ -401,8 +402,9 @@ class _ProductDialogState extends State<_ProductDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: Text(widget.product == null ? 'Add Product' : 'Edit Product'),
+      title: Text(widget.product == null ? l10n.addProduct : l10n.editProduct),
       content: SizedBox(
         width: 500,
         child: Form(
@@ -414,14 +416,14 @@ class _ProductDialogState extends State<_ProductDialog> {
                 TextFormField(
                   controller: _nameController,
                   decoration:
-                      const InputDecoration(labelText: 'Product Name *'),
-                  validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
+                      InputDecoration(labelText: l10n.productNameRequired),
+                  validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _barcodeController,
-                  decoration: const InputDecoration(labelText: 'Barcode *'),
-                  validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
+                  decoration: InputDecoration(labelText: l10n.barcodeRequired),
+                  validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
                 ),
                 const SizedBox(height: 16),
                 _isLoadingCategories
@@ -434,10 +436,10 @@ class _ProductDialogState extends State<_ProductDialog> {
                     : DropdownButtonFormField<String>(
                         initialValue: _selectedCategoryId,
                         decoration:
-                            const InputDecoration(labelText: 'Category *'),
-                        hint: const Text('Select a category'),
+                            InputDecoration(labelText: l10n.categoryRequired),
+                        hint: Text(l10n.selectACategory),
                         isExpanded: true,
-                        validator: (v) => v == null ? 'Required' : null,
+                        validator: (v) => v == null ? l10n.required : null,
                         items: _categories.map((category) {
                           return DropdownMenuItem<String>(
                             value: category.id,
@@ -456,20 +458,20 @@ class _ProductDialogState extends State<_ProductDialog> {
                     Expanded(
                       child: TextFormField(
                         controller: _priceController,
-                        decoration: const InputDecoration(labelText: 'Price *'),
+                        decoration: InputDecoration(labelText: l10n.priceRequired),
                         keyboardType: TextInputType.number,
                         validator: (v) =>
-                            double.tryParse(v ?? '') == null ? 'Invalid' : null,
+                            double.tryParse(v ?? '') == null ? l10n.invalid : null,
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: TextFormField(
                         controller: _costController,
-                        decoration: const InputDecoration(labelText: 'Cost *'),
+                        decoration: InputDecoration(labelText: l10n.costRequired),
                         keyboardType: TextInputType.number,
                         validator: (v) =>
-                            double.tryParse(v ?? '') == null ? 'Invalid' : null,
+                            double.tryParse(v ?? '') == null ? l10n.invalid : null,
                       ),
                     ),
                   ],
@@ -481,20 +483,20 @@ class _ProductDialogState extends State<_ProductDialog> {
                       child: TextFormField(
                         controller: _quantityController,
                         decoration:
-                            const InputDecoration(labelText: 'Quantity *'),
+                            InputDecoration(labelText: l10n.quantityRequired),
                         keyboardType: TextInputType.number,
                         validator: (v) =>
-                            int.tryParse(v ?? '') == null ? 'Invalid' : null,
+                            int.tryParse(v ?? '') == null ? l10n.invalid : null,
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: TextFormField(
                         controller: _vatRateController,
-                        decoration: const InputDecoration(labelText: 'VAT % *'),
+                        decoration: InputDecoration(labelText: l10n.vatRateRequired),
                         keyboardType: TextInputType.number,
                         validator: (v) =>
-                            double.tryParse(v ?? '') == null ? 'Invalid' : null,
+                            double.tryParse(v ?? '') == null ? l10n.invalid : null,
                       ),
                     ),
                   ],
@@ -502,7 +504,7 @@ class _ProductDialogState extends State<_ProductDialog> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _descriptionController,
-                  decoration: const InputDecoration(labelText: 'Description'),
+                  decoration: InputDecoration(labelText: l10n.description),
                   maxLines: 3,
                 ),
               ],

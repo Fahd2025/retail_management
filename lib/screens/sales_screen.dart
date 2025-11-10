@@ -33,8 +33,9 @@ class _SalesScreenState extends State<SalesScreen> {
 
       if (companyInfo == null) {
         if (mounted) {
+          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Company info not configured')),
+            SnackBar(content: Text(l10n.companyInfoNotConfigured)),
           );
         }
         return;
@@ -52,8 +53,9 @@ class _SalesScreenState extends State<SalesScreen> {
       );
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Print error: $e')),
+          SnackBar(content: Text(l10n.printError(e.toString()))),
         );
       }
     }
@@ -61,11 +63,18 @@ class _SalesScreenState extends State<SalesScreen> {
 
   Widget _buildSaleCard(
       Sale sale, DateFormat dateFormat, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final statusColor = sale.status == SaleStatus.completed
         ? Colors.green
         : sale.status == SaleStatus.returned
             ? Colors.orange
             : Colors.red;
+
+    final statusText = sale.status == SaleStatus.completed
+        ? l10n.completed
+        : sale.status == SaleStatus.returned
+            ? l10n.returned
+            : sale.status.toString().split('.').last.toUpperCase();
 
     return Card(
       child: ExpansionTile(
@@ -74,16 +83,16 @@ class _SalesScreenState extends State<SalesScreen> {
           child: Icon(Icons.receipt, color: statusColor),
         ),
         title: Text(
-          'Invoice: ${sale.invoiceNumber}',
+          l10n.invoiceLabel(sale.invoiceNumber),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Date: ${dateFormat.format(sale.saleDate)}'),
-            Text('Total: SAR ${sale.totalAmount.toStringAsFixed(2)}'),
+            Text(l10n.dateLabel(dateFormat.format(sale.saleDate))),
+            Text(l10n.totalLabel(sale.totalAmount.toStringAsFixed(2))),
             Text(
-              'Status: ${sale.status.toString().split('.').last.toUpperCase()}',
+              l10n.statusLabelText(statusText),
               style: TextStyle(color: statusColor),
             ),
           ],
@@ -94,14 +103,14 @@ class _SalesScreenState extends State<SalesScreen> {
             IconButton(
               icon: const Icon(Icons.print),
               onPressed: () => _reprintInvoice(sale),
-              tooltip: 'Reprint',
+              tooltip: l10n.reprint,
             ),
             if (sale.status == SaleStatus.completed &&
                 context.read<AuthProvider>().isAdmin)
               IconButton(
                 icon: const Icon(Icons.undo, color: Colors.orange),
                 onPressed: () => _returnSale(sale),
-                tooltip: 'Return',
+                tooltip: l10n.return,
               ),
           ],
         ),
@@ -111,9 +120,9 @@ class _SalesScreenState extends State<SalesScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Items:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Text(
+                  l10n.itemsLabel,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 ...sale.items.map((item) {
@@ -139,14 +148,14 @@ class _SalesScreenState extends State<SalesScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Subtotal:'),
+                    Text(l10n.subtotalLabel),
                     Text('SAR ${sale.subtotal.toStringAsFixed(2)}'),
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('VAT:'),
+                    Text(l10n.vatLabel),
                     Text('SAR ${sale.vatAmount.toStringAsFixed(2)}'),
                   ],
                 ),
@@ -154,9 +163,9 @@ class _SalesScreenState extends State<SalesScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Total:',
-                      style: TextStyle(
+                    Text(
+                      l10n.totalLabelColon,
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -175,7 +184,7 @@ class _SalesScreenState extends State<SalesScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Paid:'),
+                      Text(l10n.paidLabel),
                       Text('SAR ${sale.paidAmount.toStringAsFixed(2)}'),
                     ],
                   ),
@@ -183,7 +192,7 @@ class _SalesScreenState extends State<SalesScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Change:'),
+                        Text(l10n.changeLabel),
                         Text('SAR ${sale.changeAmount.toStringAsFixed(2)}'),
                       ],
                     ),
@@ -224,8 +233,9 @@ class _SalesScreenState extends State<SalesScreen> {
           );
 
       if (success && mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Sale returned successfully')),
+          SnackBar(content: Text(l10n.saleReturnedSuccess)),
         );
       }
     }
