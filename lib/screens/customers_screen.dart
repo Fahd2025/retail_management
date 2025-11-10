@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../providers/customer_provider.dart';
+import '../providers/sale_provider.dart';
 import '../models/customer.dart';
+import '../models/company_info.dart';
+import '../database/drift_database.dart';
+import '../services/customer_invoice_export_service.dart';
 
 class CustomersScreen extends StatefulWidget {
   const CustomersScreen({super.key});
@@ -26,6 +31,13 @@ class _CustomersScreenState extends State<CustomersScreen> {
     await showDialog(
       context: context,
       builder: (context) => _CustomerDialog(customer: customer),
+    );
+  }
+
+  Future<void> _showExportDialog(BuildContext context, Customer customer) async {
+    await showDialog(
+      context: context,
+      builder: (context) => _ExportInvoicesDialog(customer: customer),
     );
   }
 
@@ -65,7 +77,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
               final customer = provider.customers[index];
               return Card(
                 margin: const EdgeInsets.only(bottom: 8),
-                child: ListTile(
+                child: ExpansionTile(
                   leading: CircleAvatar(
                     child: Text(customer.name[0].toUpperCase()),
                   ),
@@ -77,13 +89,36 @@ class _CustomersScreenState extends State<CustomersScreen> {
                       if (customer.email != null) Text(AppLocalizations.of(context)!.emailLabel(customer.email!)),
                       if (customer.vatNumber != null)
                         Text(AppLocalizations.of(context)!.vatLabel2(customer.vatNumber!)),
-                      if (customer.saudiAddress != null)
-                        Text(AppLocalizations.of(context)!.addressLabel(customer.saudiAddress!.formattedAddress)),
+                      const SizedBox(height: 4),
+                      FutureBuilder<Map<String, dynamic>>(
+                        future: context.read<SaleProvider>().getCustomerStatistics(customer.id),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            final stats = snapshot.data!;
+                            final invoiceCount = stats['invoiceCount'] as int;
+                            final totalAmount = stats['totalAmount'] as double;
+                            final currencyFormat = NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
+                            return Text(
+                              'Invoices: $invoiceCount | Total: ${currencyFormat.format(totalAmount)}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            );
+                          }
+                          return const Text('Loading statistics...');
+                        },
+                      ),
                     ],
                   ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      IconButton(
+                        icon: const Icon(Icons.picture_as_pdf, color: Colors.blue),
+                        tooltip: 'Export Invoices to PDF',
+                        onPressed: () => _showExportDialog(context, customer),
+                      ),
                       IconButton(
                         icon: const Icon(Icons.edit),
                         onPressed: () => showCustomerDialog(customer),
@@ -120,7 +155,13 @@ class _CustomersScreenState extends State<CustomersScreen> {
                       ),
                     ],
                   ),
-                  isThreeLine: true,
+                  children: [
+                    if (customer.saudiAddress != null)
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(AppLocalizations.of(context)!.addressLabel(customer.saudiAddress!.formattedAddress)),
+                      ),
+                  ],
                 ),
               );
             },
@@ -350,5 +391,276 @@ class _CustomerDialogState extends State<_CustomerDialog> {
     _postalCodeController.dispose();
     _additionalNumberController.dispose();
     super.dispose();
+  }
+}
+
+class _ExportInvoicesDialog extends StatefulWidget {
+  final Customer customer;
+
+  const _ExportInvoicesDialog({required this.customer});
+
+  @override
+  State<_ExportInvoicesDialog> createState() => _ExportInvoicesDialogState();
+}
+
+class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
+  DateTime? _startDate;
+  DateTime? _endDate;
+  bool _isExporting = false;
+  String _filterOption = 'all'; // 'all', 'custom', 'last_month', 'last_3_months', 'last_year'
+
+  @override
+  void initState() {
+    super.initState();
+    _setDateRangeFromFilter();
+  }
+
+  void _setDateRangeFromFilter() {
+    final now = DateTime.now();
+    switch (_filterOption) {
+      case 'last_month':
+        _startDate = DateTime(now.year, now.month - 1, now.day);
+        _endDate = now;
+        break;
+      case 'last_3_months':
+        _startDate = DateTime(now.year, now.month - 3, now.day);
+        _endDate = now;
+        break;
+      case 'last_year':
+        _startDate = DateTime(now.year - 1, now.month, now.day);
+        _endDate = now;
+        break;
+      case 'all':
+        _startDate = null;
+        _endDate = null;
+        break;
+      case 'custom':
+        // Keep existing dates or set to null
+        break;
+    }
+  }
+
+  Future<void> _selectStartDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _startDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        _startDate = picked;
+        _filterOption = 'custom';
+      });
+    }
+  }
+
+  Future<void> _selectEndDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _endDate ?? DateTime.now(),
+      firstDate: _startDate ?? DateTime(2000),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        _endDate = picked;
+        _filterOption = 'custom';
+      });
+    }
+  }
+
+  Future<void> _exportInvoices() async {
+    setState(() {
+      _isExporting = true;
+    });
+
+    try {
+      final db = AppDatabase();
+      final saleProvider = context.read<SaleProvider>();
+      final exportService = CustomerInvoiceExportService();
+
+      // Get company info
+      final companyInfo = await db.getCompanyInfo();
+      if (companyInfo == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Company information not found. Please set up company info first.')),
+          );
+        }
+        return;
+      }
+
+      // Get sales for customer with date filter
+      final sales = await saleProvider.getCustomerSales(
+        widget.customer.id,
+        startDate: _startDate,
+        endDate: _endDate,
+      );
+
+      if (sales.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('No invoices found for the selected period.')),
+          );
+        }
+        return;
+      }
+
+      // Export to PDF
+      await exportService.exportCustomerInvoices(
+        customer: widget.customer,
+        sales: sales,
+        companyInfo: companyInfo,
+        startDate: _startDate,
+        endDate: _endDate,
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Successfully exported ${sales.length} invoices to PDF')),
+        );
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error exporting invoices: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isExporting = false;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final dateFormat = DateFormat('dd/MM/yyyy');
+
+    return AlertDialog(
+      title: const Text('Export Customer Invoices to PDF'),
+      content: SizedBox(
+        width: 500,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Customer: ${widget.customer.name}',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            const Text('Select Period:', style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
+            DropdownButtonFormField<String>(
+              value: _filterOption,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              ),
+              items: const [
+                DropdownMenuItem(value: 'all', child: Text('All Time')),
+                DropdownMenuItem(value: 'last_month', child: Text('Last Month')),
+                DropdownMenuItem(value: 'last_3_months', child: Text('Last 3 Months')),
+                DropdownMenuItem(value: 'last_year', child: Text('Last Year')),
+                DropdownMenuItem(value: 'custom', child: Text('Custom Date Range')),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _filterOption = value!;
+                  _setDateRangeFromFilter();
+                });
+              },
+            ),
+            if (_filterOption == 'custom') ...[
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: _selectStartDate,
+                      icon: const Icon(Icons.calendar_today),
+                      label: Text(_startDate == null ? 'Start Date' : dateFormat.format(_startDate!)),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: _selectEndDate,
+                      icon: const Icon(Icons.calendar_today),
+                      label: Text(_endDate == null ? 'End Date' : dateFormat.format(_endDate!)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            const SizedBox(height: 16),
+            FutureBuilder<List<dynamic>>(
+              future: Future.wait([
+                context.read<SaleProvider>().getCustomerSales(
+                  widget.customer.id,
+                  startDate: _startDate,
+                  endDate: _endDate,
+                ),
+                context.read<SaleProvider>().getCustomerStatistics(widget.customer.id),
+              ]),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final sales = snapshot.data![0] as List;
+                  final stats = snapshot.data![1] as Map<String, dynamic>;
+                  final totalAmount = stats['totalAmount'] as double;
+                  final currencyFormat = NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
+
+                  return Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade50,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Preview:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue.shade900,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text('Total Invoices: ${sales.length}'),
+                        Text('Total Amount: ${currencyFormat.format(totalAmount)}'),
+                      ],
+                    ),
+                  );
+                }
+                return const CircularProgressIndicator();
+              },
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: _isExporting ? null : () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton.icon(
+          onPressed: _isExporting ? null : _exportInvoices,
+          icon: _isExporting
+            ? const SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : const Icon(Icons.picture_as_pdf),
+          label: Text(_isExporting ? 'Exporting...' : 'Export to PDF'),
+        ),
+      ],
+    );
   }
 }
