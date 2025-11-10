@@ -570,4 +570,69 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reportPeriod => 'Report Period';
+
+  @override
+  String get companyInformation => 'Company Information';
+
+  @override
+  String get companyNameEnglish => 'Company Name (English)';
+
+  @override
+  String get companyNameArabic => 'Company Name (Arabic)';
+
+  @override
+  String get addressEnglish => 'Address (English)';
+
+  @override
+  String get addressArabic => 'Address (Arabic)';
+
+  @override
+  String get required => 'Required';
+
+  @override
+  String get vatNumber => 'VAT Number';
+
+  @override
+  String get crnNumber => 'CRN Number';
+
+  @override
+  String get saveCompanyInformation => 'Save Company Information';
+
+  @override
+  String get companyInfoSavedSuccess => 'Company info saved successfully';
+
+  @override
+  String errorLoadingCompanyInfo(String error) {
+    return 'Error loading company info: $error';
+  }
+
+  @override
+  String errorSaving(String error) {
+    return 'Error saving: $error';
+  }
+
+  @override
+  String get changesAppliedImmediately => 'Changes will be applied immediately';
+
+  @override
+  String get dataSynchronization => 'Data Synchronization';
+
+  @override
+  String get syncDescription =>
+      'Sync your local data with the cloud when internet connection is available.';
+
+  @override
+  String get syncing => 'Syncing...';
+
+  @override
+  String get syncNow => 'Sync Now';
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get appVersion => '1.0.0';
+
+  @override
+  String get posWithOfflineSupport => 'Point of Sale with Offline Support';
 }

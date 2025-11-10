@@ -570,4 +570,69 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get reportPeriod => 'فترة التقرير';
+
+  @override
+  String get companyInformation => 'معلومات الشركة';
+
+  @override
+  String get companyNameEnglish => 'اسم الشركة (إنجليزي)';
+
+  @override
+  String get companyNameArabic => 'اسم الشركة (عربي)';
+
+  @override
+  String get addressEnglish => 'العنوان (إنجليزي)';
+
+  @override
+  String get addressArabic => 'العنوان (عربي)';
+
+  @override
+  String get required => 'مطلوب';
+
+  @override
+  String get vatNumber => 'الرقم الضريبي';
+
+  @override
+  String get crnNumber => 'رقم السجل التجاري';
+
+  @override
+  String get saveCompanyInformation => 'حفظ معلومات الشركة';
+
+  @override
+  String get companyInfoSavedSuccess => 'تم حفظ معلومات الشركة بنجاح';
+
+  @override
+  String errorLoadingCompanyInfo(String error) {
+    return 'خطأ في تحميل معلومات الشركة: $error';
+  }
+
+  @override
+  String errorSaving(String error) {
+    return 'خطأ في الحفظ: $error';
+  }
+
+  @override
+  String get changesAppliedImmediately => 'سيتم تطبيق التغييرات على الفور';
+
+  @override
+  String get dataSynchronization => 'مزامنة البيانات';
+
+  @override
+  String get syncDescription =>
+      'مزامنة بياناتك المحلية مع السحابة عند توفر الاتصال بالإنترنت.';
+
+  @override
+  String get syncing => 'جاري المزامنة...';
+
+  @override
+  String get syncNow => 'مزامنة الآن';
+
+  @override
+  String get version => 'الإصدار';
+
+  @override
+  String get appVersion => '1.0.0';
+
+  @override
+  String get posWithOfflineSupport => 'نظام نقاط البيع مع دعم العمل بلا اتصال';
 }

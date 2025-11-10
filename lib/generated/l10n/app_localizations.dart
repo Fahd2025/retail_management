@@ -1219,6 +1219,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Report Period'**
   String get reportPeriod;
+
+  /// No description provided for @companyInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Company Information'**
+  String get companyInformation;
+
+  /// No description provided for @companyNameEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'Company Name (English)'**
+  String get companyNameEnglish;
+
+  /// No description provided for @companyNameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Company Name (Arabic)'**
+  String get companyNameArabic;
+
+  /// No description provided for @addressEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'Address (English)'**
+  String get addressEnglish;
+
+  /// No description provided for @addressArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Address (Arabic)'**
+  String get addressArabic;
+
+  /// No description provided for @required.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get required;
+
+  /// No description provided for @vatNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT Number'**
+  String get vatNumber;
+
+  /// No description provided for @crnNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'CRN Number'**
+  String get crnNumber;
+
+  /// No description provided for @saveCompanyInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Company Information'**
+  String get saveCompanyInformation;
+
+  /// No description provided for @companyInfoSavedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Company info saved successfully'**
+  String get companyInfoSavedSuccess;
+
+  /// No description provided for @errorLoadingCompanyInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading company info: {error}'**
+  String errorLoadingCompanyInfo(String error);
+
+  /// No description provided for @errorSaving.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving: {error}'**
+  String errorSaving(String error);
+
+  /// No description provided for @changesAppliedImmediately.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes will be applied immediately'**
+  String get changesAppliedImmediately;
+
+  /// No description provided for @dataSynchronization.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Synchronization'**
+  String get dataSynchronization;
+
+  /// No description provided for @syncDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync your local data with the cloud when internet connection is available.'**
+  String get syncDescription;
+
+  /// No description provided for @syncing.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing...'**
+  String get syncing;
+
+  /// No description provided for @syncNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Now'**
+  String get syncNow;
+
+  /// No description provided for @version.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get version;
+
+  /// No description provided for @appVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'1.0.0'**
+  String get appVersion;
+
+  /// No description provided for @posWithOfflineSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Point of Sale with Offline Support'**
+  String get posWithOfflineSupport;
 }
 
 class _AppLocalizationsDelegate
