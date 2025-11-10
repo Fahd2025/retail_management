@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../database/drift_database.dart';
 import '../models/category.dart' as models;
 
@@ -89,7 +90,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -162,14 +163,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Cannot Delete Category'),
-          content: Text(
-            'This category has $productCount product(s). Please remove or reassign all products before deleting the category.',
-          ),
+          title: Text(AppLocalizations.of(context)!.cannotDeleteCategory),
+          content: Text(AppLocalizations.of(context)!.categoryHasProducts),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('OK'),
+              child: Text(AppLocalizations.of(context)!.ok),
             ),
           ],
         ),
@@ -180,12 +179,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Category'),
-        content: Text('Are you sure you want to delete "${category.name}"?'),
+        title: Text(AppLocalizations.of(context)!.deleteCategory),
+        content: Text(AppLocalizations.of(context)!.deleteCategoryConfirm(category.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
@@ -193,7 +192,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),

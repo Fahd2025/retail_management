@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../providers/customer_provider.dart';
 import '../models/customer.dart';
 
@@ -89,22 +90,23 @@ class _CustomersScreenState extends State<CustomersScreen> {
                       IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),
                         onPressed: () async {
+                          final l10n = AppLocalizations.of(context)!;
                           final confirm = await showDialog<bool>(
                             context: context,
                             builder: (context) => AlertDialog(
-                              title: const Text('Delete Customer'),
-                              content: Text('Delete ${customer.name}?'),
+                              title: Text(l10n.deleteCustomer),
+                              content: Text(l10n.deleteCustomerConfirm),
                               actions: [
                                 TextButton(
                                   onPressed: () => Navigator.pop(context, false),
-                                  child: const Text('Cancel'),
+                                  child: Text(l10n.cancel),
                                 ),
                                 ElevatedButton(
                                   onPressed: () => Navigator.pop(context, true),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.red,
                                   ),
-                                  child: const Text('Delete'),
+                                  child: Text(l10n.delete),
                                 ),
                               ],
                             ),
@@ -322,11 +324,11 @@ class _CustomerDialogState extends State<_CustomerDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         ElevatedButton(
           onPressed: _save,
-          child: const Text('Save'),
+          child: Text(AppLocalizations.of(context)!.save),
         ),
       ],
     );

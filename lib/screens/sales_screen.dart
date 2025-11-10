@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../providers/sale_provider.dart';
 import '../providers/auth_provider.dart';
 import '../models/sale.dart';
@@ -199,17 +200,17 @@ class _SalesScreenState extends State<SalesScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Return Sale'),
-        content: Text('Return sale ${sale.invoiceNumber}?'),
+        title: Text(AppLocalizations.of(context)!.returnSale),
+        content: Text(AppLocalizations.of(context)!.returnSaleConfirm(sale.invoiceNumber)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-            child: const Text('Return'),
+            child: Text(AppLocalizations.of(context)!.returnSale),
           ),
         ],
       ),

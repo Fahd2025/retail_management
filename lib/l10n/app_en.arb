@@ -251,5 +251,45 @@
   "usersManagement": "Users Management",
   "addProduct": "Add Product",
   "addCategory": "Add Category",
-  "cashier": "Cashier"
+  "cashier": "Cashier",
+
+  "cannotDeleteCategory": "Cannot Delete Category",
+  "categoryHasProducts": "This category has products associated with it",
+  "deleteProductConfirm": "Delete {productName}?",
+  "@deleteProductConfirm": {
+    "placeholders": {
+      "productName": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteCategoryConfirm": "Delete {categoryName}? This action cannot be undone.",
+  "@deleteCategoryConfirm": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteCustomerConfirm": "Are you sure you want to delete this customer?",
+  "deleteUserConfirm": "Delete user {username}? This action cannot be undone.",
+  "@deleteUserConfirm": {
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  },
+  "returnSale": "Return Sale",
+  "returnSaleConfirm": "Return sale {invoiceNumber}?",
+  "@returnSaleConfirm": {
+    "placeholders": {
+      "invoiceNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "printInvoiceQuestion": "Would you like to print the invoice?",
+  "print": "Print",
+  "complete": "Complete"
 }
