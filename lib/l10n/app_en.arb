@@ -599,5 +599,19 @@
         "type": "String"
       }
     }
-  }
+  },
+
+  "loginSuccess": "Login successful! Welcome {username}",
+  "@loginSuccess": {
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  },
+  "defaultCredentials": "Default Credentials",
+  "adminCredentials": "Admin: admin / admin123",
+  "cashierCredentials": "Cashier: cashier / cashier123",
+  "switchTheme": "Switch Theme",
+  "switchLanguage": "Switch Language"
 }

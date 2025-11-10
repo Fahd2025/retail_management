@@ -379,5 +379,12 @@
   "companyInfoNotFound": "معلومات الشركة غير موجودة. الرجاء إعداد معلومات الشركة أولاً.",
   "noInvoicesFound": "لم يتم العثور على فواتير للفترة المحددة.",
   "exportedInvoicesSuccess": "تم تصدير {count} فاتورة إلى PDF بنجاح",
-  "errorExportingInvoices": "خطأ في تصدير الفواتير: {error}"
+  "errorExportingInvoices": "خطأ في تصدير الفواتير: {error}",
+
+  "loginSuccess": "تم تسجيل الدخول بنجاح! مرحباً {username}",
+  "defaultCredentials": "بيانات الدخول الافتراضية",
+  "adminCredentials": "المدير: admin / admin123",
+  "cashierCredentials": "أمين الصندوق: cashier / cashier123",
+  "switchTheme": "تبديل السمة",
+  "switchLanguage": "تبديل اللغة"
 }
