@@ -63,8 +63,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading company info: $e')),
+          SnackBar(content: Text(l10n.errorLoadingCompanyInfo(e.toString()))),
         );
       }
     }
@@ -98,14 +99,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
       await db.createOrUpdateCompanyInfo(companyInfo);
 
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Company info saved successfully')),
+          SnackBar(content: Text(l10n.companyInfoSavedSuccess)),
         );
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error saving: $e')),
+          SnackBar(content: Text(l10n.errorSaving(e.toString()))),
         );
       }
     }
@@ -204,9 +207,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        localeProvider.isArabic
-                          ? 'سيتم تطبيق التغييرات على الفور'
-                          : 'Changes will be applied immediately',
+                        l10n.changesAppliedImmediately,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Colors.grey[600],
                           fontStyle: FontStyle.italic,
@@ -227,7 +228,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Company Information',
+                      l10n.companyInformation,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const Divider(),
@@ -250,22 +251,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       Expanded(
                                         child: TextFormField(
                                           controller: _nameController,
-                                          decoration: const InputDecoration(
-                                            labelText: 'Company Name (English) *',
+                                          decoration: InputDecoration(
+                                            labelText: '${l10n.companyNameEnglish} *',
                                           ),
                                           validator: (v) =>
-                                              v?.isEmpty ?? true ? 'Required' : null,
+                                              v?.isEmpty ?? true ? l10n.required : null,
                                         ),
                                       ),
                                       const SizedBox(width: 16),
                                       Expanded(
                                         child: TextFormField(
                                           controller: _nameArabicController,
-                                          decoration: const InputDecoration(
-                                            labelText: 'Company Name (Arabic) *',
+                                          decoration: InputDecoration(
+                                            labelText: '${l10n.companyNameArabic} *',
                                           ),
                                           validator: (v) =>
-                                              v?.isEmpty ?? true ? 'Required' : null,
+                                              v?.isEmpty ?? true ? l10n.required : null,
                                         ),
                                       ),
                                     ],
@@ -277,24 +278,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       Expanded(
                                         child: TextFormField(
                                           controller: _addressController,
-                                          decoration: const InputDecoration(
-                                            labelText: 'Address (English) *',
+                                          decoration: InputDecoration(
+                                            labelText: '${l10n.addressEnglish} *',
                                           ),
                                           maxLines: 2,
                                           validator: (v) =>
-                                              v?.isEmpty ?? true ? 'Required' : null,
+                                              v?.isEmpty ?? true ? l10n.required : null,
                                         ),
                                       ),
                                       const SizedBox(width: 16),
                                       Expanded(
                                         child: TextFormField(
                                           controller: _addressArabicController,
-                                          decoration: const InputDecoration(
-                                            labelText: 'Address (Arabic) *',
+                                          decoration: InputDecoration(
+                                            labelText: '${l10n.addressArabic} *',
                                           ),
                                           maxLines: 2,
                                           validator: (v) =>
-                                              v?.isEmpty ?? true ? 'Required' : null,
+                                              v?.isEmpty ?? true ? l10n.required : null,
                                         ),
                                       ),
                                     ],
@@ -305,19 +306,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       Expanded(
                                         child: TextFormField(
                                           controller: _phoneController,
-                                          decoration: const InputDecoration(
-                                            labelText: 'Phone *',
+                                          decoration: InputDecoration(
+                                            labelText: '${l10n.phone} *',
                                           ),
                                           validator: (v) =>
-                                              v?.isEmpty ?? true ? 'Required' : null,
+                                              v?.isEmpty ?? true ? l10n.required : null,
                                         ),
                                       ),
                                       const SizedBox(width: 16),
                                       Expanded(
                                         child: TextFormField(
                                           controller: _emailController,
-                                          decoration: const InputDecoration(
-                                            labelText: 'Email',
+                                          decoration: InputDecoration(
+                                            labelText: l10n.email,
                                           ),
                                           keyboardType: TextInputType.emailAddress,
                                         ),
@@ -330,22 +331,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       Expanded(
                                         child: TextFormField(
                                           controller: _vatNumberController,
-                                          decoration: const InputDecoration(
-                                            labelText: 'VAT Number *',
+                                          decoration: InputDecoration(
+                                            labelText: '${l10n.vatNumber} *',
                                           ),
                                           validator: (v) =>
-                                              v?.isEmpty ?? true ? 'Required' : null,
+                                              v?.isEmpty ?? true ? l10n.required : null,
                                         ),
                                       ),
                                       const SizedBox(width: 16),
                                       Expanded(
                                         child: TextFormField(
                                           controller: _crnNumberController,
-                                          decoration: const InputDecoration(
-                                            labelText: 'CRN Number *',
+                                          decoration: InputDecoration(
+                                            labelText: '${l10n.crnNumber} *',
                                           ),
                                           validator: (v) =>
-                                              v?.isEmpty ?? true ? 'Required' : null,
+                                              v?.isEmpty ?? true ? l10n.required : null,
                                         ),
                                       ),
                                     ],
@@ -355,7 +356,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     width: double.infinity,
                                     child: ElevatedButton(
                                       onPressed: _saveCompanyInfo,
-                                      child: const Text('Save Company Information'),
+                                      child: Text(l10n.saveCompanyInformation),
                                     ),
                                   ),
                                 ],
@@ -366,82 +367,82 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 children: [
                                   TextFormField(
                                     controller: _nameController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Company Name (English) *',
+                                    decoration: InputDecoration(
+                                      labelText: '${l10n.companyNameEnglish} *',
                                     ),
                                     validator: (v) =>
-                                        v?.isEmpty ?? true ? 'Required' : null,
+                                        v?.isEmpty ?? true ? l10n.required : null,
                                   ),
                                   const SizedBox(height: 16),
                                   TextFormField(
                                     controller: _nameArabicController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Company Name (Arabic) *',
+                                    decoration: InputDecoration(
+                                      labelText: '${l10n.companyNameArabic} *',
                                     ),
                                     validator: (v) =>
-                                        v?.isEmpty ?? true ? 'Required' : null,
+                                        v?.isEmpty ?? true ? l10n.required : null,
                                   ),
                                   const SizedBox(height: 16),
                                   TextFormField(
                                     controller: _addressController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Address (English) *',
+                                    decoration: InputDecoration(
+                                      labelText: '${l10n.addressEnglish} *',
                                     ),
                                     maxLines: 2,
                                     validator: (v) =>
-                                        v?.isEmpty ?? true ? 'Required' : null,
+                                        v?.isEmpty ?? true ? l10n.required : null,
                                   ),
                                   const SizedBox(height: 16),
                                   TextFormField(
                                     controller: _addressArabicController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Address (Arabic) *',
+                                    decoration: InputDecoration(
+                                      labelText: '${l10n.addressArabic} *',
                                     ),
                                     maxLines: 2,
                                     validator: (v) =>
-                                        v?.isEmpty ?? true ? 'Required' : null,
+                                        v?.isEmpty ?? true ? l10n.required : null,
                                   ),
                                   const SizedBox(height: 16),
                                   TextFormField(
                                     controller: _phoneController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Phone *',
+                                    decoration: InputDecoration(
+                                      labelText: '${l10n.phone} *',
                                     ),
                                     validator: (v) =>
-                                        v?.isEmpty ?? true ? 'Required' : null,
+                                        v?.isEmpty ?? true ? l10n.required : null,
                                   ),
                                   const SizedBox(height: 16),
                                   TextFormField(
                                     controller: _emailController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Email',
+                                    decoration: InputDecoration(
+                                      labelText: l10n.email,
                                     ),
                                     keyboardType: TextInputType.emailAddress,
                                   ),
                                   const SizedBox(height: 16),
                                   TextFormField(
                                     controller: _vatNumberController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'VAT Number *',
+                                    decoration: InputDecoration(
+                                      labelText: '${l10n.vatNumber} *',
                                     ),
                                     validator: (v) =>
-                                        v?.isEmpty ?? true ? 'Required' : null,
+                                        v?.isEmpty ?? true ? l10n.required : null,
                                   ),
                                   const SizedBox(height: 16),
                                   TextFormField(
                                     controller: _crnNumberController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'CRN Number *',
+                                    decoration: InputDecoration(
+                                      labelText: '${l10n.crnNumber} *',
                                     ),
                                     validator: (v) =>
-                                        v?.isEmpty ?? true ? 'Required' : null,
+                                        v?.isEmpty ?? true ? l10n.required : null,
                                   ),
                                   const SizedBox(height: 24),
                                   SizedBox(
                                     width: double.infinity,
                                     child: ElevatedButton(
                                       onPressed: _saveCompanyInfo,
-                                      child: const Text('Save Company Information'),
+                                      child: Text(l10n.saveCompanyInformation),
                                     ),
                                   ),
                                 ],
@@ -464,12 +465,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Data Synchronization',
+                      l10n.dataSynchronization,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const Divider(),
-                    const Text(
-                      'Sync your local data with the cloud when internet connection is available.',
+                    Text(
+                      l10n.syncDescription,
                     ),
                     const SizedBox(height: 16),
                     SizedBox(
@@ -486,7 +487,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 ),
                               )
                             : const Icon(Icons.sync),
-                        label: Text(_isSyncing ? 'Syncing...' : 'Sync Now'),
+                        label: Text(_isSyncing ? l10n.syncing : l10n.syncNow),
                       ),
                     ),
                   ],
@@ -503,19 +504,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'About',
+                      l10n.about,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const Divider(),
-                    const ListTile(
-                      leading: Icon(Icons.info_outline),
-                      title: Text('Version'),
-                      subtitle: Text('1.0.0'),
+                    ListTile(
+                      leading: const Icon(Icons.info_outline),
+                      title: Text(l10n.version),
+                      subtitle: Text(l10n.appVersion),
                     ),
-                    const ListTile(
-                      leading: Icon(Icons.business),
-                      title: Text('Retail Management System'),
-                      subtitle: Text('Point of Sale with Offline Support'),
+                    ListTile(
+                      leading: const Icon(Icons.business),
+                      title: Text(l10n.appTitle),
+                      subtitle: Text(l10n.posWithOfflineSupport),
                     ),
                   ],
                 ),

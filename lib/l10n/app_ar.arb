@@ -201,5 +201,26 @@
   "inventoryReport": "تقرير المخزون",
   "customerReport": "تقرير العملاء",
   "generateReport": "إنشاء تقرير",
-  "reportPeriod": "فترة التقرير"
+  "reportPeriod": "فترة التقرير",
+
+  "companyInformation": "معلومات الشركة",
+  "companyNameEnglish": "اسم الشركة (إنجليزي)",
+  "companyNameArabic": "اسم الشركة (عربي)",
+  "addressEnglish": "العنوان (إنجليزي)",
+  "addressArabic": "العنوان (عربي)",
+  "required": "مطلوب",
+  "vatNumber": "الرقم الضريبي",
+  "crnNumber": "رقم السجل التجاري",
+  "saveCompanyInformation": "حفظ معلومات الشركة",
+  "companyInfoSavedSuccess": "تم حفظ معلومات الشركة بنجاح",
+  "errorLoadingCompanyInfo": "خطأ في تحميل معلومات الشركة: {error}",
+  "errorSaving": "خطأ في الحفظ: {error}",
+  "changesAppliedImmediately": "سيتم تطبيق التغييرات على الفور",
+  "dataSynchronization": "مزامنة البيانات",
+  "syncDescription": "مزامنة بياناتك المحلية مع السحابة عند توفر الاتصال بالإنترنت.",
+  "syncing": "جاري المزامنة...",
+  "syncNow": "مزامنة الآن",
+  "version": "الإصدار",
+  "appVersion": "1.0.0",
+  "posWithOfflineSupport": "نظام نقاط البيع مع دعم العمل بلا اتصال"
 }
