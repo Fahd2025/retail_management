@@ -2203,6 +2203,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error exporting invoices: {error}'**
   String errorExportingInvoices(String error);
+
+  /// No description provided for @loginSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Login successful! Welcome {username}'**
+  String loginSuccess(String username);
+
+  /// No description provided for @defaultCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Default Credentials'**
+  String get defaultCredentials;
+
+  /// No description provided for @adminCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin: admin / admin123'**
+  String get adminCredentials;
+
+  /// No description provided for @cashierCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Cashier: cashier / cashier123'**
+  String get cashierCredentials;
+
+  /// No description provided for @switchTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch Theme'**
+  String get switchTheme;
+
+  /// No description provided for @switchLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch Language'**
+  String get switchLanguage;
 }
 
 class _AppLocalizationsDelegate

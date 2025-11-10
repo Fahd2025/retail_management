@@ -1125,4 +1125,24 @@ class AppLocalizationsAr extends AppLocalizations {
   String errorExportingInvoices(String error) {
     return 'خطأ في تصدير الفواتير: $error';
   }
+
+  @override
+  String loginSuccess(String username) {
+    return 'تم تسجيل الدخول بنجاح! مرحباً $username';
+  }
+
+  @override
+  String get defaultCredentials => 'بيانات الدخول الافتراضية';
+
+  @override
+  String get adminCredentials => 'المدير: admin / admin123';
+
+  @override
+  String get cashierCredentials => 'أمين الصندوق: cashier / cashier123';
+
+  @override
+  String get switchTheme => 'تبديل السمة';
+
+  @override
+  String get switchLanguage => 'تبديل اللغة';
 }

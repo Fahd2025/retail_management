@@ -108,7 +108,8 @@ class Sales extends Table {
 // Sale Items table
 class SaleItems extends Table {
   TextColumn get id => text()();
-  TextColumn get saleId => text().references(Sales, #id, onDelete: KeyAction.cascade)();
+  TextColumn get saleId =>
+      text().references(Sales, #id, onDelete: KeyAction.cascade)();
   TextColumn get productId => text()();
   TextColumn get productName => text()();
   RealColumn get unitPrice => real()();
@@ -144,7 +145,15 @@ class CompanyInfoTable extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-@DriftDatabase(tables: [Users, CategoriesTable, Products, Customers, Sales, SaleItems, CompanyInfoTable])
+@DriftDatabase(tables: [
+  Users,
+  CategoriesTable,
+  Products,
+  Customers,
+  Sales,
+  SaleItems,
+  CompanyInfoTable
+])
 class AppDatabase extends _$AppDatabase {
   // Singleton pattern
   static AppDatabase? _instance;
@@ -161,44 +170,51 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-    onCreate: (Migrator m) async {
-      await m.createAll();
+        onCreate: (Migrator m) async {
+          await m.createAll();
 
-      // Create indexes
-      await customStatement('CREATE INDEX idx_products_barcode ON products(barcode)');
-      await customStatement('CREATE INDEX idx_products_category_id ON products(category_id)');
-      await customStatement('CREATE INDEX idx_sales_date ON sales(sale_date)');
-      await customStatement('CREATE INDEX idx_sales_cashier ON sales(cashier_id)');
-      await customStatement('CREATE INDEX idx_sale_items_sale ON sale_items(sale_id)');
-
-      // Seed initial data
-      await _seedInitialData();
-    },
-    onUpgrade: (Migrator m, int from, int to) async {
-      if (from == 1 && to == 2) {
-        // Create categories table
-        await m.createTable(categoriesTable);
-
-        // Add default categories
-        await _seedInitialCategories();
-
-        // Add categoryId column to products
-        await m.addColumn(products, products.categoryId);
-
-        // Migrate existing products to use the first category as default
-        final defaultCategory = await (select(categoriesTable)..limit(1)).getSingleOrNull();
-        if (defaultCategory != null) {
+          // Create indexes
           await customStatement(
-            'UPDATE products SET category_id = ? WHERE category_id IS NULL',
-            [defaultCategory.id],
-          );
-        }
+              'CREATE INDEX idx_products_barcode ON products(barcode)');
+          await customStatement(
+              'CREATE INDEX idx_products_category_id ON products(category_id)');
+          await customStatement(
+              'CREATE INDEX idx_sales_date ON sales(sale_date)');
+          await customStatement(
+              'CREATE INDEX idx_sales_cashier ON sales(cashier_id)');
+          await customStatement(
+              'CREATE INDEX idx_sale_items_sale ON sale_items(sale_id)');
 
-        // Update index
-        await customStatement('CREATE INDEX idx_products_category_id ON products(category_id)');
-      }
-    },
-  );
+          // Seed initial data
+          await _seedInitialData();
+        },
+        onUpgrade: (Migrator m, int from, int to) async {
+          if (from == 1 && to == 2) {
+            // Create categories table
+            await m.createTable(categoriesTable);
+
+            // Add default categories
+            await _seedInitialCategories();
+
+            // Add categoryId column to products
+            await m.addColumn(products, products.categoryId);
+
+            // Migrate existing products to use the first category as default
+            final defaultCategory =
+                await (select(categoriesTable)..limit(1)).getSingleOrNull();
+            if (defaultCategory != null) {
+              await customStatement(
+                'UPDATE products SET category_id = ? WHERE category_id IS NULL',
+                [defaultCategory.id],
+              );
+            }
+
+            // Update index
+            await customStatement(
+                'CREATE INDEX idx_products_category_id ON products(category_id)');
+          }
+        },
+      );
 
   // User operations
   Future<models.User> createUser(models.User user) async {
@@ -304,7 +320,8 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<List<models.Product>> getAllProducts({bool activeOnly = false}) async {
-    final query = select(products)..orderBy([(t) => OrderingTerm(expression: t.name)]);
+    final query = select(products)
+      ..orderBy([(t) => OrderingTerm(expression: t.name)]);
     if (activeOnly) {
       query.where((tbl) => tbl.isActive.equals(true));
     }
@@ -314,7 +331,8 @@ class AppDatabase extends _$AppDatabase {
 
   Future<List<models.Product>> getProductsByCategory(String categoryId) async {
     final query = select(products)
-      ..where((tbl) => tbl.categoryId.equals(categoryId) & tbl.isActive.equals(true))
+      ..where((tbl) =>
+          tbl.categoryId.equals(categoryId) & tbl.isActive.equals(true))
       ..orderBy([(t) => OrderingTerm(expression: t.name)]);
     final result = await query.get();
     return result.map((row) => _productFromRow(row)).toList();
@@ -377,8 +395,10 @@ class AppDatabase extends _$AppDatabase {
     return _customerFromRow(result);
   }
 
-  Future<List<models.Customer>> getAllCustomers({bool activeOnly = false}) async {
-    final query = select(customers)..orderBy([(t) => OrderingTerm(expression: t.name)]);
+  Future<List<models.Customer>> getAllCustomers(
+      {bool activeOnly = false}) async {
+    final query = select(customers)
+      ..orderBy([(t) => OrderingTerm(expression: t.name)]);
     if (activeOnly) {
       query.where((tbl) => tbl.isActive.equals(true));
     }
@@ -387,7 +407,8 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<int> updateCustomer(models.Customer customer) async {
-    return (update(customers)..where((tbl) => tbl.id.equals(customer.id))).write(
+    return (update(customers)..where((tbl) => tbl.id.equals(customer.id)))
+        .write(
       CustomersCompanion(
         name: Value(customer.name),
         email: Value(customer.email),
@@ -461,12 +482,15 @@ class AppDatabase extends _$AppDatabase {
 
   Future<List<models.Sale>> getAllSales() async {
     final saleRows = await (select(sales)
-      ..orderBy([(t) => OrderingTerm(expression: t.saleDate, mode: OrderingMode.desc)]))
-      .get();
+          ..orderBy([
+            (t) => OrderingTerm(expression: t.saleDate, mode: OrderingMode.desc)
+          ]))
+        .get();
 
     final allSales = <models.Sale>[];
     for (var saleRow in saleRows) {
-      final itemsQuery = select(saleItems)..where((tbl) => tbl.saleId.equals(saleRow.id));
+      final itemsQuery = select(saleItems)
+        ..where((tbl) => tbl.saleId.equals(saleRow.id));
       final itemRows = await itemsQuery.get();
       final items = itemRows.map((row) => _saleItemFromRow(row)).toList();
       allSales.add(_saleFromRow(saleRow, items));
@@ -474,17 +498,21 @@ class AppDatabase extends _$AppDatabase {
     return allSales;
   }
 
-  Future<List<models.Sale>> getSalesByDateRange(DateTime start, DateTime end) async {
+  Future<List<models.Sale>> getSalesByDateRange(
+      DateTime start, DateTime end) async {
     final saleRows = await (select(sales)
-      ..where((tbl) =>
-        tbl.saleDate.isBiggerOrEqualValue(start.toIso8601String()) &
-        tbl.saleDate.isSmallerOrEqualValue(end.toIso8601String()))
-      ..orderBy([(t) => OrderingTerm(expression: t.saleDate, mode: OrderingMode.desc)]))
-      .get();
+          ..where((tbl) =>
+              tbl.saleDate.isBiggerOrEqualValue(start.toIso8601String()) &
+              tbl.saleDate.isSmallerOrEqualValue(end.toIso8601String()))
+          ..orderBy([
+            (t) => OrderingTerm(expression: t.saleDate, mode: OrderingMode.desc)
+          ]))
+        .get();
 
     final allSales = <models.Sale>[];
     for (var saleRow in saleRows) {
-      final itemsQuery = select(saleItems)..where((tbl) => tbl.saleId.equals(saleRow.id));
+      final itemsQuery = select(saleItems)
+        ..where((tbl) => tbl.saleId.equals(saleRow.id));
       final itemRows = await itemsQuery.get();
       final items = itemRows.map((row) => _saleItemFromRow(row)).toList();
       allSales.add(_saleFromRow(saleRow, items));
@@ -492,24 +520,30 @@ class AppDatabase extends _$AppDatabase {
     return allSales;
   }
 
-  Future<List<models.Sale>> getSalesByCustomer(String customerId, {DateTime? startDate, DateTime? endDate}) async {
-    var query = select(sales)..where((tbl) => tbl.customerId.equals(customerId));
+  Future<List<models.Sale>> getSalesByCustomer(String customerId,
+      {DateTime? startDate, DateTime? endDate}) async {
+    var query = select(sales)
+      ..where((tbl) => tbl.customerId.equals(customerId));
 
     if (startDate != null && endDate != null) {
       query = select(sales)
         ..where((tbl) =>
-          tbl.customerId.equals(customerId) &
-          tbl.saleDate.isBiggerOrEqualValue(startDate.toIso8601String()) &
-          tbl.saleDate.isSmallerOrEqualValue(endDate.toIso8601String()));
+            tbl.customerId.equals(customerId) &
+            tbl.saleDate.isBiggerOrEqualValue(startDate.toIso8601String()) &
+            tbl.saleDate.isSmallerOrEqualValue(endDate.toIso8601String()));
     }
 
-    query = query..orderBy([(t) => OrderingTerm(expression: t.saleDate, mode: OrderingMode.desc)]);
+    query = query
+      ..orderBy([
+        (t) => OrderingTerm(expression: t.saleDate, mode: OrderingMode.desc)
+      ]);
 
     final saleRows = await query.get();
 
     final allSales = <models.Sale>[];
     for (var saleRow in saleRows) {
-      final itemsQuery = select(saleItems)..where((tbl) => tbl.saleId.equals(saleRow.id));
+      final itemsQuery = select(saleItems)
+        ..where((tbl) => tbl.saleId.equals(saleRow.id));
       final itemRows = await itemsQuery.get();
       final items = itemRows.map((row) => _saleItemFromRow(row)).toList();
       allSales.add(_saleFromRow(saleRow, items));
@@ -517,12 +551,15 @@ class AppDatabase extends _$AppDatabase {
     return allSales;
   }
 
-  Future<Map<String, dynamic>> getCustomerSalesStatistics(String customerId) async {
-    final salesQuery = select(sales)..where((tbl) => tbl.customerId.equals(customerId));
+  Future<Map<String, dynamic>> getCustomerSalesStatistics(
+      String customerId) async {
+    final salesQuery = select(sales)
+      ..where((tbl) => tbl.customerId.equals(customerId));
     final salesList = await salesQuery.get();
 
     final invoiceCount = salesList.length;
-    final totalAmount = salesList.fold<double>(0, (sum, sale) => sum + sale.totalAmount);
+    final totalAmount =
+        salesList.fold<double>(0, (sum, sale) => sum + sale.totalAmount);
 
     return {
       'invoiceCount': invoiceCount,
@@ -542,8 +579,10 @@ class AppDatabase extends _$AppDatabase {
   }
 
   // Company Info operations
-  Future<models.CompanyInfo> createOrUpdateCompanyInfo(models.CompanyInfo info) async {
-    final existing = await (select(companyInfoTable)..limit(1)).getSingleOrNull();
+  Future<models.CompanyInfo> createOrUpdateCompanyInfo(
+      models.CompanyInfo info) async {
+    final existing =
+        await (select(companyInfoTable)..limit(1)).getSingleOrNull();
 
     if (existing == null) {
       await into(companyInfoTable).insert(CompanyInfoTableCompanion(
@@ -561,7 +600,9 @@ class AppDatabase extends _$AppDatabase {
         updatedAt: Value(info.updatedAt.toIso8601String()),
       ));
     } else {
-      await (update(companyInfoTable)..where((tbl) => tbl.id.equals(existing.id))).write(
+      await (update(companyInfoTable)
+            ..where((tbl) => tbl.id.equals(existing.id)))
+          .write(
         CompanyInfoTableCompanion(
           name: Value(info.name),
           nameArabic: Value(info.nameArabic),
@@ -599,11 +640,13 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<List<models.Sale>> getSalesNeedingSync() async {
-    final saleRows = await (select(sales)..where((tbl) => tbl.needsSync.equals(true))).get();
+    final saleRows =
+        await (select(sales)..where((tbl) => tbl.needsSync.equals(true))).get();
 
     final allSales = <models.Sale>[];
     for (var saleRow in saleRows) {
-      final itemsQuery = select(saleItems)..where((tbl) => tbl.saleId.equals(saleRow.id));
+      final itemsQuery = select(saleItems)
+        ..where((tbl) => tbl.saleId.equals(saleRow.id));
       final itemRows = await itemsQuery.get();
       final items = itemRows.map((row) => _saleItemFromRow(row)).toList();
       allSales.add(_saleFromRow(saleRow, items));
@@ -618,10 +661,12 @@ class AppDatabase extends _$AppDatabase {
       username: row.username,
       password: row.password,
       fullName: row.fullName,
-      role: row.role == 'admin' ? models.UserRole.admin : models.UserRole.cashier,
+      role:
+          row.role == 'admin' ? models.UserRole.admin : models.UserRole.cashier,
       isActive: row.isActive,
       createdAt: DateTime.parse(row.createdAt),
-      lastLoginAt: row.lastLoginAt != null ? DateTime.parse(row.lastLoginAt!) : null,
+      lastLoginAt:
+          row.lastLoginAt != null ? DateTime.parse(row.lastLoginAt!) : null,
     );
   }
 
@@ -653,8 +698,8 @@ class AppDatabase extends _$AppDatabase {
       crnNumber: row.crnNumber,
       vatNumber: row.vatNumber,
       saudiAddress: row.saudiAddress != null
-        ? models.SaudiAddress.fromString(row.saudiAddress!)
-        : null,
+          ? models.SaudiAddress.fromString(row.saudiAddress!)
+          : null,
       isActive: row.isActive,
       createdAt: DateTime.parse(row.createdAt),
       updatedAt: DateTime.parse(row.updatedAt),
@@ -691,15 +736,15 @@ class AppDatabase extends _$AppDatabase {
       paidAmount: row.paidAmount,
       changeAmount: row.changeAmount,
       status: row.status == 'completed'
-        ? models.SaleStatus.completed
-        : row.status == 'returned'
-        ? models.SaleStatus.returned
-        : models.SaleStatus.cancelled,
+          ? models.SaleStatus.completed
+          : row.status == 'returned'
+              ? models.SaleStatus.returned
+              : models.SaleStatus.cancelled,
       paymentMethod: row.paymentMethod == 'cash'
-        ? models.PaymentMethod.cash
-        : row.paymentMethod == 'card'
-        ? models.PaymentMethod.card
-        : models.PaymentMethod.transfer,
+          ? models.PaymentMethod.cash
+          : row.paymentMethod == 'card'
+              ? models.PaymentMethod.card
+              : models.PaymentMethod.transfer,
       notes: row.notes,
       isPrinted: row.isPrinted,
       needsSync: row.needsSync,
@@ -760,8 +805,10 @@ class AppDatabase extends _$AppDatabase {
     return _categoryFromRow(result);
   }
 
-  Future<List<models.Category>> getAllCategories({bool activeOnly = false}) async {
-    final query = select(categoriesTable)..orderBy([(t) => OrderingTerm(expression: t.name)]);
+  Future<List<models.Category>> getAllCategories(
+      {bool activeOnly = false}) async {
+    final query = select(categoriesTable)
+      ..orderBy([(t) => OrderingTerm(expression: t.name)]);
     if (activeOnly) {
       query.where((tbl) => tbl.isActive.equals(true));
     }
@@ -770,7 +817,8 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<int> updateCategory(models.Category category) async {
-    return (update(categoriesTable)..where((tbl) => tbl.id.equals(category.id))).write(
+    return (update(categoriesTable)..where((tbl) => tbl.id.equals(category.id)))
+        .write(
       CategoriesTableCompanion(
         name: Value(category.name),
         description: Value(category.description),
@@ -793,9 +841,10 @@ class AppDatabase extends _$AppDatabase {
 
     for (var category in categoriesList) {
       final productCount = await (select(products)
-        ..where((tbl) => tbl.categoryId.equals(category.id) & tbl.isActive.equals(true)))
-        .get()
-        .then((rows) => rows.length);
+            ..where((tbl) =>
+                tbl.categoryId.equals(category.id) & tbl.isActive.equals(true)))
+          .get()
+          .then((rows) => rows.length);
 
       result.add({
         'category': category,
@@ -949,16 +998,30 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> _seedInitialUser() async {
     final now = DateTime.now();
-    final adminUser = models.User(
-      id: 'user-1',
-      username: 'admin',
-      password: 'admin123', // In production, this should be hashed
-      fullName: 'System Administrator',
-      role: models.UserRole.admin,
-      isActive: true,
-      createdAt: now,
-    );
 
-    await createUser(adminUser);
+    final defaultUsers = [
+      models.User(
+        id: 'user-1',
+        username: 'admin',
+        password: 'admin123', // In production, this should be hashed
+        fullName: 'System Administrator',
+        role: models.UserRole.admin,
+        isActive: true,
+        createdAt: now,
+      ),
+      models.User(
+        id: 'user-2',
+        username: 'cashier',
+        password: 'cashier123', // In production, this should be hashed
+        fullName: 'System Cashier',
+        role: models.UserRole.cashier,
+        isActive: true,
+        createdAt: now,
+      ),
+    ];
+
+    for (var user in defaultUsers) {
+      await createUser(user);
+    }
   }
 }

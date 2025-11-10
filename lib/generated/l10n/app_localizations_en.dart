@@ -1126,4 +1126,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String errorExportingInvoices(String error) {
     return 'Error exporting invoices: $error';
   }
+
+  @override
+  String loginSuccess(String username) {
+    return 'Login successful! Welcome $username';
+  }
+
+  @override
+  String get defaultCredentials => 'Default Credentials';
+
+  @override
+  String get adminCredentials => 'Admin: admin / admin123';
+
+  @override
+  String get cashierCredentials => 'Cashier: cashier / cashier123';
+
+  @override
+  String get switchTheme => 'Switch Theme';
+
+  @override
+  String get switchLanguage => 'Switch Language';
 }
