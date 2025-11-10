@@ -864,6 +864,8 @@ class AppDatabase extends _$AppDatabase {
     await _seedInitialCategories();
     await _seedInitialProducts();
     await _seedInitialUser();
+    await _seedInitialCustomers();
+    await _seedInitialCompanyInfo();
   }
 
   Future<void> _seedInitialCategories() async {
@@ -919,6 +921,7 @@ class AppDatabase extends _$AppDatabase {
   Future<void> _seedInitialProducts() async {
     final now = DateTime.now();
     final defaultProducts = [
+      // Electronics
       models.Product(
         id: 'prod-1',
         name: 'Wireless Mouse',
@@ -927,26 +930,56 @@ class AppDatabase extends _$AppDatabase {
         price: 45.00,
         cost: 30.00,
         quantity: 50,
-        category: 'cat-1', // Electronics
+        category: 'cat-1',
         isActive: true,
         vatRate: 15.0,
         createdAt: now,
         updatedAt: now,
       ),
       models.Product(
-        id: 'prod-2',
-        name: 'Notebook A4',
-        description: '200 pages ruled notebook',
-        barcode: '1234567890002',
-        price: 12.00,
-        cost: 7.00,
-        quantity: 100,
-        category: 'cat-5', // Office Supplies
+        id: 'prod-6',
+        name: 'USB Keyboard',
+        description: 'Mechanical keyboard with LED backlight',
+        barcode: '1234567890006',
+        price: 120.00,
+        cost: 80.00,
+        quantity: 35,
+        category: 'cat-1',
         isActive: true,
         vatRate: 15.0,
         createdAt: now,
         updatedAt: now,
       ),
+      models.Product(
+        id: 'prod-7',
+        name: 'USB-C Cable 2m',
+        description: 'Fast charging USB-C to USB-C cable',
+        barcode: '1234567890007',
+        price: 25.00,
+        cost: 12.00,
+        quantity: 100,
+        category: 'cat-1',
+        isActive: true,
+        vatRate: 15.0,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Product(
+        id: 'prod-8',
+        name: 'Wireless Headphones',
+        description: 'Bluetooth headphones with noise cancellation',
+        barcode: '1234567890008',
+        price: 250.00,
+        cost: 150.00,
+        quantity: 25,
+        category: 'cat-1',
+        isActive: true,
+        vatRate: 15.0,
+        createdAt: now,
+        updatedAt: now,
+      ),
+
+      // Clothing
       models.Product(
         id: 'prod-3',
         name: 'T-Shirt - Medium',
@@ -955,12 +988,42 @@ class AppDatabase extends _$AppDatabase {
         price: 35.00,
         cost: 20.00,
         quantity: 75,
-        category: 'cat-2', // Clothing
+        category: 'cat-2',
         isActive: true,
         vatRate: 15.0,
         createdAt: now,
         updatedAt: now,
       ),
+      models.Product(
+        id: 'prod-9',
+        name: 'Jeans - Size 32',
+        description: 'Blue denim jeans, classic fit',
+        barcode: '1234567890009',
+        price: 150.00,
+        cost: 90.00,
+        quantity: 40,
+        category: 'cat-2',
+        isActive: true,
+        vatRate: 15.0,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Product(
+        id: 'prod-10',
+        name: 'Sports Shoes',
+        description: 'Running shoes with cushioned sole',
+        barcode: '1234567890010',
+        price: 280.00,
+        cost: 180.00,
+        quantity: 30,
+        category: 'cat-2',
+        isActive: true,
+        vatRate: 15.0,
+        createdAt: now,
+        updatedAt: now,
+      ),
+
+      // Food & Beverages
       models.Product(
         id: 'prod-4',
         name: 'Water Bottle 1L',
@@ -969,12 +1032,56 @@ class AppDatabase extends _$AppDatabase {
         price: 3.50,
         cost: 2.00,
         quantity: 200,
-        category: 'cat-3', // Food & Beverages
+        category: 'cat-3',
         isActive: true,
         vatRate: 15.0,
         createdAt: now,
         updatedAt: now,
       ),
+      models.Product(
+        id: 'prod-11',
+        name: 'Coffee Beans 250g',
+        description: 'Premium Arabica coffee beans',
+        barcode: '1234567890011',
+        price: 45.00,
+        cost: 25.00,
+        quantity: 60,
+        category: 'cat-3',
+        isActive: true,
+        vatRate: 15.0,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Product(
+        id: 'prod-12',
+        name: 'Orange Juice 1L',
+        description: 'Fresh squeezed orange juice',
+        barcode: '1234567890012',
+        price: 12.00,
+        cost: 7.00,
+        quantity: 80,
+        category: 'cat-3',
+        isActive: true,
+        vatRate: 15.0,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Product(
+        id: 'prod-13',
+        name: 'Chocolate Bar',
+        description: 'Premium dark chocolate 100g',
+        barcode: '1234567890013',
+        price: 8.50,
+        cost: 4.50,
+        quantity: 150,
+        category: 'cat-3',
+        isActive: true,
+        vatRate: 15.0,
+        createdAt: now,
+        updatedAt: now,
+      ),
+
+      // Home & Garden
       models.Product(
         id: 'prod-5',
         name: 'Garden Shovel',
@@ -983,7 +1090,93 @@ class AppDatabase extends _$AppDatabase {
         price: 55.00,
         cost: 35.00,
         quantity: 30,
-        category: 'cat-4', // Home & Garden
+        category: 'cat-4',
+        isActive: true,
+        vatRate: 15.0,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Product(
+        id: 'prod-14',
+        name: 'LED Light Bulb',
+        description: '10W LED bulb, warm white',
+        barcode: '1234567890014',
+        price: 15.00,
+        cost: 8.00,
+        quantity: 120,
+        category: 'cat-4',
+        isActive: true,
+        vatRate: 15.0,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Product(
+        id: 'prod-15',
+        name: 'Plant Pot 30cm',
+        description: 'Ceramic plant pot with drainage',
+        barcode: '1234567890015',
+        price: 35.00,
+        cost: 20.00,
+        quantity: 45,
+        category: 'cat-4',
+        isActive: true,
+        vatRate: 15.0,
+        createdAt: now,
+        updatedAt: now,
+      ),
+
+      // Office Supplies
+      models.Product(
+        id: 'prod-2',
+        name: 'Notebook A4',
+        description: '200 pages ruled notebook',
+        barcode: '1234567890002',
+        price: 12.00,
+        cost: 7.00,
+        quantity: 100,
+        category: 'cat-5',
+        isActive: true,
+        vatRate: 15.0,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Product(
+        id: 'prod-16',
+        name: 'Ballpoint Pen Pack',
+        description: 'Pack of 10 blue ballpoint pens',
+        barcode: '1234567890016',
+        price: 18.00,
+        cost: 10.00,
+        quantity: 200,
+        category: 'cat-5',
+        isActive: true,
+        vatRate: 15.0,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Product(
+        id: 'prod-17',
+        name: 'Stapler',
+        description: 'Heavy-duty office stapler',
+        barcode: '1234567890017',
+        price: 28.00,
+        cost: 16.00,
+        quantity: 50,
+        category: 'cat-5',
+        isActive: true,
+        vatRate: 15.0,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Product(
+        id: 'prod-18',
+        name: 'A4 Paper Ream',
+        description: '500 sheets white copy paper',
+        barcode: '1234567890018',
+        price: 22.00,
+        cost: 14.00,
+        quantity: 80,
+        category: 'cat-5',
         isActive: true,
         vatRate: 15.0,
         createdAt: now,
@@ -1023,5 +1216,169 @@ class AppDatabase extends _$AppDatabase {
     for (var user in defaultUsers) {
       await createUser(user);
     }
+  }
+
+  Future<void> _seedInitialCustomers() async {
+    final now = DateTime.now();
+
+    final defaultCustomers = [
+      // Individual customers without business registration
+      models.Customer(
+        id: 'cust-1',
+        name: 'Ahmed Al-Saud',
+        email: 'ahmed.alsaud@email.com',
+        phone: '+966501234567',
+        isActive: true,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Customer(
+        id: 'cust-2',
+        name: 'Fatima Hassan',
+        email: 'fatima.hassan@email.com',
+        phone: '+966502345678',
+        isActive: true,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Customer(
+        id: 'cust-3',
+        name: 'Mohammed Ali',
+        phone: '+966503456789',
+        isActive: true,
+        createdAt: now,
+        updatedAt: now,
+      ),
+
+      // Business customers with CRN and VAT numbers
+      models.Customer(
+        id: 'cust-4',
+        name: 'Al-Noor Trading Company',
+        email: 'info@alnoor-trading.sa',
+        phone: '+966114567890',
+        crnNumber: '1010123456',
+        vatNumber: '300123456789003',
+        saudiAddress: models.SaudiAddress(
+          buildingNumber: '7890',
+          streetName: 'King Fahd Road',
+          district: 'Al Olaya',
+          city: 'Riyadh',
+          postalCode: '12211',
+          additionalNumber: '1234',
+        ),
+        isActive: true,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Customer(
+        id: 'cust-5',
+        name: 'Saudi Electronics Ltd.',
+        email: 'sales@saudi-electronics.sa',
+        phone: '+966126789012',
+        crnNumber: '2020234567',
+        vatNumber: '300234567890003',
+        saudiAddress: models.SaudiAddress(
+          buildingNumber: '4321',
+          streetName: 'Prince Sultan Street',
+          district: 'Al Hamra',
+          city: 'Jeddah',
+          postalCode: '23323',
+          additionalNumber: '5678',
+        ),
+        isActive: true,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Customer(
+        id: 'cust-6',
+        name: 'Al-Khaleej General Trading',
+        email: 'contact@alkhaleej-trading.sa',
+        phone: '+966138901234',
+        crnNumber: '3030345678',
+        vatNumber: '300345678901003',
+        saudiAddress: models.SaudiAddress(
+          buildingNumber: '5678',
+          streetName: 'Dhahran Street',
+          district: 'Al Khobar',
+          city: 'Dammam',
+          postalCode: '32234',
+          additionalNumber: '9012',
+        ),
+        isActive: true,
+        createdAt: now,
+        updatedAt: now,
+      ),
+
+      // Individual customer with full Saudi address
+      models.Customer(
+        id: 'cust-7',
+        name: 'Khalid Ibrahim',
+        email: 'khalid.ibrahim@email.com',
+        phone: '+966504567890',
+        saudiAddress: models.SaudiAddress(
+          buildingNumber: '2468',
+          streetName: 'Takhassusi Street',
+          district: 'Al Muhammadiyah',
+          city: 'Riyadh',
+          postalCode: '12364',
+          additionalNumber: '3456',
+        ),
+        isActive: true,
+        createdAt: now,
+        updatedAt: now,
+      ),
+
+      // Additional individual customers
+      models.Customer(
+        id: 'cust-8',
+        name: 'Sara Al-Mutairi',
+        email: 'sara.mutairi@email.com',
+        phone: '+966505678901',
+        isActive: true,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Customer(
+        id: 'cust-9',
+        name: 'Abdullah Omar',
+        phone: '+966506789012',
+        isActive: true,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      models.Customer(
+        id: 'cust-10',
+        name: 'Noura Fahad',
+        email: 'noura.fahad@email.com',
+        phone: '+966507890123',
+        isActive: true,
+        createdAt: now,
+        updatedAt: now,
+      ),
+    ];
+
+    for (var customer in defaultCustomers) {
+      await createCustomer(customer);
+    }
+  }
+
+  Future<void> _seedInitialCompanyInfo() async {
+    final now = DateTime.now();
+
+    final companyInfo = models.CompanyInfo(
+      id: 'company-1',
+      name: 'Saudi Retail Solutions',
+      nameArabic: 'حلول التجزئة السعودية',
+      address: 'Building 1234, King Abdullah Road, Al Olaya District, Riyadh 12345',
+      addressArabic: 'مبنى 1234، طريق الملك عبدالله، حي العليا، الرياض 12345',
+      phone: '+966112345678',
+      email: 'info@saudiretail.sa',
+      vatNumber: '300123456789003',
+      crnNumber: '1010987654',
+      createdAt: now,
+      updatedAt: now,
+    );
+
+    await createOrUpdateCompanyInfo(companyInfo);
   }
 }
