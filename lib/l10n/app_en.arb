@@ -523,5 +523,81 @@
       }
     }
   },
-  "syncFailed": "Sync failed"
+  "syncFailed": "Sync failed",
+
+  "exportInvoicesToPdf": "Export Invoices to PDF",
+  "exportCustomerInvoices": "Export Customer Invoices to PDF",
+  "customerLabel": "Customer: {name}",
+  "@customerLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "selectPeriod": "Select Period:",
+  "allTime": "All Time",
+  "lastMonth": "Last Month",
+  "lastThreeMonths": "Last 3 Months",
+  "lastYear": "Last Year",
+  "customDateRange": "Custom Date Range",
+  "startDate": "Start Date",
+  "endDate": "End Date",
+  "preview": "Preview:",
+  "totalInvoices": "Total Invoices: {count}",
+  "@totalInvoices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalAmount": "Total Amount: {amount}",
+  "@totalAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "exporting": "Exporting...",
+  "exportToPdf": "Export to PDF",
+  "loadingStatistics": "Loading statistics...",
+  "invoicesCount": "Invoices: {count}",
+  "@invoicesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "invoicesTotal": "Invoices: {count} | Total: {total}",
+  "@invoicesTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "companyInfoNotFound": "Company information not found. Please set up company info first.",
+  "noInvoicesFound": "No invoices found for the selected period.",
+  "exportedInvoicesSuccess": "Successfully exported {count} invoices to PDF",
+  "@exportedInvoicesSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorExportingInvoices": "Error exporting invoices: {error}",
+  "@errorExportingInvoices": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -98,15 +98,16 @@ class _CustomersScreenState extends State<CustomersScreen> {
                             final invoiceCount = stats['invoiceCount'] as int;
                             final totalAmount = stats['totalAmount'] as double;
                             final currencyFormat = NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
+                            final l10n = AppLocalizations.of(context)!;
                             return Text(
-                              'Invoices: $invoiceCount | Total: ${currencyFormat.format(totalAmount)}',
+                              l10n.invoicesTotal(invoiceCount, currencyFormat.format(totalAmount)),
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Theme.of(context).primaryColor,
                               ),
                             );
                           }
-                          return const Text('Loading statistics...');
+                          return Text(AppLocalizations.of(context)!.loadingStatistics);
                         },
                       ),
                     ],
@@ -116,7 +117,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.picture_as_pdf, color: Colors.blue),
-                        tooltip: 'Export Invoices to PDF',
+                        tooltip: AppLocalizations.of(context)!.exportInvoicesToPdf,
                         onPressed: () => _showExportDialog(context, customer),
                       ),
                       IconButton(
@@ -479,13 +480,14 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
       final db = AppDatabase();
       final saleProvider = context.read<SaleProvider>();
       final exportService = CustomerInvoiceExportService();
+      final l10n = AppLocalizations.of(context)!;
 
       // Get company info
       final companyInfo = await db.getCompanyInfo();
       if (companyInfo == null) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Company information not found. Please set up company info first.')),
+            SnackBar(content: Text(l10n.companyInfoNotFound)),
           );
         }
         return;
@@ -501,7 +503,7 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
       if (sales.isEmpty) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('No invoices found for the selected period.')),
+            SnackBar(content: Text(l10n.noInvoicesFound)),
           );
         }
         return;
@@ -518,14 +520,15 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Successfully exported ${sales.length} invoices to PDF')),
+          SnackBar(content: Text(l10n.exportedInvoicesSuccess(sales.length))),
         );
         Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error exporting invoices: $e')),
+          SnackBar(content: Text(l10n.errorExportingInvoices(e.toString()))),
         );
       }
     } finally {
@@ -540,9 +543,10 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('dd/MM/yyyy');
+    final l10n = AppLocalizations.of(context)!;
 
     return AlertDialog(
-      title: const Text('Export Customer Invoices to PDF'),
+      title: Text(l10n.exportCustomerInvoices),
       content: SizedBox(
         width: 500,
         child: Column(
@@ -550,11 +554,11 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Customer: ${widget.customer.name}',
+              l10n.customerLabel(widget.customer.name),
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            const Text('Select Period:', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(l10n.selectPeriod, style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
             DropdownButtonFormField<String>(
               value: _filterOption,
@@ -562,12 +566,12 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
                 border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
-              items: const [
-                DropdownMenuItem(value: 'all', child: Text('All Time')),
-                DropdownMenuItem(value: 'last_month', child: Text('Last Month')),
-                DropdownMenuItem(value: 'last_3_months', child: Text('Last 3 Months')),
-                DropdownMenuItem(value: 'last_year', child: Text('Last Year')),
-                DropdownMenuItem(value: 'custom', child: Text('Custom Date Range')),
+              items: [
+                DropdownMenuItem(value: 'all', child: Text(l10n.allTime)),
+                DropdownMenuItem(value: 'last_month', child: Text(l10n.lastMonth)),
+                DropdownMenuItem(value: 'last_3_months', child: Text(l10n.lastThreeMonths)),
+                DropdownMenuItem(value: 'last_year', child: Text(l10n.lastYear)),
+                DropdownMenuItem(value: 'custom', child: Text(l10n.customDateRange)),
               ],
               onChanged: (value) {
                 setState(() {
@@ -584,7 +588,7 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
                     child: OutlinedButton.icon(
                       onPressed: _selectStartDate,
                       icon: const Icon(Icons.calendar_today),
-                      label: Text(_startDate == null ? 'Start Date' : dateFormat.format(_startDate!)),
+                      label: Text(_startDate == null ? l10n.startDate : dateFormat.format(_startDate!)),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -592,7 +596,7 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
                     child: OutlinedButton.icon(
                       onPressed: _selectEndDate,
                       icon: const Icon(Icons.calendar_today),
-                      label: Text(_endDate == null ? 'End Date' : dateFormat.format(_endDate!)),
+                      label: Text(_endDate == null ? l10n.endDate : dateFormat.format(_endDate!)),
                     ),
                   ),
                 ],
@@ -625,15 +629,15 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Preview:',
+                          l10n.preview,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.blue.shade900,
                           ),
                         ),
                         const SizedBox(height: 8),
-                        Text('Total Invoices: ${sales.length}'),
-                        Text('Total Amount: ${currencyFormat.format(totalAmount)}'),
+                        Text(l10n.totalInvoices(sales.length)),
+                        Text(l10n.totalAmount(currencyFormat.format(totalAmount))),
                       ],
                     ),
                   );
@@ -647,7 +651,7 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
       actions: [
         TextButton(
           onPressed: _isExporting ? null : () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: Text(l10n.cancel),
         ),
         ElevatedButton.icon(
           onPressed: _isExporting ? null : _exportInvoices,
@@ -658,7 +662,7 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
                 child: CircularProgressIndicator(strokeWidth: 2),
               )
             : const Icon(Icons.picture_as_pdf),
-          label: Text(_isExporting ? 'Exporting...' : 'Export to PDF'),
+          label: Text(_isExporting ? l10n.exporting : l10n.exportToPdf),
         ),
       ],
     );
