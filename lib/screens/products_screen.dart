@@ -128,6 +128,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           }
 
           if (provider.products.isEmpty) {
+            final l10n = AppLocalizations.of(context)!;
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -135,12 +136,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   Icon(Icons.inventory_2,
                       size: 64, color: Colors.grey.shade300),
                   const SizedBox(height: 16),
-                  const Text('No products found'),
+                  Text(l10n.noProductsFound),
                   const SizedBox(height: 16),
                   ElevatedButton.icon(
                     onPressed: () => showProductDialog(),
                     icon: const Icon(Icons.add),
-                    label: const Text('Add Product'),
+                    label: Text(l10n.addProduct),
                   ),
                 ],
               ),
@@ -150,6 +151,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           return LayoutBuilder(
             builder: (context, constraints) {
               final isDesktop = constraints.maxWidth >= 800;
+              final l10n = AppLocalizations.of(context)!;
 
               if (isDesktop) {
                 // Desktop/Tablet: DataTable layout
@@ -158,15 +160,15 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: DataTable(
-                      columns: const [
-                        DataColumn(label: Text('Name')),
-                        DataColumn(label: Text('Barcode')),
-                        DataColumn(label: Text('Category')),
-                        DataColumn(label: Text('Price')),
-                        DataColumn(label: Text('Cost')),
-                        DataColumn(label: Text('Stock')),
-                        DataColumn(label: Text('VAT %')),
-                        DataColumn(label: Text('Actions')),
+                      columns: [
+                        DataColumn(label: Text(l10n.name)),
+                        DataColumn(label: Text(l10n.barcode)),
+                        DataColumn(label: Text(l10n.category)),
+                        DataColumn(label: Text(l10n.price)),
+                        DataColumn(label: Text(l10n.cost)),
+                        DataColumn(label: Text(l10n.stock)),
+                        DataColumn(label: Text(l10n.vat)),
+                        DataColumn(label: Text(l10n.actions)),
                       ],
                       rows: provider.products.map((product) {
                         return DataRow(cells: [
