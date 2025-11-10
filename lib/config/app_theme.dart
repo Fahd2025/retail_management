@@ -169,7 +169,7 @@ class AppTheme {
       ),
 
       // Dialog theme
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         backgroundColor: Colors.white,
         elevation: 8,
         shape: RoundedRectangleBorder(
@@ -285,7 +285,7 @@ class AppTheme {
       ),
 
       // Outlined button theme
-      outlinedButtonThemeData: OutlinedButtonThemeData(
+      outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: const Color(0xFF90CAF9),
           side: const BorderSide(color: Color(0xFF90CAF9), width: 1.5),
@@ -345,7 +345,7 @@ class AppTheme {
       ),
 
       // Dialog theme
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         backgroundColor: const Color(0xFF2C2C2C),
         elevation: 8,
         shape: RoundedRectangleBorder(
