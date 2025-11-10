@@ -243,5 +243,13 @@
   "syncNow": "Sync Now",
   "version": "Version",
   "appVersion": "1.0.0",
-  "posWithOfflineSupport": "Point of Sale with Offline Support"
+  "posWithOfflineSupport": "Point of Sale with Offline Support",
+
+  "pointOfSale": "Point of Sale",
+  "productsManagement": "Products Management",
+  "customersManagement": "Customers Management",
+  "usersManagement": "Users Management",
+  "addProduct": "Add Product",
+  "addCategory": "Add Category",
+  "cashier": "Cashier"
 }

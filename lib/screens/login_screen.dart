@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import '../database/drift_database.dart' hide User;
 import '../models/user.dart';
@@ -58,8 +59,9 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Initialization error: $e')),
+          SnackBar(content: Text(l10n.initializationError(e.toString()))),
         );
       }
     } finally {
@@ -80,9 +82,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (mounted) {
       if (!success) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(authProvider.errorMessage ?? 'Login failed'),
+            content: Text(authProvider.errorMessage ?? l10n.loginFailed),
             backgroundColor: Colors.red,
           ),
         );
@@ -92,6 +95,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -136,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     // Title
                     Text(
-                      'Retail Management',
+                      l10n.loginTitle,
                       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: Colors.blue.shade700,
@@ -144,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Point of Sale System',
+                      l10n.loginSubtitle,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Colors.grey.shade600,
                           ),
@@ -152,11 +157,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 32),
 
                     if (_isInitializing)
-                      const Column(
+                      Column(
                         children: [
-                          CircularProgressIndicator(),
-                          SizedBox(height: 16),
-                          Text('Initializing system...'),
+                          const CircularProgressIndicator(),
+                          const SizedBox(height: 16),
+                          Text(l10n.initializingSystem),
                         ],
                       )
                     else
@@ -167,13 +172,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             // Username field
                             TextFormField(
                               controller: _usernameController,
-                              decoration: const InputDecoration(
-                                labelText: 'Username',
-                                prefixIcon: Icon(Icons.person),
+                              decoration: InputDecoration(
+                                labelText: l10n.username,
+                                prefixIcon: const Icon(Icons.person),
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please enter username';
+                                  return l10n.pleaseEnterUsername;
                                 }
                                 return null;
                               },
@@ -185,7 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             TextFormField(
                               controller: _passwordController,
                               decoration: InputDecoration(
-                                labelText: 'Password',
+                                labelText: l10n.password,
                                 prefixIcon: const Icon(Icons.lock),
                                 suffixIcon: IconButton(
                                   icon: Icon(
@@ -203,7 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               obscureText: _obscurePassword,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please enter password';
+                                  return l10n.pleaseEnterPassword;
                                 }
                                 return null;
                               },
@@ -236,9 +241,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                               color: Colors.white,
                                             ),
                                           )
-                                        : const Text(
-                                            'LOGIN',
-                                            style: TextStyle(
+                                        : Text(
+                                            l10n.login,
+                                            style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
                                             ),
