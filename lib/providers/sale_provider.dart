@@ -45,6 +45,14 @@ class SaleProvider with ChangeNotifier {
     return await _db.getSalesByDateRange(start, end);
   }
 
+  Future<List<Sale>> getCustomerSales(String customerId, {DateTime? startDate, DateTime? endDate}) async {
+    return await _db.getSalesByCustomer(customerId, startDate: startDate, endDate: endDate);
+  }
+
+  Future<Map<String, dynamic>> getCustomerStatistics(String customerId) async {
+    return await _db.getCustomerSalesStatistics(customerId);
+  }
+
   void addToCart(Product product, {int quantity = 1}) {
     final existingIndex = _cartItems.indexWhere(
       (item) => item.productId == product.id,

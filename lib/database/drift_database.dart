@@ -492,6 +492,44 @@ class AppDatabase extends _$AppDatabase {
     return allSales;
   }
 
+  Future<List<models.Sale>> getSalesByCustomer(String customerId, {DateTime? startDate, DateTime? endDate}) async {
+    var query = select(sales)..where((tbl) => tbl.customerId.equals(customerId));
+
+    if (startDate != null && endDate != null) {
+      query = select(sales)
+        ..where((tbl) =>
+          tbl.customerId.equals(customerId) &
+          tbl.saleDate.isBiggerOrEqualValue(startDate.toIso8601String()) &
+          tbl.saleDate.isSmallerOrEqualValue(endDate.toIso8601String()));
+    }
+
+    query = query..orderBy([(t) => OrderingTerm(expression: t.saleDate, mode: OrderingMode.desc)]);
+
+    final saleRows = await query.get();
+
+    final allSales = <models.Sale>[];
+    for (var saleRow in saleRows) {
+      final itemsQuery = select(saleItems)..where((tbl) => tbl.saleId.equals(saleRow.id));
+      final itemRows = await itemsQuery.get();
+      final items = itemRows.map((row) => _saleItemFromRow(row)).toList();
+      allSales.add(_saleFromRow(saleRow, items));
+    }
+    return allSales;
+  }
+
+  Future<Map<String, dynamic>> getCustomerSalesStatistics(String customerId) async {
+    final salesQuery = select(sales)..where((tbl) => tbl.customerId.equals(customerId));
+    final salesList = await salesQuery.get();
+
+    final invoiceCount = salesList.length;
+    final totalAmount = salesList.fold<double>(0, (sum, sale) => sum + sale.totalAmount);
+
+    return {
+      'invoiceCount': invoiceCount,
+      'totalAmount': totalAmount,
+    };
+  }
+
   Future<int> updateSale(models.Sale sale) async {
     return (update(sales)..where((tbl) => tbl.id.equals(sale.id))).write(
       SalesCompanion(
