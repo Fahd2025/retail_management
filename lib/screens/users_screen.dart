@@ -41,9 +41,10 @@ class _UsersScreenState extends State<UsersScreen> {
     // Prevent deleting self
     if (currentUser?.id == user.id) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('You cannot delete your own account'),
+          SnackBar(
+            content: Text(l10n.cannotDeleteOwnAccount),
             backgroundColor: Colors.orange,
           ),
         );
@@ -124,18 +125,19 @@ class _UsersScreenState extends State<UsersScreen> {
           }
 
           if (provider.users.isEmpty) {
+            final l10n = AppLocalizations.of(context)!;
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.people, size: 64, color: Colors.grey.shade300),
                   const SizedBox(height: 16),
-                  const Text('No users found'),
+                  Text(l10n.noUsersFound),
                   const SizedBox(height: 16),
                   ElevatedButton.icon(
                     onPressed: () => showUserDialog(),
                     icon: const Icon(Icons.add),
-                    label: const Text('Add User'),
+                    label: Text(l10n.addUser),
                   ),
                 ],
               ),
@@ -145,6 +147,7 @@ class _UsersScreenState extends State<UsersScreen> {
           return LayoutBuilder(
             builder: (context, constraints) {
               final isDesktop = constraints.maxWidth >= 800;
+              final l10n = AppLocalizations.of(context)!;
 
               if (isDesktop) {
                 // Desktop/Tablet: DataTable layout
@@ -153,14 +156,14 @@ class _UsersScreenState extends State<UsersScreen> {
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: DataTable(
-                      columns: const [
-                        DataColumn(label: Text('Username')),
-                        DataColumn(label: Text('Full Name')),
-                        DataColumn(label: Text('Role')),
-                        DataColumn(label: Text('Status')),
-                        DataColumn(label: Text('Invoice Count')),
-                        DataColumn(label: Text('Total Sales')),
-                        DataColumn(label: Text('Actions')),
+                      columns: [
+                        DataColumn(label: Text(l10n.username)),
+                        DataColumn(label: Text(l10n.fullName)),
+                        DataColumn(label: Text(l10n.role)),
+                        DataColumn(label: Text(l10n.status)),
+                        DataColumn(label: Text(l10n.invoiceCount)),
+                        DataColumn(label: Text(l10n.totalSales)),
+                        DataColumn(label: Text(l10n.actions)),
                       ],
                       rows: provider.users.map((user) {
                         final stats = provider.userSalesStats[user.id] ?? {};

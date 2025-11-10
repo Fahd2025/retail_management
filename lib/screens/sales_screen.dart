@@ -243,6 +243,7 @@ class _SalesScreenState extends State<SalesScreen> {
           }
 
           if (provider.sales.isEmpty) {
+            final l10n = AppLocalizations.of(context)!;
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -250,7 +251,7 @@ class _SalesScreenState extends State<SalesScreen> {
                   Icon(Icons.receipt_long,
                       size: 64, color: Colors.grey.shade300),
                   const SizedBox(height: 16),
-                  const Text('No sales found'),
+                  Text(l10n.noSalesFound),
                 ],
               ),
             );

@@ -242,5 +242,20 @@
   "returnSaleConfirm": "إرجاع البيع {invoiceNumber}؟",
   "printInvoiceQuestion": "هل تريد طباعة الفاتورة؟",
   "print": "طباعة",
-  "complete": "إتمام"
+  "complete": "إتمام",
+
+  "name": "الاسم",
+  "barcode": "الرمز الشريطي",
+  "stock": "المخزون",
+  "cost": "التكلفة",
+  "vat": "الضريبة %",
+  "actions": "الإجراءات",
+  "status": "الحالة",
+  "invoiceCount": "عدد الفواتير",
+  "totalSales": "إجمالي المبيعات",
+  "noSalesFound": "لم يتم العثور على مبيعات",
+  "noCustomersFound": "لم يتم العثور على عملاء",
+  "noProductsFound": "لم يتم العثور على منتجات",
+  "noUsersFound": "لم يتم العثور على مستخدمين",
+  "cannotDeleteOwnAccount": "لا يمكنك حذف حسابك الخاص"
 }

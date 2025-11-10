@@ -291,5 +291,20 @@
   },
   "printInvoiceQuestion": "Would you like to print the invoice?",
   "print": "Print",
-  "complete": "Complete"
+  "complete": "Complete",
+
+  "name": "Name",
+  "barcode": "Barcode",
+  "stock": "Stock",
+  "cost": "Cost",
+  "vat": "VAT %",
+  "actions": "Actions",
+  "status": "Status",
+  "invoiceCount": "Invoice Count",
+  "totalSales": "Total Sales",
+  "noSalesFound": "No sales found",
+  "noCustomersFound": "No customers found",
+  "noProductsFound": "No products found",
+  "noUsersFound": "No users found",
+  "cannotDeleteOwnAccount": "You cannot delete your own account"
 }

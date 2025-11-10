@@ -39,18 +39,19 @@ class _CustomersScreenState extends State<CustomersScreen> {
           }
 
           if (provider.customers.isEmpty) {
+            final l10n = AppLocalizations.of(context)!;
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.people, size: 64, color: Colors.grey.shade300),
                   const SizedBox(height: 16),
-                  const Text('No customers found'),
+                  Text(l10n.noCustomersFound),
                   const SizedBox(height: 16),
                   ElevatedButton.icon(
                     onPressed: () => showCustomerDialog(),
                     icon: const Icon(Icons.add),
-                    label: const Text('Add Customer'),
+                    label: Text(l10n.addCustomer),
                   ),
                 ],
               ),
