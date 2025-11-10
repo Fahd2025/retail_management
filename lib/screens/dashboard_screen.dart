@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import '../providers/product_provider.dart';
 import '../providers/customer_provider.dart';
@@ -73,32 +74,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-  List<Map<String, dynamic>> _getNavigationItems(UserRole role) {
+  List<Map<String, dynamic>> _getNavigationItems(UserRole role, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (role == UserRole.admin) {
-      return const [
-        {'icon': Icons.point_of_sale, 'label': 'Cashier'},
-        {'icon': Icons.inventory, 'label': 'Products'},
-        {'icon': Icons.category, 'label': 'Categories'},
-        {'icon': Icons.people, 'label': 'Customers'},
-        {'icon': Icons.receipt_long, 'label': 'Sales'},
-        {'icon': Icons.person, 'label': 'Users'},
-        {'icon': Icons.settings, 'label': 'Settings'},
+      return [
+        {'icon': Icons.point_of_sale, 'label': l10n.cashier},
+        {'icon': Icons.inventory, 'label': l10n.products},
+        {'icon': Icons.category, 'label': l10n.categories},
+        {'icon': Icons.people, 'label': l10n.customers},
+        {'icon': Icons.receipt_long, 'label': l10n.sales},
+        {'icon': Icons.person, 'label': l10n.users},
+        {'icon': Icons.settings, 'label': l10n.settings},
       ];
     } else {
-      return const [
-        {'icon': Icons.point_of_sale, 'label': 'Cashier'},
-        {'icon': Icons.receipt_long, 'label': 'Sales'},
+      return [
+        {'icon': Icons.point_of_sale, 'label': l10n.cashier},
+        {'icon': Icons.receipt_long, 'label': l10n.sales},
       ];
     }
   }
 
-  PreferredSizeWidget _buildAppBar(List<Map<String, dynamic>> navItems) {
+  PreferredSizeWidget _buildAppBar(List<Map<String, dynamic>> navItems, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     // Build AppBar based on selected screen
     switch (_selectedIndex) {
       case 0: // Cashier Screen
         final saleProvider = context.watch<SaleProvider>();
         return AppBar(
-          title: const Text('Point of Sale'),
+          title: Text(l10n.pointOfSale),
           backgroundColor: Colors.blue.shade700,
           foregroundColor: Colors.white,
           actions: [
@@ -120,9 +123,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         );
       case 1: // Products or Sales Screen (depends on user role)
         final label = navItems[_selectedIndex]['label'] as String;
-        if (label == 'Products') {
+        if (label == l10n.products) {
           return AppBar(
-            title: const Text('Products Management'),
+            title: Text(l10n.productsManagement),
             backgroundColor: Colors.blue.shade700,
             foregroundColor: Colors.white,
             actions: [
@@ -131,21 +134,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 onPressed: () {
                   (_productsKey.currentState as dynamic)?.showProductDialog();
                 },
-                tooltip: 'Add Product',
+                tooltip: l10n.addProduct,
               ),
               IconButton(
                 icon: const Icon(Icons.refresh),
                 onPressed: () {
                   context.read<ProductProvider>().loadProducts();
                 },
-                tooltip: 'Refresh',
+                tooltip: l10n.refresh,
               ),
             ],
           );
         } else {
           // Sales screen for cashier role
           return AppBar(
-            title: const Text('Sales History'),
+            title: Text(l10n.salesList),
             backgroundColor: Colors.blue.shade700,
             foregroundColor: Colors.white,
             actions: [
@@ -154,13 +157,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 onPressed: () {
                   context.read<SaleProvider>().loadSales();
                 },
+                tooltip: l10n.refresh,
               ),
             ],
           );
         }
       case 2: // Categories Screen (admin only)
         return AppBar(
-          title: const Text('Categories'),
+          title: Text(l10n.categories),
           backgroundColor: Colors.blue.shade700,
           foregroundColor: Colors.white,
           actions: [
@@ -169,20 +173,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
               onPressed: () {
                 (_categoriesKey.currentState as dynamic)?.showCategoryDialog();
               },
-              tooltip: 'Add Category',
+              tooltip: l10n.addCategory,
             ),
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: () {
                 (_categoriesKey.currentState as dynamic)?.loadCategories();
               },
-              tooltip: 'Refresh',
+              tooltip: l10n.refresh,
             ),
           ],
         );
       case 3: // Customers Screen (admin only)
         return AppBar(
-          title: const Text('Customers Management'),
+          title: Text(l10n.customersManagement),
           backgroundColor: Colors.blue.shade700,
           foregroundColor: Colors.white,
           actions: [
@@ -202,7 +206,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         );
       case 4: // Sales Screen (admin only)
         return AppBar(
-          title: const Text('Sales History'),
+          title: Text(l10n.salesList),
           backgroundColor: Colors.blue.shade700,
           foregroundColor: Colors.white,
           actions: [
@@ -216,7 +220,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         );
       case 5: // Users Screen (admin only)
         return AppBar(
-          title: const Text('Users Management'),
+          title: Text(l10n.usersManagement),
           backgroundColor: Colors.blue.shade700,
           foregroundColor: Colors.white,
           actions: [
@@ -225,20 +229,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
               onPressed: () {
                 (_usersKey.currentState as dynamic)?.showUserDialog();
               },
-              tooltip: 'Add User',
+              tooltip: l10n.addUser,
             ),
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: () {
                 context.read<UserProvider>().loadUsers();
               },
-              tooltip: 'Refresh',
+              tooltip: l10n.refresh,
             ),
           ],
         );
       case 6: // Settings Screen (admin only)
         return AppBar(
-          title: const Text('Settings'),
+          title: Text(l10n.settings),
           backgroundColor: Colors.blue.shade700,
           foregroundColor: Colors.white,
         );
@@ -324,10 +328,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (user == null) return const SizedBox();
 
     final screens = _getScreens(user.role);
-    final navItems = _getNavigationItems(user.role);
+    final navItems = _getNavigationItems(user.role, context);
 
     return Scaffold(
-      appBar: _buildAppBar(navItems),
+      appBar: _buildAppBar(navItems, context),
       drawer: Drawer(
         child: Column(
           children: [
@@ -370,20 +374,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const Divider(height: 1),
             ListTile(
               leading: const Icon(Icons.logout, color: Colors.red),
-              title: const Text(
-                'Logout',
-                style: TextStyle(color: Colors.red),
+              title: Text(
+                AppLocalizations.of(context)!.logout,
+                style: const TextStyle(color: Colors.red),
               ),
               onTap: () async {
+                final l10n = AppLocalizations.of(context)!;
                 final confirm = await showDialog<bool>(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text('Logout'),
-                    content: const Text('Are you sure you want to logout?'),
+                    title: Text(l10n.logout),
+                    content: Text(l10n.confirmLogout),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(context, false),
-                        child: const Text('Cancel'),
+                        child: Text(l10n.cancel),
                       ),
                       ElevatedButton(
                         onPressed: () => Navigator.pop(context, true),
@@ -391,7 +396,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
                         ),
-                        child: const Text('Logout'),
+                        child: Text(l10n.logout),
                       ),
                     ],
                   ),

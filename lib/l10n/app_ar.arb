@@ -222,5 +222,13 @@
   "syncNow": "مزامنة الآن",
   "version": "الإصدار",
   "appVersion": "1.0.0",
-  "posWithOfflineSupport": "نظام نقاط البيع مع دعم العمل بلا اتصال"
+  "posWithOfflineSupport": "نظام نقاط البيع مع دعم العمل بلا اتصال",
+
+  "pointOfSale": "نقطة البيع",
+  "productsManagement": "إدارة المنتجات",
+  "customersManagement": "إدارة العملاء",
+  "usersManagement": "إدارة المستخدمين",
+  "addProduct": "إضافة منتج",
+  "addCategory": "إضافة فئة",
+  "cashier": "أمين الصندوق"
 }
