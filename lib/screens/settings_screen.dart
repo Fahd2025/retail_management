@@ -122,9 +122,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final result = await _syncService.manualSync();
 
     if (mounted) {
+      final l10n = AppLocalizations.of(context)!;
+      String message;
+
+      switch (result.messageType) {
+        case SyncMessageType.noInternet:
+          message = l10n.noInternetConnection;
+          break;
+        case SyncMessageType.alreadySynced:
+          message = l10n.allDataSynchronized;
+          break;
+        case SyncMessageType.success:
+          message = l10n.successfullySynchronized(result.itemsSynced);
+          break;
+        case SyncMessageType.failed:
+          message = l10n.syncFailed;
+          break;
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(result.message),
+          content: Text(message),
           backgroundColor: result.success ? Colors.green : Colors.red,
         ),
       );
