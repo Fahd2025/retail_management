@@ -91,25 +91,34 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
+    // Prevent default form submission (important for web)
     if (!_formKey.currentState!.validate()) return;
 
     final authProvider = context.read<AuthProvider>();
     final username = _usernameController.text.trim();
-    final success = await authProvider.login(
-      username,
-      _passwordController.text,
-    );
 
-    if (mounted) {
-      final l10n = AppLocalizations.of(context)!;
-      if (success) {
-        _showNotification(l10n.loginSuccess(username), false);
-      } else {
-        // Use localized error message instead of the hardcoded one from provider
-        final errorMsg = authProvider.errorMessage?.contains('Invalid') == true
-            ? l10n.invalidCredentials
-            : l10n.loginFailed;
-        _showNotification(errorMsg, true);
+    try {
+      final success = await authProvider.login(
+        username,
+        _passwordController.text,
+      );
+
+      if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        if (success) {
+          _showNotification(l10n.loginSuccess(username), false);
+        } else {
+          // Use localized error message instead of the hardcoded one from provider
+          final errorMsg = authProvider.errorMessage?.contains('Invalid') == true
+              ? l10n.invalidCredentials
+              : l10n.loginFailed;
+          _showNotification(errorMsg, true);
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        _showNotification(l10n.loginFailed, true);
       }
     }
   }
@@ -315,6 +324,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 labelText: l10n.username,
                                 prefixIcon: const Icon(Icons.person),
                               ),
+                              autofillHints: const [AutofillHints.username],
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return l10n.pleaseEnterUsername;
@@ -322,6 +332,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 return null;
                               },
                               textInputAction: TextInputAction.next,
+                              onFieldSubmitted: (_) {
+                                // Move focus to password field
+                                FocusScope.of(context).nextFocus();
+                              },
                             ),
                             const SizedBox(height: 16),
 
@@ -344,6 +358,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   },
                                 ),
                               ),
+                              autofillHints: const [AutofillHints.password],
                               obscureText: _obscurePassword,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -351,7 +366,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }
                                 return null;
                               },
-                              onFieldSubmitted: (_) => _login(),
+                              onFieldSubmitted: (_) {
+                                // Submit form on Enter key
+                                if (_formKey.currentState!.validate()) {
+                                  _login();
+                                }
+                              },
                             ),
                             const SizedBox(height: 32),
 

@@ -98,6 +98,9 @@ class AuthWrapper extends StatefulWidget {
 }
 
 class _AuthWrapperState extends State<AuthWrapper> {
+  // Use a GlobalKey to preserve LoginScreen state across rebuilds
+  final GlobalKey<State<LoginScreen>> _loginScreenKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -122,7 +125,8 @@ class _AuthWrapperState extends State<AuthWrapper> {
           return const DashboardScreen();
         }
 
-        return const LoginScreen();
+        // Use key to preserve LoginScreen state when Consumer rebuilds
+        return LoginScreen(key: _loginScreenKey);
       },
     );
   }
