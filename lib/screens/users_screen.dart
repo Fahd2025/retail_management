@@ -38,7 +38,7 @@ class _UsersScreenState extends State<UsersScreen> {
     User user,
   ) async {
     final authState = context.read<AuthBloc>().state;
-    final currentUser = authState is AuthAuthenticated ? authState.user : null;
+    final currentUser = authState is Authenticated ? authState.user : null;
 
     // Prevent deleting self
     if (currentUser?.id == user.id) {
@@ -58,8 +58,8 @@ class _UsersScreenState extends State<UsersScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(AppLocalizations.of(context)!.deleteUser),
-        content:
-            Text(AppLocalizations.of(context)!.deleteUserConfirm(user.username)),
+        content: Text(
+            AppLocalizations.of(context)!.deleteUserConfirm(user.username)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -116,7 +116,7 @@ class _UsersScreenState extends State<UsersScreen> {
             final l10n = AppLocalizations.of(context)!;
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
+                content: Text(state.message!),
                 backgroundColor: Colors.green,
               ),
             );
@@ -138,7 +138,9 @@ class _UsersScreenState extends State<UsersScreen> {
           }
 
           final users = state is UserLoaded ? state.users : <User>[];
-          final userSalesStats = state is UserLoaded ? state.userSalesStats : <String, Map<String, dynamic>>{};
+          final userSalesStats = state is UserLoaded
+              ? state.userSalesStats
+              : <String, Map<String, dynamic>>{};
 
           if (users.isEmpty && state is! UserLoading) {
             final l10n = AppLocalizations.of(context)!;
@@ -228,8 +230,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                 IconButton(
                                   icon: const Icon(Icons.delete,
                                       size: 20, color: Colors.red),
-                                  onPressed: () =>
-                                      _deleteUser(context, user),
+                                  onPressed: () => _deleteUser(context, user),
                                 ),
                               ],
                             ),
@@ -292,7 +293,9 @@ class _UsersScreenState extends State<UsersScreen> {
                             _buildInfoRow(l10n.usernameLabel, user.username),
                             _buildInfoRow(
                               l10n.roleLabel,
-                              user.role == UserRole.admin ? l10n.admin : l10n.cashier,
+                              user.role == UserRole.admin
+                                  ? l10n.admin
+                                  : l10n.cashier,
                             ),
                             _buildInfoRow(
                               l10n.statusLabel,
@@ -363,14 +366,14 @@ class _UserDialogState extends State<_UserDialog> {
     if (widget.user == null) {
       // Create new user
       context.read<UserBloc>().add(
-        AddUserEvent(
-          username: _usernameController.text.trim(),
-          password: _passwordController.text,
-          fullName: _fullNameController.text.trim(),
-          role: _selectedRole,
-          isActive: _isActive,
-        ),
-      );
+            AddUserEvent(
+              username: _usernameController.text.trim(),
+              password: _passwordController.text,
+              fullName: _fullNameController.text.trim(),
+              role: _selectedRole,
+              isActive: _isActive,
+            ),
+          );
     } else {
       // Update existing user
       final updatedUser = widget.user!.copyWith(

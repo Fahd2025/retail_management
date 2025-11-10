@@ -7,17 +7,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:retail_management/blocs/locale/locale_bloc.dart';
+import 'package:retail_management/blocs/theme/theme_bloc.dart';
 
 import 'package:retail_management/main.dart';
-import 'package:retail_management/providers/locale_provider.dart';
-import 'package:retail_management/providers/theme_provider.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(MyApp(
-      themeProvider: ThemeProvider(),
-      localeProvider: LocaleProvider(),
+      themeBloc: ThemeBloc(),
+      localeBloc: LocaleBloc(),
     ));
 
     // Verify that our counter starts at 0.

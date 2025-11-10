@@ -37,11 +37,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
   CompanyInfo? _companyInfo;
 
   // GlobalKeys for screen access
-  final GlobalKey<State<CashierScreen>> _cashierKey = GlobalKey<State<CashierScreen>>();
-  final GlobalKey<State<ProductsScreen>> _productsKey = GlobalKey<State<ProductsScreen>>();
-  final GlobalKey<State<CategoriesScreen>> _categoriesKey = GlobalKey<State<CategoriesScreen>>();
-  final GlobalKey<State<CustomersScreen>> _customersKey = GlobalKey<State<CustomersScreen>>();
-  final GlobalKey<State<UsersScreen>> _usersKey = GlobalKey<State<UsersScreen>>();
+  final GlobalKey<State<CashierScreen>> _cashierKey =
+      GlobalKey<State<CashierScreen>>();
+  final GlobalKey<State<ProductsScreen>> _productsKey =
+      GlobalKey<State<ProductsScreen>>();
+  final GlobalKey<State<CategoriesScreen>> _categoriesKey =
+      GlobalKey<State<CategoriesScreen>>();
+  final GlobalKey<State<CustomersScreen>> _customersKey =
+      GlobalKey<State<CustomersScreen>>();
+  final GlobalKey<State<UsersScreen>> _usersKey =
+      GlobalKey<State<UsersScreen>>();
 
   @override
   void initState() {
@@ -81,7 +86,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-  List<Map<String, dynamic>> _getNavigationItems(UserRole role, BuildContext context) {
+  List<Map<String, dynamic>> _getNavigationItems(
+      UserRole role, BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     if (role == UserRole.admin) {
       return [
@@ -101,44 +107,48 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-  PreferredSizeWidget _buildAppBar(List<Map<String, dynamic>> navItems, BuildContext context) {
+  PreferredSizeWidget _buildAppBar(
+      List<Map<String, dynamic>> navItems, BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     // Build AppBar based on selected screen
     switch (_selectedIndex) {
       case 0: // Cashier Screen
-        return BlocBuilder<SaleBloc, SaleState>(
-          builder: (context, saleState) {
-            int cartItemCount = 0;
-            if (saleState is SaleLoaded) {
-              cartItemCount = saleState.cartItemCount;
-            } else if (saleState is SaleError) {
-              cartItemCount = saleState.cartItemCount;
-            } else if (saleState is SaleOperationSuccess) {
-              cartItemCount = saleState.cartItemCount;
-            }
+        return PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: BlocBuilder<SaleBloc, SaleState>(
+            builder: (context, saleState) {
+              int cartItemCount = 0;
+              if (saleState is SaleLoaded) {
+                cartItemCount = saleState.cartItemCount;
+              } else if (saleState is SaleError) {
+                cartItemCount = saleState.cartItemCount;
+              } else if (saleState is SaleOperationSuccess) {
+                cartItemCount = saleState.cartItemCount;
+              }
 
-            return AppBar(
-              title: Text(l10n.pointOfSale),
-              backgroundColor: Colors.blue.shade700,
-              foregroundColor: Colors.white,
-              actions: [
-                // Cart icon with badge
-                Padding(
-                  padding: const EdgeInsets.only(right: 16),
-                  child: Badge(
-                    label: Text('$cartItemCount'),
-                    isLabelVisible: cartItemCount > 0,
-                    child: IconButton(
-                      icon: const Icon(Icons.shopping_cart),
-                      onPressed: () {
-                        (_cashierKey.currentState as dynamic)?.toggleCart();
-                      },
+              return AppBar(
+                title: Text(l10n.pointOfSale),
+                backgroundColor: Colors.blue.shade700,
+                foregroundColor: Colors.white,
+                actions: [
+                  // Cart icon with badge
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: Badge(
+                      label: Text('$cartItemCount'),
+                      isLabelVisible: cartItemCount > 0,
+                      child: IconButton(
+                        icon: const Icon(Icons.shopping_cart),
+                        onPressed: () {
+                          (_cashierKey.currentState as dynamic)?.toggleCart();
+                        },
+                      ),
                     ),
                   ),
-                ),
-              ],
-            );
-          },
+                ],
+              );
+            },
+          ),
         );
       case 1: // Products or Sales Screen (depends on user role)
         final label = navItems[_selectedIndex]['label'] as String;
@@ -352,89 +362,90 @@ class _DashboardScreenState extends State<DashboardScreen> {
         final navItems = _getNavigationItems(user.role, context);
 
         return Scaffold(
-      appBar: _buildAppBar(navItems, context),
-      drawer: Drawer(
-        child: Column(
-          children: [
-            _buildDrawerHeader(),
-            Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                itemCount: navItems.length,
-                itemBuilder: (context, index) {
-                  final item = navItems[index];
-                  final isSelected = _selectedIndex == index;
+          appBar: _buildAppBar(navItems, context),
+          drawer: Drawer(
+            child: Column(
+              children: [
+                _buildDrawerHeader(),
+                Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: navItems.length,
+                    itemBuilder: (context, index) {
+                      final item = navItems[index];
+                      final isSelected = _selectedIndex == index;
 
-                  return ListTile(
-                    leading: Icon(
-                      item['icon'] as IconData,
-                      color: isSelected
-                          ? Colors.blue.shade700
-                          : Colors.grey.shade700,
-                    ),
-                    title: Text(
-                      item['label'] as String,
-                      style: TextStyle(
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.normal,
-                        color: isSelected
-                            ? Colors.blue.shade700
-                            : Colors.grey.shade700,
-                      ),
-                    ),
-                    selected: isSelected,
-                    selectedTileColor: Colors.blue.shade50,
-                    onTap: () {
-                      setState(() => _selectedIndex = index);
-                      Navigator.pop(context); // Close drawer
-                    },
-                  );
-                },
-              ),
-            ),
-            const Divider(height: 1),
-            ListTile(
-              leading: const Icon(Icons.logout, color: Colors.red),
-              title: Text(
-                AppLocalizations.of(context)!.logout,
-                style: const TextStyle(color: Colors.red),
-              ),
-              onTap: () async {
-                final l10n = AppLocalizations.of(context)!;
-                final confirm = await showDialog<bool>(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text(l10n.logout),
-                    content: Text(l10n.confirmLogout),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, false),
-                        child: Text(l10n.cancel),
-                      ),
-                      ElevatedButton(
-                        onPressed: () => Navigator.pop(context, true),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          foregroundColor: Colors.white,
+                      return ListTile(
+                        leading: Icon(
+                          item['icon'] as IconData,
+                          color: isSelected
+                              ? Colors.blue.shade700
+                              : Colors.grey.shade700,
                         ),
-                        child: Text(l10n.logout),
-                      ),
-                    ],
+                        title: Text(
+                          item['label'] as String,
+                          style: TextStyle(
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            color: isSelected
+                                ? Colors.blue.shade700
+                                : Colors.grey.shade700,
+                          ),
+                        ),
+                        selected: isSelected,
+                        selectedTileColor: Colors.blue.shade50,
+                        onTap: () {
+                          setState(() => _selectedIndex = index);
+                          Navigator.pop(context); // Close drawer
+                        },
+                      );
+                    },
                   ),
-                );
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.logout, color: Colors.red),
+                  title: Text(
+                    AppLocalizations.of(context)!.logout,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                  onTap: () async {
+                    final l10n = AppLocalizations.of(context)!;
+                    final confirm = await showDialog<bool>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text(l10n.logout),
+                        content: Text(l10n.confirmLogout),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, false),
+                            child: Text(l10n.cancel),
+                          ),
+                          ElevatedButton(
+                            onPressed: () => Navigator.pop(context, true),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              foregroundColor: Colors.white,
+                            ),
+                            child: Text(l10n.logout),
+                          ),
+                        ],
+                      ),
+                    );
 
-                if (confirm == true && mounted) {
-                  Navigator.pop(context); // Close drawer
-                  context.read<AuthBloc>().add(const LogoutEvent());
-                }
-              },
+                    if (confirm == true && mounted) {
+                      Navigator.pop(context); // Close drawer
+                      context.read<AuthBloc>().add(const LogoutEvent());
+                    }
+                  },
+                ),
+                const SizedBox(height: 8),
+              ],
             ),
-            const SizedBox(height: 8),
-          ],
-        ),
-      ),
-      body: screens[_selectedIndex],
-    );
+          ),
+          body: screens[_selectedIndex],
+        );
       },
     );
   }
