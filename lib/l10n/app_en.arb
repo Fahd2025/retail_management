@@ -1,7 +1,6 @@
 {
   "@@locale": "en",
 
-  "_comment_app_general": "=== General App Strings ===",
   "appTitle": "Retail Management System",
   "appSubtitle": "Point of Sale System",
   "ok": "OK",
@@ -22,7 +21,6 @@
   "close": "Close",
   "submit": "Submit",
 
-  "_comment_login": "=== Login Screen ===",
   "loginTitle": "Retail Management",
   "loginSubtitle": "Point of Sale System",
   "username": "Username",
@@ -43,7 +41,6 @@
     }
   },
 
-  "_comment_dashboard": "=== Dashboard ===",
   "dashboard": "Dashboard",
   "welcome": "Welcome",
   "totalSales": "Total Sales",
@@ -57,7 +54,6 @@
   "thisWeek": "This Week",
   "thisMonth": "This Month",
 
-  "_comment_products": "=== Products ===",
   "products": "Products",
   "productList": "Product List",
   "addProduct": "Add Product",
@@ -77,7 +73,6 @@
   "productDetails": "Product Details",
   "stockLevel": "Stock Level",
 
-  "_comment_categories": "=== Categories ===",
   "categories": "Categories",
   "addCategory": "Add Category",
   "editCategory": "Edit Category",
@@ -85,7 +80,6 @@
   "categoryName": "Category Name",
   "categoryDescription": "Category Description",
 
-  "_comment_customers": "=== Customers ===",
   "customers": "Customers",
   "customerList": "Customer List",
   "addCustomer": "Add Customer",
@@ -99,7 +93,6 @@
   "customerDetails": "Customer Details",
   "totalPurchases": "Total Purchases",
 
-  "_comment_sales": "=== Sales ===",
   "sales": "Sales",
   "salesList": "Sales List",
   "newSale": "New Sale",
@@ -120,7 +113,6 @@
   "printInvoice": "Print Invoice",
   "completeSale": "Complete Sale",
 
-  "_comment_users": "=== Users ===",
   "users": "Users",
   "userList": "User List",
   "addUser": "Add User",
@@ -135,7 +127,6 @@
   "active": "Active",
   "inactive": "Inactive",
 
-  "_comment_settings": "=== Settings ===",
   "settings": "Settings",
   "generalSettings": "General Settings",
   "appearance": "Appearance",
@@ -155,7 +146,6 @@
   "restore": "Restore",
   "about": "About",
 
-  "_comment_messages": "=== Messages & Notifications ===",
   "saveSuccess": "Saved successfully",
   "deleteSuccess": "Deleted successfully",
   "updateSuccess": "Updated successfully",
@@ -171,7 +161,6 @@
   "invalidEmail": "Invalid email address",
   "invalidPhone": "Invalid phone number",
 
-  "_comment_validation": "=== Validation Messages ===",
   "fieldRequired": "This field is required",
   "enterValidEmail": "Please enter a valid email",
   "enterValidPhone": "Please enter a valid phone number",
@@ -180,7 +169,6 @@
   "nameTooShort": "Name is too short",
   "passwordTooShort": "Password must be at least 6 characters",
 
-  "_comment_actions": "=== Actions ===",
   "view": "View",
   "print": "Print",
   "export": "Export",
@@ -194,7 +182,6 @@
   "reset": "Reset",
   "apply": "Apply",
 
-  "_comment_time": "=== Time & Date ===",
   "daily": "Daily",
   "weekly": "Weekly",
   "monthly": "Monthly",
@@ -205,7 +192,6 @@
   "selectDate": "Select Date",
   "selectTime": "Select Time",
 
-  "_comment_cashier": "=== Cashier Screen ===",
   "cashierMode": "Cashier Mode",
   "scanBarcode": "Scan Barcode",
   "addItem": "Add Item",
@@ -217,7 +203,6 @@
   "saleCompleted": "Sale Completed",
   "thankYou": "Thank you!",
 
-  "_comment_reports": "=== Reports ===",
   "reports": "Reports",
   "salesReport": "Sales Report",
   "inventoryReport": "Inventory Report",
