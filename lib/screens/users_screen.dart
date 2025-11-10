@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../providers/user_provider.dart';
 import '../providers/auth_provider.dart';
 import '../models/user.dart';
@@ -53,20 +54,20 @@ class _UsersScreenState extends State<UsersScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete User'),
+        title: Text(AppLocalizations.of(context)!.deleteUser),
         content:
-            Text('Delete user ${user.username}? This action cannot be undone.'),
+            Text(AppLocalizations.of(context)!.deleteUserConfirm(user.username)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
             ),
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),
@@ -475,7 +476,7 @@ class _UserDialogState extends State<_UserDialog> {
               ),
               const SizedBox(height: 16),
               SwitchListTile(
-                title: const Text('Active'),
+                title: Text(AppLocalizations.of(context)!.active),
                 value: _isActive,
                 onChanged: (value) {
                   setState(() => _isActive = value);
@@ -488,11 +489,11 @@ class _UserDialogState extends State<_UserDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         ElevatedButton(
           onPressed: _save,
-          child: const Text('Save'),
+          child: Text(AppLocalizations.of(context)!.save),
         ),
       ],
     );

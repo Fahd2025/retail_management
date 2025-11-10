@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../providers/product_provider.dart';
 import '../providers/sale_provider.dart';
 import '../providers/auth_provider.dart';
@@ -177,16 +178,16 @@ class _CashierScreenState extends State<CashierScreen>
         final shouldPrint = await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Sale Completed'),
-            content: const Text('Would you like to print the invoice?'),
+            title: Text(AppLocalizations.of(context)!.saleCompleted),
+            content: Text(AppLocalizations.of(context)!.printInvoiceQuestion),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: const Text('No'),
+                child: Text(AppLocalizations.of(context)!.no),
               ),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context, true),
-                child: const Text('Print'),
+                child: Text(AppLocalizations.of(context)!.print),
               ),
             ],
           ),
@@ -480,7 +481,7 @@ class _CashierScreenState extends State<CashierScreen>
                                       onPressed: saleProvider.cartItems.isEmpty
                                           ? null
                                           : () => saleProvider.clearCart(),
-                                      child: const Text('Clear'),
+                                      child: Text(AppLocalizations.of(context)!.clear),
                                     ),
                                   ),
                                   const SizedBox(width: 8),
@@ -494,7 +495,7 @@ class _CashierScreenState extends State<CashierScreen>
                                         backgroundColor: Colors.green,
                                         foregroundColor: Colors.white,
                                       ),
-                                      child: const Text('Checkout'),
+                                      child: Text(AppLocalizations.of(context)!.checkout),
                                     ),
                                   ),
                                 ],
@@ -860,7 +861,7 @@ class _PaymentDialogState extends State<_PaymentDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Payment'),
+      title: Text(AppLocalizations.of(context)!.payment),
       content: SizedBox(
         width: 400,
         child: Column(
@@ -930,7 +931,7 @@ class _PaymentDialogState extends State<_PaymentDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         ElevatedButton(
           onPressed: _change >= 0
@@ -942,7 +943,7 @@ class _PaymentDialogState extends State<_PaymentDialog> {
                   });
                 }
               : null,
-          child: const Text('Complete'),
+          child: Text(AppLocalizations.of(context)!.complete),
         ),
       ],
     );
