@@ -918,4 +918,212 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nameFieldLabel => 'Name';
+
+  @override
+  String get customerNameRequired => 'Customer Name *';
+
+  @override
+  String get emailFieldLabel => 'Email';
+
+  @override
+  String get phoneFieldLabel => 'Phone';
+
+  @override
+  String get vatNumberFieldLabel => 'VAT Number';
+
+  @override
+  String get crnNumberFieldLabel => 'CRN Number';
+
+  @override
+  String get saudiNationalAddress => 'Saudi National Address';
+
+  @override
+  String get buildingNumber => 'Building Number';
+
+  @override
+  String get streetName => 'Street Name';
+
+  @override
+  String get district => 'District';
+
+  @override
+  String get city => 'City';
+
+  @override
+  String get postalCode => 'Postal Code';
+
+  @override
+  String get additionalNumber => 'Additional Number';
+
+  @override
+  String phoneLabel(String phone) {
+    return 'Phone: $phone';
+  }
+
+  @override
+  String emailLabel(String email) {
+    return 'Email: $email';
+  }
+
+  @override
+  String vatLabel2(String vatNumber) {
+    return 'VAT: $vatNumber';
+  }
+
+  @override
+  String addressLabel(String address) {
+    return 'Address: $address';
+  }
+
+  @override
+  String get cart => 'Cart';
+
+  @override
+  String cartItems(int count) {
+    return '$count items';
+  }
+
+  @override
+  String get cartIsEmpty => 'Cart is empty';
+
+  @override
+  String get scanOrEnterBarcode => 'Scan or enter barcode...';
+
+  @override
+  String productAddedToCart(String productName) {
+    return '$productName added to cart';
+  }
+
+  @override
+  String get productNotFound => 'Product not found';
+
+  @override
+  String get subtotalColon => 'Subtotal:';
+
+  @override
+  String get vatColon => 'VAT:';
+
+  @override
+  String get totalColon => 'Total:';
+
+  @override
+  String get walkInCustomer => 'Walk-in Customer';
+
+  @override
+  String get amountPaid => 'Amount Paid';
+
+  @override
+  String changeColon(String amount) {
+    return 'Change: SAR $amount';
+  }
+
+  @override
+  String get insufficientPayment => 'Insufficient payment';
+
+  @override
+  String get cashPayment => 'Cash';
+
+  @override
+  String get cardPayment => 'Card';
+
+  @override
+  String get transferPayment => 'Transfer';
+
+  @override
+  String get allDataSynchronized => 'All data is already synchronized';
+
+  @override
+  String get noInternetConnection => 'No internet connection';
+
+  @override
+  String successfullySynchronized(int count) {
+    return 'Successfully synchronized $count items';
+  }
+
+  @override
+  String get syncFailed => 'Sync failed';
+
+  @override
+  String get exportInvoicesToPdf => 'Export Invoices to PDF';
+
+  @override
+  String get exportCustomerInvoices => 'Export Customer Invoices to PDF';
+
+  @override
+  String customerLabel(String name) {
+    return 'Customer: $name';
+  }
+
+  @override
+  String get selectPeriod => 'Select Period:';
+
+  @override
+  String get allTime => 'All Time';
+
+  @override
+  String get lastMonth => 'Last Month';
+
+  @override
+  String get lastThreeMonths => 'Last 3 Months';
+
+  @override
+  String get lastYear => 'Last Year';
+
+  @override
+  String get customDateRange => 'Custom Date Range';
+
+  @override
+  String get startDate => 'Start Date';
+
+  @override
+  String get endDate => 'End Date';
+
+  @override
+  String get preview => 'Preview:';
+
+  @override
+  String totalInvoices(int count) {
+    return 'Total Invoices: $count';
+  }
+
+  @override
+  String totalAmount(String amount) {
+    return 'Total Amount: $amount';
+  }
+
+  @override
+  String get exporting => 'Exporting...';
+
+  @override
+  String get exportToPdf => 'Export to PDF';
+
+  @override
+  String get loadingStatistics => 'Loading statistics...';
+
+  @override
+  String invoicesCount(int count) {
+    return 'Invoices: $count';
+  }
+
+  @override
+  String invoicesTotal(int count, String total) {
+    return 'Invoices: $count | Total: $total';
+  }
+
+  @override
+  String get companyInfoNotFound =>
+      'Company information not found. Please set up company info first.';
+
+  @override
+  String get noInvoicesFound => 'No invoices found for the selected period.';
+
+  @override
+  String exportedInvoicesSuccess(int count) {
+    return 'Successfully exported $count invoices to PDF';
+  }
+
+  @override
+  String errorExportingInvoices(String error) {
+    return 'Error exporting invoices: $error';
+  }
 }

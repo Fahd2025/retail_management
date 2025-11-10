@@ -917,4 +917,212 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get nameFieldLabel => 'الاسم';
+
+  @override
+  String get customerNameRequired => 'اسم العميل *';
+
+  @override
+  String get emailFieldLabel => 'البريد الإلكتروني';
+
+  @override
+  String get phoneFieldLabel => 'الهاتف';
+
+  @override
+  String get vatNumberFieldLabel => 'الرقم الضريبي';
+
+  @override
+  String get crnNumberFieldLabel => 'رقم السجل التجاري';
+
+  @override
+  String get saudiNationalAddress => 'العنوان الوطني السعودي';
+
+  @override
+  String get buildingNumber => 'رقم المبنى';
+
+  @override
+  String get streetName => 'اسم الشارع';
+
+  @override
+  String get district => 'الحي';
+
+  @override
+  String get city => 'المدينة';
+
+  @override
+  String get postalCode => 'الرمز البريدي';
+
+  @override
+  String get additionalNumber => 'الرقم الإضافي';
+
+  @override
+  String phoneLabel(String phone) {
+    return 'الهاتف: $phone';
+  }
+
+  @override
+  String emailLabel(String email) {
+    return 'البريد: $email';
+  }
+
+  @override
+  String vatLabel2(String vatNumber) {
+    return 'ض.ق.م: $vatNumber';
+  }
+
+  @override
+  String addressLabel(String address) {
+    return 'العنوان: $address';
+  }
+
+  @override
+  String get cart => 'السلة';
+
+  @override
+  String cartItems(int count) {
+    return '$count عناصر';
+  }
+
+  @override
+  String get cartIsEmpty => 'السلة فارغة';
+
+  @override
+  String get scanOrEnterBarcode => 'امسح أو أدخل الرمز الشريطي...';
+
+  @override
+  String productAddedToCart(String productName) {
+    return 'تمت إضافة $productName إلى السلة';
+  }
+
+  @override
+  String get productNotFound => 'المنتج غير موجود';
+
+  @override
+  String get subtotalColon => 'المجموع الفرعي:';
+
+  @override
+  String get vatColon => 'الضريبة:';
+
+  @override
+  String get totalColon => 'الإجمالي:';
+
+  @override
+  String get walkInCustomer => 'عميل عابر';
+
+  @override
+  String get amountPaid => 'المبلغ المدفوع';
+
+  @override
+  String changeColon(String amount) {
+    return 'الباقي: $amount ر.س';
+  }
+
+  @override
+  String get insufficientPayment => 'المبلغ المدفوع غير كافٍ';
+
+  @override
+  String get cashPayment => 'نقدي';
+
+  @override
+  String get cardPayment => 'بطاقة';
+
+  @override
+  String get transferPayment => 'تحويل';
+
+  @override
+  String get allDataSynchronized => 'جميع البيانات متزامنة بالفعل';
+
+  @override
+  String get noInternetConnection => 'لا يوجد اتصال بالإنترنت';
+
+  @override
+  String successfullySynchronized(int count) {
+    return 'تمت مزامنة $count عنصر بنجاح';
+  }
+
+  @override
+  String get syncFailed => 'فشلت المزامنة';
+
+  @override
+  String get exportInvoicesToPdf => 'تصدير الفواتير إلى PDF';
+
+  @override
+  String get exportCustomerInvoices => 'تصدير فواتير العميل إلى PDF';
+
+  @override
+  String customerLabel(String name) {
+    return 'العميل: $name';
+  }
+
+  @override
+  String get selectPeriod => 'اختر الفترة:';
+
+  @override
+  String get allTime => 'كل الفترات';
+
+  @override
+  String get lastMonth => 'آخر شهر';
+
+  @override
+  String get lastThreeMonths => 'آخر 3 أشهر';
+
+  @override
+  String get lastYear => 'آخر سنة';
+
+  @override
+  String get customDateRange => 'نطاق تاريخ مخصص';
+
+  @override
+  String get startDate => 'تاريخ البداية';
+
+  @override
+  String get endDate => 'تاريخ النهاية';
+
+  @override
+  String get preview => 'معاينة:';
+
+  @override
+  String totalInvoices(int count) {
+    return 'إجمالي الفواتير: $count';
+  }
+
+  @override
+  String totalAmount(String amount) {
+    return 'المبلغ الإجمالي: $amount';
+  }
+
+  @override
+  String get exporting => 'جاري التصدير...';
+
+  @override
+  String get exportToPdf => 'تصدير إلى PDF';
+
+  @override
+  String get loadingStatistics => 'جاري تحميل الإحصائيات...';
+
+  @override
+  String invoicesCount(int count) {
+    return 'الفواتير: $count';
+  }
+
+  @override
+  String invoicesTotal(int count, String total) {
+    return 'الفواتير: $count | الإجمالي: $total';
+  }
+
+  @override
+  String get companyInfoNotFound =>
+      'معلومات الشركة غير موجودة. الرجاء إعداد معلومات الشركة أولاً.';
+
+  @override
+  String get noInvoicesFound => 'لم يتم العثور على فواتير للفترة المحددة.';
+
+  @override
+  String exportedInvoicesSuccess(int count) {
+    return 'تم تصدير $count فاتورة إلى PDF بنجاح';
+  }
+
+  @override
+  String errorExportingInvoices(String error) {
+    return 'خطأ في تصدير الفواتير: $error';
+  }
 }

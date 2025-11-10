@@ -1849,6 +1849,360 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Name'**
   String get nameFieldLabel;
+
+  /// No description provided for @customerNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer Name *'**
+  String get customerNameRequired;
+
+  /// No description provided for @emailFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get emailFieldLabel;
+
+  /// No description provided for @phoneFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get phoneFieldLabel;
+
+  /// No description provided for @vatNumberFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT Number'**
+  String get vatNumberFieldLabel;
+
+  /// No description provided for @crnNumberFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'CRN Number'**
+  String get crnNumberFieldLabel;
+
+  /// No description provided for @saudiNationalAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Saudi National Address'**
+  String get saudiNationalAddress;
+
+  /// No description provided for @buildingNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Building Number'**
+  String get buildingNumber;
+
+  /// No description provided for @streetName.
+  ///
+  /// In en, this message translates to:
+  /// **'Street Name'**
+  String get streetName;
+
+  /// No description provided for @district.
+  ///
+  /// In en, this message translates to:
+  /// **'District'**
+  String get district;
+
+  /// No description provided for @city.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get city;
+
+  /// No description provided for @postalCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Postal Code'**
+  String get postalCode;
+
+  /// No description provided for @additionalNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional Number'**
+  String get additionalNumber;
+
+  /// No description provided for @phoneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone: {phone}'**
+  String phoneLabel(String phone);
+
+  /// No description provided for @emailLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Email: {email}'**
+  String emailLabel(String email);
+
+  /// No description provided for @vatLabel2.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT: {vatNumber}'**
+  String vatLabel2(String vatNumber);
+
+  /// No description provided for @addressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Address: {address}'**
+  String addressLabel(String address);
+
+  /// No description provided for @cart.
+  ///
+  /// In en, this message translates to:
+  /// **'Cart'**
+  String get cart;
+
+  /// No description provided for @cartItems.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items'**
+  String cartItems(int count);
+
+  /// No description provided for @cartIsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Cart is empty'**
+  String get cartIsEmpty;
+
+  /// No description provided for @scanOrEnterBarcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan or enter barcode...'**
+  String get scanOrEnterBarcode;
+
+  /// No description provided for @productAddedToCart.
+  ///
+  /// In en, this message translates to:
+  /// **'{productName} added to cart'**
+  String productAddedToCart(String productName);
+
+  /// No description provided for @productNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Product not found'**
+  String get productNotFound;
+
+  /// No description provided for @subtotalColon.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal:'**
+  String get subtotalColon;
+
+  /// No description provided for @vatColon.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT:'**
+  String get vatColon;
+
+  /// No description provided for @totalColon.
+  ///
+  /// In en, this message translates to:
+  /// **'Total:'**
+  String get totalColon;
+
+  /// No description provided for @walkInCustomer.
+  ///
+  /// In en, this message translates to:
+  /// **'Walk-in Customer'**
+  String get walkInCustomer;
+
+  /// No description provided for @amountPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount Paid'**
+  String get amountPaid;
+
+  /// No description provided for @changeColon.
+  ///
+  /// In en, this message translates to:
+  /// **'Change: SAR {amount}'**
+  String changeColon(String amount);
+
+  /// No description provided for @insufficientPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Insufficient payment'**
+  String get insufficientPayment;
+
+  /// No description provided for @cashPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get cashPayment;
+
+  /// No description provided for @cardPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Card'**
+  String get cardPayment;
+
+  /// No description provided for @transferPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer'**
+  String get transferPayment;
+
+  /// No description provided for @allDataSynchronized.
+  ///
+  /// In en, this message translates to:
+  /// **'All data is already synchronized'**
+  String get allDataSynchronized;
+
+  /// No description provided for @noInternetConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection'**
+  String get noInternetConnection;
+
+  /// No description provided for @successfullySynchronized.
+  ///
+  /// In en, this message translates to:
+  /// **'Successfully synchronized {count} items'**
+  String successfullySynchronized(int count);
+
+  /// No description provided for @syncFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync failed'**
+  String get syncFailed;
+
+  /// No description provided for @exportInvoicesToPdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Invoices to PDF'**
+  String get exportInvoicesToPdf;
+
+  /// No description provided for @exportCustomerInvoices.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Customer Invoices to PDF'**
+  String get exportCustomerInvoices;
+
+  /// No description provided for @customerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer: {name}'**
+  String customerLabel(String name);
+
+  /// No description provided for @selectPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Period:'**
+  String get selectPeriod;
+
+  /// No description provided for @allTime.
+  ///
+  /// In en, this message translates to:
+  /// **'All Time'**
+  String get allTime;
+
+  /// No description provided for @lastMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Month'**
+  String get lastMonth;
+
+  /// No description provided for @lastThreeMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 3 Months'**
+  String get lastThreeMonths;
+
+  /// No description provided for @lastYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Year'**
+  String get lastYear;
+
+  /// No description provided for @customDateRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Date Range'**
+  String get customDateRange;
+
+  /// No description provided for @startDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Date'**
+  String get startDate;
+
+  /// No description provided for @endDate.
+  ///
+  /// In en, this message translates to:
+  /// **'End Date'**
+  String get endDate;
+
+  /// No description provided for @preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview:'**
+  String get preview;
+
+  /// No description provided for @totalInvoices.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Invoices: {count}'**
+  String totalInvoices(int count);
+
+  /// No description provided for @totalAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Amount: {amount}'**
+  String totalAmount(String amount);
+
+  /// No description provided for @exporting.
+  ///
+  /// In en, this message translates to:
+  /// **'Exporting...'**
+  String get exporting;
+
+  /// No description provided for @exportToPdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Export to PDF'**
+  String get exportToPdf;
+
+  /// No description provided for @loadingStatistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading statistics...'**
+  String get loadingStatistics;
+
+  /// No description provided for @invoicesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoices: {count}'**
+  String invoicesCount(int count);
+
+  /// No description provided for @invoicesTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoices: {count} | Total: {total}'**
+  String invoicesTotal(int count, String total);
+
+  /// No description provided for @companyInfoNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Company information not found. Please set up company info first.'**
+  String get companyInfoNotFound;
+
+  /// No description provided for @noInvoicesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No invoices found for the selected period.'**
+  String get noInvoicesFound;
+
+  /// No description provided for @exportedInvoicesSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Successfully exported {count} invoices to PDF'**
+  String exportedInvoicesSuccess(int count);
+
+  /// No description provided for @errorExportingInvoices.
+  ///
+  /// In en, this message translates to:
+  /// **'Error exporting invoices: {error}'**
+  String errorExportingInvoices(String error);
 }
 
 class _AppLocalizationsDelegate

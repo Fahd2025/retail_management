@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../providers/customer_provider.dart';
 import '../providers/sale_provider.dart';
-import '../models/customer.dart';
+import '../models/customer.dart' as models;
 import '../models/company_info.dart';
 import '../database/drift_database.dart';
 import '../services/customer_invoice_export_service.dart';
@@ -27,14 +27,15 @@ class _CustomersScreenState extends State<CustomersScreen> {
     await context.read<CustomerProvider>().loadCustomers();
   }
 
-  Future<void> showCustomerDialog([Customer? customer]) async {
+  Future<void> showCustomerDialog([models.Customer? customer]) async {
     await showDialog(
       context: context,
       builder: (context) => _CustomerDialog(customer: customer),
     );
   }
 
-  Future<void> _showExportDialog(BuildContext context, Customer customer) async {
+  Future<void> _showExportDialog(
+      BuildContext context, models.Customer customer) async {
     await showDialog(
       context: context,
       builder: (context) => _ExportInvoicesDialog(customer: customer),
@@ -85,29 +86,39 @@ class _CustomersScreenState extends State<CustomersScreen> {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (customer.phone != null) Text(AppLocalizations.of(context)!.phoneLabel(customer.phone!)),
-                      if (customer.email != null) Text(AppLocalizations.of(context)!.emailLabel(customer.email!)),
+                      if (customer.phone != null)
+                        Text(AppLocalizations.of(context)!
+                            .phoneLabel(customer.phone!)),
+                      if (customer.email != null)
+                        Text(AppLocalizations.of(context)!
+                            .emailLabel(customer.email!)),
                       if (customer.vatNumber != null)
-                        Text(AppLocalizations.of(context)!.vatLabel2(customer.vatNumber!)),
+                        Text(AppLocalizations.of(context)!
+                            .vatLabel2(customer.vatNumber!)),
                       const SizedBox(height: 4),
                       FutureBuilder<Map<String, dynamic>>(
-                        future: context.read<SaleProvider>().getCustomerStatistics(customer.id),
+                        future: context
+                            .read<SaleProvider>()
+                            .getCustomerStatistics(customer.id),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             final stats = snapshot.data!;
                             final invoiceCount = stats['invoiceCount'] as int;
                             final totalAmount = stats['totalAmount'] as double;
-                            final currencyFormat = NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
+                            final currencyFormat = NumberFormat.currency(
+                                symbol: 'SAR ', decimalDigits: 2);
                             final l10n = AppLocalizations.of(context)!;
                             return Text(
-                              l10n.invoicesTotal(invoiceCount, currencyFormat.format(totalAmount)),
+                              l10n.invoicesTotal(invoiceCount,
+                                  currencyFormat.format(totalAmount)),
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Theme.of(context).primaryColor,
                               ),
                             );
                           }
-                          return Text(AppLocalizations.of(context)!.loadingStatistics);
+                          return Text(
+                              AppLocalizations.of(context)!.loadingStatistics);
                         },
                       ),
                     ],
@@ -116,8 +127,10 @@ class _CustomersScreenState extends State<CustomersScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.picture_as_pdf, color: Colors.blue),
-                        tooltip: AppLocalizations.of(context)!.exportInvoicesToPdf,
+                        icon: const Icon(Icons.picture_as_pdf,
+                            color: Colors.blue),
+                        tooltip:
+                            AppLocalizations.of(context)!.exportInvoicesToPdf,
                         onPressed: () => _showExportDialog(context, customer),
                       ),
                       IconButton(
@@ -135,7 +148,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                               content: Text(l10n.deleteCustomerConfirm),
                               actions: [
                                 TextButton(
-                                  onPressed: () => Navigator.pop(context, false),
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
                                   child: Text(l10n.cancel),
                                 ),
                                 ElevatedButton(
@@ -160,7 +174,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                     if (customer.saudiAddress != null)
                       Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: Text(AppLocalizations.of(context)!.addressLabel(customer.saudiAddress!.formattedAddress)),
+                        child: Text(AppLocalizations.of(context)!.addressLabel(
+                            customer.saudiAddress!.formattedAddress)),
                       ),
                   ],
                 ),
@@ -174,7 +189,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
 }
 
 class _CustomerDialog extends StatefulWidget {
-  final Customer? customer;
+  final models.Customer? customer;
 
   const _CustomerDialog({this.customer});
 
@@ -204,8 +219,10 @@ class _CustomerDialogState extends State<_CustomerDialog> {
     _nameController = TextEditingController(text: widget.customer?.name);
     _emailController = TextEditingController(text: widget.customer?.email);
     _phoneController = TextEditingController(text: widget.customer?.phone);
-    _vatNumberController = TextEditingController(text: widget.customer?.vatNumber);
-    _crnNumberController = TextEditingController(text: widget.customer?.crnNumber);
+    _vatNumberController =
+        TextEditingController(text: widget.customer?.vatNumber);
+    _crnNumberController =
+        TextEditingController(text: widget.customer?.crnNumber);
 
     final address = widget.customer?.saudiAddress;
     _buildingController = TextEditingController(text: address?.buildingNumber);
@@ -213,7 +230,8 @@ class _CustomerDialogState extends State<_CustomerDialog> {
     _districtController = TextEditingController(text: address?.district);
     _cityController = TextEditingController(text: address?.city);
     _postalCodeController = TextEditingController(text: address?.postalCode);
-    _additionalNumberController = TextEditingController(text: address?.additionalNumber);
+    _additionalNumberController =
+        TextEditingController(text: address?.additionalNumber);
   }
 
   Future<void> _save() async {
@@ -221,12 +239,17 @@ class _CustomerDialogState extends State<_CustomerDialog> {
 
     final provider = context.read<CustomerProvider>();
 
-    final saudiAddress = SaudiAddress(
-      buildingNumber: _buildingController.text.isEmpty ? null : _buildingController.text,
-      streetName: _streetController.text.isEmpty ? null : _streetController.text,
-      district: _districtController.text.isEmpty ? null : _districtController.text,
+    final saudiAddress = models.SaudiAddress(
+      buildingNumber:
+          _buildingController.text.isEmpty ? null : _buildingController.text,
+      streetName:
+          _streetController.text.isEmpty ? null : _streetController.text,
+      district:
+          _districtController.text.isEmpty ? null : _districtController.text,
       city: _cityController.text.isEmpty ? null : _cityController.text,
-      postalCode: _postalCodeController.text.isEmpty ? null : _postalCodeController.text,
+      postalCode: _postalCodeController.text.isEmpty
+          ? null
+          : _postalCodeController.text,
       additionalNumber: _additionalNumberController.text.isEmpty
           ? null
           : _additionalNumberController.text,
@@ -238,8 +261,12 @@ class _CustomerDialogState extends State<_CustomerDialog> {
         name: _nameController.text,
         email: _emailController.text.isEmpty ? null : _emailController.text,
         phone: _phoneController.text.isEmpty ? null : _phoneController.text,
-        vatNumber: _vatNumberController.text.isEmpty ? null : _vatNumberController.text,
-        crnNumber: _crnNumberController.text.isEmpty ? null : _crnNumberController.text,
+        vatNumber: _vatNumberController.text.isEmpty
+            ? null
+            : _vatNumberController.text,
+        crnNumber: _crnNumberController.text.isEmpty
+            ? null
+            : _crnNumberController.text,
         saudiAddress: saudiAddress,
       );
     } else {
@@ -248,8 +275,12 @@ class _CustomerDialogState extends State<_CustomerDialog> {
           name: _nameController.text,
           email: _emailController.text.isEmpty ? null : _emailController.text,
           phone: _phoneController.text.isEmpty ? null : _phoneController.text,
-          vatNumber: _vatNumberController.text.isEmpty ? null : _vatNumberController.text,
-          crnNumber: _crnNumberController.text.isEmpty ? null : _crnNumberController.text,
+          vatNumber: _vatNumberController.text.isEmpty
+              ? null
+              : _vatNumberController.text,
+          crnNumber: _crnNumberController.text.isEmpty
+              ? null
+              : _crnNumberController.text,
           saudiAddress: saudiAddress,
         ),
       );
@@ -264,7 +295,8 @@ class _CustomerDialogState extends State<_CustomerDialog> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: Text(widget.customer == null ? l10n.addCustomer : l10n.editCustomer),
+      title:
+          Text(widget.customer == null ? l10n.addCustomer : l10n.editCustomer),
       content: SizedBox(
         width: 600,
         child: Form(
@@ -276,7 +308,8 @@ class _CustomerDialogState extends State<_CustomerDialog> {
               children: [
                 TextFormField(
                   controller: _nameController,
-                  decoration: InputDecoration(labelText: l10n.customerNameRequired),
+                  decoration:
+                      InputDecoration(labelText: l10n.customerNameRequired),
                   validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
                 ),
                 const SizedBox(height: 16),
@@ -294,12 +327,14 @@ class _CustomerDialogState extends State<_CustomerDialog> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _vatNumberController,
-                  decoration: InputDecoration(labelText: l10n.vatNumberFieldLabel),
+                  decoration:
+                      InputDecoration(labelText: l10n.vatNumberFieldLabel),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _crnNumberController,
-                  decoration: InputDecoration(labelText: l10n.crnNumberFieldLabel),
+                  decoration:
+                      InputDecoration(labelText: l10n.crnNumberFieldLabel),
                 ),
                 const SizedBox(height: 24),
                 Text(
@@ -312,7 +347,8 @@ class _CustomerDialogState extends State<_CustomerDialog> {
                     Expanded(
                       child: TextFormField(
                         controller: _buildingController,
-                        decoration: InputDecoration(labelText: l10n.buildingNumber),
+                        decoration:
+                            InputDecoration(labelText: l10n.buildingNumber),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -355,7 +391,8 @@ class _CustomerDialogState extends State<_CustomerDialog> {
                     Expanded(
                       child: TextFormField(
                         controller: _additionalNumberController,
-                        decoration: InputDecoration(labelText: l10n.additionalNumber),
+                        decoration:
+                            InputDecoration(labelText: l10n.additionalNumber),
                       ),
                     ),
                   ],
@@ -396,7 +433,7 @@ class _CustomerDialogState extends State<_CustomerDialog> {
 }
 
 class _ExportInvoicesDialog extends StatefulWidget {
-  final Customer customer;
+  final models.Customer customer;
 
   const _ExportInvoicesDialog({required this.customer});
 
@@ -408,7 +445,8 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
   DateTime? _startDate;
   DateTime? _endDate;
   bool _isExporting = false;
-  String _filterOption = 'all'; // 'all', 'custom', 'last_month', 'last_3_months', 'last_year'
+  String _filterOption =
+      'all'; // 'all', 'custom', 'last_month', 'last_3_months', 'last_year'
 
   @override
   void initState() {
@@ -558,20 +596,26 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            Text(l10n.selectPeriod, style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(l10n.selectPeriod,
+                style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
             DropdownButtonFormField<String>(
               value: _filterOption,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
               items: [
                 DropdownMenuItem(value: 'all', child: Text(l10n.allTime)),
-                DropdownMenuItem(value: 'last_month', child: Text(l10n.lastMonth)),
-                DropdownMenuItem(value: 'last_3_months', child: Text(l10n.lastThreeMonths)),
-                DropdownMenuItem(value: 'last_year', child: Text(l10n.lastYear)),
-                DropdownMenuItem(value: 'custom', child: Text(l10n.customDateRange)),
+                DropdownMenuItem(
+                    value: 'last_month', child: Text(l10n.lastMonth)),
+                DropdownMenuItem(
+                    value: 'last_3_months', child: Text(l10n.lastThreeMonths)),
+                DropdownMenuItem(
+                    value: 'last_year', child: Text(l10n.lastYear)),
+                DropdownMenuItem(
+                    value: 'custom', child: Text(l10n.customDateRange)),
               ],
               onChanged: (value) {
                 setState(() {
@@ -588,7 +632,9 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
                     child: OutlinedButton.icon(
                       onPressed: _selectStartDate,
                       icon: const Icon(Icons.calendar_today),
-                      label: Text(_startDate == null ? l10n.startDate : dateFormat.format(_startDate!)),
+                      label: Text(_startDate == null
+                          ? l10n.startDate
+                          : dateFormat.format(_startDate!)),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -596,7 +642,9 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
                     child: OutlinedButton.icon(
                       onPressed: _selectEndDate,
                       icon: const Icon(Icons.calendar_today),
-                      label: Text(_endDate == null ? l10n.endDate : dateFormat.format(_endDate!)),
+                      label: Text(_endDate == null
+                          ? l10n.endDate
+                          : dateFormat.format(_endDate!)),
                     ),
                   ),
                 ],
@@ -606,18 +654,21 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
             FutureBuilder<List<dynamic>>(
               future: Future.wait([
                 context.read<SaleProvider>().getCustomerSales(
-                  widget.customer.id,
-                  startDate: _startDate,
-                  endDate: _endDate,
-                ),
-                context.read<SaleProvider>().getCustomerStatistics(widget.customer.id),
+                      widget.customer.id,
+                      startDate: _startDate,
+                      endDate: _endDate,
+                    ),
+                context
+                    .read<SaleProvider>()
+                    .getCustomerStatistics(widget.customer.id),
               ]),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final sales = snapshot.data![0] as List;
                   final stats = snapshot.data![1] as Map<String, dynamic>;
                   final totalAmount = stats['totalAmount'] as double;
-                  final currencyFormat = NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
+                  final currencyFormat =
+                      NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
 
                   return Container(
                     padding: const EdgeInsets.all(12),
@@ -637,7 +688,8 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
                         ),
                         const SizedBox(height: 8),
                         Text(l10n.totalInvoices(sales.length)),
-                        Text(l10n.totalAmount(currencyFormat.format(totalAmount))),
+                        Text(l10n
+                            .totalAmount(currencyFormat.format(totalAmount))),
                       ],
                     ),
                   );
@@ -656,12 +708,12 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
         ElevatedButton.icon(
           onPressed: _isExporting ? null : _exportInvoices,
           icon: _isExporting
-            ? const SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
-            : const Icon(Icons.picture_as_pdf),
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Icon(Icons.picture_as_pdf),
           label: Text(_isExporting ? l10n.exporting : l10n.exportToPdf),
         ),
       ],
