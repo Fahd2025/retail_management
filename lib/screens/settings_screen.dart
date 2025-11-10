@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../database/drift_database.dart';
 import '../models/company_info.dart';
 import '../services/sync_service.dart';
+import '../providers/theme_provider.dart';
+import '../providers/locale_provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -128,12 +132,93 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final themeProvider = context.watch<ThemeProvider>();
+    final localeProvider = context.watch<LocaleProvider>();
+
     return Scaffold(
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Appearance & Language Preferences Section
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.appearance,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const Divider(),
+
+                    // Theme Selection
+                    ListTile(
+                      leading: Icon(
+                        themeProvider.isDarkMode
+                          ? Icons.dark_mode
+                          : Icons.light_mode,
+                      ),
+                      title: Text(l10n.theme),
+                      subtitle: Text(
+                        themeProvider.isDarkMode
+                          ? l10n.darkMode
+                          : l10n.lightMode,
+                      ),
+                      trailing: Switch(
+                        value: themeProvider.isDarkMode,
+                        onChanged: (value) async {
+                          await themeProvider.toggleTheme();
+                        },
+                      ),
+                    ),
+
+                    const Divider(),
+
+                    // Language Selection
+                    ListTile(
+                      leading: const Icon(Icons.language),
+                      title: Text(l10n.language),
+                      subtitle: Text(localeProvider.currentLocaleName),
+                      trailing: DropdownButton<Locale>(
+                        value: localeProvider.locale,
+                        underline: const SizedBox(),
+                        items: LocaleProvider.supportedLocales.map((locale) {
+                          return DropdownMenuItem(
+                            value: locale,
+                            child: Text(localeProvider.getLocaleName(locale)),
+                          );
+                        }).toList(),
+                        onChanged: (Locale? newLocale) async {
+                          if (newLocale != null) {
+                            await localeProvider.setLocale(newLocale);
+                          }
+                        },
+                      ),
+                    ),
+
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        localeProvider.isArabic
+                          ? 'سيتم تطبيق التغييرات على الفور'
+                          : 'Changes will be applied immediately',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Colors.grey[600],
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+
             // Company Information Section
             Card(
               child: Padding(
