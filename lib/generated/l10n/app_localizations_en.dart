@@ -687,4 +687,235 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get complete => 'Complete';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get stock => 'Stock';
+
+  @override
+  String get vat => 'VAT %';
+
+  @override
+  String get actions => 'Actions';
+
+  @override
+  String get status => 'Status';
+
+  @override
+  String get invoiceCount => 'Invoice Count';
+
+  @override
+  String get noSalesFound => 'No sales found';
+
+  @override
+  String get noCustomersFound => 'No customers found';
+
+  @override
+  String get noProductsFound => 'No products found';
+
+  @override
+  String get noUsersFound => 'No users found';
+
+  @override
+  String get cannotDeleteOwnAccount => 'You cannot delete your own account';
+
+  @override
+  String get selectACategory => 'Select a category';
+
+  @override
+  String get invalid => 'Invalid';
+
+  @override
+  String get units => 'units';
+
+  @override
+  String failedToLoadCategories(String error) {
+    return 'Failed to load categories: $error';
+  }
+
+  @override
+  String get descriptionOptional => 'Description (Optional)';
+
+  @override
+  String get pleaseEnterCategoryName => 'Please enter a category name';
+
+  @override
+  String get categoryAddedSuccess => 'Category added successfully';
+
+  @override
+  String get categoryUpdatedSuccess => 'Category updated successfully';
+
+  @override
+  String get categoryDeletedSuccess => 'Category deleted successfully';
+
+  @override
+  String errorSavingCategory(String error) {
+    return 'Error saving category: $error';
+  }
+
+  @override
+  String errorDeletingCategory(String error) {
+    return 'Error deleting category: $error';
+  }
+
+  @override
+  String get noCategoriesFound => 'No categories found';
+
+  @override
+  String productCount(int count) {
+    return '$count product(s)';
+  }
+
+  @override
+  String get tooltipEdit => 'Edit';
+
+  @override
+  String get tooltipDelete => 'Delete';
+
+  @override
+  String get userDeletedSuccess => 'User deleted successfully';
+
+  @override
+  String get failedToDeleteUser => 'Failed to delete user';
+
+  @override
+  String get usernameLabel => 'Username';
+
+  @override
+  String get roleLabel => 'Role';
+
+  @override
+  String get statusLabel => 'Status';
+
+  @override
+  String get userCreatedSuccess => 'User created successfully';
+
+  @override
+  String get userUpdatedSuccess => 'User updated successfully';
+
+  @override
+  String get anErrorOccurred => 'An error occurred';
+
+  @override
+  String get usernameRequired => 'Username is required';
+
+  @override
+  String get usernameMinLength => 'Username must be at least 3 characters';
+
+  @override
+  String get fullNameRequired => 'Full name is required';
+
+  @override
+  String get passwordRequired => 'Password is required';
+
+  @override
+  String get passwordMinLength => 'Password must be at least 6 characters';
+
+  @override
+  String get passwordLeaveEmpty => 'Password (leave empty to keep current)';
+
+  @override
+  String get companyInfoNotConfigured => 'Company info not configured';
+
+  @override
+  String printError(String error) {
+    return 'Print error: $error';
+  }
+
+  @override
+  String get invoice => 'Invoice';
+
+  @override
+  String invoiceLabel(String invoiceNumber) {
+    return 'Invoice: $invoiceNumber';
+  }
+
+  @override
+  String dateLabel(String date) {
+    return 'Date: $date';
+  }
+
+  @override
+  String totalLabel(String total) {
+    return 'Total: SAR $total';
+  }
+
+  @override
+  String statusLabelText(String status) {
+    return 'Status: $status';
+  }
+
+  @override
+  String get completed => 'COMPLETED';
+
+  @override
+  String get returned => 'RETURNED';
+
+  @override
+  String get reprint => 'Reprint';
+
+  @override
+  String get return_sale => 'Return';
+
+  @override
+  String get itemsLabel => 'Items:';
+
+  @override
+  String get subtotalLabel => 'Subtotal:';
+
+  @override
+  String get vatLabel => 'VAT:';
+
+  @override
+  String get totalLabelColon => 'Total:';
+
+  @override
+  String get paidLabel => 'Paid:';
+
+  @override
+  String get changeLabel => 'Change:';
+
+  @override
+  String get saleReturnedSuccess => 'Sale returned successfully';
+
+  @override
+  String get errorLoadingCategories => 'Error loading categories';
+
+  @override
+  String get productNameRequired => 'Product Name *';
+
+  @override
+  String get barcodeRequired => 'Barcode *';
+
+  @override
+  String get categoryRequired => 'Category *';
+
+  @override
+  String get priceRequired => 'Price *';
+
+  @override
+  String get costRequired => 'Cost *';
+
+  @override
+  String get quantityRequired => 'Quantity *';
+
+  @override
+  String get vatRateRequired => 'VAT % *';
+
+  @override
+  String get usernameFieldLabel => 'Username *';
+
+  @override
+  String get fullNameFieldLabel => 'Full Name *';
+
+  @override
+  String get passwordFieldLabel => 'Password *';
+
+  @override
+  String get roleFieldLabel => 'Role *';
+
+  @override
+  String get nameFieldLabel => 'Name';
 }

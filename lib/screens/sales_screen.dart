@@ -110,7 +110,7 @@ class _SalesScreenState extends State<SalesScreen> {
               IconButton(
                 icon: const Icon(Icons.undo, color: Colors.orange),
                 onPressed: () => _returnSale(sale),
-                tooltip: l10n.return,
+                tooltip: l10n.return_sale,
               ),
           ],
         ),
@@ -210,7 +210,8 @@ class _SalesScreenState extends State<SalesScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(AppLocalizations.of(context)!.returnSale),
-        content: Text(AppLocalizations.of(context)!.returnSaleConfirm(sale.invoiceNumber)),
+        content: Text(AppLocalizations.of(context)!
+            .returnSaleConfirm(sale.invoiceNumber)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),

@@ -1423,6 +1423,432 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Complete'**
   String get complete;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @stock.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock'**
+  String get stock;
+
+  /// No description provided for @vat.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT %'**
+  String get vat;
+
+  /// No description provided for @actions.
+  ///
+  /// In en, this message translates to:
+  /// **'Actions'**
+  String get actions;
+
+  /// No description provided for @status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status;
+
+  /// No description provided for @invoiceCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice Count'**
+  String get invoiceCount;
+
+  /// No description provided for @noSalesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No sales found'**
+  String get noSalesFound;
+
+  /// No description provided for @noCustomersFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No customers found'**
+  String get noCustomersFound;
+
+  /// No description provided for @noProductsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No products found'**
+  String get noProductsFound;
+
+  /// No description provided for @noUsersFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No users found'**
+  String get noUsersFound;
+
+  /// No description provided for @cannotDeleteOwnAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot delete your own account'**
+  String get cannotDeleteOwnAccount;
+
+  /// No description provided for @selectACategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a category'**
+  String get selectACategory;
+
+  /// No description provided for @invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid'**
+  String get invalid;
+
+  /// No description provided for @units.
+  ///
+  /// In en, this message translates to:
+  /// **'units'**
+  String get units;
+
+  /// No description provided for @failedToLoadCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load categories: {error}'**
+  String failedToLoadCategories(String error);
+
+  /// No description provided for @descriptionOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Description (Optional)'**
+  String get descriptionOptional;
+
+  /// No description provided for @pleaseEnterCategoryName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a category name'**
+  String get pleaseEnterCategoryName;
+
+  /// No description provided for @categoryAddedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Category added successfully'**
+  String get categoryAddedSuccess;
+
+  /// No description provided for @categoryUpdatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Category updated successfully'**
+  String get categoryUpdatedSuccess;
+
+  /// No description provided for @categoryDeletedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Category deleted successfully'**
+  String get categoryDeletedSuccess;
+
+  /// No description provided for @errorSavingCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving category: {error}'**
+  String errorSavingCategory(String error);
+
+  /// No description provided for @errorDeletingCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting category: {error}'**
+  String errorDeletingCategory(String error);
+
+  /// No description provided for @noCategoriesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No categories found'**
+  String get noCategoriesFound;
+
+  /// No description provided for @productCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} product(s)'**
+  String productCount(int count);
+
+  /// No description provided for @tooltipEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get tooltipEdit;
+
+  /// No description provided for @tooltipDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get tooltipDelete;
+
+  /// No description provided for @userDeletedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'User deleted successfully'**
+  String get userDeletedSuccess;
+
+  /// No description provided for @failedToDeleteUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete user'**
+  String get failedToDeleteUser;
+
+  /// No description provided for @usernameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get usernameLabel;
+
+  /// No description provided for @roleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get roleLabel;
+
+  /// No description provided for @statusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get statusLabel;
+
+  /// No description provided for @userCreatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'User created successfully'**
+  String get userCreatedSuccess;
+
+  /// No description provided for @userUpdatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'User updated successfully'**
+  String get userUpdatedSuccess;
+
+  /// No description provided for @anErrorOccurred.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred'**
+  String get anErrorOccurred;
+
+  /// No description provided for @usernameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Username is required'**
+  String get usernameRequired;
+
+  /// No description provided for @usernameMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Username must be at least 3 characters'**
+  String get usernameMinLength;
+
+  /// No description provided for @fullNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name is required'**
+  String get fullNameRequired;
+
+  /// No description provided for @passwordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required'**
+  String get passwordRequired;
+
+  /// No description provided for @passwordMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get passwordMinLength;
+
+  /// No description provided for @passwordLeaveEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Password (leave empty to keep current)'**
+  String get passwordLeaveEmpty;
+
+  /// No description provided for @companyInfoNotConfigured.
+  ///
+  /// In en, this message translates to:
+  /// **'Company info not configured'**
+  String get companyInfoNotConfigured;
+
+  /// No description provided for @printError.
+  ///
+  /// In en, this message translates to:
+  /// **'Print error: {error}'**
+  String printError(String error);
+
+  /// No description provided for @invoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice'**
+  String get invoice;
+
+  /// No description provided for @invoiceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice: {invoiceNumber}'**
+  String invoiceLabel(String invoiceNumber);
+
+  /// No description provided for @dateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Date: {date}'**
+  String dateLabel(String date);
+
+  /// No description provided for @totalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total: SAR {total}'**
+  String totalLabel(String total);
+
+  /// No description provided for @statusLabelText.
+  ///
+  /// In en, this message translates to:
+  /// **'Status: {status}'**
+  String statusLabelText(String status);
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'COMPLETED'**
+  String get completed;
+
+  /// No description provided for @returned.
+  ///
+  /// In en, this message translates to:
+  /// **'RETURNED'**
+  String get returned;
+
+  /// No description provided for @reprint.
+  ///
+  /// In en, this message translates to:
+  /// **'Reprint'**
+  String get reprint;
+
+  /// No description provided for @return_sale.
+  ///
+  /// In en, this message translates to:
+  /// **'Return'**
+  String get return_sale;
+
+  /// No description provided for @itemsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Items:'**
+  String get itemsLabel;
+
+  /// No description provided for @subtotalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal:'**
+  String get subtotalLabel;
+
+  /// No description provided for @vatLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT:'**
+  String get vatLabel;
+
+  /// No description provided for @totalLabelColon.
+  ///
+  /// In en, this message translates to:
+  /// **'Total:'**
+  String get totalLabelColon;
+
+  /// No description provided for @paidLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid:'**
+  String get paidLabel;
+
+  /// No description provided for @changeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Change:'**
+  String get changeLabel;
+
+  /// No description provided for @saleReturnedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Sale returned successfully'**
+  String get saleReturnedSuccess;
+
+  /// No description provided for @errorLoadingCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading categories'**
+  String get errorLoadingCategories;
+
+  /// No description provided for @productNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Product Name *'**
+  String get productNameRequired;
+
+  /// No description provided for @barcodeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Barcode *'**
+  String get barcodeRequired;
+
+  /// No description provided for @categoryRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Category *'**
+  String get categoryRequired;
+
+  /// No description provided for @priceRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Price *'**
+  String get priceRequired;
+
+  /// No description provided for @costRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Cost *'**
+  String get costRequired;
+
+  /// No description provided for @quantityRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity *'**
+  String get quantityRequired;
+
+  /// No description provided for @vatRateRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT % *'**
+  String get vatRateRequired;
+
+  /// No description provided for @usernameFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Username *'**
+  String get usernameFieldLabel;
+
+  /// No description provided for @fullNameFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name *'**
+  String get fullNameFieldLabel;
+
+  /// No description provided for @passwordFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Password *'**
+  String get passwordFieldLabel;
+
+  /// No description provided for @roleFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Role *'**
+  String get roleFieldLabel;
+
+  /// No description provided for @nameFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get nameFieldLabel;
 }
 
 class _AppLocalizationsDelegate

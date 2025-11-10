@@ -410,7 +410,7 @@
   "completed": "COMPLETED",
   "returned": "RETURNED",
   "reprint": "Reprint",
-  "return": "Return",
+  "return_sale": "Return",
   "itemsLabel": "Items:",
   "subtotalLabel": "Subtotal:",
   "vatLabel": "VAT:",

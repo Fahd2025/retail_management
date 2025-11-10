@@ -298,7 +298,7 @@
   "completed": "مكتمل",
   "returned": "مرتجع",
   "reprint": "إعادة الطباعة",
-  "return": "إرجاع",
+  "return_sale": "إرجاع",
   "itemsLabel": "العناصر:",
   "subtotalLabel": "المجموع الفرعي:",
   "vatLabel": "الضريبة:",

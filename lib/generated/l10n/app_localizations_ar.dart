@@ -685,4 +685,236 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get complete => 'إتمام';
+
+  @override
+  String get name => 'الاسم';
+
+  @override
+  String get stock => 'المخزون';
+
+  @override
+  String get vat => 'الضريبة %';
+
+  @override
+  String get actions => 'الإجراءات';
+
+  @override
+  String get status => 'الحالة';
+
+  @override
+  String get invoiceCount => 'عدد الفواتير';
+
+  @override
+  String get noSalesFound => 'لم يتم العثور على مبيعات';
+
+  @override
+  String get noCustomersFound => 'لم يتم العثور على عملاء';
+
+  @override
+  String get noProductsFound => 'لم يتم العثور على منتجات';
+
+  @override
+  String get noUsersFound => 'لم يتم العثور على مستخدمين';
+
+  @override
+  String get cannotDeleteOwnAccount => 'لا يمكنك حذف حسابك الخاص';
+
+  @override
+  String get selectACategory => 'اختر فئة';
+
+  @override
+  String get invalid => 'غير صحيح';
+
+  @override
+  String get units => 'وحدات';
+
+  @override
+  String failedToLoadCategories(String error) {
+    return 'فشل تحميل الفئات: $error';
+  }
+
+  @override
+  String get descriptionOptional => 'الوصف (اختياري)';
+
+  @override
+  String get pleaseEnterCategoryName => 'الرجاء إدخال اسم الفئة';
+
+  @override
+  String get categoryAddedSuccess => 'تمت إضافة الفئة بنجاح';
+
+  @override
+  String get categoryUpdatedSuccess => 'تم تحديث الفئة بنجاح';
+
+  @override
+  String get categoryDeletedSuccess => 'تم حذف الفئة بنجاح';
+
+  @override
+  String errorSavingCategory(String error) {
+    return 'خطأ في حفظ الفئة: $error';
+  }
+
+  @override
+  String errorDeletingCategory(String error) {
+    return 'خطأ في حذف الفئة: $error';
+  }
+
+  @override
+  String get noCategoriesFound => 'لم يتم العثور على فئات';
+
+  @override
+  String productCount(int count) {
+    return '$count منتج';
+  }
+
+  @override
+  String get tooltipEdit => 'تعديل';
+
+  @override
+  String get tooltipDelete => 'حذف';
+
+  @override
+  String get userDeletedSuccess => 'تم حذف المستخدم بنجاح';
+
+  @override
+  String get failedToDeleteUser => 'فشل حذف المستخدم';
+
+  @override
+  String get usernameLabel => 'اسم المستخدم';
+
+  @override
+  String get roleLabel => 'الدور';
+
+  @override
+  String get statusLabel => 'الحالة';
+
+  @override
+  String get userCreatedSuccess => 'تم إنشاء المستخدم بنجاح';
+
+  @override
+  String get userUpdatedSuccess => 'تم تحديث المستخدم بنجاح';
+
+  @override
+  String get anErrorOccurred => 'حدث خطأ';
+
+  @override
+  String get usernameRequired => 'اسم المستخدم مطلوب';
+
+  @override
+  String get usernameMinLength => 'يجب أن يكون اسم المستخدم 3 أحرف على الأقل';
+
+  @override
+  String get fullNameRequired => 'الاسم الكامل مطلوب';
+
+  @override
+  String get passwordRequired => 'كلمة المرور مطلوبة';
+
+  @override
+  String get passwordMinLength => 'يجب أن تكون كلمة المرور 6 أحرف على الأقل';
+
+  @override
+  String get passwordLeaveEmpty =>
+      'كلمة المرور (اتركها فارغة للاحتفاظ بالحالية)';
+
+  @override
+  String get companyInfoNotConfigured => 'معلومات الشركة غير مكونة';
+
+  @override
+  String printError(String error) {
+    return 'خطأ في الطباعة: $error';
+  }
+
+  @override
+  String get invoice => 'الفاتورة';
+
+  @override
+  String invoiceLabel(String invoiceNumber) {
+    return 'الفاتورة: $invoiceNumber';
+  }
+
+  @override
+  String dateLabel(String date) {
+    return 'التاريخ: $date';
+  }
+
+  @override
+  String totalLabel(String total) {
+    return 'الإجمالي: $total ر.س';
+  }
+
+  @override
+  String statusLabelText(String status) {
+    return 'الحالة: $status';
+  }
+
+  @override
+  String get completed => 'مكتمل';
+
+  @override
+  String get returned => 'مرتجع';
+
+  @override
+  String get reprint => 'إعادة الطباعة';
+
+  @override
+  String get return_sale => 'إرجاع';
+
+  @override
+  String get itemsLabel => 'العناصر:';
+
+  @override
+  String get subtotalLabel => 'المجموع الفرعي:';
+
+  @override
+  String get vatLabel => 'الضريبة:';
+
+  @override
+  String get totalLabelColon => 'الإجمالي:';
+
+  @override
+  String get paidLabel => 'المدفوع:';
+
+  @override
+  String get changeLabel => 'الباقي:';
+
+  @override
+  String get saleReturnedSuccess => 'تم إرجاع البيع بنجاح';
+
+  @override
+  String get errorLoadingCategories => 'خطأ في تحميل الفئات';
+
+  @override
+  String get productNameRequired => 'اسم المنتج *';
+
+  @override
+  String get barcodeRequired => 'الرمز الشريطي *';
+
+  @override
+  String get categoryRequired => 'الفئة *';
+
+  @override
+  String get priceRequired => 'السعر *';
+
+  @override
+  String get costRequired => 'التكلفة *';
+
+  @override
+  String get quantityRequired => 'الكمية *';
+
+  @override
+  String get vatRateRequired => 'الضريبة % *';
+
+  @override
+  String get usernameFieldLabel => 'اسم المستخدم *';
+
+  @override
+  String get fullNameFieldLabel => 'الاسم الكامل *';
+
+  @override
+  String get passwordFieldLabel => 'كلمة المرور *';
+
+  @override
+  String get roleFieldLabel => 'الدور *';
+
+  @override
+  String get nameFieldLabel => 'الاسم';
 }
