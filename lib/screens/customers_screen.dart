@@ -73,12 +73,12 @@ class _CustomersScreenState extends State<CustomersScreen> {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (customer.phone != null) Text('Phone: ${customer.phone}'),
-                      if (customer.email != null) Text('Email: ${customer.email}'),
+                      if (customer.phone != null) Text(AppLocalizations.of(context)!.phoneLabel(customer.phone!)),
+                      if (customer.email != null) Text(AppLocalizations.of(context)!.emailLabel(customer.email!)),
                       if (customer.vatNumber != null)
-                        Text('VAT: ${customer.vatNumber}'),
+                        Text(AppLocalizations.of(context)!.vatLabel2(customer.vatNumber!)),
                       if (customer.saudiAddress != null)
-                        Text('Address: ${customer.saudiAddress!.formattedAddress}'),
+                        Text(AppLocalizations.of(context)!.addressLabel(customer.saudiAddress!.formattedAddress)),
                     ],
                   ),
                   trailing: Row(
@@ -220,8 +220,9 @@ class _CustomerDialogState extends State<_CustomerDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: Text(widget.customer == null ? 'Add Customer' : 'Edit Customer'),
+      title: Text(widget.customer == null ? l10n.addCustomer : l10n.editCustomer),
       content: SizedBox(
         width: 600,
         child: Form(
@@ -233,34 +234,34 @@ class _CustomerDialogState extends State<_CustomerDialog> {
               children: [
                 TextFormField(
                   controller: _nameController,
-                  decoration: const InputDecoration(labelText: 'Customer Name *'),
-                  validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
+                  decoration: InputDecoration(labelText: l10n.customerNameRequired),
+                  validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _emailController,
-                  decoration: const InputDecoration(labelText: 'Email'),
+                  decoration: InputDecoration(labelText: l10n.emailFieldLabel),
                   keyboardType: TextInputType.emailAddress,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _phoneController,
-                  decoration: const InputDecoration(labelText: 'Phone'),
+                  decoration: InputDecoration(labelText: l10n.phoneFieldLabel),
                   keyboardType: TextInputType.phone,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _vatNumberController,
-                  decoration: const InputDecoration(labelText: 'VAT Number'),
+                  decoration: InputDecoration(labelText: l10n.vatNumberFieldLabel),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _crnNumberController,
-                  decoration: const InputDecoration(labelText: 'CRN Number'),
+                  decoration: InputDecoration(labelText: l10n.crnNumberFieldLabel),
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'Saudi National Address',
+                  l10n.saudiNationalAddress,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(height: 16),
@@ -269,14 +270,14 @@ class _CustomerDialogState extends State<_CustomerDialog> {
                     Expanded(
                       child: TextFormField(
                         controller: _buildingController,
-                        decoration: const InputDecoration(labelText: 'Building Number'),
+                        decoration: InputDecoration(labelText: l10n.buildingNumber),
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: TextFormField(
                         controller: _streetController,
-                        decoration: const InputDecoration(labelText: 'Street Name'),
+                        decoration: InputDecoration(labelText: l10n.streetName),
                       ),
                     ),
                   ],
@@ -287,14 +288,14 @@ class _CustomerDialogState extends State<_CustomerDialog> {
                     Expanded(
                       child: TextFormField(
                         controller: _districtController,
-                        decoration: const InputDecoration(labelText: 'District'),
+                        decoration: InputDecoration(labelText: l10n.district),
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: TextFormField(
                         controller: _cityController,
-                        decoration: const InputDecoration(labelText: 'City'),
+                        decoration: InputDecoration(labelText: l10n.city),
                       ),
                     ),
                   ],
@@ -305,14 +306,14 @@ class _CustomerDialogState extends State<_CustomerDialog> {
                     Expanded(
                       child: TextFormField(
                         controller: _postalCodeController,
-                        decoration: const InputDecoration(labelText: 'Postal Code'),
+                        decoration: InputDecoration(labelText: l10n.postalCode),
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: TextFormField(
                         controller: _additionalNumberController,
-                        decoration: const InputDecoration(labelText: 'Additional Number'),
+                        decoration: InputDecoration(labelText: l10n.additionalNumber),
                       ),
                     ),
                   ],
