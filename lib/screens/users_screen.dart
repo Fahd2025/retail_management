@@ -77,11 +77,12 @@ class _UsersScreenState extends State<UsersScreen> {
     if (confirm == true && mounted) {
       final success = await provider.deleteUser(user.id);
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(success
-                ? 'User deleted successfully'
-                : 'Failed to delete user'),
+                ? l10n.userDeletedSuccess
+                : l10n.failedToDeleteUser),
             backgroundColor: success ? Colors.green : Colors.red,
           ),
         );
@@ -177,8 +178,8 @@ class _UsersScreenState extends State<UsersScreen> {
                             Chip(
                               label: Text(
                                 user.role == UserRole.admin
-                                    ? 'Admin'
-                                    : 'Cashier',
+                                    ? l10n.admin
+                                    : l10n.cashier,
                                 style: const TextStyle(fontSize: 12),
                               ),
                               backgroundColor: user.role == UserRole.admin
@@ -189,7 +190,7 @@ class _UsersScreenState extends State<UsersScreen> {
                           DataCell(
                             Chip(
                               label: Text(
-                                user.isActive ? 'Active' : 'Inactive',
+                                user.isActive ? l10n.active : l10n.inactive,
                                 style: const TextStyle(fontSize: 12),
                               ),
                               backgroundColor: user.isActive
@@ -273,19 +274,19 @@ class _UsersScreenState extends State<UsersScreen> {
                               ],
                             ),
                             const Divider(),
-                            _buildInfoRow('Username', user.username),
+                            _buildInfoRow(l10n.usernameLabel, user.username),
                             _buildInfoRow(
-                              'Role',
-                              user.role == UserRole.admin ? 'Admin' : 'Cashier',
+                              l10n.roleLabel,
+                              user.role == UserRole.admin ? l10n.admin : l10n.cashier,
                             ),
                             _buildInfoRow(
-                              'Status',
-                              user.isActive ? 'Active' : 'Inactive',
+                              l10n.statusLabel,
+                              user.isActive ? l10n.active : l10n.inactive,
                             ),
                             _buildInfoRow(
-                                'Invoice Count', invoiceCount.toString()),
+                                l10n.invoiceCount, invoiceCount.toString()),
                             _buildInfoRow(
-                              'Total Sales',
+                              l10n.totalSales,
                               'SAR ${totalSales.toStringAsFixed(2)}',
                             ),
                           ],
@@ -373,16 +374,18 @@ class _UserDialogState extends State<_UserDialog> {
     if (mounted) {
       if (success) {
         Navigator.pop(context);
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(widget.user == null
-                ? 'User created successfully'
-                : 'User updated successfully'),
+                ? l10n.userCreatedSuccess
+                : l10n.userUpdatedSuccess),
             backgroundColor: Colors.green,
           ),
         );
       } else {
-        final errorMessage = provider.errorMessage ?? 'An error occurred';
+        final l10n = AppLocalizations.of(context)!;
+        final errorMessage = provider.errorMessage ?? l10n.anErrorOccurred;
         print(errorMessage);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -396,8 +399,9 @@ class _UserDialogState extends State<_UserDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: Text(widget.user == null ? 'Add User' : 'Edit User'),
+      title: Text(widget.user == null ? l10n.addUser : l10n.editUser),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -406,16 +410,16 @@ class _UserDialogState extends State<_UserDialog> {
             children: [
               TextFormField(
                 controller: _usernameController,
-                decoration: const InputDecoration(
-                  labelText: 'Username *',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: l10n.usernameFieldLabel,
+                  border: const OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Username is required';
+                    return l10n.usernameRequired;
                   }
                   if (value.trim().length < 3) {
-                    return 'Username must be at least 3 characters';
+                    return l10n.usernameMinLength;
                   }
                   return null;
                 },
@@ -423,13 +427,13 @@ class _UserDialogState extends State<_UserDialog> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _fullNameController,
-                decoration: const InputDecoration(
-                  labelText: 'Full Name *',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: l10n.fullNameFieldLabel,
+                  border: const OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Full name is required';
+                    return l10n.fullNameRequired;
                   }
                   return null;
                 },
@@ -439,17 +443,17 @@ class _UserDialogState extends State<_UserDialog> {
                 controller: _passwordController,
                 decoration: InputDecoration(
                   labelText: widget.user == null
-                      ? 'Password *'
-                      : 'Password (leave empty to keep current)',
+                      ? l10n.passwordFieldLabel
+                      : l10n.passwordLeaveEmpty,
                   border: const OutlineInputBorder(),
                 ),
                 obscureText: true,
                 validator: (value) {
                   if (widget.user == null && (value == null || value.isEmpty)) {
-                    return 'Password is required';
+                    return l10n.passwordRequired;
                   }
                   if (value != null && value.isNotEmpty && value.length < 6) {
-                    return 'Password must be at least 6 characters';
+                    return l10n.passwordMinLength;
                   }
                   return null;
                 },
@@ -457,18 +461,18 @@ class _UserDialogState extends State<_UserDialog> {
               const SizedBox(height: 16),
               DropdownButtonFormField<UserRole>(
                 initialValue: _selectedRole,
-                decoration: const InputDecoration(
-                  labelText: 'Role *',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: l10n.roleFieldLabel,
+                  border: const OutlineInputBorder(),
                 ),
-                items: const [
+                items: [
                   DropdownMenuItem(
                     value: UserRole.admin,
-                    child: Text('Admin'),
+                    child: Text(l10n.admin),
                   ),
                   DropdownMenuItem(
                     value: UserRole.cashier,
-                    child: Text('Cashier'),
+                    child: Text(l10n.cashier),
                   ),
                 ],
                 onChanged: (value) {
