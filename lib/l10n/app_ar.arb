@@ -230,5 +230,17 @@
   "usersManagement": "إدارة المستخدمين",
   "addProduct": "إضافة منتج",
   "addCategory": "إضافة فئة",
-  "cashier": "أمين الصندوق"
+  "cashier": "أمين الصندوق",
+
+  "cannotDeleteCategory": "لا يمكن حذف الفئة",
+  "categoryHasProducts": "هذه الفئة تحتوي على منتجات مرتبطة بها",
+  "deleteProductConfirm": "حذف {productName}؟",
+  "deleteCategoryConfirm": "حذف {categoryName}؟ لا يمكن التراجع عن هذا الإجراء.",
+  "deleteCustomerConfirm": "هل أنت متأكد من حذف هذا العميل؟",
+  "deleteUserConfirm": "حذف المستخدم {username}؟ لا يمكن التراجع عن هذا الإجراء.",
+  "returnSale": "إرجاع البيع",
+  "returnSaleConfirm": "إرجاع البيع {invoiceNumber}؟",
+  "printInvoiceQuestion": "هل تريد طباعة الفاتورة؟",
+  "print": "طباعة",
+  "complete": "إتمام"
 }
