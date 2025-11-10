@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../database/drift_database.dart';
 import '../models/company_info.dart';
 import '../services/sync_service.dart';
-import '../providers/theme_provider.dart';
-import '../providers/locale_provider.dart';
+import '../blocs/theme/theme_bloc.dart';
+import '../blocs/theme/theme_event.dart';
+import '../blocs/theme/theme_state.dart';
+import '../blocs/locale/locale_bloc.dart';
+import '../blocs/locale/locale_event.dart';
+import '../blocs/locale/locale_state.dart';
 import 'package:uuid/uuid.dart';
 import 'package:retail_management/generated/l10n/app_localizations.dart';
 
@@ -151,11 +155,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() => _isSyncing = false);
   }
 
+  List<Locale> _getSupportedLocales() {
+    return const [
+      Locale('en', 'US'),
+      Locale('ar', 'SA'),
+    ];
+  }
+
+  String _getLocaleName(Locale locale) {
+    switch (locale.languageCode) {
+      case 'en':
+        return 'English';
+      case 'ar':
+        return 'العربية';
+      default:
+        return 'English';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final themeProvider = context.watch<ThemeProvider>();
-    final localeProvider = context.watch<LocaleProvider>();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -177,48 +197,60 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const Divider(),
 
                     // Theme Selection
-                    ListTile(
-                      leading: Icon(
-                        themeProvider.isDarkMode
-                          ? Icons.dark_mode
-                          : Icons.light_mode,
-                      ),
-                      title: Text(l10n.theme),
-                      subtitle: Text(
-                        themeProvider.isDarkMode
-                          ? l10n.darkMode
-                          : l10n.lightMode,
-                      ),
-                      trailing: Switch(
-                        value: themeProvider.isDarkMode,
-                        onChanged: (value) async {
-                          await themeProvider.toggleTheme();
-                        },
-                      ),
+                    BlocBuilder<ThemeBloc, ThemeState>(
+                      builder: (context, themeState) {
+                        return ListTile(
+                          leading: Icon(
+                            themeState.isDarkMode
+                              ? Icons.dark_mode
+                              : Icons.light_mode,
+                          ),
+                          title: Text(l10n.theme),
+                          subtitle: Text(
+                            themeState.isDarkMode
+                              ? l10n.darkMode
+                              : l10n.lightMode,
+                          ),
+                          trailing: Switch(
+                            value: themeState.isDarkMode,
+                            onChanged: (value) {
+                              context.read<ThemeBloc>().add(const ToggleThemeEvent());
+                            },
+                          ),
+                        );
+                      },
                     ),
 
                     const Divider(),
 
                     // Language Selection
-                    ListTile(
-                      leading: const Icon(Icons.language),
-                      title: Text(l10n.language),
-                      subtitle: Text(localeProvider.currentLocaleName),
-                      trailing: DropdownButton<Locale>(
-                        value: localeProvider.locale,
-                        underline: const SizedBox(),
-                        items: LocaleProvider.supportedLocales.map((locale) {
-                          return DropdownMenuItem(
-                            value: locale,
-                            child: Text(localeProvider.getLocaleName(locale)),
-                          );
-                        }).toList(),
-                        onChanged: (Locale? newLocale) async {
-                          if (newLocale != null) {
-                            await localeProvider.setLocale(newLocale);
-                          }
-                        },
-                      ),
+                    BlocBuilder<LocaleBloc, LocaleState>(
+                      builder: (context, localeState) {
+                        return ListTile(
+                          leading: const Icon(Icons.language),
+                          title: Text(l10n.language),
+                          subtitle: Text(_getLocaleName(localeState.locale)),
+                          trailing: DropdownButton<Locale>(
+                            value: localeState.locale,
+                            underline: const SizedBox(),
+                            items: _getSupportedLocales().map((locale) {
+                              return DropdownMenuItem(
+                                value: locale,
+                                child: Text(_getLocaleName(locale)),
+                              );
+                            }).toList(),
+                            onChanged: (Locale? newLocale) {
+                              if (newLocale != null) {
+                                if (newLocale.languageCode == 'en') {
+                                  context.read<LocaleBloc>().add(const SetEnglishEvent());
+                                } else if (newLocale.languageCode == 'ar') {
+                                  context.read<LocaleBloc>().add(const SetArabicEvent());
+                                }
+                              }
+                            },
+                          ),
+                        );
+                      },
                     ),
 
                     const SizedBox(height: 8),

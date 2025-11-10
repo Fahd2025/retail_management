@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:retail_management/generated/l10n/app_localizations.dart';
-import '../providers/product_provider.dart';
-import '../providers/sale_provider.dart';
-import '../providers/auth_provider.dart';
-import '../providers/customer_provider.dart';
+import '../blocs/product/product_bloc.dart';
+import '../blocs/product/product_event.dart';
+import '../blocs/product/product_state.dart';
+import '../blocs/sale/sale_bloc.dart';
+import '../blocs/sale/sale_event.dart';
+import '../blocs/sale/sale_state.dart';
+import '../blocs/auth/auth_bloc.dart';
+import '../blocs/auth/auth_state.dart';
+import '../blocs/customer/customer_bloc.dart';
+import '../blocs/customer/customer_event.dart';
+import '../blocs/customer/customer_state.dart';
 import '../models/product.dart';
 import '../models/sale.dart';
 import '../models/customer.dart';
@@ -67,10 +74,9 @@ class _CashierScreenState extends State<CashierScreen>
   }
 
   Future<void> _loadData() async {
-    final productProvider = context.read<ProductProvider>();
-    await productProvider.loadProducts(activeOnly: true);
-    await productProvider.loadCategories();
-    await context.read<CustomerProvider>().loadCustomers(activeOnly: true);
+    context.read<ProductBloc>().add(const LoadProductsEvent(activeOnly: true));
+    context.read<ProductBloc>().add(const LoadCategoriesEvent());
+    context.read<CustomerBloc>().add(const LoadCustomersEvent(activeOnly: true));
 
     // Load category names
     try {
@@ -86,26 +92,39 @@ class _CashierScreenState extends State<CashierScreen>
       // Silently fail - will display IDs if categories can't be loaded
     }
 
-    if (mounted && productProvider.categories.isNotEmpty) {
-      setState(() {
-        _selectedCategory = productProvider.categories.first;
-      });
-      _loadProductsByCategory();
+    // Wait for bloc state and set selected category
+    final productBloc = context.read<ProductBloc>();
+    await Future.delayed(const Duration(milliseconds: 100));
+    if (mounted && productBloc.state is ProductLoaded) {
+      final state = productBloc.state as ProductLoaded;
+      if (state.categories.isNotEmpty) {
+        setState(() {
+          _selectedCategory = state.categories.first;
+        });
+        _loadProductsByCategory();
+      }
     }
   }
 
   Future<void> _loadProductsByCategory() async {
     if (_selectedCategory == null) return;
 
-    final products = await context
-        .read<ProductProvider>()
-        .getProductsByCategory(_selectedCategory!);
+    context.read<ProductBloc>().add(GetProductsByCategoryEvent(_selectedCategory!));
 
-    setState(() {
-      _displayedProducts = products;
-    });
+    // Wait for state update and get products
+    await Future.delayed(const Duration(milliseconds: 50));
+    final productBloc = context.read<ProductBloc>();
+    if (productBloc.state is ProductLoaded) {
+      final state = productBloc.state as ProductLoaded;
+      final products = state.products.where((p) => p.category == _selectedCategory).toList();
 
-    _animationController.forward(from: 0);
+      if (mounted) {
+        setState(() {
+          _displayedProducts = products;
+        });
+        _animationController.forward(from: 0);
+      }
+    }
   }
 
   String _getCategoryName(String categoryId) {
@@ -113,7 +132,7 @@ class _CashierScreenState extends State<CashierScreen>
   }
 
   void _addProductToCart(Product product) {
-    context.read<SaleProvider>().addToCart(product);
+    context.read<SaleBloc>().add(AddToCartEvent(product));
     final l10n = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -128,12 +147,23 @@ class _CashierScreenState extends State<CashierScreen>
     final barcode = _barcodeController.text.trim();
     if (barcode.isEmpty) return;
 
-    final product =
-        await context.read<ProductProvider>().getProductByBarcode(barcode);
+    context.read<ProductBloc>().add(GetProductByBarcodeEvent(barcode));
 
-    if (product != null && mounted) {
-      _addProductToCart(product);
-      _barcodeController.clear();
+    // Wait for state update
+    await Future.delayed(const Duration(milliseconds: 50));
+    final productBloc = context.read<ProductBloc>();
+
+    if (productBloc.state is ProductLoaded) {
+      final state = productBloc.state as ProductLoaded;
+      final product = state.products.firstWhere(
+        (p) => p.barcode == barcode,
+        orElse: () => throw Exception('Product not found'),
+      );
+
+      if (mounted) {
+        _addProductToCart(product);
+        _barcodeController.clear();
+      }
     } else if (mounted) {
       final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -146,9 +176,24 @@ class _CashierScreenState extends State<CashierScreen>
   }
 
   Future<void> _checkout() async {
-    final saleProvider = context.read<SaleProvider>();
+    final saleBloc = context.read<SaleBloc>();
+    final saleState = saleBloc.state;
 
-    if (saleProvider.cartItems.isEmpty) {
+    List<SaleItem> cartItems = [];
+    double cartTotal = 0;
+
+    if (saleState is SaleLoaded) {
+      cartItems = saleState.cartItems;
+      cartTotal = saleState.cartTotal;
+    } else if (saleState is SaleError) {
+      cartItems = saleState.cartItems;
+      cartTotal = saleState.cartTotal;
+    } else if (saleState is SaleOperationSuccess) {
+      cartItems = saleState.cartItems;
+      cartTotal = saleState.cartTotal;
+    }
+
+    if (cartItems.isEmpty) {
       final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.cartIsEmpty)),
@@ -160,44 +205,57 @@ class _CashierScreenState extends State<CashierScreen>
     final result = await showDialog<Map<String, dynamic>>(
       context: context,
       builder: (context) => _PaymentDialog(
-        total: saleProvider.cartTotal,
+        total: cartTotal,
         customer: _selectedCustomer,
       ),
     );
 
     if (result != null && mounted) {
-      final authProvider = context.read<AuthProvider>();
-      final sale = await saleProvider.completeSale(
-        cashierId: authProvider.currentUser!.id,
-        customerId: result['customerId'],
-        paidAmount: result['paidAmount'],
-        paymentMethod: result['paymentMethod'],
-      );
+      final authBloc = context.read<AuthBloc>();
+      final authState = authBloc.state;
 
-      if (sale != null && mounted) {
-        setState(() => _selectedCustomer = null);
+      if (authState is Authenticated) {
+        context.read<SaleBloc>().add(CompleteSaleEvent(
+          cashierId: authState.user.id,
+          customerId: result['customerId'],
+          paidAmount: result['paidAmount'],
+          paymentMethod: result['paymentMethod'],
+        ));
 
-        // Show print dialog
-        final shouldPrint = await showDialog<bool>(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(AppLocalizations.of(context)!.saleCompleted),
-            content: Text(AppLocalizations.of(context)!.printInvoiceQuestion),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: Text(AppLocalizations.of(context)!.no),
-              ),
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: Text(AppLocalizations.of(context)!.print),
-              ),
-            ],
-          ),
-        );
+        // Wait for sale completion
+        await Future.delayed(const Duration(milliseconds: 200));
+        final newSaleState = saleBloc.state;
 
-        if (shouldPrint == true && mounted) {
-          await _printInvoice(sale);
+        Sale? sale;
+        if (newSaleState is SaleCompleted) {
+          sale = newSaleState.completedSale;
+        }
+
+        if (sale != null && mounted) {
+          setState(() => _selectedCustomer = null);
+
+          // Show print dialog
+          final shouldPrint = await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text(AppLocalizations.of(context)!.saleCompleted),
+              content: Text(AppLocalizations.of(context)!.printInvoiceQuestion),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: Text(AppLocalizations.of(context)!.no),
+                ),
+                ElevatedButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: Text(AppLocalizations.of(context)!.print),
+                ),
+              ],
+            ),
+          );
+
+          if (shouldPrint == true && mounted) {
+            await _printInvoice(sale);
+          }
         }
       }
     }
@@ -252,10 +310,46 @@ class _CashierScreenState extends State<CashierScreen>
 
   @override
   Widget build(BuildContext context) {
-    final categories = context.watch<ProductProvider>().categories;
-    final saleProvider = context.watch<SaleProvider>();
+    return BlocBuilder<ProductBloc, ProductState>(
+      builder: (context, productState) {
+        List<String> categories = [];
+        if (productState is ProductLoaded) {
+          categories = productState.categories;
+        } else if (productState is ProductError) {
+          categories = productState.categories;
+        } else if (productState is ProductOperationSuccess) {
+          categories = productState.categories;
+        }
 
-    return Scaffold(
+        return BlocBuilder<SaleBloc, SaleState>(
+          builder: (context, saleState) {
+            List<SaleItem> cartItems = [];
+            double cartSubtotal = 0;
+            double cartVatAmount = 0;
+            double cartTotal = 0;
+            int cartItemCount = 0;
+
+            if (saleState is SaleLoaded) {
+              cartItems = saleState.cartItems;
+              cartSubtotal = saleState.cartSubtotal;
+              cartVatAmount = saleState.cartVatAmount;
+              cartTotal = saleState.cartTotal;
+              cartItemCount = saleState.cartItemCount;
+            } else if (saleState is SaleError) {
+              cartItems = saleState.cartItems;
+              cartSubtotal = saleState.cartSubtotal;
+              cartVatAmount = saleState.cartVatAmount;
+              cartTotal = saleState.cartTotal;
+              cartItemCount = saleState.cartItemCount;
+            } else if (saleState is SaleOperationSuccess) {
+              cartItems = saleState.cartItems;
+              cartSubtotal = saleState.cartSubtotal;
+              cartVatAmount = saleState.cartVatAmount;
+              cartTotal = saleState.cartTotal;
+              cartItemCount = saleState.cartItemCount;
+            }
+
+            return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isTablet = constraints.maxWidth >= 600;
@@ -405,7 +499,7 @@ class _CashierScreenState extends State<CashierScreen>
                               ),
                               const Spacer(),
                               Text(
-                                AppLocalizations.of(context)!.cartItems(saleProvider.cartItemCount),
+                                AppLocalizations.of(context)!.cartItems(cartItemCount),
                                 style: TextStyle(color: Colors.grey.shade600),
                               ),
                             ],
@@ -425,7 +519,7 @@ class _CashierScreenState extends State<CashierScreen>
 
                         // Cart items
                         Expanded(
-                          child: saleProvider.cartItems.isEmpty
+                          child: cartItems.isEmpty
                               ? Center(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -447,9 +541,9 @@ class _CashierScreenState extends State<CashierScreen>
                                   ),
                                 )
                               : ListView.builder(
-                                  itemCount: saleProvider.cartItems.length,
+                                  itemCount: cartItems.length,
                                   itemBuilder: (context, index) {
-                                    final item = saleProvider.cartItems[index];
+                                    final item = cartItems[index];
                                     return _CartItem(item: item);
                                   },
                                 ),
@@ -467,13 +561,13 @@ class _CashierScreenState extends State<CashierScreen>
                           child: Column(
                             children: [
                               _SummaryRow(
-                                  AppLocalizations.of(context)!.subtotalColon, saleProvider.cartSubtotal),
+                                  AppLocalizations.of(context)!.subtotalColon, cartSubtotal),
                               const SizedBox(height: 8),
-                              _SummaryRow(AppLocalizations.of(context)!.vatColon, saleProvider.cartVatAmount),
+                              _SummaryRow(AppLocalizations.of(context)!.vatColon, cartVatAmount),
                               const Divider(),
                               _SummaryRow(
                                 AppLocalizations.of(context)!.totalColon,
-                                saleProvider.cartTotal,
+                                cartTotal,
                                 isBold: true,
                                 fontSize: 20,
                               ),
@@ -482,9 +576,9 @@ class _CashierScreenState extends State<CashierScreen>
                                 children: [
                                   Expanded(
                                     child: OutlinedButton(
-                                      onPressed: saleProvider.cartItems.isEmpty
+                                      onPressed: cartItems.isEmpty
                                           ? null
-                                          : () => saleProvider.clearCart(),
+                                          : () => context.read<SaleBloc>().add(const ClearCartEvent()),
                                       child: Text(AppLocalizations.of(context)!.clear),
                                     ),
                                   ),
@@ -492,7 +586,7 @@ class _CashierScreenState extends State<CashierScreen>
                                   Expanded(
                                     flex: 2,
                                     child: ElevatedButton(
-                                      onPressed: saleProvider.cartItems.isEmpty
+                                      onPressed: cartItems.isEmpty
                                           ? null
                                           : _checkout,
                                       style: ElevatedButton.styleFrom(
@@ -513,8 +607,9 @@ class _CashierScreenState extends State<CashierScreen>
                 ),
             ],
           );
-        },
-      ),
+          },
+        );
+      },
     );
   }
 
@@ -674,8 +769,6 @@ class _CartItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final saleProvider = context.read<SaleProvider>();
-
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Padding(
@@ -702,9 +795,8 @@ class _CartItem extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.remove),
                   onPressed: () {
-                    saleProvider.updateCartItemQuantity(
-                      item.id,
-                      item.quantity - 1,
+                    context.read<SaleBloc>().add(
+                      UpdateCartItemQuantityEvent(item.id, item.quantity - 1),
                     );
                   },
                   iconSize: 20,
@@ -716,9 +808,8 @@ class _CartItem extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.add),
                   onPressed: () {
-                    saleProvider.updateCartItemQuantity(
-                      item.id,
-                      item.quantity + 1,
+                    context.read<SaleBloc>().add(
+                      UpdateCartItemQuantityEvent(item.id, item.quantity + 1),
                     );
                   },
                   iconSize: 20,
@@ -735,7 +826,7 @@ class _CartItem extends StatelessWidget {
             ),
             IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),
-              onPressed: () => saleProvider.removeFromCart(item.id),
+              onPressed: () => context.read<SaleBloc>().add(RemoveFromCartEvent(item.id)),
               iconSize: 20,
             ),
           ],
@@ -793,9 +884,18 @@ class _CustomerSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final customers = context.watch<CustomerProvider>().customers;
+    return BlocBuilder<CustomerBloc, CustomerState>(
+      builder: (context, customerState) {
+        List<Customer> customers = [];
+        if (customerState is CustomerLoaded) {
+          customers = customerState.customers;
+        } else if (customerState is CustomerError) {
+          customers = customerState.customers;
+        } else if (customerState is CustomerOperationSuccess) {
+          customers = customerState.customers;
+        }
 
-    return Card(
+        return Card(
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Row(
@@ -826,6 +926,8 @@ class _CustomerSelector extends StatelessWidget {
           ],
         ),
       ),
+    );
+      },
     );
   }
 }

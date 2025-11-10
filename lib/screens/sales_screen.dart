@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:retail_management/generated/l10n/app_localizations.dart';
-import '../providers/sale_provider.dart';
-import '../providers/auth_provider.dart';
+import '../blocs/sale/sale_bloc.dart';
+import '../blocs/sale/sale_event.dart';
+import '../blocs/sale/sale_state.dart';
+import '../blocs/auth/auth_bloc.dart';
+import '../blocs/auth/auth_state.dart';
 import '../models/sale.dart';
 import '../services/invoice_service.dart';
 import '../database/drift_database.dart' hide Sale;
@@ -23,7 +26,7 @@ class _SalesScreenState extends State<SalesScreen> {
   }
 
   Future<void> _loadSales() async {
-    await context.read<SaleProvider>().loadSales();
+    context.read<SaleBloc>().add(const LoadSalesEvent());
   }
 
   Future<void> _reprintInvoice(Sale sale) async {
@@ -105,12 +108,18 @@ class _SalesScreenState extends State<SalesScreen> {
               onPressed: () => _reprintInvoice(sale),
               tooltip: l10n.reprint,
             ),
-            if (sale.status == SaleStatus.completed &&
-                context.read<AuthProvider>().isAdmin)
-              IconButton(
-                icon: const Icon(Icons.undo, color: Colors.orange),
-                onPressed: () => _returnSale(sale),
-                tooltip: l10n.return_sale,
+            if (sale.status == SaleStatus.completed)
+              BlocBuilder<AuthBloc, AuthState>(
+                builder: (context, authState) {
+                  if (authState is Authenticated && authState.isAdmin) {
+                    return IconButton(
+                      icon: const Icon(Icons.undo, color: Colors.orange),
+                      onPressed: () => _returnSale(sale),
+                      tooltip: l10n.return_sale,
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
           ],
         ),
@@ -227,17 +236,25 @@ class _SalesScreenState extends State<SalesScreen> {
     );
 
     if (confirm == true && mounted) {
-      final authProvider = context.read<AuthProvider>();
-      final success = await context.read<SaleProvider>().returnSale(
-            sale.id,
-            authProvider.currentUser!.id,
-          );
+      final authBloc = context.read<AuthBloc>();
+      final authState = authBloc.state;
 
-      if (success && mounted) {
-        final l10n = AppLocalizations.of(context)!;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.saleReturnedSuccess)),
-        );
+      if (authState is Authenticated) {
+        context.read<SaleBloc>().add(ReturnSaleEvent(
+          sale.id,
+          authState.user.id,
+        ));
+
+        // Wait for operation to complete
+        await Future.delayed(const Duration(milliseconds: 200));
+        final saleState = context.read<SaleBloc>().state;
+
+        if (mounted && saleState is SaleOperationSuccess) {
+          final l10n = AppLocalizations.of(context)!;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(l10n.saleReturnedSuccess)),
+          );
+        }
       }
     }
   }
@@ -247,13 +264,24 @@ class _SalesScreenState extends State<SalesScreen> {
     final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
 
     return Scaffold(
-      body: Consumer<SaleProvider>(
-        builder: (context, provider, _) {
-          if (provider.isLoading) {
+      body: BlocBuilder<SaleBloc, SaleState>(
+        builder: (context, state) {
+          if (state is SaleLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (provider.sales.isEmpty) {
+          List<Sale> sales = [];
+          if (state is SaleLoaded) {
+            sales = state.sales;
+          } else if (state is SaleError) {
+            sales = state.sales;
+          } else if (state is SaleOperationSuccess) {
+            sales = state.sales;
+          } else if (state is SaleCompleted) {
+            sales = state.sales;
+          }
+
+          if (sales.isEmpty) {
             final l10n = AppLocalizations.of(context)!;
             return Center(
               child: Column(
@@ -282,22 +310,22 @@ class _SalesScreenState extends State<SalesScreen> {
                     mainAxisSpacing: 16,
                     childAspectRatio: 2.5,
                   ),
-                  itemCount: provider.sales.length,
+                  itemCount: sales.length,
                   itemBuilder: (context, index) {
                     return _buildSaleCard(
-                        provider.sales[index], dateFormat, context);
+                        sales[index], dateFormat, context);
                   },
                 );
               } else {
                 // Mobile/Tablet: List layout
                 return ListView.builder(
                   padding: const EdgeInsets.all(16),
-                  itemCount: provider.sales.length,
+                  itemCount: sales.length,
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: _buildSaleCard(
-                          provider.sales[index], dateFormat, context),
+                          sales[index], dateFormat, context),
                     );
                   },
                 );
