@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
+import '../providers/theme_provider.dart';
+import '../providers/locale_provider.dart';
 import '../database/drift_database.dart' hide User;
 import '../models/user.dart';
 import 'package:uuid/uuid.dart';
@@ -19,6 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
   bool _isInitializing = false;
+  String? _notificationMessage;
+  bool _isNotificationError = false;
 
   @override
   void initState() {
@@ -71,23 +75,40 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  void _showNotification(String message, bool isError) {
+    setState(() {
+      _notificationMessage = message;
+      _isNotificationError = isError;
+    });
+
+    // Auto-hide notification after 5 seconds
+    Future.delayed(const Duration(seconds: 5), () {
+      if (mounted) {
+        setState(() {
+          _notificationMessage = null;
+        });
+      }
+    });
+  }
+
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
 
     final authProvider = context.read<AuthProvider>();
+    final username = _usernameController.text.trim();
     final success = await authProvider.login(
-      _usernameController.text.trim(),
+      username,
       _passwordController.text,
     );
 
     if (mounted) {
-      if (!success) {
-        final l10n = AppLocalizations.of(context)!;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(authProvider.errorMessage ?? l10n.loginFailed),
-            backgroundColor: Colors.red,
-          ),
+      final l10n = AppLocalizations.of(context)!;
+      if (success) {
+        _showNotification(l10n.loginSuccess(username), false);
+      } else {
+        _showNotification(
+          authProvider.errorMessage ?? l10n.loginFailed,
+          true,
         );
       }
     }
@@ -96,33 +117,99 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final themeProvider = context.watch<ThemeProvider>();
+    final localeProvider = context.watch<LocaleProvider>();
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.blue.shade700,
-              Colors.blue.shade500,
-            ],
-          ),
-        ),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Card(
-              margin: const EdgeInsets.all(32),
-              elevation: 8,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.blue.shade700,
+                  Colors.blue.shade500,
+                ],
               ),
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 500),
-                padding: const EdgeInsets.all(40),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
+            ),
+            child: Center(
+              child: SingleChildScrollView(
+                child: Card(
+                  margin: const EdgeInsets.all(32),
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Container(
+                    constraints: const BoxConstraints(maxWidth: 500),
+                    padding: const EdgeInsets.all(40),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Theme and Language Switchers Row
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            // Theme Switcher
+                            Tooltip(
+                              message: l10n.switchTheme,
+                              child: IconButton(
+                                icon: Icon(
+                                  themeProvider.isDarkMode
+                                      ? Icons.light_mode
+                                      : Icons.dark_mode,
+                                ),
+                                onPressed: () async {
+                                  await themeProvider.toggleTheme();
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            // Language Switcher
+                            Tooltip(
+                              message: l10n.switchLanguage,
+                              child: PopupMenuButton<String>(
+                                icon: const Icon(Icons.language),
+                                onSelected: (String value) async {
+                                  if (value == 'en') {
+                                    await localeProvider.setEnglish();
+                                  } else {
+                                    await localeProvider.setArabic();
+                                  }
+                                },
+                                itemBuilder: (BuildContext context) => [
+                                  PopupMenuItem(
+                                    value: 'en',
+                                    child: Row(
+                                      children: [
+                                        if (localeProvider.isEnglish)
+                                          const Icon(Icons.check, size: 18),
+                                        if (localeProvider.isEnglish)
+                                          const SizedBox(width: 8),
+                                        const Text('English'),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 'ar',
+                                    child: Row(
+                                      children: [
+                                        if (localeProvider.isArabic)
+                                          const Icon(Icons.check, size: 18),
+                                        if (localeProvider.isArabic)
+                                          const SizedBox(width: 8),
+                                        const Text('العربية'),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
                     // Logo/Icon
                     Container(
                       width: 100,
@@ -154,7 +241,59 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: Colors.grey.shade600,
                           ),
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 24),
+
+                    // Default Credentials Display
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade50,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Colors.blue.shade200,
+                          width: 1,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.info_outline,
+                                size: 20,
+                                color: Colors.blue.shade700,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                l10n.defaultCredentials,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue.shade700,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            l10n.adminCredentials,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey.shade700,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            l10n.cashierCredentials,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey.shade700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
 
                     if (_isInitializing)
                       Column(
@@ -261,6 +400,75 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ),
+          ),
+
+          // Notification Bar
+          if (_notificationMessage != null)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Material(
+                elevation: 4,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
+                  decoration: BoxDecoration(
+                    color: _isNotificationError
+                        ? Colors.red.shade50
+                        : Colors.green.shade50,
+                    border: Border(
+                      bottom: BorderSide(
+                        color: _isNotificationError
+                            ? Colors.red.shade200
+                            : Colors.green.shade200,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        _isNotificationError
+                            ? Icons.error_outline
+                            : Icons.check_circle_outline,
+                        color: _isNotificationError
+                            ? Colors.red.shade700
+                            : Colors.green.shade700,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          _notificationMessage!,
+                          style: TextStyle(
+                            color: _isNotificationError
+                                ? Colors.red.shade900
+                                : Colors.green.shade900,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.close,
+                          color: _isNotificationError
+                              ? Colors.red.shade700
+                              : Colors.green.shade700,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _notificationMessage = null;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
