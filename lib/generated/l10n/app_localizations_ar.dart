@@ -635,4 +635,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get posWithOfflineSupport => 'نظام نقاط البيع مع دعم العمل بلا اتصال';
+
+  @override
+  String get pointOfSale => 'نقطة البيع';
+
+  @override
+  String get productsManagement => 'إدارة المنتجات';
+
+  @override
+  String get customersManagement => 'إدارة العملاء';
+
+  @override
+  String get usersManagement => 'إدارة المستخدمين';
 }

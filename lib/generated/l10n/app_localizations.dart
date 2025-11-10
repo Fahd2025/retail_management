@@ -1339,6 +1339,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Point of Sale with Offline Support'**
   String get posWithOfflineSupport;
+
+  /// No description provided for @pointOfSale.
+  ///
+  /// In en, this message translates to:
+  /// **'Point of Sale'**
+  String get pointOfSale;
+
+  /// No description provided for @productsManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Products Management'**
+  String get productsManagement;
+
+  /// No description provided for @customersManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Customers Management'**
+  String get customersManagement;
+
+  /// No description provided for @usersManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Users Management'**
+  String get usersManagement;
 }
 
 class _AppLocalizationsDelegate

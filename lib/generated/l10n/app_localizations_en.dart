@@ -635,4 +635,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get posWithOfflineSupport => 'Point of Sale with Offline Support';
+
+  @override
+  String get pointOfSale => 'Point of Sale';
+
+  @override
+  String get productsManagement => 'Products Management';
+
+  @override
+  String get customersManagement => 'Customers Management';
+
+  @override
+  String get usersManagement => 'Users Management';
 }
