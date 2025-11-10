@@ -114,9 +114,10 @@ class _CashierScreenState extends State<CashierScreen>
 
   void _addProductToCart(Product product) {
     context.read<SaleProvider>().addToCart(product);
+    final l10n = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('${product.name} added to cart'),
+        content: Text(l10n.productAddedToCart(product.name)),
         duration: const Duration(milliseconds: 500),
         behavior: SnackBarBehavior.floating,
       ),
@@ -134,9 +135,10 @@ class _CashierScreenState extends State<CashierScreen>
       _addProductToCart(product);
       _barcodeController.clear();
     } else if (mounted) {
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Product not found'),
+        SnackBar(
+          content: Text(l10n.productNotFound),
           backgroundColor: Colors.red,
         ),
       );
@@ -147,8 +149,9 @@ class _CashierScreenState extends State<CashierScreen>
     final saleProvider = context.read<SaleProvider>();
 
     if (saleProvider.cartItems.isEmpty) {
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Cart is empty')),
+        SnackBar(content: Text(l10n.cartIsEmpty)),
       );
       return;
     }
@@ -236,9 +239,10 @@ class _CashierScreenState extends State<CashierScreen>
       );
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Print error: $e'),
+            content: Text(l10n.printError(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -271,7 +275,7 @@ class _CashierScreenState extends State<CashierScreen>
                         child: TextField(
                           controller: _barcodeController,
                           decoration: InputDecoration(
-                            hintText: 'Scan or enter barcode...',
+                            hintText: AppLocalizations.of(context)!.scanOrEnterBarcode,
                             prefixIcon: const Icon(Icons.qr_code_scanner),
                             fillColor: Colors.grey.shade50,
                             filled: true,
@@ -392,16 +396,16 @@ class _CashierScreenState extends State<CashierScreen>
                             children: [
                               const Icon(Icons.shopping_cart),
                               const SizedBox(width: 8),
-                              const Text(
-                                'Cart',
-                                style: TextStyle(
+                              Text(
+                                AppLocalizations.of(context)!.cart,
+                                style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               const Spacer(),
                               Text(
-                                '${saleProvider.cartItemCount} items',
+                                AppLocalizations.of(context)!.cartItems(saleProvider.cartItemCount),
                                 style: TextStyle(color: Colors.grey.shade600),
                               ),
                             ],
@@ -433,7 +437,7 @@ class _CashierScreenState extends State<CashierScreen>
                                       ),
                                       const SizedBox(height: 16),
                                       Text(
-                                        'Cart is empty',
+                                        AppLocalizations.of(context)!.cartIsEmpty,
                                         style: TextStyle(
                                           color: Colors.grey.shade600,
                                           fontSize: 16,
@@ -463,12 +467,12 @@ class _CashierScreenState extends State<CashierScreen>
                           child: Column(
                             children: [
                               _SummaryRow(
-                                  'Subtotal:', saleProvider.cartSubtotal),
+                                  AppLocalizations.of(context)!.subtotalColon, saleProvider.cartSubtotal),
                               const SizedBox(height: 8),
-                              _SummaryRow('VAT:', saleProvider.cartVatAmount),
+                              _SummaryRow(AppLocalizations.of(context)!.vatColon, saleProvider.cartVatAmount),
                               const Divider(),
                               _SummaryRow(
-                                'Total:',
+                                AppLocalizations.of(context)!.totalColon,
                                 saleProvider.cartTotal,
                                 isBold: true,
                                 fontSize: 20,
@@ -801,13 +805,13 @@ class _CustomerSelector extends StatelessWidget {
             Expanded(
               child: DropdownButton<Customer?>(
                 value: selectedCustomer,
-                hint: const Text('Walk-in Customer'),
+                hint: Text(AppLocalizations.of(context)!.walkInCustomer),
                 isExpanded: true,
                 underline: const SizedBox(),
                 items: [
-                  const DropdownMenuItem<Customer?>(
+                  DropdownMenuItem<Customer?>(
                     value: null,
-                    child: Text('Walk-in Customer'),
+                    child: Text(AppLocalizations.of(context)!.walkInCustomer),
                   ),
                   ...customers.map((customer) {
                     return DropdownMenuItem<Customer>(
@@ -873,21 +877,21 @@ class _PaymentDialogState extends State<_PaymentDialog> {
             ),
             const SizedBox(height: 24),
             SegmentedButton<PaymentMethod>(
-              segments: const [
+              segments: [
                 ButtonSegment(
                   value: PaymentMethod.cash,
-                  label: Text('Cash'),
-                  icon: Icon(Icons.money),
+                  label: Text(AppLocalizations.of(context)!.cashPayment),
+                  icon: const Icon(Icons.money),
                 ),
                 ButtonSegment(
                   value: PaymentMethod.card,
-                  label: Text('Card'),
-                  icon: Icon(Icons.credit_card),
+                  label: Text(AppLocalizations.of(context)!.cardPayment),
+                  icon: const Icon(Icons.credit_card),
                 ),
                 ButtonSegment(
                   value: PaymentMethod.transfer,
-                  label: Text('Transfer'),
-                  icon: Icon(Icons.account_balance),
+                  label: Text(AppLocalizations.of(context)!.transferPayment),
+                  icon: const Icon(Icons.account_balance),
                 ),
               ],
               selected: {_paymentMethod},
@@ -900,8 +904,8 @@ class _PaymentDialogState extends State<_PaymentDialog> {
             const SizedBox(height: 16),
             TextField(
               controller: _paidController,
-              decoration: const InputDecoration(
-                labelText: 'Amount Paid',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.amountPaid,
                 prefixText: 'SAR ',
               ),
               keyboardType: TextInputType.number,
@@ -909,7 +913,7 @@ class _PaymentDialogState extends State<_PaymentDialog> {
             const SizedBox(height: 16),
             if (_change >= 0)
               Text(
-                'Change: SAR ${_change.toStringAsFixed(2)}',
+                AppLocalizations.of(context)!.changeColon(_change.toStringAsFixed(2)),
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -918,7 +922,7 @@ class _PaymentDialogState extends State<_PaymentDialog> {
               )
             else
               Text(
-                'Insufficient payment',
+                AppLocalizations.of(context)!.insufficientPayment,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

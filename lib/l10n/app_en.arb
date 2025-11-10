@@ -430,5 +430,98 @@
   "fullNameFieldLabel": "Full Name *",
   "passwordFieldLabel": "Password *",
   "roleFieldLabel": "Role *",
-  "nameFieldLabel": "Name"
+  "nameFieldLabel": "Name",
+
+  "customerNameRequired": "Customer Name *",
+  "emailFieldLabel": "Email",
+  "phoneFieldLabel": "Phone",
+  "vatNumberFieldLabel": "VAT Number",
+  "crnNumberFieldLabel": "CRN Number",
+  "saudiNationalAddress": "Saudi National Address",
+  "buildingNumber": "Building Number",
+  "streetName": "Street Name",
+  "district": "District",
+  "city": "City",
+  "postalCode": "Postal Code",
+  "additionalNumber": "Additional Number",
+  "phoneLabel": "Phone: {phone}",
+  "@phoneLabel": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "emailLabel": "Email: {email}",
+  "@emailLabel": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "vatLabel2": "VAT: {vatNumber}",
+  "@vatLabel2": {
+    "placeholders": {
+      "vatNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "addressLabel": "Address: {address}",
+  "@addressLabel": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "cart": "Cart",
+  "cartItems": "{count} items",
+  "@cartItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cartIsEmpty": "Cart is empty",
+  "scanOrEnterBarcode": "Scan or enter barcode...",
+  "productAddedToCart": "{productName} added to cart",
+  "@productAddedToCart": {
+    "placeholders": {
+      "productName": {
+        "type": "String"
+      }
+    }
+  },
+  "productNotFound": "Product not found",
+  "subtotalColon": "Subtotal:",
+  "vatColon": "VAT:",
+  "totalColon": "Total:",
+  "walkInCustomer": "Walk-in Customer",
+  "amountPaid": "Amount Paid",
+  "changeColon": "Change: SAR {amount}",
+  "@changeColon": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "insufficientPayment": "Insufficient payment",
+  "cashPayment": "Cash",
+  "cardPayment": "Card",
+  "transferPayment": "Transfer",
+  "allDataSynchronized": "All data is already synchronized",
+  "noInternetConnection": "No internet connection",
+  "successfullySynchronized": "Successfully synchronized {count} items",
+  "@successfullySynchronized": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncFailed": "Sync failed"
 }
