@@ -647,4 +647,42 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get usersManagement => 'إدارة المستخدمين';
+
+  @override
+  String get cannotDeleteCategory => 'لا يمكن حذف الفئة';
+
+  @override
+  String get categoryHasProducts => 'هذه الفئة تحتوي على منتجات مرتبطة بها';
+
+  @override
+  String deleteProductConfirm(String productName) {
+    return 'حذف $productName؟';
+  }
+
+  @override
+  String deleteCategoryConfirm(String categoryName) {
+    return 'حذف $categoryName؟ لا يمكن التراجع عن هذا الإجراء.';
+  }
+
+  @override
+  String get deleteCustomerConfirm => 'هل أنت متأكد من حذف هذا العميل؟';
+
+  @override
+  String deleteUserConfirm(String username) {
+    return 'حذف المستخدم $username؟ لا يمكن التراجع عن هذا الإجراء.';
+  }
+
+  @override
+  String get returnSale => 'إرجاع البيع';
+
+  @override
+  String returnSaleConfirm(String invoiceNumber) {
+    return 'إرجاع البيع $invoiceNumber؟';
+  }
+
+  @override
+  String get printInvoiceQuestion => 'هل تريد طباعة الفاتورة؟';
+
+  @override
+  String get complete => 'إتمام';
 }

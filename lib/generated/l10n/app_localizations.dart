@@ -1363,6 +1363,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Users Management'**
   String get usersManagement;
+
+  /// No description provided for @cannotDeleteCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot Delete Category'**
+  String get cannotDeleteCategory;
+
+  /// No description provided for @categoryHasProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'This category has products associated with it'**
+  String get categoryHasProducts;
+
+  /// No description provided for @deleteProductConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {productName}?'**
+  String deleteProductConfirm(String productName);
+
+  /// No description provided for @deleteCategoryConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {categoryName}? This action cannot be undone.'**
+  String deleteCategoryConfirm(String categoryName);
+
+  /// No description provided for @deleteCustomerConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this customer?'**
+  String get deleteCustomerConfirm;
+
+  /// No description provided for @deleteUserConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete user {username}? This action cannot be undone.'**
+  String deleteUserConfirm(String username);
+
+  /// No description provided for @returnSale.
+  ///
+  /// In en, this message translates to:
+  /// **'Return Sale'**
+  String get returnSale;
+
+  /// No description provided for @returnSaleConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Return sale {invoiceNumber}?'**
+  String returnSaleConfirm(String invoiceNumber);
+
+  /// No description provided for @printInvoiceQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Would you like to print the invoice?'**
+  String get printInvoiceQuestion;
+
+  /// No description provided for @complete.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get complete;
 }
 
 class _AppLocalizationsDelegate

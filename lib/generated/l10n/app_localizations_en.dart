@@ -647,4 +647,44 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get usersManagement => 'Users Management';
+
+  @override
+  String get cannotDeleteCategory => 'Cannot Delete Category';
+
+  @override
+  String get categoryHasProducts =>
+      'This category has products associated with it';
+
+  @override
+  String deleteProductConfirm(String productName) {
+    return 'Delete $productName?';
+  }
+
+  @override
+  String deleteCategoryConfirm(String categoryName) {
+    return 'Delete $categoryName? This action cannot be undone.';
+  }
+
+  @override
+  String get deleteCustomerConfirm =>
+      'Are you sure you want to delete this customer?';
+
+  @override
+  String deleteUserConfirm(String username) {
+    return 'Delete user $username? This action cannot be undone.';
+  }
+
+  @override
+  String get returnSale => 'Return Sale';
+
+  @override
+  String returnSaleConfirm(String invoiceNumber) {
+    return 'Return sale $invoiceNumber?';
+  }
+
+  @override
+  String get printInvoiceQuestion => 'Would you like to print the invoice?';
+
+  @override
+  String get complete => 'Complete';
 }
