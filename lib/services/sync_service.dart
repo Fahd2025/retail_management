@@ -70,7 +70,7 @@ class SyncService {
     if (!connected) {
       return SyncResult(
         success: false,
-        message: 'No internet connection',
+        messageType: SyncMessageType.noInternet,
       );
     }
 
@@ -86,7 +86,7 @@ class SyncService {
       if (totalItems == 0) {
         return SyncResult(
           success: true,
-          message: 'All data is already synchronized',
+          messageType: SyncMessageType.alreadySynced,
           itemsSynced: 0,
         );
       }
@@ -108,26 +108,36 @@ class SyncService {
 
       return SyncResult(
         success: true,
-        message: 'Successfully synchronized $totalItems items',
+        messageType: SyncMessageType.success,
         itemsSynced: totalItems,
       );
     } catch (e) {
       return SyncResult(
         success: false,
-        message: 'Sync failed: ${e.toString()}',
+        messageType: SyncMessageType.failed,
+        errorMessage: e.toString(),
       );
     }
   }
 }
 
+enum SyncMessageType {
+  noInternet,
+  alreadySynced,
+  success,
+  failed,
+}
+
 class SyncResult {
   final bool success;
-  final String message;
+  final SyncMessageType messageType;
   final int itemsSynced;
+  final String? errorMessage;
 
   SyncResult({
     required this.success,
-    required this.message,
+    required this.messageType,
     this.itemsSynced = 0,
+    this.errorMessage,
   });
 }
