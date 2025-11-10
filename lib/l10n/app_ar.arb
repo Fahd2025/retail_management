@@ -1,7 +1,6 @@
 {
   "@@locale": "ar",
 
-  "_comment_app_general": "=== سلاسل التطبيق العامة ===",
   "appTitle": "نظام إدارة البيع بالتجزئة",
   "appSubtitle": "نظام نقاط البيع",
   "ok": "موافق",
@@ -22,7 +21,6 @@
   "close": "إغلاق",
   "submit": "إرسال",
 
-  "_comment_login": "=== شاشة تسجيل الدخول ===",
   "loginTitle": "إدارة البيع بالتجزئة",
   "loginSubtitle": "نظام نقاط البيع",
   "username": "اسم المستخدم",
@@ -36,7 +34,6 @@
   "initializingSystem": "جاري تهيئة النظام...",
   "initializationError": "خطأ في التهيئة: {error}",
 
-  "_comment_dashboard": "=== لوحة التحكم ===",
   "dashboard": "لوحة التحكم",
   "welcome": "مرحباً",
   "totalSales": "إجمالي المبيعات",
@@ -50,7 +47,6 @@
   "thisWeek": "هذا الأسبوع",
   "thisMonth": "هذا الشهر",
 
-  "_comment_products": "=== المنتجات ===",
   "products": "المنتجات",
   "productList": "قائمة المنتجات",
   "addProduct": "إضافة منتج",
@@ -70,7 +66,6 @@
   "productDetails": "تفاصيل المنتج",
   "stockLevel": "مستوى المخزون",
 
-  "_comment_categories": "=== الفئات ===",
   "categories": "الفئات",
   "addCategory": "إضافة فئة",
   "editCategory": "تعديل الفئة",
@@ -78,7 +73,6 @@
   "categoryName": "اسم الفئة",
   "categoryDescription": "وصف الفئة",
 
-  "_comment_customers": "=== العملاء ===",
   "customers": "العملاء",
   "customerList": "قائمة العملاء",
   "addCustomer": "إضافة عميل",
@@ -92,7 +86,6 @@
   "customerDetails": "تفاصيل العميل",
   "totalPurchases": "إجمالي المشتريات",
 
-  "_comment_sales": "=== المبيعات ===",
   "sales": "المبيعات",
   "salesList": "قائمة المبيعات",
   "newSale": "عملية بيع جديدة",
@@ -113,7 +106,6 @@
   "printInvoice": "طباعة الفاتورة",
   "completeSale": "إتمام البيع",
 
-  "_comment_users": "=== المستخدمون ===",
   "users": "المستخدمون",
   "userList": "قائمة المستخدمين",
   "addUser": "إضافة مستخدم",
@@ -128,7 +120,6 @@
   "active": "نشط",
   "inactive": "غير نشط",
 
-  "_comment_settings": "=== الإعدادات ===",
   "settings": "الإعدادات",
   "generalSettings": "الإعدادات العامة",
   "appearance": "المظهر",
@@ -148,7 +139,6 @@
   "restore": "استعادة",
   "about": "حول",
 
-  "_comment_messages": "=== الرسائل والإشعارات ===",
   "saveSuccess": "تم الحفظ بنجاح",
   "deleteSuccess": "تم الحذف بنجاح",
   "updateSuccess": "تم التحديث بنجاح",
@@ -164,7 +154,6 @@
   "invalidEmail": "عنوان البريد الإلكتروني غير صحيح",
   "invalidPhone": "رقم الهاتف غير صحيح",
 
-  "_comment_validation": "=== رسائل التحقق ===",
   "fieldRequired": "هذا الحقل مطلوب",
   "enterValidEmail": "الرجاء إدخال بريد إلكتروني صحيح",
   "enterValidPhone": "الرجاء إدخال رقم هاتف صحيح",
@@ -173,7 +162,6 @@
   "nameTooShort": "الاسم قصير جداً",
   "passwordTooShort": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
 
-  "_comment_actions": "=== الإجراءات ===",
   "view": "عرض",
   "print": "طباعة",
   "export": "تصدير",
@@ -187,7 +175,6 @@
   "reset": "إعادة تعيين",
   "apply": "تطبيق",
 
-  "_comment_time": "=== الوقت والتاريخ ===",
   "daily": "يومي",
   "weekly": "أسبوعي",
   "monthly": "شهري",
@@ -198,7 +185,6 @@
   "selectDate": "اختر التاريخ",
   "selectTime": "اختر الوقت",
 
-  "_comment_cashier": "=== شاشة أمين الصندوق ===",
   "cashierMode": "وضع أمين الصندوق",
   "scanBarcode": "مسح الرمز الشريطي",
   "addItem": "إضافة عنصر",
@@ -210,7 +196,6 @@
   "saleCompleted": "تم إتمام البيع",
   "thankYou": "شكراً لك!",
 
-  "_comment_reports": "=== التقارير ===",
   "reports": "التقارير",
   "salesReport": "تقرير المبيعات",
   "inventoryReport": "تقرير المخزون",
