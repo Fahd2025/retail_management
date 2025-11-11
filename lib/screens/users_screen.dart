@@ -113,7 +113,6 @@ class _UsersScreenState extends State<UsersScreen> {
       body: BlocConsumer<UserBloc, UserState>(
         listener: (context, state) {
           if (state is UserOperationSuccess) {
-            final l10n = AppLocalizations.of(context)!;
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message!),
@@ -123,7 +122,6 @@ class _UsersScreenState extends State<UsersScreen> {
             // Reload users after successful operation
             context.read<UserBloc>().add(const LoadUsersEvent());
           } else if (state is UserError) {
-            final l10n = AppLocalizations.of(context)!;
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),

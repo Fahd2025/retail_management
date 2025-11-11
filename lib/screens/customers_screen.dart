@@ -5,9 +5,7 @@ import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../blocs/customer/customer_bloc.dart';
 import '../blocs/customer/customer_event.dart';
 import '../blocs/customer/customer_state.dart';
-import '../blocs/sale/sale_bloc.dart';
 import '../models/customer.dart' as models;
-import '../models/company_info.dart';
 import '../database/drift_database.dart';
 import '../services/customer_invoice_export_service.dart';
 
@@ -108,7 +106,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                             .vatLabel2(customer.vatNumber!)),
                       const SizedBox(height: 4),
                       FutureBuilder<Map<String, dynamic>>(
-                        future: AppDatabase().getCustomerSalesStatistics(customer.id),
+                        future: AppDatabase()
+                            .getCustomerSalesStatistics(customer.id),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             final stats = snapshot.data!;
@@ -173,7 +172,9 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           );
 
                           if (confirm == true && mounted) {
-                            context.read<CustomerBloc>().add(DeleteCustomerEvent(customer.id));
+                            context
+                                .read<CustomerBloc>()
+                                .add(DeleteCustomerEvent(customer.id));
                           }
                         },
                       ),
@@ -661,10 +662,10 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
             FutureBuilder<List<dynamic>>(
               future: Future.wait([
                 AppDatabase().getSalesByCustomer(
-                      widget.customer.id,
-                      startDate: _startDate,
-                      endDate: _endDate,
-                    ),
+                  widget.customer.id,
+                  startDate: _startDate,
+                  endDate: _endDate,
+                ),
                 AppDatabase().getCustomerSalesStatistics(widget.customer.id),
               ]),
               builder: (context, snapshot) {
