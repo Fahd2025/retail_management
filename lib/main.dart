@@ -58,15 +58,15 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => SaleBloc()),
         BlocProvider(create: (_) => UserBloc()),
       ],
-      child: BlocBuilder<ThemeBloc, ThemeState>(
-        builder: (context, themeState) {
-          return BlocBuilder<LocaleBloc, LocaleState>(
-            builder: (context, localeState) {
-              return ScreenUtilInit(
-                designSize: const Size(1920, 1080), // Desktop/Tablet design size
-                minTextAdapt: true,
-                splitScreenMode: true,
-                builder: (context, child) {
+      child: ScreenUtilInit(
+        designSize: const Size(1920, 1080), // Desktop/Tablet design size
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) {
+          return BlocBuilder<ThemeBloc, ThemeState>(
+            builder: (context, themeState) {
+              return BlocBuilder<LocaleBloc, LocaleState>(
+                builder: (context, localeState) {
                   return MaterialApp(
                     title: 'Retail Management System',
                     debugShowCheckedModeBanner: false,
