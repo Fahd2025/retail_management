@@ -349,6 +349,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  Future<bool> _onWillPop(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+    final shouldExit = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.confirm),
+        content: Text(l10n.confirmExit),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.no),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: Text(l10n.yes),
+          ),
+        ],
+      ),
+    );
+    return shouldExit ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
@@ -361,7 +387,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
         final screens = _getScreens(user.role);
         final navItems = _getNavigationItems(user.role, context);
 
-        return Scaffold(
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (bool didPop, Object? result) async {
+            if (didPop) {
+              return;
+            }
+            final shouldPop = await _onWillPop(context);
+            if (shouldPop && context.mounted) {
+              Navigator.of(context).pop();
+            }
+          },
+          child: Scaffold(
           appBar: _buildAppBar(navItems, context),
           drawer: Drawer(
             child: Column(
@@ -444,7 +481,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ],
             ),
           ),
-          body: screens[_selectedIndex],
+            body: screens[_selectedIndex],
+          ),
         );
       },
     );

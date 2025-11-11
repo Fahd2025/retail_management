@@ -162,6 +162,26 @@ Quick lookup guide for common development tasks.
 
 ---
 
+### 6. ARABIC_TRANSLATION_REQUIREMENTS.md (NEW)
+**Arabic Translation Guidelines - REQUIRED FOR ALL NEW FEATURES**
+
+Mandatory requirements and guidelines for Arabic translations.
+
+**Contains**:
+- General translation requirements
+- Translation process step-by-step
+- Recent changes documentation (Mobile UI enhancements)
+- Best practices for Arabic translation (RTL support, cultural context, quality)
+- Checklist for new features
+- Translation guidelines by category (buttons, dialogs, errors, status)
+- Tools and resources for translation
+- Common translation patterns
+- Testing guidelines for Arabic display
+
+**Key Takeaway**: All new features MUST include Arabic translations following these guidelines.
+
+---
+
 ## How to Use This Documentation
 
 ### If You're New to the Project
@@ -388,6 +408,7 @@ All documentation is in this project directory:
 - `FLUTTER_ARCHITECTURE.md`
 - `THEME_LOCALIZATION_INTEGRATION.md`
 - `QUICK_REFERENCE.md`
+- `ARABIC_TRANSLATION_REQUIREMENTS.md` (NEW - 2025-11-11)
 
 ### Existing Documentation
 - `MIGRATION.md` - Database migration notes

@@ -147,6 +147,7 @@
   "updateFailed": "فشل التحديث",
   "confirmDelete": "هل أنت متأكد من حذف هذا العنصر؟",
   "confirmLogout": "هل أنت متأكد من تسجيل الخروج؟",
+  "confirmExit": "هل أنت متأكد من الخروج من التطبيق؟",
   "noDataAvailable": "لا توجد بيانات متاحة",
   "noItemsFound": "لم يتم العثور على عناصر",
   "searchResults": "نتائج البحث",
