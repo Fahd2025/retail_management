@@ -229,9 +229,9 @@ class _InvoicePreviewBottomSheetState
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-      initialChildSize: 0.7,
-      minChildSize: 0.5,
-      maxChildSize: 0.95,
+      initialChildSize: 0.4,
+      minChildSize: 0.3,
+      maxChildSize: 0.9,
       expand: false,
       builder: (context, scrollController) {
         return Container(
@@ -242,10 +242,11 @@ class _InvoicePreviewBottomSheetState
             ),
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               // Handle
               Container(
-                margin: const EdgeInsets.only(top: 8),
+                margin: const EdgeInsets.only(top: 8, bottom: 8),
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
@@ -254,103 +255,116 @@ class _InvoicePreviewBottomSheetState
                 ),
               ),
 
-              // Header
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    const Icon(Icons.print),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Print Invoice',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                  ],
-                ),
-              ),
+              // Scrollable content
+              Flexible(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Header
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.print),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Print Invoice',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            const Spacer(),
+                            IconButton(
+                              icon: const Icon(Icons.close),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                          ],
+                        ),
+                      ),
 
-              const Divider(height: 1),
+                      const Divider(height: 1),
 
-              // Format selector
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Select Format:',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 8,
-                      children: PrintFormat.all.map((format) {
-                        return ChoiceChip(
-                          label: Text(format.displayName),
-                          selected: _selectedFormat == format,
-                          onSelected: (selected) {
-                            if (selected) {
-                              setState(() {
-                                _selectedFormat = format;
-                              });
-                            }
-                          },
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                ),
-              ),
+                      // Format selector
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text(
+                              'Select Format:',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 8),
+                            Wrap(
+                              spacing: 8,
+                              children: PrintFormat.all.map((format) {
+                                return ChoiceChip(
+                                  label: Text(format.displayName),
+                                  selected: _selectedFormat == format,
+                                  onSelected: (selected) {
+                                    if (selected) {
+                                      setState(() {
+                                        _selectedFormat = format;
+                                      });
+                                    }
+                                  },
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
+                      ),
 
-              const Divider(height: 1),
+                      const Divider(height: 1),
 
-              // Action buttons
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    ElevatedButton.icon(
-                      onPressed: () async {
-                        final config = PrintFormatConfig(
-                          format: _selectedFormat,
-                        );
-                        await _invoiceService.printInvoice(
-                          sale: widget.sale,
-                          companyInfo: widget.companyInfo,
-                          customer: widget.customer,
-                          config: config,
-                        );
-                        if (context.mounted) {
-                          Navigator.of(context).pop();
-                        }
-                      },
-                      icon: const Icon(Icons.print),
-                      label: const Text('Print Now'),
-                    ),
-                    const SizedBox(height: 8),
-                    OutlinedButton.icon(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        InvoicePreviewDialog.show(
-                          context: context,
-                          sale: widget.sale,
-                          companyInfo: widget.companyInfo,
-                          customer: widget.customer,
-                          initialConfig: PrintFormatConfig(
-                            format: _selectedFormat,
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.preview),
-                      label: const Text('Preview'),
-                    ),
-                  ],
+                      // Action buttons
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ElevatedButton.icon(
+                              onPressed: () async {
+                                final config = PrintFormatConfig(
+                                  format: _selectedFormat,
+                                );
+                                await _invoiceService.printInvoice(
+                                  sale: widget.sale,
+                                  companyInfo: widget.companyInfo,
+                                  customer: widget.customer,
+                                  config: config,
+                                );
+                                if (context.mounted) {
+                                  Navigator.of(context).pop();
+                                }
+                              },
+                              icon: const Icon(Icons.print),
+                              label: const Text('Print Now'),
+                            ),
+                            const SizedBox(height: 8),
+                            OutlinedButton.icon(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                InvoicePreviewDialog.show(
+                                  context: context,
+                                  sale: widget.sale,
+                                  companyInfo: widget.companyInfo,
+                                  customer: widget.customer,
+                                  initialConfig: PrintFormatConfig(
+                                    format: _selectedFormat,
+                                  ),
+                                );
+                              },
+                              icon: const Icon(Icons.preview),
+                              label: const Text('Preview'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
