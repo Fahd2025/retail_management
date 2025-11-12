@@ -144,27 +144,29 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Center(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-                  child: Container(
-                    constraints: const BoxConstraints(maxWidth: 500),
-                    padding: const EdgeInsets.all(32),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.95),
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
+                  child: BlocBuilder<ThemeBloc, ThemeState>(
+                    builder: (context, themeState) {
+                      return Container(
+                        constraints: const BoxConstraints(maxWidth: 500),
+                        padding: const EdgeInsets.all(32),
+                        decoration: BoxDecoration(
+                          color: themeState.isDarkMode
+                              ? const Color(0xFF1E1E1E).withOpacity(0.95)
+                              : Colors.white.withOpacity(0.95),
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Theme and Language Switchers Row
-                        BlocBuilder<ThemeBloc, ThemeState>(
-                          builder: (context, themeState) {
-                            return BlocBuilder<LocaleBloc, LocaleState>(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Theme and Language Switchers Row
+                            BlocBuilder<LocaleBloc, LocaleState>(
                               builder: (context, localeState) {
                                 return Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
@@ -227,206 +229,206 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ],
                                 );
                               },
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 8),
-                    // Logo/Icon
-                    Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade100,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.store,
-                        size: 50,
-                        color: Colors.blue.shade700,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Title
-                    Text(
-                      l10n.loginTitle,
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue.shade700,
-                          ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      l10n.loginSubtitle,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.grey.shade600,
-                          ),
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Default Credentials Display
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: Colors.blue.shade200,
-                          width: 1,
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.info_outline,
-                                size: 20,
+                            ),
+                            const SizedBox(height: 8),
+                            // Logo/Icon
+                            Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.blue.shade100,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.store,
+                                size: 50,
                                 color: Colors.blue.shade700,
                               ),
-                              const SizedBox(width: 8),
-                              Text(
-                                l10n.defaultCredentials,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue.shade700,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            l10n.adminCredentials,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey.shade700,
                             ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            l10n.cashierCredentials,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey.shade700,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 24),
+                            const SizedBox(height: 24),
 
-                    if (_isInitializing)
-                      Column(
-                        children: [
-                          const CircularProgressIndicator(),
-                          const SizedBox(height: 16),
-                          Text(l10n.initializingSystem),
-                        ],
-                      )
-                    else
-                      Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            // Username field
-                            TextFormField(
-                              controller: _usernameController,
-                              decoration: InputDecoration(
-                                labelText: l10n.username,
-                                prefixIcon: const Icon(Icons.person),
-                              ),
-                              autofillHints: const [AutofillHints.username],
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return l10n.pleaseEnterUsername;
-                                }
-                                return null;
-                              },
-                              textInputAction: TextInputAction.next,
-                              onFieldSubmitted: (_) {
-                                // Move focus to password field
-                                FocusScope.of(context).nextFocus();
-                              },
-                            ),
-                            const SizedBox(height: 16),
-
-                            // Password field
-                            TextFormField(
-                              controller: _passwordController,
-                              decoration: InputDecoration(
-                                labelText: l10n.password,
-                                prefixIcon: const Icon(Icons.lock),
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    _obscurePassword
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
+                            // Title
+                            Text(
+                              l10n.loginTitle,
+                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue.shade700,
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _obscurePassword = !_obscurePassword;
-                                    });
-                                  },
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              l10n.loginSubtitle,
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: Colors.grey.shade600,
+                                  ),
+                            ),
+                            const SizedBox(height: 24),
+
+                            // Default Credentials Display
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: Colors.blue.shade50,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: Colors.blue.shade200,
+                                  width: 1,
                                 ),
                               ),
-                              autofillHints: const [AutofillHints.password],
-                              obscureText: _obscurePassword,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return l10n.pleaseEnterPassword;
-                                }
-                                return null;
-                              },
-                              onFieldSubmitted: (_) {
-                                // Submit form on Enter key
-                                if (_formKey.currentState!.validate()) {
-                                  _login();
-                                }
-                              },
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.info_outline,
+                                        size: 20,
+                                        color: Colors.blue.shade700,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        l10n.defaultCredentials,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blue.shade700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    l10n.adminCredentials,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    l10n.cashierCredentials,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            const SizedBox(height: 32),
+                            const SizedBox(height: 24),
 
-                            // Login button
-                            SizedBox(
-                              width: double.infinity,
-                              child: BlocBuilder<AuthBloc, AuthState>(
-                                builder: (context, state) {
-                                  final isLoading = state is AuthLoading;
-                                  return ElevatedButton(
-                                    onPressed: isLoading ? null : _login,
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.blue.shade700,
-                                      foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 16,
+                            if (_isInitializing)
+                              Column(
+                                children: [
+                                  const CircularProgressIndicator(),
+                                  const SizedBox(height: 16),
+                                  Text(l10n.initializingSystem),
+                                ],
+                              )
+                            else
+                              Form(
+                                key: _formKey,
+                                child: Column(
+                                  children: [
+                                    // Username field
+                                    TextFormField(
+                                      controller: _usernameController,
+                                      decoration: InputDecoration(
+                                        labelText: l10n.username,
+                                        prefixIcon: const Icon(Icons.person),
+                                      ),
+                                      autofillHints: const [AutofillHints.username],
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return l10n.pleaseEnterUsername;
+                                        }
+                                        return null;
+                                      },
+                                      textInputAction: TextInputAction.next,
+                                      onFieldSubmitted: (_) {
+                                        // Move focus to password field
+                                        FocusScope.of(context).nextFocus();
+                                      },
+                                    ),
+                                    const SizedBox(height: 16),
+
+                                    // Password field
+                                    TextFormField(
+                                      controller: _passwordController,
+                                      decoration: InputDecoration(
+                                        labelText: l10n.password,
+                                        prefixIcon: const Icon(Icons.lock),
+                                        suffixIcon: IconButton(
+                                          icon: Icon(
+                                            _obscurePassword
+                                                ? Icons.visibility
+                                                : Icons.visibility_off,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              _obscurePassword = !_obscurePassword;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      autofillHints: const [AutofillHints.password],
+                                      obscureText: _obscurePassword,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return l10n.pleaseEnterPassword;
+                                        }
+                                        return null;
+                                      },
+                                      onFieldSubmitted: (_) {
+                                        // Submit form on Enter key
+                                        if (_formKey.currentState!.validate()) {
+                                          _login();
+                                        }
+                                      },
+                                    ),
+                                    const SizedBox(height: 32),
+
+                                    // Login button
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: BlocBuilder<AuthBloc, AuthState>(
+                                        builder: (context, state) {
+                                          final isLoading = state is AuthLoading;
+                                          return ElevatedButton(
+                                            onPressed: isLoading ? null : _login,
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.blue.shade700,
+                                              foregroundColor: Colors.white,
+                                              padding: const EdgeInsets.symmetric(
+                                                vertical: 16,
+                                              ),
+                                            ),
+                                            child: isLoading
+                                                ? const SizedBox(
+                                                    height: 20,
+                                                    width: 20,
+                                                    child: CircularProgressIndicator(
+                                                      strokeWidth: 2,
+                                                      color: Colors.white,
+                                                    ),
+                                                  )
+                                                : Text(
+                                                    l10n.login,
+                                                    style: const TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                          );
+                                        },
                                       ),
                                     ),
-                                    child: isLoading
-                                        ? const SizedBox(
-                                            height: 20,
-                                            width: 20,
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 2,
-                                              color: Colors.white,
-                                            ),
-                                          )
-                                        : Text(
-                                            l10n.login,
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                  );
-                                },
+                                  ],
+                                ),
                               ),
-                            ),
                           ],
                         ),
-                      ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 ),
               ),
