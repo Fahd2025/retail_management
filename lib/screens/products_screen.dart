@@ -4,6 +4,8 @@ import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../blocs/product/product_bloc.dart';
 import '../blocs/product/product_event.dart';
 import '../blocs/product/product_state.dart';
+import '../blocs/app_config/app_config_bloc.dart';
+import '../blocs/app_config/app_config_state.dart';
 import '../models/product.dart' as models;
 import '../models/category.dart';
 import '../database/drift_database.dart';
@@ -351,7 +353,6 @@ class _ProductDialogState extends State<_ProductDialog> {
   late TextEditingController _priceController;
   late TextEditingController _costController;
   late TextEditingController _quantityController;
-  late TextEditingController _vatRateController;
   late TextEditingController _descriptionController;
 
   List<Category> _categories = [];
@@ -372,9 +373,6 @@ class _ProductDialogState extends State<_ProductDialog> {
     );
     _quantityController = TextEditingController(
       text: widget.product?.quantity.toString() ?? '0',
-    );
-    _vatRateController = TextEditingController(
-      text: widget.product?.vatRate.toString() ?? '15',
     );
     _descriptionController = TextEditingController(
       text: widget.product?.description,
@@ -407,6 +405,10 @@ class _ProductDialogState extends State<_ProductDialog> {
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
 
+    // Get the current VAT rate from app config
+    final appConfig = context.read<AppConfigBloc>().state;
+    final vatRate = appConfig.vatRate;
+
     if (widget.product == null) {
       context.read<ProductBloc>().add(AddProductEvent(
         name: _nameController.text,
@@ -415,7 +417,7 @@ class _ProductDialogState extends State<_ProductDialog> {
         price: double.parse(_priceController.text),
         cost: double.parse(_costController.text),
         quantity: int.parse(_quantityController.text),
-        vatRate: double.parse(_vatRateController.text),
+        vatRate: vatRate,
         description: _descriptionController.text.isEmpty
             ? null
             : _descriptionController.text,
@@ -429,7 +431,7 @@ class _ProductDialogState extends State<_ProductDialog> {
           price: double.parse(_priceController.text),
           cost: double.parse(_costController.text),
           quantity: int.parse(_quantityController.text),
-          vatRate: double.parse(_vatRateController.text),
+          vatRate: vatRate,
           description: _descriptionController.text.isEmpty
               ? null
               : _descriptionController.text,
@@ -567,17 +569,25 @@ class _ProductDialogState extends State<_ProductDialog> {
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: TextFormField(
-                  controller: _vatRateController,
-                  decoration: InputDecoration(
-                    labelText: l10n.vatRateRequired,
-                    border: const OutlineInputBorder(),
-                    prefixIcon: const Icon(Icons.percent),
-                  ),
-                  keyboardType: TextInputType.number,
-                  validator: (v) =>
-                      double.tryParse(v ?? '') == null ? l10n.invalid : null,
-                  textInputAction: TextInputAction.next,
+                child: BlocBuilder<AppConfigBloc, AppConfigState>(
+                  builder: (context, appConfig) {
+                    return TextFormField(
+                      initialValue: appConfig.vatRate.toStringAsFixed(1),
+                      decoration: InputDecoration(
+                        labelText: '${l10n.vat} (%)',
+                        border: const OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.percent),
+                        filled: true,
+                        fillColor: Colors.grey.shade100,
+                        suffixIcon: Tooltip(
+                          message: 'VAT rate is set in Settings',
+                          child: Icon(Icons.lock, size: 18, color: Colors.grey.shade600),
+                        ),
+                      ),
+                      readOnly: true,
+                      enabled: false,
+                    );
+                  },
                 ),
               ),
             ],
@@ -617,7 +627,6 @@ class _ProductDialogState extends State<_ProductDialog> {
     _priceController.dispose();
     _costController.dispose();
     _quantityController.dispose();
-    _vatRateController.dispose();
     _descriptionController.dispose();
     // Don't close the singleton database instance
     super.dispose();

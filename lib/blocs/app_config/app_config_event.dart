@@ -63,3 +63,12 @@ class UpdatePrintFormatEvent extends AppConfigEvent {
   @override
   List<Object?> get props => [config];
 }
+
+class UpdateVatRateEvent extends AppConfigEvent {
+  final double vatRate;
+
+  const UpdateVatRateEvent(this.vatRate);
+
+  @override
+  List<Object?> get props => [vatRate];
+}
