@@ -308,13 +308,13 @@ class _CashierScreenState extends State<CashierScreen>
       final appConfigState = context.read<AppConfigBloc>().state;
       final printConfig = appConfigState.printFormatConfig;
 
-      // Show print preview bottom sheet with format selection
-      await InvoicePreviewBottomSheet.show(
-        context: context,
+      // Print directly using the configured settings from settings page
+      final invoiceService = InvoiceService();
+      await invoiceService.printInvoice(
         sale: sale,
         companyInfo: companyInfo ?? await db.getCompanyInfo() as CompanyInfo,
         customer: customer,
-        initialConfig: printConfig,
+        config: printConfig,
       );
     } catch (e) {
       if (mounted) {

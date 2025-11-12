@@ -7,8 +7,10 @@ import '../blocs/sale/sale_event.dart';
 import '../blocs/sale/sale_state.dart';
 import '../blocs/auth/auth_bloc.dart';
 import '../blocs/auth/auth_state.dart';
+import '../blocs/app_config/app_config_bloc.dart';
+import '../blocs/app_config/app_config_state.dart';
 import '../models/sale.dart';
-import '../services/invoice_service.dart';
+import '../widgets/invoice_preview_dialog.dart';
 import '../database/drift_database.dart' hide Sale;
 
 class SalesScreen extends StatefulWidget {
@@ -48,11 +50,17 @@ class _SalesScreenState extends State<SalesScreen> {
           ? await db.getCustomer(sale.customerId!)
           : null;
 
-      final invoiceService = InvoiceService();
-      await invoiceService.printInvoice(
+      // Get current print format configuration from AppConfig
+      final appConfigState = context.read<AppConfigBloc>().state;
+      final printConfig = appConfigState.printFormatConfig;
+
+      // Show print preview bottom sheet with format selection
+      await InvoicePreviewBottomSheet.show(
+        context: context,
         sale: sale,
         companyInfo: companyInfo,
         customer: customer,
+        initialConfig: printConfig,
       );
     } catch (e) {
       if (mounted) {
