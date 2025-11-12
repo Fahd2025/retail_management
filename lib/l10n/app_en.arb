@@ -617,5 +617,33 @@
   "adminCredentials": "Admin: admin / admin123",
   "cashierCredentials": "Cashier: cashier / cashier123",
   "switchTheme": "Switch Theme",
-  "switchLanguage": "Switch Language"
+  "switchLanguage": "Switch Language",
+
+  "printSettings": "Print Settings",
+  "printFormat": "Print Format",
+  "displayOptions": "Display Options",
+  "showCompanyLogo": "Show Company Logo",
+  "displayLogoPlaceholder": "Display logo placeholder in invoice header",
+  "showQrCode": "Show QR Code",
+  "displayZatcaQrCode": "Display ZATCA-compliant QR code",
+  "showCustomerInformation": "Show Customer Information",
+  "displayCustomerDetails": "Display customer details when available",
+  "showNotes": "Show Notes",
+  "displaySaleNotes": "Display sale notes when available",
+  "selectFormat": "Select Format",
+  "printNow": "Print Now",
+  "preview": "Preview",
+  "thermalReceiptPrinter": "Thermal receipt printer",
+  "standardPaperFormat": "Standard paper format",
+  "a4Format": "A4 (210×297mm)",
+  "thermal80mmFormat": "80mm Thermal",
+  "thermal58mmFormat": "58mm Thermal",
+  "mmWidth": "{width}mm width",
+  "@mmWidth": {
+    "placeholders": {
+      "width": {
+        "type": "String"
+      }
+    }
+  }
 }

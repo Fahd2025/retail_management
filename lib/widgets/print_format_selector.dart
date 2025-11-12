@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../models/print_format.dart';
 import '../blocs/app_config/app_config_bloc.dart';
 import '../blocs/app_config/app_config_event.dart';
@@ -14,6 +15,8 @@ class PrintFormatSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return BlocBuilder<AppConfigBloc, AppConfigState>(
       builder: (context, state) {
         final config = state.printFormatConfig;
@@ -23,7 +26,7 @@ class PrintFormatSelector extends StatelessWidget {
           children: [
             // Format Selection
             Text(
-              'Print Format',
+              l10n.printFormat,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -34,8 +37,8 @@ class PrintFormatSelector extends StatelessWidget {
                 title: Text(format.displayName),
                 subtitle: Text(
                   format.isThermal
-                      ? 'Thermal receipt printer'
-                      : 'Standard paper format',
+                      ? l10n.thermalReceiptPrinter
+                      : l10n.standardPaperFormat,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 value: format,
@@ -55,7 +58,7 @@ class PrintFormatSelector extends StatelessWidget {
 
             // Display Options
             Text(
-              'Display Options',
+              l10n.displayOptions,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -63,8 +66,8 @@ class PrintFormatSelector extends StatelessWidget {
             const SizedBox(height: 8),
 
             SwitchListTile(
-              title: const Text('Show Company Logo'),
-              subtitle: const Text('Display logo placeholder in invoice header'),
+              title: Text(l10n.showCompanyLogo),
+              subtitle: Text(l10n.displayLogoPlaceholder),
               value: config.showLogo,
               onChanged: (value) {
                 context.read<AppConfigBloc>().add(
@@ -76,8 +79,8 @@ class PrintFormatSelector extends StatelessWidget {
             ),
 
             SwitchListTile(
-              title: const Text('Show QR Code'),
-              subtitle: const Text('Display ZATCA-compliant QR code'),
+              title: Text(l10n.showQrCode),
+              subtitle: Text(l10n.displayZatcaQrCode),
               value: config.showQrCode,
               onChanged: (value) {
                 context.read<AppConfigBloc>().add(
@@ -89,8 +92,8 @@ class PrintFormatSelector extends StatelessWidget {
             ),
 
             SwitchListTile(
-              title: const Text('Show Customer Information'),
-              subtitle: const Text('Display customer details when available'),
+              title: Text(l10n.showCustomerInformation),
+              subtitle: Text(l10n.displayCustomerDetails),
               value: config.showCustomerInfo,
               onChanged: (value) {
                 context.read<AppConfigBloc>().add(
@@ -102,8 +105,8 @@ class PrintFormatSelector extends StatelessWidget {
             ),
 
             SwitchListTile(
-              title: const Text('Show Notes'),
-              subtitle: const Text('Display sale notes when available'),
+              title: Text(l10n.showNotes),
+              subtitle: Text(l10n.displaySaleNotes),
               value: config.showNotes,
               onChanged: (value) {
                 context.read<AppConfigBloc>().add(
@@ -133,12 +136,14 @@ class PrintFormatQuickSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          'Select Print Format',
+          l10n.selectFormat,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -149,7 +154,7 @@ class PrintFormatQuickSelector extends StatelessWidget {
             dense: true,
             title: Text(format.displayName),
             subtitle: Text(
-              '${format.widthMm.toInt()}mm width',
+              l10n.mmWidth(format.widthMm.toInt().toString()),
               style: Theme.of(context).textTheme.bodySmall,
             ),
             value: format,
