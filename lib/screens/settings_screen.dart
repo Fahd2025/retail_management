@@ -276,7 +276,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Print Settings',
+                      l10n.printSettings,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const Divider(),

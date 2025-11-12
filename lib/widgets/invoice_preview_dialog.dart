@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:printing/printing.dart';
+import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../models/sale.dart';
 import '../models/company_info.dart';
 import '../models/customer.dart';
@@ -228,6 +229,8 @@ class _InvoicePreviewBottomSheetState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return DraggableScrollableSheet(
       initialChildSize: 0.4,
       minChildSize: 0.3,
@@ -270,7 +273,7 @@ class _InvoicePreviewBottomSheetState
                             const Icon(Icons.print),
                             const SizedBox(width: 8),
                             Text(
-                              'Print Invoice',
+                              l10n.printInvoice,
                               style: Theme.of(context).textTheme.titleLarge,
                             ),
                             const Spacer(),
@@ -291,9 +294,9 @@ class _InvoicePreviewBottomSheetState
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text(
-                              'Select Format:',
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                            Text(
+                              '${l10n.selectFormat}:',
+                              style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 8),
                             Wrap(
@@ -341,7 +344,7 @@ class _InvoicePreviewBottomSheetState
                                 }
                               },
                               icon: const Icon(Icons.print),
-                              label: const Text('Print Now'),
+                              label: Text(l10n.printNow),
                             ),
                             const SizedBox(height: 8),
                             OutlinedButton.icon(
@@ -358,7 +361,7 @@ class _InvoicePreviewBottomSheetState
                                 );
                               },
                               icon: const Icon(Icons.preview),
-                              label: const Text('Preview'),
+                              label: Text(l10n.preview),
                             ),
                           ],
                         ),

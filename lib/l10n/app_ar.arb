@@ -368,5 +368,26 @@
   "adminCredentials": "المدير: admin / admin123",
   "cashierCredentials": "أمين الصندوق: cashier / cashier123",
   "switchTheme": "تبديل السمة",
-  "switchLanguage": "تبديل اللغة"
+  "switchLanguage": "تبديل اللغة",
+
+  "printSettings": "إعدادات الطباعة",
+  "printFormat": "تنسيق الطباعة",
+  "displayOptions": "خيارات العرض",
+  "showCompanyLogo": "إظهار شعار الشركة",
+  "displayLogoPlaceholder": "عرض مكان الشعار في رأس الفاتورة",
+  "showQrCode": "إظهار رمز الاستجابة السريعة",
+  "displayZatcaQrCode": "عرض رمز QR المتوافق مع هيئة الزكاة والضريبة والجمارك",
+  "showCustomerInformation": "إظهار معلومات العميل",
+  "displayCustomerDetails": "عرض تفاصيل العميل عند توفرها",
+  "showNotes": "إظهار الملاحظات",
+  "displaySaleNotes": "عرض ملاحظات البيع عند توفرها",
+  "selectFormat": "اختر التنسيق",
+  "printNow": "اطبع الآن",
+  "preview": "معاينة",
+  "thermalReceiptPrinter": "طابعة إيصالات حرارية",
+  "standardPaperFormat": "تنسيق ورق قياسي",
+  "a4Format": "A4 (210×297 ملم)",
+  "thermal80mmFormat": "حراري 80 ملم",
+  "thermal58mmFormat": "حراري 58 ملم",
+  "mmWidth": "عرض {width} ملم"
 }
