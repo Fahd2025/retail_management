@@ -920,6 +920,12 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to logout?'**
   String get confirmLogout;
 
+  /// No description provided for @confirmExit.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to exit the application?'**
+  String get confirmExit;
+
   /// No description provided for @noDataAvailable.
   ///
   /// In en, this message translates to:

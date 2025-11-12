@@ -422,6 +422,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get confirmLogout => 'هل أنت متأكد من تسجيل الخروج؟';
 
   @override
+  String get confirmExit => 'هل أنت متأكد من الخروج من التطبيق؟';
+
+  @override
   String get noDataAvailable => 'لا توجد بيانات متاحة';
 
   @override

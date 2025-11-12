@@ -16,6 +16,13 @@ import 'blocs/theme/theme_state.dart';
 import 'blocs/locale/locale_bloc.dart';
 import 'blocs/locale/locale_event.dart';
 import 'blocs/locale/locale_state.dart';
+import 'blocs/auth/auth_bloc.dart';
+import 'blocs/auth/auth_event.dart';
+import 'blocs/auth/auth_state.dart';
+import 'blocs/product/product_bloc.dart';
+import 'blocs/customer/customer_bloc.dart';
+import 'blocs/sale/sale_bloc.dart';
+import 'blocs/user/user_bloc.dart';
 import 'config/app_theme.dart';
 import 'screens/login_screen.dart';
 import 'screens/dashboard_screen.dart';
@@ -85,6 +92,14 @@ class MyApp extends StatelessWidget {
                       GlobalWidgetsLocalizations.delegate,
                       GlobalCupertinoLocalizations.delegate,
                     ],
+
+                    // Properly handle text direction for RTL languages
+                    builder: (context, child) {
+                      return Directionality(
+                        textDirection: localeState.textDirection,
+                        child: child!,
+                      );
+                    },
 
                     home: const AuthWrapper(),
                   );

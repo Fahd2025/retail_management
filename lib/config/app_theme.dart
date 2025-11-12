@@ -183,6 +183,9 @@ class AppTheme {
         ),
       ),
 
+      // Text theme
+      textTheme: AppTypography.lightTextTheme(),
+
       // Switch theme
       switchTheme: SwitchThemeData(
         thumbColor: MaterialStateProperty.resolveWith((states) {

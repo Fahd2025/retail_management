@@ -422,6 +422,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmLogout => 'Are you sure you want to logout?';
 
   @override
+  String get confirmExit => 'Are you sure you want to exit the application?';
+
+  @override
   String get noDataAvailable => 'No data available';
 
   @override
