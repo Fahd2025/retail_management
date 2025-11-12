@@ -1,15 +1,18 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import '../../models/print_format.dart';
 
 class AppConfigState extends Equatable {
   final ThemeMode themeMode;
   final Locale locale;
   final bool isLoading;
+  final PrintFormatConfig printFormatConfig;
 
   const AppConfigState({
     required this.themeMode,
     required this.locale,
     required this.isLoading,
+    this.printFormatConfig = PrintFormatConfig.defaultConfig,
   });
 
   bool get isDarkMode => themeMode == ThemeMode.dark;
@@ -23,14 +26,16 @@ class AppConfigState extends Equatable {
     ThemeMode? themeMode,
     Locale? locale,
     bool? isLoading,
+    PrintFormatConfig? printFormatConfig,
   }) {
     return AppConfigState(
       themeMode: themeMode ?? this.themeMode,
       locale: locale ?? this.locale,
       isLoading: isLoading ?? this.isLoading,
+      printFormatConfig: printFormatConfig ?? this.printFormatConfig,
     );
   }
 
   @override
-  List<Object?> get props => [themeMode, locale, isLoading];
+  List<Object?> get props => [themeMode, locale, isLoading, printFormatConfig];
 }
