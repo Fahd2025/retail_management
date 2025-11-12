@@ -6,6 +6,7 @@ import '../services/sync_service.dart';
 import '../blocs/app_config/app_config_bloc.dart';
 import '../blocs/app_config/app_config_event.dart';
 import '../blocs/app_config/app_config_state.dart';
+import '../widgets/print_format_selector.dart';
 import 'package:uuid/uuid.dart';
 import 'package:retail_management/generated/l10n/app_localizations.dart';
 
@@ -261,6 +262,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       ),
                     ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Print Settings Section
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Print Settings',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const Divider(),
+                    const PrintFormatSelector(),
                   ],
                 ),
               ),

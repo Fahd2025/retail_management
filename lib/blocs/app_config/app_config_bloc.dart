@@ -1,12 +1,15 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../models/print_format.dart';
 import 'app_config_event.dart';
 import 'app_config_state.dart';
 
 class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   static const String _themePreferenceKey = 'theme_mode';
   static const String _localePreferenceKey = 'app_locale';
+  static const String _printFormatPreferenceKey = 'print_format_config';
 
   static const Locale englishLocale = Locale('en', 'US');
   static const Locale arabicLocale = Locale('ar', 'SA');
@@ -16,6 +19,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
           themeMode: ThemeMode.light,
           locale: englishLocale,
           isLoading: true,
+          printFormatConfig: PrintFormatConfig.defaultConfig,
         )) {
     on<InitializeAppConfigEvent>(_onInitialize);
     on<UpdateThemeEvent>(_onUpdateTheme);
@@ -23,6 +27,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     on<ToggleThemeEvent>(_onToggleTheme);
     on<SetEnglishEvent>(_onSetEnglish);
     on<SetArabicEvent>(_onSetArabic);
+    on<UpdatePrintFormatEvent>(_onUpdatePrintFormat);
   }
 
   Future<void> _onInitialize(
@@ -35,13 +40,25 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
       final prefs = await SharedPreferences.getInstance();
       final savedTheme = prefs.getString(_themePreferenceKey);
       final savedLocale = prefs.getString(_localePreferenceKey);
+      final savedPrintFormat = prefs.getString(_printFormatPreferenceKey);
 
       final themeMode = savedTheme == 'dark' ? ThemeMode.dark : ThemeMode.light;
       final locale = savedLocale == 'ar' ? arabicLocale : englishLocale;
 
+      PrintFormatConfig printFormatConfig = PrintFormatConfig.defaultConfig;
+      if (savedPrintFormat != null) {
+        try {
+          final json = jsonDecode(savedPrintFormat) as Map<String, dynamic>;
+          printFormatConfig = PrintFormatConfig.fromJson(json);
+        } catch (e) {
+          debugPrint('Error parsing print format config: $e');
+        }
+      }
+
       emit(state.copyWith(
         themeMode: themeMode,
         locale: locale,
+        printFormatConfig: printFormatConfig,
         isLoading: false,
       ));
     } catch (e) {
@@ -49,6 +66,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
       emit(state.copyWith(
         themeMode: ThemeMode.light,
         locale: englishLocale,
+        printFormatConfig: PrintFormatConfig.defaultConfig,
         isLoading: false,
       ));
     }
@@ -117,6 +135,26 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
       await prefs.setString(_localePreferenceKey, locale.languageCode);
     } catch (e) {
       debugPrint('Error saving locale preference: $e');
+    }
+  }
+
+  Future<void> _onUpdatePrintFormat(
+    UpdatePrintFormatEvent event,
+    Emitter<AppConfigState> emit,
+  ) async {
+    if (state.printFormatConfig != event.config) {
+      await _savePrintFormatPreference(event.config);
+      emit(state.copyWith(printFormatConfig: event.config));
+    }
+  }
+
+  Future<void> _savePrintFormatPreference(PrintFormatConfig config) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final json = jsonEncode(config.toJson());
+      await prefs.setString(_printFormatPreferenceKey, json);
+    } catch (e) {
+      debugPrint('Error saving print format preference: $e');
     }
   }
 }

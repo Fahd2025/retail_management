@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import '../../models/print_format.dart';
 
 abstract class AppConfigEvent extends Equatable {
   const AppConfigEvent();
@@ -52,4 +53,13 @@ class SetArabicEvent extends AppConfigEvent {
 
   @override
   List<Object?> get props => [];
+}
+
+class UpdatePrintFormatEvent extends AppConfigEvent {
+  final PrintFormatConfig config;
+
+  const UpdatePrintFormatEvent(this.config);
+
+  @override
+  List<Object?> get props => [config];
 }

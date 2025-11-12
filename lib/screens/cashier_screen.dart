@@ -12,8 +12,11 @@ import '../blocs/auth/auth_state.dart';
 import '../blocs/customer/customer_bloc.dart';
 import '../blocs/customer/customer_event.dart';
 import '../blocs/customer/customer_state.dart';
+import '../blocs/app_config/app_config_bloc.dart';
+import '../blocs/app_config/app_config_state.dart';
 import '../models/product.dart';
 import '../widgets/form_bottom_sheet.dart';
+import '../widgets/invoice_preview_dialog.dart';
 import '../models/sale.dart';
 import '../models/customer.dart';
 import '../services/invoice_service.dart';
@@ -301,11 +304,17 @@ class _CashierScreenState extends State<CashierScreen>
         customer = await db.getCustomer(sale.customerId!);
       }
 
-      final invoiceService = InvoiceService();
-      await invoiceService.printInvoice(
+      // Get current print format configuration from AppConfig
+      final appConfigState = context.read<AppConfigBloc>().state;
+      final printConfig = appConfigState.printFormatConfig;
+
+      // Show print preview bottom sheet with format selection
+      await InvoicePreviewBottomSheet.show(
+        context: context,
         sale: sale,
         companyInfo: companyInfo ?? await db.getCompanyInfo() as CompanyInfo,
         customer: customer,
+        initialConfig: printConfig,
       );
     } catch (e) {
       if (mounted) {
