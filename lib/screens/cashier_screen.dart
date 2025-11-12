@@ -13,6 +13,7 @@ import '../blocs/customer/customer_bloc.dart';
 import '../blocs/customer/customer_event.dart';
 import '../blocs/customer/customer_state.dart';
 import '../models/product.dart';
+import '../widgets/form_bottom_sheet.dart';
 import '../models/sale.dart';
 import '../models/customer.dart';
 import '../services/invoice_service.dart';
@@ -207,8 +208,12 @@ class _CashierScreenState extends State<CashierScreen>
     }
 
     // Show payment dialog
-    final result = await showDialog<Map<String, dynamic>>(
+    final result = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
+      isScrollControlled: true,
+      enableDrag: true,
+      isDismissible: true,
+      backgroundColor: Colors.transparent,
       builder: (context) => _PaymentDialog(
         total: cartTotal,
         customer: _selectedCustomer,
@@ -995,93 +1000,146 @@ class _PaymentDialogState extends State<_PaymentDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(AppLocalizations.of(context)!.payment),
-      content: SizedBox(
-        width: 400,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Total: SAR ${widget.total.toStringAsFixed(2)}',
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 24),
-            SegmentedButton<PaymentMethod>(
-              segments: [
-                ButtonSegment(
-                  value: PaymentMethod.cash,
-                  label: Text(AppLocalizations.of(context)!.cashPayment),
-                  icon: const Icon(Icons.money),
-                ),
-                ButtonSegment(
-                  value: PaymentMethod.card,
-                  label: Text(AppLocalizations.of(context)!.cardPayment),
-                  icon: const Icon(Icons.credit_card),
-                ),
-                ButtonSegment(
-                  value: PaymentMethod.transfer,
-                  label: Text(AppLocalizations.of(context)!.transferPayment),
-                  icon: const Icon(Icons.account_balance),
-                ),
-              ],
-              selected: {_paymentMethod},
-              onSelectionChanged: (Set<PaymentMethod> newSelection) {
-                setState(() {
-                  _paymentMethod = newSelection.first;
-                });
-              },
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _paidController,
-              decoration: InputDecoration(
-                labelText: AppLocalizations.of(context)!.amountPaid,
-                prefixText: 'SAR ',
-              ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 16),
-            if (_change >= 0)
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+
+    // Build the payment content
+    final paymentContent = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Total Amount Display - Prominent
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primaryContainer,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            children: [
               Text(
-                AppLocalizations.of(context)!
-                    .changeColon(_change.toStringAsFixed(2)),
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green.shade700,
-                ),
-              )
-            else
-              Text(
-                AppLocalizations.of(context)!.insufficientPayment,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red.shade700,
+                l10n.total,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: theme.colorScheme.onPrimaryContainer,
                 ),
               ),
+              const SizedBox(height: 8),
+              Text(
+                'SAR ${widget.total.toStringAsFixed(2)}',
+                style: theme.textTheme.headlineLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.onPrimaryContainer,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 24),
+
+        // Payment Method Selection
+        Text(
+          l10n.paymentMethod,
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 12),
+        SegmentedButton<PaymentMethod>(
+          segments: [
+            ButtonSegment(
+              value: PaymentMethod.cash,
+              label: Text(l10n.cashPayment),
+              icon: const Icon(Icons.money),
+            ),
+            ButtonSegment(
+              value: PaymentMethod.card,
+              label: Text(l10n.cardPayment),
+              icon: const Icon(Icons.credit_card),
+            ),
+            ButtonSegment(
+              value: PaymentMethod.transfer,
+              label: Text(l10n.transferPayment),
+              icon: const Icon(Icons.account_balance),
+            ),
           ],
+          selected: {_paymentMethod},
+          onSelectionChanged: (Set<PaymentMethod> newSelection) {
+            setState(() {
+              _paymentMethod = newSelection.first;
+            });
+          },
         ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(AppLocalizations.of(context)!.cancel),
+        const SizedBox(height: 24),
+
+        // Amount Paid Input
+        TextField(
+          controller: _paidController,
+          decoration: InputDecoration(
+            labelText: l10n.amountPaid,
+            prefixText: 'SAR ',
+            border: const OutlineInputBorder(),
+            prefixIcon: const Icon(Icons.payments_outlined),
+          ),
+          keyboardType: TextInputType.number,
+          autofocus: true,
         ),
-        ElevatedButton(
-          onPressed: _change >= 0
-              ? () {
-                  Navigator.pop(context, {
-                    'customerId': widget.customer?.id,
-                    'paidAmount': double.parse(_paidController.text),
-                    'paymentMethod': _paymentMethod,
-                  });
-                }
-              : null,
-          child: Text(AppLocalizations.of(context)!.complete),
+        const SizedBox(height: 24),
+
+        // Change Display - Dynamic
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: _change >= 0
+                ? theme.colorScheme.secondaryContainer
+                : theme.colorScheme.errorContainer,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: _change >= 0
+                  ? theme.colorScheme.secondary
+                  : theme.colorScheme.error,
+              width: 2,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                _change >= 0 ? l10n.change : l10n.insufficientPayment,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: _change >= 0
+                      ? theme.colorScheme.onSecondaryContainer
+                      : theme.colorScheme.onErrorContainer,
+                ),
+              ),
+              if (_change >= 0)
+                Text(
+                  'SAR ${_change.toStringAsFixed(2)}',
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onSecondaryContainer,
+                  ),
+                ),
+            ],
+          ),
         ),
       ],
+    );
+
+    // Wrap in FormBottomSheet with conditional save button
+    return FormBottomSheet(
+      title: l10n.payment,
+      saveButtonText: l10n.complete,
+      cancelButtonText: l10n.cancel,
+      isSaveDisabled: _change < 0, // Disable if insufficient payment
+      onSave: () {
+        Navigator.pop(context, {
+          'customerId': widget.customer?.id,
+          'paidAmount': double.parse(_paidController.text),
+          'paymentMethod': _paymentMethod,
+        });
+      },
+      maxHeightFraction: 0.85,
+      child: paymentContent,
     );
   }
 

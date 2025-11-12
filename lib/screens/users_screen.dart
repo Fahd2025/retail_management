@@ -7,6 +7,7 @@ import '../blocs/user/user_state.dart';
 import '../blocs/auth/auth_bloc.dart';
 import '../blocs/auth/auth_state.dart';
 import '../models/user.dart';
+import '../widgets/form_bottom_sheet.dart';
 
 class UsersScreen extends StatefulWidget {
   const UsersScreen({super.key});
@@ -27,8 +28,12 @@ class _UsersScreenState extends State<UsersScreen> {
   }
 
   Future<void> showUserDialog([User? user]) async {
-    await showDialog(
+    await showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      enableDrag: true,
+      isDismissible: true,
+      backgroundColor: Colors.transparent,
       builder: (context) => _UserDialog(user: user),
     );
   }
@@ -394,109 +399,128 @@ class _UserDialogState extends State<_UserDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return AlertDialog(
-      title: Text(widget.user == null ? l10n.addUser : l10n.editUser),
-      content: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: _usernameController,
-                decoration: InputDecoration(
-                  labelText: l10n.usernameFieldLabel,
-                  border: const OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return l10n.usernameRequired;
-                  }
-                  if (value.trim().length < 3) {
-                    return l10n.usernameMinLength;
-                  }
-                  return null;
-                },
+
+    // Build the form content
+    final formContent = Form(
+      key: _formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Username Field
+          TextFormField(
+            controller: _usernameController,
+            decoration: InputDecoration(
+              labelText: l10n.usernameFieldLabel,
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.person_outlined),
+            ),
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return l10n.usernameRequired;
+              }
+              if (value.trim().length < 3) {
+                return l10n.usernameMinLength;
+              }
+              return null;
+            },
+            textInputAction: TextInputAction.next,
+          ),
+          const SizedBox(height: 16),
+
+          // Full Name Field
+          TextFormField(
+            controller: _fullNameController,
+            decoration: InputDecoration(
+              labelText: l10n.fullNameFieldLabel,
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.badge_outlined),
+            ),
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return l10n.fullNameRequired;
+              }
+              return null;
+            },
+            textInputAction: TextInputAction.next,
+          ),
+          const SizedBox(height: 16),
+
+          // Password Field
+          TextFormField(
+            controller: _passwordController,
+            decoration: InputDecoration(
+              labelText: widget.user == null
+                  ? l10n.passwordFieldLabel
+                  : l10n.passwordLeaveEmpty,
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.lock_outlined),
+            ),
+            obscureText: true,
+            validator: (value) {
+              if (widget.user == null && (value == null || value.isEmpty)) {
+                return l10n.passwordRequired;
+              }
+              if (value != null && value.isNotEmpty && value.length < 6) {
+                return l10n.passwordMinLength;
+              }
+              return null;
+            },
+            textInputAction: TextInputAction.next,
+          ),
+          const SizedBox(height: 16),
+
+          // Role Dropdown
+          DropdownButtonFormField<UserRole>(
+            value: _selectedRole,
+            decoration: InputDecoration(
+              labelText: l10n.roleFieldLabel,
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.admin_panel_settings_outlined),
+            ),
+            items: [
+              DropdownMenuItem(
+                value: UserRole.admin,
+                child: Text(l10n.admin),
               ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _fullNameController,
-                decoration: InputDecoration(
-                  labelText: l10n.fullNameFieldLabel,
-                  border: const OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return l10n.fullNameRequired;
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _passwordController,
-                decoration: InputDecoration(
-                  labelText: widget.user == null
-                      ? l10n.passwordFieldLabel
-                      : l10n.passwordLeaveEmpty,
-                  border: const OutlineInputBorder(),
-                ),
-                obscureText: true,
-                validator: (value) {
-                  if (widget.user == null && (value == null || value.isEmpty)) {
-                    return l10n.passwordRequired;
-                  }
-                  if (value != null && value.isNotEmpty && value.length < 6) {
-                    return l10n.passwordMinLength;
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              DropdownButtonFormField<UserRole>(
-                initialValue: _selectedRole,
-                decoration: InputDecoration(
-                  labelText: l10n.roleFieldLabel,
-                  border: const OutlineInputBorder(),
-                ),
-                items: [
-                  DropdownMenuItem(
-                    value: UserRole.admin,
-                    child: Text(l10n.admin),
-                  ),
-                  DropdownMenuItem(
-                    value: UserRole.cashier,
-                    child: Text(l10n.cashier),
-                  ),
-                ],
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() => _selectedRole = value);
-                  }
-                },
-              ),
-              const SizedBox(height: 16),
-              SwitchListTile(
-                title: Text(AppLocalizations.of(context)!.active),
-                value: _isActive,
-                onChanged: (value) {
-                  setState(() => _isActive = value);
-                },
+              DropdownMenuItem(
+                value: UserRole.cashier,
+                child: Text(l10n.cashier),
               ),
             ],
+            onChanged: (value) {
+              if (value != null) {
+                setState(() => _selectedRole = value);
+              }
+            },
           ),
-        ),
+          const SizedBox(height: 16),
+
+          // Active Status Switch
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Theme.of(context).dividerColor),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: SwitchListTile(
+              title: Text(l10n.active),
+              subtitle: Text(_isActive ? l10n.active : l10n.inactive),
+              value: _isActive,
+              onChanged: (value) {
+                setState(() => _isActive = value);
+              },
+            ),
+          ),
+        ],
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(AppLocalizations.of(context)!.cancel),
-        ),
-        ElevatedButton(
-          onPressed: _save,
-          child: Text(AppLocalizations.of(context)!.save),
-        ),
-      ],
+    );
+
+    // Wrap in FormBottomSheet
+    return FormBottomSheet(
+      title: widget.user == null ? l10n.addUser : l10n.editUser,
+      saveButtonText: l10n.save,
+      cancelButtonText: l10n.cancel,
+      onSave: _save,
+      child: formContent,
     );
   }
 }

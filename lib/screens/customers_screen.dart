@@ -8,6 +8,7 @@ import '../blocs/customer/customer_state.dart';
 import '../models/customer.dart' as models;
 import '../database/drift_database.dart';
 import '../services/customer_invoice_export_service.dart';
+import '../widgets/form_bottom_sheet.dart';
 
 class CustomersScreen extends StatefulWidget {
   const CustomersScreen({super.key});
@@ -28,8 +29,12 @@ class _CustomersScreenState extends State<CustomersScreen> {
   }
 
   Future<void> showCustomerDialog([models.Customer? customer]) async {
-    await showDialog(
+    await showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      enableDrag: true,
+      isDismissible: true,
+      backgroundColor: Colors.transparent,
       builder: (context) => _CustomerDialog(customer: customer),
     );
   }
@@ -38,8 +43,12 @@ class _CustomersScreenState extends State<CustomersScreen> {
     BuildContext context,
     models.Customer customer,
   ) async {
-    await showDialog(
+    await showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      enableDrag: true,
+      isDismissible: true,
+      backgroundColor: Colors.transparent,
       builder: (context) => _ExportInvoicesDialog(customer: customer),
     );
   }
@@ -336,130 +345,203 @@ class _CustomerDialogState extends State<_CustomerDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return AlertDialog(
-      title: Text(
-        widget.customer == null ? l10n.addCustomer : l10n.editCustomer,
-      ),
-      content: SizedBox(
-        width: 600,
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextFormField(
-                  controller: _nameController,
-                  decoration: InputDecoration(
-                    labelText: l10n.customerNameRequired,
-                  ),
-                  validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: InputDecoration(labelText: l10n.emailFieldLabel),
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _phoneController,
-                  decoration: InputDecoration(labelText: l10n.phoneFieldLabel),
-                  keyboardType: TextInputType.phone,
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _vatNumberController,
-                  decoration: InputDecoration(
-                    labelText: l10n.vatNumberFieldLabel,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _crnNumberController,
-                  decoration: InputDecoration(
-                    labelText: l10n.crnNumberFieldLabel,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  l10n.saudiNationalAddress,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _buildingController,
-                        decoration: InputDecoration(
-                          labelText: l10n.buildingNumber,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _streetController,
-                        decoration: InputDecoration(labelText: l10n.streetName),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _districtController,
-                        decoration: InputDecoration(labelText: l10n.district),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _cityController,
-                        decoration: InputDecoration(labelText: l10n.city),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _postalCodeController,
-                        decoration: InputDecoration(labelText: l10n.postalCode),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _additionalNumberController,
-                        decoration: InputDecoration(
-                          labelText: l10n.additionalNumber,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+    final theme = Theme.of(context);
+
+    // Build the form content
+    final formContent = Form(
+      key: _formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Basic Customer Information Section
+          Text(
+            l10n.customerInformation,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.primary,
             ),
           ),
-        ),
+          const SizedBox(height: 16),
+
+          // Customer Name Field
+          TextFormField(
+            controller: _nameController,
+            decoration: InputDecoration(
+              labelText: l10n.customerNameRequired,
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.person_outlined),
+            ),
+            validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
+            textInputAction: TextInputAction.next,
+          ),
+          const SizedBox(height: 16),
+
+          // Email Field
+          TextFormField(
+            controller: _emailController,
+            decoration: InputDecoration(
+              labelText: l10n.emailFieldLabel,
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.email_outlined),
+            ),
+            keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
+          ),
+          const SizedBox(height: 16),
+
+          // Phone Field
+          TextFormField(
+            controller: _phoneController,
+            decoration: InputDecoration(
+              labelText: l10n.phoneFieldLabel,
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.phone_outlined),
+            ),
+            keyboardType: TextInputType.phone,
+            textInputAction: TextInputAction.next,
+          ),
+          const SizedBox(height: 16),
+
+          // VAT Number Field
+          TextFormField(
+            controller: _vatNumberController,
+            decoration: InputDecoration(
+              labelText: l10n.vatNumberFieldLabel,
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.receipt_outlined),
+            ),
+            textInputAction: TextInputAction.next,
+          ),
+          const SizedBox(height: 16),
+
+          // CRN Number Field
+          TextFormField(
+            controller: _crnNumberController,
+            decoration: InputDecoration(
+              labelText: l10n.crnNumberFieldLabel,
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.business_outlined),
+            ),
+            textInputAction: TextInputAction.next,
+          ),
+
+          // Saudi National Address Section
+          const SizedBox(height: 32),
+          Divider(color: theme.dividerColor),
+          const SizedBox(height: 16),
+
+          Text(
+            l10n.saudiNationalAddress,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Building Number and Street Name Row
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  controller: _buildingController,
+                  decoration: InputDecoration(
+                    labelText: l10n.buildingNumber,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.home_outlined),
+                  ),
+                  textInputAction: TextInputAction.next,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: TextFormField(
+                  controller: _streetController,
+                  decoration: InputDecoration(
+                    labelText: l10n.streetName,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.streetview_outlined),
+                  ),
+                  textInputAction: TextInputAction.next,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // District and City Row
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  controller: _districtController,
+                  decoration: InputDecoration(
+                    labelText: l10n.district,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.location_city_outlined),
+                  ),
+                  textInputAction: TextInputAction.next,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: TextFormField(
+                  controller: _cityController,
+                  decoration: InputDecoration(
+                    labelText: l10n.city,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.location_on_outlined),
+                  ),
+                  textInputAction: TextInputAction.next,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Postal Code and Additional Number Row
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  controller: _postalCodeController,
+                  decoration: InputDecoration(
+                    labelText: l10n.postalCode,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.mail_outline),
+                  ),
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.next,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: TextFormField(
+                  controller: _additionalNumberController,
+                  decoration: InputDecoration(
+                    labelText: l10n.additionalNumber,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.tag_outlined),
+                  ),
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.done,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(AppLocalizations.of(context)!.cancel),
-        ),
-        ElevatedButton(
-          onPressed: _save,
-          child: Text(AppLocalizations.of(context)!.save),
-        ),
-      ],
+    );
+
+    // Wrap in FormBottomSheet
+    return FormBottomSheet(
+      title: widget.customer == null ? l10n.addCustomer : l10n.editCustomer,
+      saveButtonText: l10n.save,
+      cancelButtonText: l10n.cancel,
+      onSave: _save,
+      maxHeightFraction: 0.95, // Use more height for this complex form
+      child: formContent,
     );
   }
 
@@ -629,158 +711,247 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('dd/MM/yyyy');
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
-    return AlertDialog(
-      title: Text(l10n.exportCustomerInvoices),
-      content: SizedBox(
-        width: 500,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.customerLabel(widget.customer.name),
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              l10n.selectPeriod,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            DropdownButtonFormField<String>(
-              initialValue: _filterOption,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
+    // Build the export configuration content
+    final exportContent = Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Customer Information
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primaryContainer,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                Icons.person,
+                color: theme.colorScheme.onPrimaryContainer,
               ),
-              items: [
-                DropdownMenuItem(value: 'all', child: Text(l10n.allTime)),
-                DropdownMenuItem(
-                  value: 'last_month',
-                  child: Text(l10n.lastMonth),
-                ),
-                DropdownMenuItem(
-                  value: 'last_3_months',
-                  child: Text(l10n.lastThreeMonths),
-                ),
-                DropdownMenuItem(
-                  value: 'last_year',
-                  child: Text(l10n.lastYear),
-                ),
-                DropdownMenuItem(
-                  value: 'custom',
-                  child: Text(l10n.customDateRange),
-                ),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  _filterOption = value!;
-                  _setDateRangeFromFilter();
-                });
-              },
-            ),
-            if (_filterOption == 'custom') ...[
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: _selectStartDate,
-                      icon: const Icon(Icons.calendar_today),
-                      label: Text(
-                        _startDate == null
-                            ? l10n.startDate
-                            : dateFormat.format(_startDate!),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.customer,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: theme.colorScheme.onPrimaryContainer,
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: _selectEndDate,
-                      icon: const Icon(Icons.calendar_today),
-                      label: Text(
-                        _endDate == null
-                            ? l10n.endDate
-                            : dateFormat.format(_endDate!),
+                    Text(
+                      widget.customer.name,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onPrimaryContainer,
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
-            const SizedBox(height: 16),
-            FutureBuilder<List<dynamic>>(
-              future: Future.wait([
-                AppDatabase().getSalesByCustomer(
-                  widget.customer.id,
-                  startDate: _startDate,
-                  endDate: _endDate,
-                ),
-                AppDatabase().getCustomerSalesStatistics(widget.customer.id),
-              ]),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final sales = snapshot.data![0] as List;
-                  final stats = snapshot.data![1] as Map<String, dynamic>;
-                  final totalAmount = stats['totalAmount'] as double;
-                  final currencyFormat = NumberFormat.currency(
-                    symbol: 'SAR ',
-                    decimalDigits: 2,
-                  );
+          ),
+        ),
+        const SizedBox(height: 24),
 
-                  return Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.blue.shade50,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+        // Period Selection Section
+        Text(
+          l10n.selectPeriod,
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 12),
+
+        // Period Dropdown
+        DropdownButtonFormField<String>(
+          value: _filterOption,
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 8,
+            ),
+            prefixIcon: const Icon(Icons.date_range),
+          ),
+          items: [
+            DropdownMenuItem(value: 'all', child: Text(l10n.allTime)),
+            DropdownMenuItem(
+              value: 'last_month',
+              child: Text(l10n.lastMonth),
+            ),
+            DropdownMenuItem(
+              value: 'last_3_months',
+              child: Text(l10n.lastThreeMonths),
+            ),
+            DropdownMenuItem(
+              value: 'last_year',
+              child: Text(l10n.lastYear),
+            ),
+            DropdownMenuItem(
+              value: 'custom',
+              child: Text(l10n.customDateRange),
+            ),
+          ],
+          onChanged: (value) {
+            setState(() {
+              _filterOption = value!;
+              _setDateRangeFromFilter();
+            });
+          },
+        ),
+
+        // Custom Date Range Pickers (conditionally shown)
+        if (_filterOption == 'custom') ...[
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: _selectStartDate,
+                  icon: const Icon(Icons.calendar_today),
+                  label: Text(
+                    _startDate == null
+                        ? l10n.startDate
+                        : dateFormat.format(_startDate!),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: _selectEndDate,
+                  icon: const Icon(Icons.calendar_today),
+                  label: Text(
+                    _endDate == null
+                        ? l10n.endDate
+                        : dateFormat.format(_endDate!),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+        const SizedBox(height: 24),
+
+        // Preview Statistics
+        FutureBuilder<List<dynamic>>(
+          future: Future.wait([
+            AppDatabase().getSalesByCustomer(
+              widget.customer.id,
+              startDate: _startDate,
+              endDate: _endDate,
+            ),
+            AppDatabase().getCustomerSalesStatistics(widget.customer.id),
+          ]),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final sales = snapshot.data![0] as List;
+              final stats = snapshot.data![1] as Map<String, dynamic>;
+              final totalAmount = stats['totalAmount'] as double;
+              final currencyFormat = NumberFormat.currency(
+                symbol: 'SAR ',
+                decimalDigits: 2,
+              );
+
+              return Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.secondaryContainer,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: theme.colorScheme.secondary,
+                    width: 2,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
+                        Icon(
+                          Icons.visibility,
+                          color: theme.colorScheme.onSecondaryContainer,
+                        ),
+                        const SizedBox(width: 8),
                         Text(
                           l10n.preview,
-                          style: TextStyle(
+                          style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: Colors.blue.shade900,
+                            color: theme.colorScheme.onSecondaryContainer,
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(l10n.totalInvoices(sales.length)),
-                        Text(
-                          l10n.totalAmount(currencyFormat.format(totalAmount)),
                         ),
                       ],
                     ),
-                  );
-                }
-                return const CircularProgressIndicator();
-              },
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: _isExporting ? null : () => Navigator.pop(context),
-          child: Text(l10n.cancel),
-        ),
-        ElevatedButton.icon(
-          onPressed: _isExporting ? null : _exportInvoices,
-          icon: _isExporting
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Icon(Icons.picture_as_pdf),
-          label: Text(_isExporting ? l10n.exporting : l10n.exportToPdf),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              l10n.invoices,
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                color: theme.colorScheme.onSecondaryContainer,
+                              ),
+                            ),
+                            Text(
+                              '${sales.length}',
+                              style: theme.textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: theme.colorScheme.onSecondaryContainer,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              l10n.totalAmount(''),
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                color: theme.colorScheme.onSecondaryContainer,
+                              ),
+                            ),
+                            Text(
+                              currencyFormat.format(totalAmount),
+                              style: theme.textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: theme.colorScheme.onSecondaryContainer,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: CircularProgressIndicator(),
+              ),
+            );
+          },
         ),
       ],
+    );
+
+    // Wrap in FormBottomSheet
+    return FormBottomSheet(
+      title: l10n.exportCustomerInvoices,
+      saveButtonText: _isExporting ? l10n.exporting : l10n.exportToPdf,
+      cancelButtonText: l10n.cancel,
+      isLoading: _isExporting,
+      onSave: _exportInvoices,
+      maxHeightFraction: 0.9,
+      child: exportContent,
     );
   }
 }
