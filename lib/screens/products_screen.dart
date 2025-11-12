@@ -190,10 +190,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           DataColumn(label: Text(l10n.price)),
                           DataColumn(label: Text(l10n.cost)),
                           DataColumn(label: Text(l10n.stock)),
-                          DataColumn(label: Text(l10n.vat)),
+                          DataColumn(label: Text('${l10n.vat} Amount')),
                           DataColumn(label: Text(l10n.actions)),
                         ],
                         rows: products.map((product) {
+                          final vatAmount = product.price * (product.vatRate / 100);
                           return DataRow(cells: [
                             DataCell(Text(product.name)),
                             DataCell(Text(product.barcode)),
@@ -204,7 +205,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 Text('SAR ${product.cost.toStringAsFixed(2)}')),
                             DataCell(Text(product.quantity.toString())),
                             DataCell(
-                                Text('${product.vatRate.toStringAsFixed(0)}%')),
+                                Text('SAR ${vatAmount.toStringAsFixed(2)}')),
                             DataCell(
                               Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -235,6 +236,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   itemCount: products.length,
                   itemBuilder: (context, index) {
                     final product = products[index];
+                    final vatAmount = product.price * (product.vatRate / 100);
                     return Card(
                       margin: const EdgeInsets.only(bottom: 12),
                       elevation: 2,
@@ -296,8 +298,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     'SAR ${product.cost.toStringAsFixed(2)}'),
                                 _buildInfoRow(l10n.stock,
                                     '${product.quantity} ${l10n.units}'),
-                                _buildInfoRow(l10n.vat,
-                                    '${product.vatRate.toStringAsFixed(0)}%'),
+                                _buildInfoRow('${l10n.vat} Amount',
+                                    'SAR ${vatAmount.toStringAsFixed(2)}'),
                                 if (product.description != null &&
                                     product.description!.isNotEmpty) ...[
                                   const SizedBox(height: 8),
@@ -529,6 +531,10 @@ class _ProductDialogState extends State<_ProductDialog> {
                   validator: (v) =>
                       double.tryParse(v ?? '') == null ? l10n.invalid : null,
                   textInputAction: TextInputAction.next,
+                  onChanged: (value) {
+                    // Trigger rebuild to update VAT amount
+                    setState(() {});
+                  },
                 ),
               ),
               const SizedBox(width: 16),
@@ -571,17 +577,20 @@ class _ProductDialogState extends State<_ProductDialog> {
               Expanded(
                 child: BlocBuilder<AppConfigBloc, AppConfigState>(
                   builder: (context, appConfig) {
+                    final price = double.tryParse(_priceController.text) ?? 0.0;
+                    final vatAmount = price * (appConfig.vatRate / 100);
                     return TextFormField(
-                      initialValue: appConfig.vatRate.toStringAsFixed(1),
+                      key: ValueKey('${price}_${appConfig.vatRate}'),
+                      initialValue: vatAmount.toStringAsFixed(2),
                       decoration: InputDecoration(
-                        labelText: '${l10n.vat} (%)',
+                        labelText: '${l10n.vat} Amount (SAR)',
                         border: const OutlineInputBorder(),
-                        prefixIcon: const Icon(Icons.percent),
+                        prefixIcon: const Icon(Icons.account_balance_wallet),
                         filled: true,
                         fillColor: Colors.grey.shade100,
                         suffixIcon: Tooltip(
-                          message: 'VAT rate is set in Settings',
-                          child: Icon(Icons.lock, size: 18, color: Colors.grey.shade600),
+                          message: 'VAT amount calculated automatically (${appConfig.vatRate.toStringAsFixed(1)}%)',
+                          child: Icon(Icons.info_outline, size: 18, color: Colors.blue.shade600),
                         ),
                       ),
                       readOnly: true,
