@@ -1,3 +1,4 @@
+import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 /// Enum representing available print formats for invoices
@@ -30,16 +31,16 @@ enum PrintFormat {
   double get heightPt => heightMm * 2.83465;
 
   /// Get the PDF page format for this print format
-  pw.PageFormat get pageFormat {
+  PdfPageFormat get pageFormat {
     switch (this) {
       case PrintFormat.thermal58mm:
         // For thermal printers, height is dynamic based on content
         // Using a large height that will be trimmed by content
-        return pw.PageFormat(widthPt, 842, marginAll: 2 * 2.83465); // ~2mm margins
+        return PdfPageFormat(widthPt, 842, marginAll: 2 * 2.83465); // ~2mm margins
       case PrintFormat.thermal80mm:
-        return pw.PageFormat(widthPt, 842, marginAll: 2 * 2.83465); // ~2mm margins
+        return PdfPageFormat(widthPt, 842, marginAll: 2 * 2.83465); // ~2mm margins
       case PrintFormat.a4:
-        return pw.PageFormat.a4.copyWith(
+        return PdfPageFormat.a4.copyWith(
           marginLeft: 10 * 2.83465,  // 10mm
           marginRight: 10 * 2.83465, // 10mm
           marginTop: 10 * 2.83465,   // 10mm
