@@ -1,3 +1,4 @@
+import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:intl/intl.dart';
 import '../../models/sale.dart';
@@ -33,7 +34,8 @@ abstract class InvoiceTemplate {
 
   // Common formatters used across templates
   final DateFormat dateFormat = DateFormat('dd/MM/yyyy HH:mm');
-  final NumberFormat currencyFormat = NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
+  final NumberFormat currencyFormat =
+      NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
 
   InvoiceTemplate({
     required this.format,

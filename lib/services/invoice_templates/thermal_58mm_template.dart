@@ -1,5 +1,6 @@
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:retail_management/models/sale.dart';
 import '../../models/print_format.dart';
 import 'invoice_template.dart';
 
@@ -135,7 +136,8 @@ class Thermal58mmTemplate extends InvoiceTemplate {
       children: [
         _buildInfoLine('Inv: ${data.sale.invoiceNumber}'),
         _buildInfoLine('Date: ${dateFormat.format(data.sale.saleDate)}'),
-        _buildInfoLine('Pay: ${_getShortPaymentMethod(data.sale.paymentMethod)}'),
+        _buildInfoLine(
+            'Pay: ${_getShortPaymentMethod(data.sale.paymentMethod)}'),
       ],
     );
   }
@@ -155,8 +157,7 @@ class Thermal58mmTemplate extends InvoiceTemplate {
           ),
         ),
         _buildInfoLine(data.customer!.name),
-        if (data.customer!.phone != null)
-          _buildInfoLine(data.customer!.phone!),
+        if (data.customer!.phone != null) _buildInfoLine(data.customer!.phone!),
       ],
     );
   }
@@ -249,7 +250,8 @@ class Thermal58mmTemplate extends InvoiceTemplate {
                   padding: const pw.EdgeInsets.only(top: 1),
                   child: pw.Text(
                     '${item.quantity} x ${currencyFormat.format(item.unitPrice)} (VAT ${item.vatRate.toStringAsFixed(0)}%)',
-                    style: const pw.TextStyle(fontSize: 6, color: PdfColors.grey600),
+                    style: const pw.TextStyle(
+                        fontSize: 6, color: PdfColors.grey600),
                   ),
                 ),
               ],
@@ -280,9 +282,12 @@ class Thermal58mmTemplate extends InvoiceTemplate {
         ),
         if (data.sale.paidAmount > 0) ...[
           pw.SizedBox(height: 2),
-          _buildTotalRow('Paid:', currencyFormat.format(data.sale.paidAmount), fontSize: 7),
+          _buildTotalRow('Paid:', currencyFormat.format(data.sale.paidAmount),
+              fontSize: 7),
           if (data.sale.changeAmount > 0)
-            _buildTotalRow('Change:', currencyFormat.format(data.sale.changeAmount), fontSize: 7),
+            _buildTotalRow(
+                'Change:', currencyFormat.format(data.sale.changeAmount),
+                fontSize: 7),
         ],
       ],
     );
