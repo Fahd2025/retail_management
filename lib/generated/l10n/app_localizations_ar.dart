@@ -248,6 +248,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get totalPurchases => 'إجمالي المشتريات';
 
   @override
+  String get customerInformation => 'معلومات العميل';
+
+  @override
+  String get customer => 'العميل';
+
+  @override
   String get sales => 'المبيعات';
 
   @override
@@ -1101,6 +1107,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get loadingStatistics => 'جاري تحميل الإحصائيات...';
+
+  @override
+  String get invoices => 'الفواتير';
 
   @override
   String invoicesCount(int count) {

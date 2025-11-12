@@ -110,19 +110,22 @@ class _CustomersScreenState extends State<CustomersScreen> {
                         Text(
                           AppLocalizations.of(
                             context,
-                          )!.phoneLabel(customer.phone!),
+                          )!
+                              .phoneLabel(customer.phone!),
                         ),
                       if (customer.email != null)
                         Text(
                           AppLocalizations.of(
                             context,
-                          )!.emailLabel(customer.email!),
+                          )!
+                              .emailLabel(customer.email!),
                         ),
                       if (customer.vatNumber != null)
                         Text(
                           AppLocalizations.of(
                             context,
-                          )!.vatLabel2(customer.vatNumber!),
+                          )!
+                              .vatLabel2(customer.vatNumber!),
                         ),
                       const SizedBox(height: 4),
                       FutureBuilder<Map<String, dynamic>>(
@@ -167,7 +170,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                         ),
                         tooltip: AppLocalizations.of(
                           context,
-                        )!.exportInvoicesToPdf,
+                        )!
+                            .exportInvoicesToPdf,
                         onPressed: () => _showExportDialog(context, customer),
                       ),
                       IconButton(
@@ -202,8 +206,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
 
                           if (confirm == true && mounted) {
                             context.read<CustomerBloc>().add(
-                              DeleteCustomerEvent(customer.id),
-                            );
+                                  DeleteCustomerEvent(customer.id),
+                                );
                           }
                         },
                       ),
@@ -285,15 +289,12 @@ class _CustomerDialogState extends State<_CustomerDialog> {
     final bloc = context.read<CustomerBloc>();
 
     final saudiAddress = models.SaudiAddress(
-      buildingNumber: _buildingController.text.isEmpty
-          ? null
-          : _buildingController.text,
-      streetName: _streetController.text.isEmpty
-          ? null
-          : _streetController.text,
-      district: _districtController.text.isEmpty
-          ? null
-          : _districtController.text,
+      buildingNumber:
+          _buildingController.text.isEmpty ? null : _buildingController.text,
+      streetName:
+          _streetController.text.isEmpty ? null : _streetController.text,
+      district:
+          _districtController.text.isEmpty ? null : _districtController.text,
       city: _cityController.text.isEmpty ? null : _cityController.text,
       postalCode: _postalCodeController.text.isEmpty
           ? null
@@ -768,7 +769,7 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
 
         // Period Dropdown
         DropdownButtonFormField<String>(
-          value: _filterOption,
+          initialValue: _filterOption,
           decoration: InputDecoration(
             border: const OutlineInputBorder(),
             contentPadding: const EdgeInsets.symmetric(
@@ -894,7 +895,7 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              l10n.invoices,
+                              l10n.invoiceCount,
                               style: theme.textTheme.labelMedium?.copyWith(
                                 color: theme.colorScheme.onSecondaryContainer,
                               ),

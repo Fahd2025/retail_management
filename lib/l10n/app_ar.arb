@@ -1,6 +1,5 @@
 {
   "@@locale": "ar",
-
   "appTitle": "نظام إدارة البيع بالتجزئة",
   "appSubtitle": "نظام نقاط البيع",
   "ok": "موافق",
@@ -20,7 +19,6 @@
   "no": "لا",
   "close": "إغلاق",
   "submit": "إرسال",
-
   "loginTitle": "إدارة البيع بالتجزئة",
   "loginSubtitle": "نظام نقاط البيع",
   "username": "اسم المستخدم",
@@ -33,7 +31,6 @@
   "invalidCredentials": "اسم المستخدم أو كلمة المرور غير صحيحة",
   "initializingSystem": "جاري تهيئة النظام...",
   "initializationError": "خطأ في التهيئة: {error}",
-
   "dashboard": "لوحة التحكم",
   "welcome": "مرحباً",
   "totalSales": "إجمالي المبيعات",
@@ -46,7 +43,6 @@
   "today": "اليوم",
   "thisWeek": "هذا الأسبوع",
   "thisMonth": "هذا الشهر",
-
   "products": "المنتجات",
   "productList": "قائمة المنتجات",
   "addProduct": "إضافة منتج",
@@ -65,14 +61,12 @@
   "lowStock": "مخزون منخفض",
   "productDetails": "تفاصيل المنتج",
   "stockLevel": "مستوى المخزون",
-
   "categories": "الفئات",
   "addCategory": "إضافة فئة",
   "editCategory": "تعديل الفئة",
   "deleteCategory": "حذف الفئة",
   "categoryName": "اسم الفئة",
   "categoryDescription": "وصف الفئة",
-
   "customers": "العملاء",
   "customerList": "قائمة العملاء",
   "addCustomer": "إضافة عميل",
@@ -85,6 +79,8 @@
   "address": "العنوان",
   "customerDetails": "تفاصيل العميل",
   "totalPurchases": "إجمالي المشتريات",
+  "customerInformation": "معلومات العميل",
+  "customer": "العميل",
 
   "sales": "المبيعات",
   "salesList": "قائمة المبيعات",
@@ -105,7 +101,6 @@
   "change": "الباقي",
   "printInvoice": "طباعة الفاتورة",
   "completeSale": "إتمام البيع",
-
   "users": "المستخدمون",
   "userList": "قائمة المستخدمين",
   "addUser": "إضافة مستخدم",
@@ -119,7 +114,6 @@
   "lastLogin": "آخر تسجيل دخول",
   "active": "نشط",
   "inactive": "غير نشط",
-
   "settings": "الإعدادات",
   "generalSettings": "الإعدادات العامة",
   "appearance": "المظهر",
@@ -138,7 +132,6 @@
   "backup": "نسخ احتياطي",
   "restore": "استعادة",
   "about": "حول",
-
   "saveSuccess": "تم الحفظ بنجاح",
   "deleteSuccess": "تم الحذف بنجاح",
   "updateSuccess": "تم التحديث بنجاح",
@@ -154,7 +147,6 @@
   "requiredField": "هذا الحقل مطلوب",
   "invalidEmail": "عنوان البريد الإلكتروني غير صحيح",
   "invalidPhone": "رقم الهاتف غير صحيح",
-
   "fieldRequired": "هذا الحقل مطلوب",
   "enterValidEmail": "الرجاء إدخال بريد إلكتروني صحيح",
   "enterValidPhone": "الرجاء إدخال رقم هاتف صحيح",
@@ -162,7 +154,6 @@
   "enterValidQuantity": "الرجاء إدخال كمية صحيحة",
   "nameTooShort": "الاسم قصير جداً",
   "passwordTooShort": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
-
   "view": "عرض",
   "print": "طباعة",
   "export": "تصدير",
@@ -175,7 +166,6 @@
   "clear": "مسح",
   "reset": "إعادة تعيين",
   "apply": "تطبيق",
-
   "daily": "يومي",
   "weekly": "أسبوعي",
   "monthly": "شهري",
@@ -185,7 +175,6 @@
   "to": "إلى",
   "selectDate": "اختر التاريخ",
   "selectTime": "اختر الوقت",
-
   "cashierMode": "وضع أمين الصندوق",
   "scanBarcode": "مسح الرمز الشريطي",
   "addItem": "إضافة عنصر",
@@ -196,14 +185,12 @@
   "returnChange": "إرجاع الباقي",
   "saleCompleted": "تم إتمام البيع",
   "thankYou": "شكراً لك!",
-
   "reports": "التقارير",
   "salesReport": "تقرير المبيعات",
   "inventoryReport": "تقرير المخزون",
   "customerReport": "تقرير العملاء",
   "generateReport": "إنشاء تقرير",
   "reportPeriod": "فترة التقرير",
-
   "companyInformation": "معلومات الشركة",
   "companyNameEnglish": "اسم الشركة (إنجليزي)",
   "companyNameArabic": "اسم الشركة (عربي)",
@@ -224,7 +211,6 @@
   "version": "الإصدار",
   "appVersion": "1.0.0",
   "posWithOfflineSupport": "نظام نقاط البيع مع دعم العمل بلا اتصال",
-
   "pointOfSale": "نقطة البيع",
   "productsManagement": "إدارة المنتجات",
   "customersManagement": "إدارة العملاء",
@@ -232,7 +218,6 @@
   "addProduct": "إضافة منتج",
   "addCategory": "إضافة فئة",
   "cashier": "أمين الصندوق",
-
   "cannotDeleteCategory": "لا يمكن حذف الفئة",
   "categoryHasProducts": "هذه الفئة تحتوي على منتجات مرتبطة بها",
   "deleteProductConfirm": "حذف {productName}؟",
@@ -244,7 +229,6 @@
   "printInvoiceQuestion": "هل تريد طباعة الفاتورة؟",
   "print": "طباعة",
   "complete": "إتمام",
-
   "name": "الاسم",
   "barcode": "الرمز الشريطي",
   "stock": "المخزون",
@@ -259,7 +243,6 @@
   "noProductsFound": "لم يتم العثور على منتجات",
   "noUsersFound": "لم يتم العثور على مستخدمين",
   "cannotDeleteOwnAccount": "لا يمكنك حذف حسابك الخاص",
-
   "selectACategory": "اختر فئة",
   "invalid": "غير صحيح",
   "units": "وحدات",
@@ -320,7 +303,6 @@
   "passwordFieldLabel": "كلمة المرور *",
   "roleFieldLabel": "الدور *",
   "nameFieldLabel": "الاسم",
-
   "customerNameRequired": "اسم العميل *",
   "emailFieldLabel": "البريد الإلكتروني",
   "phoneFieldLabel": "الهاتف",
@@ -357,7 +339,6 @@
   "noInternetConnection": "لا يوجد اتصال بالإنترنت",
   "successfullySynchronized": "تمت مزامنة {count} عنصر بنجاح",
   "syncFailed": "فشلت المزامنة",
-
   "exportInvoicesToPdf": "تصدير الفواتير إلى PDF",
   "exportCustomerInvoices": "تصدير فواتير العميل إلى PDF",
   "customerLabel": "العميل: {name}",
@@ -375,13 +356,13 @@
   "exporting": "جاري التصدير...",
   "exportToPdf": "تصدير إلى PDF",
   "loadingStatistics": "جاري تحميل الإحصائيات...",
+  "invoices": "الفواتير",
   "invoicesCount": "الفواتير: {count}",
   "invoicesTotal": "الفواتير: {count} | الإجمالي: {total}",
   "companyInfoNotFound": "معلومات الشركة غير موجودة. الرجاء إعداد معلومات الشركة أولاً.",
   "noInvoicesFound": "لم يتم العثور على فواتير للفترة المحددة.",
   "exportedInvoicesSuccess": "تم تصدير {count} فاتورة إلى PDF بنجاح",
   "errorExportingInvoices": "خطأ في تصدير الفواتير: {error}",
-
   "loginSuccess": "تم تسجيل الدخول بنجاح! مرحباً {username}",
   "defaultCredentials": "بيانات الدخول الافتراضية",
   "adminCredentials": "المدير: admin / admin123",

@@ -248,6 +248,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get totalPurchases => 'Total Purchases';
 
   @override
+  String get customerInformation => 'Customer Information';
+
+  @override
+  String get customer => 'Customer';
+
+  @override
   String get sales => 'Sales';
 
   @override
@@ -1102,6 +1108,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loadingStatistics => 'Loading statistics...';
+
+  @override
+  String get invoices => 'Invoices';
 
   @override
   String invoicesCount(int count) {

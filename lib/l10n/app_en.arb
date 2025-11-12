@@ -92,6 +92,8 @@
   "address": "Address",
   "customerDetails": "Customer Details",
   "totalPurchases": "Total Purchases",
+  "customerInformation": "Customer Information",
+  "customer": "Customer",
 
   "sales": "Sales",
   "salesList": "Sales List",
@@ -564,6 +566,7 @@
   "exporting": "Exporting...",
   "exportToPdf": "Export to PDF",
   "loadingStatistics": "Loading statistics...",
+  "invoices":"Invoices",
   "invoicesCount": "Invoices: {count}",
   "@invoicesCount": {
     "placeholders": {

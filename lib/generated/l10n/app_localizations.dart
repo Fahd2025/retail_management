@@ -572,6 +572,18 @@ abstract class AppLocalizations {
   /// **'Total Purchases'**
   String get totalPurchases;
 
+  /// No description provided for @customerInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer Information'**
+  String get customerInformation;
+
+  /// No description provided for @customer.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer'**
+  String get customer;
+
   /// No description provided for @sales.
   ///
   /// In en, this message translates to:
@@ -2173,6 +2185,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Loading statistics...'**
   String get loadingStatistics;
+
+  /// No description provided for @invoices.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoices'**
+  String get invoices;
 
   /// No description provided for @invoicesCount.
   ///

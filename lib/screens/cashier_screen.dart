@@ -266,6 +266,8 @@ class _CashierScreenState extends State<CashierScreen>
           if (shouldPrint == true && mounted) {
             await _printInvoice(sale);
           }
+
+          toggleCart();
         }
       }
     }
