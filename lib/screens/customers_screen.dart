@@ -35,7 +35,9 @@ class _CustomersScreenState extends State<CustomersScreen> {
   }
 
   Future<void> _showExportDialog(
-      BuildContext context, models.Customer customer) async {
+    BuildContext context,
+    models.Customer customer,
+  ) async {
     await showDialog(
       context: context,
       builder: (context) => _ExportInvoicesDialog(customer: customer),
@@ -96,29 +98,43 @@ class _CustomersScreenState extends State<CustomersScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (customer.phone != null)
-                        Text(AppLocalizations.of(context)!
-                            .phoneLabel(customer.phone!)),
+                        Text(
+                          AppLocalizations.of(
+                            context,
+                          )!.phoneLabel(customer.phone!),
+                        ),
                       if (customer.email != null)
-                        Text(AppLocalizations.of(context)!
-                            .emailLabel(customer.email!)),
+                        Text(
+                          AppLocalizations.of(
+                            context,
+                          )!.emailLabel(customer.email!),
+                        ),
                       if (customer.vatNumber != null)
-                        Text(AppLocalizations.of(context)!
-                            .vatLabel2(customer.vatNumber!)),
+                        Text(
+                          AppLocalizations.of(
+                            context,
+                          )!.vatLabel2(customer.vatNumber!),
+                        ),
                       const SizedBox(height: 4),
                       FutureBuilder<Map<String, dynamic>>(
-                        future: AppDatabase()
-                            .getCustomerSalesStatistics(customer.id),
+                        future: AppDatabase().getCustomerSalesStatistics(
+                          customer.id,
+                        ),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             final stats = snapshot.data!;
                             final invoiceCount = stats['invoiceCount'] as int;
                             final totalAmount = stats['totalAmount'] as double;
                             final currencyFormat = NumberFormat.currency(
-                                symbol: 'SAR ', decimalDigits: 2);
+                              symbol: 'SAR ',
+                              decimalDigits: 2,
+                            );
                             final l10n = AppLocalizations.of(context)!;
                             return Text(
-                              l10n.invoicesTotal(invoiceCount,
-                                  currencyFormat.format(totalAmount)),
+                              l10n.invoicesTotal(
+                                invoiceCount,
+                                currencyFormat.format(totalAmount),
+                              ),
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Theme.of(context).primaryColor,
@@ -126,7 +142,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                             );
                           }
                           return Text(
-                              AppLocalizations.of(context)!.loadingStatistics);
+                            AppLocalizations.of(context)!.loadingStatistics,
+                          );
                         },
                       ),
                     ],
@@ -135,10 +152,13 @@ class _CustomersScreenState extends State<CustomersScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.picture_as_pdf,
-                            color: Colors.blue),
-                        tooltip:
-                            AppLocalizations.of(context)!.exportInvoicesToPdf,
+                        icon: const Icon(
+                          Icons.picture_as_pdf,
+                          color: Colors.blue,
+                        ),
+                        tooltip: AppLocalizations.of(
+                          context,
+                        )!.exportInvoicesToPdf,
                         onPressed: () => _showExportDialog(context, customer),
                       ),
                       IconButton(
@@ -172,9 +192,9 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           );
 
                           if (confirm == true && mounted) {
-                            context
-                                .read<CustomerBloc>()
-                                .add(DeleteCustomerEvent(customer.id));
+                            context.read<CustomerBloc>().add(
+                              DeleteCustomerEvent(customer.id),
+                            );
                           }
                         },
                       ),
@@ -184,8 +204,11 @@ class _CustomersScreenState extends State<CustomersScreen> {
                     if (customer.saudiAddress != null)
                       Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: Text(AppLocalizations.of(context)!.addressLabel(
-                            customer.saudiAddress!.formattedAddress)),
+                        child: Text(
+                          AppLocalizations.of(context)!.addressLabel(
+                            customer.saudiAddress!.formattedAddress,
+                          ),
+                        ),
                       ),
                   ],
                 ),
@@ -229,10 +252,12 @@ class _CustomerDialogState extends State<_CustomerDialog> {
     _nameController = TextEditingController(text: widget.customer?.name);
     _emailController = TextEditingController(text: widget.customer?.email);
     _phoneController = TextEditingController(text: widget.customer?.phone);
-    _vatNumberController =
-        TextEditingController(text: widget.customer?.vatNumber);
-    _crnNumberController =
-        TextEditingController(text: widget.customer?.crnNumber);
+    _vatNumberController = TextEditingController(
+      text: widget.customer?.vatNumber,
+    );
+    _crnNumberController = TextEditingController(
+      text: widget.customer?.crnNumber,
+    );
 
     final address = widget.customer?.saudiAddress;
     _buildingController = TextEditingController(text: address?.buildingNumber);
@@ -240,8 +265,9 @@ class _CustomerDialogState extends State<_CustomerDialog> {
     _districtController = TextEditingController(text: address?.district);
     _cityController = TextEditingController(text: address?.city);
     _postalCodeController = TextEditingController(text: address?.postalCode);
-    _additionalNumberController =
-        TextEditingController(text: address?.additionalNumber);
+    _additionalNumberController = TextEditingController(
+      text: address?.additionalNumber,
+    );
   }
 
   Future<void> _save() async {
@@ -250,12 +276,15 @@ class _CustomerDialogState extends State<_CustomerDialog> {
     final bloc = context.read<CustomerBloc>();
 
     final saudiAddress = models.SaudiAddress(
-      buildingNumber:
-          _buildingController.text.isEmpty ? null : _buildingController.text,
-      streetName:
-          _streetController.text.isEmpty ? null : _streetController.text,
-      district:
-          _districtController.text.isEmpty ? null : _districtController.text,
+      buildingNumber: _buildingController.text.isEmpty
+          ? null
+          : _buildingController.text,
+      streetName: _streetController.text.isEmpty
+          ? null
+          : _streetController.text,
+      district: _districtController.text.isEmpty
+          ? null
+          : _districtController.text,
       city: _cityController.text.isEmpty ? null : _cityController.text,
       postalCode: _postalCodeController.text.isEmpty
           ? null
@@ -266,21 +295,8 @@ class _CustomerDialogState extends State<_CustomerDialog> {
     );
 
     if (widget.customer == null) {
-      bloc.add(AddCustomerEvent(
-        name: _nameController.text,
-        email: _emailController.text.isEmpty ? null : _emailController.text,
-        phone: _phoneController.text.isEmpty ? null : _phoneController.text,
-        vatNumber: _vatNumberController.text.isEmpty
-            ? null
-            : _vatNumberController.text,
-        crnNumber: _crnNumberController.text.isEmpty
-            ? null
-            : _crnNumberController.text,
-        saudiAddress: saudiAddress,
-      ));
-    } else {
-      bloc.add(UpdateCustomerEvent(
-        widget.customer!.copyWith(
+      bloc.add(
+        AddCustomerEvent(
           name: _nameController.text,
           email: _emailController.text.isEmpty ? null : _emailController.text,
           phone: _phoneController.text.isEmpty ? null : _phoneController.text,
@@ -292,7 +308,24 @@ class _CustomerDialogState extends State<_CustomerDialog> {
               : _crnNumberController.text,
           saudiAddress: saudiAddress,
         ),
-      ));
+      );
+    } else {
+      bloc.add(
+        UpdateCustomerEvent(
+          widget.customer!.copyWith(
+            name: _nameController.text,
+            email: _emailController.text.isEmpty ? null : _emailController.text,
+            phone: _phoneController.text.isEmpty ? null : _phoneController.text,
+            vatNumber: _vatNumberController.text.isEmpty
+                ? null
+                : _vatNumberController.text,
+            crnNumber: _crnNumberController.text.isEmpty
+                ? null
+                : _crnNumberController.text,
+            saudiAddress: saudiAddress,
+          ),
+        ),
+      );
     }
 
     if (mounted) {
@@ -304,8 +337,9 @@ class _CustomerDialogState extends State<_CustomerDialog> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return AlertDialog(
-      title:
-          Text(widget.customer == null ? l10n.addCustomer : l10n.editCustomer),
+      title: Text(
+        widget.customer == null ? l10n.addCustomer : l10n.editCustomer,
+      ),
       content: SizedBox(
         width: 600,
         child: Form(
@@ -317,8 +351,9 @@ class _CustomerDialogState extends State<_CustomerDialog> {
               children: [
                 TextFormField(
                   controller: _nameController,
-                  decoration:
-                      InputDecoration(labelText: l10n.customerNameRequired),
+                  decoration: InputDecoration(
+                    labelText: l10n.customerNameRequired,
+                  ),
                   validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
                 ),
                 const SizedBox(height: 16),
@@ -336,14 +371,16 @@ class _CustomerDialogState extends State<_CustomerDialog> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _vatNumberController,
-                  decoration:
-                      InputDecoration(labelText: l10n.vatNumberFieldLabel),
+                  decoration: InputDecoration(
+                    labelText: l10n.vatNumberFieldLabel,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _crnNumberController,
-                  decoration:
-                      InputDecoration(labelText: l10n.crnNumberFieldLabel),
+                  decoration: InputDecoration(
+                    labelText: l10n.crnNumberFieldLabel,
+                  ),
                 ),
                 const SizedBox(height: 24),
                 Text(
@@ -356,8 +393,9 @@ class _CustomerDialogState extends State<_CustomerDialog> {
                     Expanded(
                       child: TextFormField(
                         controller: _buildingController,
-                        decoration:
-                            InputDecoration(labelText: l10n.buildingNumber),
+                        decoration: InputDecoration(
+                          labelText: l10n.buildingNumber,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -400,8 +438,9 @@ class _CustomerDialogState extends State<_CustomerDialog> {
                     Expanded(
                       child: TextFormField(
                         controller: _additionalNumberController,
-                        decoration:
-                            InputDecoration(labelText: l10n.additionalNumber),
+                        decoration: InputDecoration(
+                          labelText: l10n.additionalNumber,
+                        ),
                       ),
                     ),
                   ],
@@ -532,9 +571,9 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
       final companyInfo = await db.getCompanyInfo();
       if (companyInfo == null) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.companyInfoNotFound)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.companyInfoNotFound)));
         }
         return;
       }
@@ -548,9 +587,9 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
 
       if (sales.isEmpty) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.noInvoicesFound)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.noInvoicesFound)));
         }
         return;
       }
@@ -604,26 +643,38 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            Text(l10n.selectPeriod,
-                style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(
+              l10n.selectPeriod,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 10),
             DropdownButtonFormField<String>(
-              value: _filterOption,
+              initialValue: _filterOption,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
               ),
               items: [
                 DropdownMenuItem(value: 'all', child: Text(l10n.allTime)),
                 DropdownMenuItem(
-                    value: 'last_month', child: Text(l10n.lastMonth)),
+                  value: 'last_month',
+                  child: Text(l10n.lastMonth),
+                ),
                 DropdownMenuItem(
-                    value: 'last_3_months', child: Text(l10n.lastThreeMonths)),
+                  value: 'last_3_months',
+                  child: Text(l10n.lastThreeMonths),
+                ),
                 DropdownMenuItem(
-                    value: 'last_year', child: Text(l10n.lastYear)),
+                  value: 'last_year',
+                  child: Text(l10n.lastYear),
+                ),
                 DropdownMenuItem(
-                    value: 'custom', child: Text(l10n.customDateRange)),
+                  value: 'custom',
+                  child: Text(l10n.customDateRange),
+                ),
               ],
               onChanged: (value) {
                 setState(() {
@@ -640,9 +691,11 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
                     child: OutlinedButton.icon(
                       onPressed: _selectStartDate,
                       icon: const Icon(Icons.calendar_today),
-                      label: Text(_startDate == null
-                          ? l10n.startDate
-                          : dateFormat.format(_startDate!)),
+                      label: Text(
+                        _startDate == null
+                            ? l10n.startDate
+                            : dateFormat.format(_startDate!),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -650,9 +703,11 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
                     child: OutlinedButton.icon(
                       onPressed: _selectEndDate,
                       icon: const Icon(Icons.calendar_today),
-                      label: Text(_endDate == null
-                          ? l10n.endDate
-                          : dateFormat.format(_endDate!)),
+                      label: Text(
+                        _endDate == null
+                            ? l10n.endDate
+                            : dateFormat.format(_endDate!),
+                      ),
                     ),
                   ),
                 ],
@@ -673,8 +728,10 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
                   final sales = snapshot.data![0] as List;
                   final stats = snapshot.data![1] as Map<String, dynamic>;
                   final totalAmount = stats['totalAmount'] as double;
-                  final currencyFormat =
-                      NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
+                  final currencyFormat = NumberFormat.currency(
+                    symbol: 'SAR ',
+                    decimalDigits: 2,
+                  );
 
                   return Container(
                     padding: const EdgeInsets.all(12),
@@ -694,8 +751,9 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
                         ),
                         const SizedBox(height: 8),
                         Text(l10n.totalInvoices(sales.length)),
-                        Text(l10n
-                            .totalAmount(currencyFormat.format(totalAmount))),
+                        Text(
+                          l10n.totalAmount(currencyFormat.format(totalAmount)),
+                        ),
                       ],
                     ),
                   );

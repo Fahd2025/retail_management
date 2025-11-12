@@ -4,12 +4,9 @@ import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../blocs/auth/auth_bloc.dart';
 import '../blocs/auth/auth_event.dart';
 import '../blocs/auth/auth_state.dart';
-import '../blocs/theme/theme_bloc.dart';
-import '../blocs/theme/theme_event.dart';
-import '../blocs/theme/theme_state.dart';
-import '../blocs/locale/locale_bloc.dart';
-import '../blocs/locale/locale_event.dart';
-import '../blocs/locale/locale_state.dart';
+import '../blocs/app_config/app_config_bloc.dart';
+import '../blocs/app_config/app_config_event.dart';
+import '../blocs/app_config/app_config_state.dart';
 import '../database/drift_database.dart' hide User;
 import '../models/user.dart';
 import 'package:uuid/uuid.dart';
@@ -144,13 +141,13 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Center(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-                  child: BlocBuilder<ThemeBloc, ThemeState>(
-                    builder: (context, themeState) {
+                  child: BlocBuilder<AppConfigBloc, AppConfigState>(
+                    builder: (context, configState) {
                       return Container(
                         constraints: const BoxConstraints(maxWidth: 500),
                         padding: const EdgeInsets.all(32),
                         decoration: BoxDecoration(
-                          color: themeState.isDarkMode
+                          color: configState.isDarkMode
                               ? const Color(0xFF1E1E1E).withOpacity(0.95)
                               : Colors.white.withOpacity(0.95),
                           borderRadius: BorderRadius.circular(24),
@@ -166,8 +163,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             // Theme and Language Switchers Row
-                            BlocBuilder<LocaleBloc, LocaleState>(
-                              builder: (context, localeState) {
+                            BlocBuilder<AppConfigBloc, AppConfigState>(
+                              builder: (context, configState) {
                                 return Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -176,12 +173,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                       message: l10n.switchTheme,
                                       child: IconButton(
                                         icon: Icon(
-                                          themeState.isDarkMode
+                                          configState.isDarkMode
                                               ? Icons.light_mode
                                               : Icons.dark_mode,
                                         ),
                                         onPressed: () {
-                                          context.read<ThemeBloc>().add(const ToggleThemeEvent());
+                                          context.read<AppConfigBloc>().add(const ToggleThemeEvent());
                                         },
                                       ),
                                     ),
@@ -193,9 +190,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                         icon: const Icon(Icons.language),
                                         onSelected: (String value) {
                                           if (value == 'en') {
-                                            context.read<LocaleBloc>().add(const SetEnglishEvent());
+                                            context.read<AppConfigBloc>().add(const SetEnglishEvent());
                                           } else {
-                                            context.read<LocaleBloc>().add(const SetArabicEvent());
+                                            context.read<AppConfigBloc>().add(const SetArabicEvent());
                                           }
                                         },
                                         itemBuilder: (BuildContext context) => [
@@ -203,11 +200,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                             value: 'en',
                                             child: Row(
                                               children: [
-                                                if (localeState.isEnglish)
+                                                if (configState.isEnglish)
                                                   const Icon(Icons.check, size: 18),
-                                                if (localeState.isEnglish)
+                                                if (configState.isEnglish)
                                                   const SizedBox(width: 8),
-                                                const Text('English'),
+                                                Text(l10n.english),
                                               ],
                                             ),
                                           ),
@@ -215,11 +212,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                             value: 'ar',
                                             child: Row(
                                               children: [
-                                                if (localeState.isArabic)
+                                                if (configState.isArabic)
                                                   const Icon(Icons.check, size: 18),
-                                                if (localeState.isArabic)
+                                                if (configState.isArabic)
                                                   const SizedBox(width: 8),
-                                                const Text('العربية'),
+                                                Text(l10n.arabic),
                                               ],
                                             ),
                                           ),
@@ -437,8 +434,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
           // Notification Bar
           if (_notificationMessage != null)
-            BlocBuilder<ThemeBloc, ThemeState>(
-              builder: (context, themeState) {
+            BlocBuilder<AppConfigBloc, AppConfigState>(
+              builder: (context, configState) {
                 return Positioned(
                   top: 0,
                   left: 0,
@@ -453,19 +450,19 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         decoration: BoxDecoration(
                           color: _isNotificationError
-                              ? (themeState.isDarkMode
+                              ? (configState.isDarkMode
                                   ? Colors.red.shade900.withOpacity(0.9)
                                   : Colors.red.shade50)
-                              : (themeState.isDarkMode
+                              : (configState.isDarkMode
                                   ? Colors.green.shade900.withOpacity(0.9)
                                   : Colors.green.shade50),
                           border: Border(
                             bottom: BorderSide(
                               color: _isNotificationError
-                                  ? (themeState.isDarkMode
+                                  ? (configState.isDarkMode
                                       ? Colors.red.shade700
                                       : Colors.red.shade200)
-                                  : (themeState.isDarkMode
+                                  : (configState.isDarkMode
                                       ? Colors.green.shade700
                                       : Colors.green.shade200),
                               width: 2,
@@ -479,10 +476,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ? Icons.error_outline
                                   : Icons.check_circle_outline,
                               color: _isNotificationError
-                                  ? (themeState.isDarkMode
+                                  ? (configState.isDarkMode
                                       ? Colors.red.shade300
                                       : Colors.red.shade700)
-                                  : (themeState.isDarkMode
+                                  : (configState.isDarkMode
                                       ? Colors.green.shade300
                                       : Colors.green.shade700),
                             ),
@@ -492,10 +489,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 _notificationMessage!,
                                 style: TextStyle(
                                   color: _isNotificationError
-                                      ? (themeState.isDarkMode
+                                      ? (configState.isDarkMode
                                           ? Colors.red.shade100
                                           : Colors.red.shade900)
-                                      : (themeState.isDarkMode
+                                      : (configState.isDarkMode
                                           ? Colors.green.shade100
                                           : Colors.green.shade900),
                                   fontWeight: FontWeight.w500,
@@ -506,10 +503,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               icon: Icon(
                                 Icons.close,
                                 color: _isNotificationError
-                                    ? (themeState.isDarkMode
+                                    ? (configState.isDarkMode
                                         ? Colors.red.shade300
                                         : Colors.red.shade700)
-                                    : (themeState.isDarkMode
+                                    : (configState.isDarkMode
                                         ? Colors.green.shade300
                                         : Colors.green.shade700),
                               ),

@@ -3,12 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../database/drift_database.dart';
 import '../models/company_info.dart';
 import '../services/sync_service.dart';
-import '../blocs/theme/theme_bloc.dart';
-import '../blocs/theme/theme_event.dart';
-import '../blocs/theme/theme_state.dart';
-import '../blocs/locale/locale_bloc.dart';
-import '../blocs/locale/locale_event.dart';
-import '../blocs/locale/locale_state.dart';
+import '../blocs/app_config/app_config_bloc.dart';
+import '../blocs/app_config/app_config_event.dart';
+import '../blocs/app_config/app_config_state.dart';
 import 'package:uuid/uuid.dart';
 import 'package:retail_management/generated/l10n/app_localizations.dart';
 
@@ -197,24 +194,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const Divider(),
 
                     // Theme Selection
-                    BlocBuilder<ThemeBloc, ThemeState>(
-                      builder: (context, themeState) {
+                    BlocBuilder<AppConfigBloc, AppConfigState>(
+                      builder: (context, configState) {
                         return ListTile(
                           leading: Icon(
-                            themeState.isDarkMode
+                            configState.isDarkMode
                               ? Icons.dark_mode
                               : Icons.light_mode,
                           ),
                           title: Text(l10n.theme),
                           subtitle: Text(
-                            themeState.isDarkMode
+                            configState.isDarkMode
                               ? l10n.darkMode
                               : l10n.lightMode,
                           ),
                           trailing: Switch(
-                            value: themeState.isDarkMode,
+                            value: configState.isDarkMode,
                             onChanged: (value) {
-                              context.read<ThemeBloc>().add(const ToggleThemeEvent());
+                              context.read<AppConfigBloc>().add(const ToggleThemeEvent());
                             },
                           ),
                         );
@@ -224,14 +221,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const Divider(),
 
                     // Language Selection
-                    BlocBuilder<LocaleBloc, LocaleState>(
-                      builder: (context, localeState) {
+                    BlocBuilder<AppConfigBloc, AppConfigState>(
+                      builder: (context, configState) {
                         return ListTile(
                           leading: const Icon(Icons.language),
                           title: Text(l10n.language),
-                          subtitle: Text(_getLocaleName(localeState.locale)),
+                          subtitle: Text(_getLocaleName(configState.locale)),
                           trailing: DropdownButton<Locale>(
-                            value: localeState.locale,
+                            value: configState.locale,
                             underline: const SizedBox(),
                             items: _getSupportedLocales().map((locale) {
                               return DropdownMenuItem(
@@ -242,9 +239,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             onChanged: (Locale? newLocale) {
                               if (newLocale != null) {
                                 if (newLocale.languageCode == 'en') {
-                                  context.read<LocaleBloc>().add(const SetEnglishEvent());
+                                  context.read<AppConfigBloc>().add(const SetEnglishEvent());
                                 } else if (newLocale.languageCode == 'ar') {
-                                  context.read<LocaleBloc>().add(const SetArabicEvent());
+                                  context.read<AppConfigBloc>().add(const SetArabicEvent());
                                 }
                               }
                             },
