@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../database/drift_database.dart';
 import '../models/category.dart' as models;
+import '../widgets/form_bottom_sheet.dart';
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});
@@ -52,63 +53,72 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         TextEditingController(text: category?.description ?? '');
     final formKey = GlobalKey<FormState>();
 
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(category == null ? l10n.addCategory : l10n.editCategory),
-        content: Form(
+      isScrollControlled: true,
+      enableDrag: true,
+      isDismissible: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        // Build the form content
+        final formContent = Form(
           key: formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    labelText: l10n.nameFieldLabel,
-                    border: const OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return l10n.pleaseEnterCategoryName;
-                    }
-                    return null;
-                  },
-                  autofocus: true,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Category Name Field
+              TextFormField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: l10n.nameFieldLabel,
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.category_outlined),
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: descriptionController,
-                  decoration: InputDecoration(
-                    labelText: l10n.descriptionOptional,
-                    border: const OutlineInputBorder(),
-                  ),
-                  maxLines: 3,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return l10n.pleaseEnterCategoryName;
+                  }
+                  return null;
+                },
+                autofocus: true,
+                textInputAction: TextInputAction.next,
+              ),
+              const SizedBox(height: 16),
+
+              // Description Field
+              TextFormField(
+                controller: descriptionController,
+                decoration: InputDecoration(
+                  labelText: l10n.descriptionOptional,
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.description_outlined),
+                  alignLabelWithHint: true,
                 ),
-              ],
-            ),
+                maxLines: 3,
+                textInputAction: TextInputAction.done,
+              ),
+            ],
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(AppLocalizations.of(context)!.cancel),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              if (formKey.currentState!.validate()) {
-                Navigator.pop(context);
-                await _saveCategory(
-                  category,
-                  nameController.text.trim(),
-                  descriptionController.text.trim(),
-                );
-              }
-            },
-            child: Text(category == null ? l10n.add : l10n.save),
-          ),
-        ],
-      ),
+        );
+
+        // Wrap in FormBottomSheet
+        return FormBottomSheet(
+          title: category == null ? l10n.addCategory : l10n.editCategory,
+          saveButtonText: category == null ? l10n.add : l10n.save,
+          cancelButtonText: l10n.cancel,
+          onSave: () async {
+            if (formKey.currentState!.validate()) {
+              Navigator.pop(context);
+              await _saveCategory(
+                category,
+                nameController.text.trim(),
+                descriptionController.text.trim(),
+              );
+            }
+          },
+          child: formContent,
+        );
+      },
     );
   }
 

@@ -7,6 +7,7 @@ import '../blocs/product/product_state.dart';
 import '../models/product.dart' as models;
 import '../models/category.dart';
 import '../database/drift_database.dart';
+import '../widgets/form_bottom_sheet.dart';
 
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({super.key});
@@ -56,8 +57,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Future<void> showProductDialog([models.Product? product]) async {
-    await showDialog(
+    await showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      enableDrag: true,
+      isDismissible: true,
+      backgroundColor: Colors.transparent,
       builder: (context) => _ProductDialog(product: product),
     );
   }
@@ -412,125 +417,166 @@ class _ProductDialogState extends State<_ProductDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return AlertDialog(
-      title: Text(widget.product == null ? l10n.addProduct : l10n.editProduct),
-      content: SizedBox(
-        width: 500,
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: _nameController,
-                  decoration:
-                      InputDecoration(labelText: l10n.productNameRequired),
-                  validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _barcodeController,
-                  decoration: InputDecoration(labelText: l10n.barcodeRequired),
-                  validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
-                ),
-                const SizedBox(height: 16),
-                _isLoadingCategories
-                    ? const Center(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 16.0),
-                          child: CircularProgressIndicator(),
-                        ),
-                      )
-                    : DropdownButtonFormField<String>(
-                        initialValue: _selectedCategoryId,
-                        decoration:
-                            InputDecoration(labelText: l10n.categoryRequired),
-                        hint: Text(l10n.selectACategory),
-                        isExpanded: true,
-                        validator: (v) => v == null ? l10n.required : null,
-                        items: _categories.map((category) {
-                          return DropdownMenuItem<String>(
-                            value: category.id,
-                            child: Text(category.name),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedCategoryId = value;
-                          });
-                        },
-                      ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _priceController,
-                        decoration: InputDecoration(labelText: l10n.priceRequired),
-                        keyboardType: TextInputType.number,
-                        validator: (v) =>
-                            double.tryParse(v ?? '') == null ? l10n.invalid : null,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _costController,
-                        decoration: InputDecoration(labelText: l10n.costRequired),
-                        keyboardType: TextInputType.number,
-                        validator: (v) =>
-                            double.tryParse(v ?? '') == null ? l10n.invalid : null,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _quantityController,
-                        decoration:
-                            InputDecoration(labelText: l10n.quantityRequired),
-                        keyboardType: TextInputType.number,
-                        validator: (v) =>
-                            int.tryParse(v ?? '') == null ? l10n.invalid : null,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _vatRateController,
-                        decoration: InputDecoration(labelText: l10n.vatRateRequired),
-                        keyboardType: TextInputType.number,
-                        validator: (v) =>
-                            double.tryParse(v ?? '') == null ? l10n.invalid : null,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _descriptionController,
-                  decoration: InputDecoration(labelText: l10n.description),
-                  maxLines: 3,
-                ),
-              ],
+
+    // Build the form content separately for cleaner code
+    final formContent = Form(
+      key: _formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Product Name Field
+          TextFormField(
+            controller: _nameController,
+            decoration: InputDecoration(
+              labelText: l10n.productNameRequired,
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.inventory_2_outlined),
             ),
+            validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
+            textInputAction: TextInputAction.next,
           ),
-        ),
+          const SizedBox(height: 16),
+
+          // Barcode Field
+          TextFormField(
+            controller: _barcodeController,
+            decoration: InputDecoration(
+              labelText: l10n.barcodeRequired,
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.qr_code),
+            ),
+            validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
+            textInputAction: TextInputAction.next,
+          ),
+          const SizedBox(height: 16),
+
+          // Category Dropdown with Loading State
+          _isLoadingCategories
+              ? const Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              : DropdownButtonFormField<String>(
+                  value: _selectedCategoryId,
+                  decoration: InputDecoration(
+                    labelText: l10n.categoryRequired,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.category_outlined),
+                  ),
+                  hint: Text(l10n.selectACategory),
+                  isExpanded: true,
+                  validator: (v) => v == null ? l10n.required : null,
+                  items: _categories.map((category) {
+                    return DropdownMenuItem<String>(
+                      value: category.id,
+                      child: Text(category.name),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedCategoryId = value;
+                    });
+                  },
+                ),
+          const SizedBox(height: 16),
+
+          // Price and Cost Row
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  controller: _priceController,
+                  decoration: InputDecoration(
+                    labelText: l10n.priceRequired,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.attach_money),
+                  ),
+                  keyboardType: TextInputType.number,
+                  validator: (v) =>
+                      double.tryParse(v ?? '') == null ? l10n.invalid : null,
+                  textInputAction: TextInputAction.next,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: TextFormField(
+                  controller: _costController,
+                  decoration: InputDecoration(
+                    labelText: l10n.costRequired,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.monetization_on_outlined),
+                  ),
+                  keyboardType: TextInputType.number,
+                  validator: (v) =>
+                      double.tryParse(v ?? '') == null ? l10n.invalid : null,
+                  textInputAction: TextInputAction.next,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Quantity and VAT Rate Row
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  controller: _quantityController,
+                  decoration: InputDecoration(
+                    labelText: l10n.quantityRequired,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.inventory),
+                  ),
+                  keyboardType: TextInputType.number,
+                  validator: (v) =>
+                      int.tryParse(v ?? '') == null ? l10n.invalid : null,
+                  textInputAction: TextInputAction.next,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: TextFormField(
+                  controller: _vatRateController,
+                  decoration: InputDecoration(
+                    labelText: l10n.vatRateRequired,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.percent),
+                  ),
+                  keyboardType: TextInputType.number,
+                  validator: (v) =>
+                      double.tryParse(v ?? '') == null ? l10n.invalid : null,
+                  textInputAction: TextInputAction.next,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Description Field
+          TextFormField(
+            controller: _descriptionController,
+            decoration: InputDecoration(
+              labelText: l10n.description,
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.description_outlined),
+              alignLabelWithHint: true,
+            ),
+            maxLines: 3,
+            textInputAction: TextInputAction.done,
+          ),
+        ],
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(AppLocalizations.of(context)!.cancel),
-        ),
-        ElevatedButton(
-          onPressed: _save,
-          child: Text(AppLocalizations.of(context)!.save),
-        ),
-      ],
+    );
+
+    // Wrap in FormBottomSheet for consistent modal design
+    return FormBottomSheet(
+      title: widget.product == null ? l10n.addProduct : l10n.editProduct,
+      saveButtonText: l10n.save,
+      cancelButtonText: l10n.cancel,
+      onSave: _save,
+      child: formContent,
     );
   }
 
