@@ -260,79 +260,167 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   ],
                 ),
               )
-            : RefreshIndicator(
-                onRefresh: loadCategories,
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: _categoriesWithCount.length,
-                  itemBuilder: (context, index) {
-                    final data = _categoriesWithCount[index];
-                    final category = data['category'] as models.Category;
-                    final productCount = data['productCount'] as int;
+            : LayoutBuilder(
+                builder: (context, constraints) {
+                  final isDesktop = constraints.maxWidth >= 800;
 
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      elevation: 2,
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        leading: CircleAvatar(
-                          backgroundColor: Theme.of(context)
-                              .primaryColor
-                              .withValues(alpha: 0.1),
-                          child: Icon(
-                            Icons.category,
-                            color: Theme.of(context).primaryColor,
+                  if (isDesktop) {
+                    // Desktop/Tablet: DataTable layout that fills width
+                    return RefreshIndicator(
+                      onRefresh: loadCategories,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minWidth: constraints.maxWidth,
+                            ),
+                            child: DataTable(
+                              columnSpacing: 24,
+                              horizontalMargin: 16,
+                              columns: [
+                                DataColumn(label: Text(l10n.nameFieldLabel)),
+                                DataColumn(label: Text(l10n.description)),
+                                DataColumn(label: Text(l10n.productCount(0).split(' ')[0])),
+                                DataColumn(label: Text(l10n.actions)),
+                              ],
+                              rows: _categoriesWithCount.map((data) {
+                                final category =
+                                    data['category'] as models.Category;
+                                final productCount = data['productCount'] as int;
+
+                                return DataRow(cells: [
+                                  DataCell(Text(category.name)),
+                                  DataCell(
+                                    Text(
+                                      category.description ?? '-',
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  DataCell(Text(productCount.toString())),
+                                  DataCell(
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(Icons.edit, size: 20),
+                                          onPressed: () =>
+                                              showCategoryDialog(category),
+                                          tooltip: l10n.tooltipEdit,
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.delete,
+                                              size: 20, color: Colors.red),
+                                          onPressed: () => _deleteCategory(
+                                              category, productCount),
+                                          tooltip: l10n.tooltipDelete,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ]);
+                              }).toList(),
+                            ),
                           ),
-                        ),
-                        title: Text(
-                          category.name,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (category.description != null)
-                              Text(
-                                category.description!,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            const SizedBox(height: 4),
-                            Text(
-                              l10n.productCount(productCount),
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey.shade600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit, color: Colors.blue),
-                              onPressed: () => showCategoryDialog(category),
-                              tooltip: l10n.tooltipEdit,
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () =>
-                                  _deleteCategory(category, productCount),
-                              tooltip: l10n.tooltipDelete,
-                            ),
-                          ],
                         ),
                       ),
                     );
-                  },
-                ),
+                  } else {
+                    // Mobile: Card with ExpansionTile layout
+                    return RefreshIndicator(
+                      onRefresh: loadCategories,
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(16),
+                        itemCount: _categoriesWithCount.length,
+                        itemBuilder: (context, index) {
+                          final data = _categoriesWithCount[index];
+                          final category = data['category'] as models.Category;
+                          final productCount = data['productCount'] as int;
+
+                          return Card(
+                            margin: const EdgeInsets.only(bottom: 12),
+                            elevation: 2,
+                            child: ExpansionTile(
+                              leading: CircleAvatar(
+                                backgroundColor: Theme.of(context)
+                                    .primaryColor
+                                    .withValues(alpha: 0.1),
+                                child: Icon(
+                                  Icons.category,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                              title: Text(
+                                category.name,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              subtitle: Text(
+                                l10n.productCount(productCount),
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.edit,
+                                        color: Colors.blue),
+                                    onPressed: () =>
+                                        showCategoryDialog(category),
+                                    tooltip: l10n.tooltipEdit,
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete,
+                                        color: Colors.red),
+                                    onPressed: () =>
+                                        _deleteCategory(category, productCount),
+                                    tooltip: l10n.tooltipDelete,
+                                  ),
+                                ],
+                              ),
+                              children: [
+                                if (category.description != null &&
+                                    category.description!.isNotEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          l10n.description,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          category.description!,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey.shade600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                },
               );
   }
 }

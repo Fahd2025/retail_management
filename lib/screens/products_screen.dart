@@ -169,58 +169,65 @@ class _ProductsScreenState extends State<ProductsScreen> {
               final l10n = AppLocalizations.of(context)!;
 
               if (isDesktop) {
-                // Desktop/Tablet: DataTable layout
+                // Desktop/Tablet: DataTable layout that fills width
                 return SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
-                    child: DataTable(
-                      columns: [
-                        DataColumn(label: Text(l10n.name)),
-                        DataColumn(label: Text(l10n.barcode)),
-                        DataColumn(label: Text(l10n.category)),
-                        DataColumn(label: Text(l10n.price)),
-                        DataColumn(label: Text(l10n.cost)),
-                        DataColumn(label: Text(l10n.stock)),
-                        DataColumn(label: Text(l10n.vat)),
-                        DataColumn(label: Text(l10n.actions)),
-                      ],
-                      rows: products.map((product) {
-                        return DataRow(cells: [
-                          DataCell(Text(product.name)),
-                          DataCell(Text(product.barcode)),
-                          DataCell(Text(_getCategoryName(product.category))),
-                          DataCell(
-                              Text('SAR ${product.price.toStringAsFixed(2)}')),
-                          DataCell(
-                              Text('SAR ${product.cost.toStringAsFixed(2)}')),
-                          DataCell(Text(product.quantity.toString())),
-                          DataCell(
-                              Text('${product.vatRate.toStringAsFixed(0)}%')),
-                          DataCell(
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.edit, size: 20),
-                                  onPressed: () => showProductDialog(product),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete,
-                                      size: 20, color: Colors.red),
-                                  onPressed: () => _deleteProduct(
-                                      context, product),
-                                ),
-                              ],
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: constraints.maxWidth,
+                      ),
+                      child: DataTable(
+                        columnSpacing: 24,
+                        horizontalMargin: 16,
+                        columns: [
+                          DataColumn(label: Text(l10n.name)),
+                          DataColumn(label: Text(l10n.barcode)),
+                          DataColumn(label: Text(l10n.category)),
+                          DataColumn(label: Text(l10n.price)),
+                          DataColumn(label: Text(l10n.cost)),
+                          DataColumn(label: Text(l10n.stock)),
+                          DataColumn(label: Text(l10n.vat)),
+                          DataColumn(label: Text(l10n.actions)),
+                        ],
+                        rows: products.map((product) {
+                          return DataRow(cells: [
+                            DataCell(Text(product.name)),
+                            DataCell(Text(product.barcode)),
+                            DataCell(Text(_getCategoryName(product.category))),
+                            DataCell(
+                                Text('SAR ${product.price.toStringAsFixed(2)}')),
+                            DataCell(
+                                Text('SAR ${product.cost.toStringAsFixed(2)}')),
+                            DataCell(Text(product.quantity.toString())),
+                            DataCell(
+                                Text('${product.vatRate.toStringAsFixed(0)}%')),
+                            DataCell(
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.edit, size: 20),
+                                    onPressed: () => showProductDialog(product),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete,
+                                        size: 20, color: Colors.red),
+                                    onPressed: () => _deleteProduct(
+                                        context, product),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ]);
-                      }).toList(),
+                          ]);
+                        }).toList(),
+                      ),
                     ),
                   ),
                 );
               } else {
-                // Mobile: Card layout
+                // Mobile: Card with ExpansionTile layout
                 return ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: products.length,
@@ -229,68 +236,91 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     return Card(
                       margin: const EdgeInsets.only(bottom: 12),
                       elevation: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
+                      child: ExpansionTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Theme.of(context)
+                              .primaryColor
+                              .withValues(alpha: 0.1),
+                          child: Icon(
+                            Icons.inventory_2,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        title: Text(
+                          product.name,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    product.name,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.edit,
-                                          color: Colors.blue),
-                                      onPressed: () =>
-                                          showProductDialog(product),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete,
-                                          color: Colors.red),
-                                      onPressed: () => _deleteProduct(
-                                          context, product),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                            Text(
+                              l10n.category + ': ' + _getCategoryName(product.category),
+                              style: const TextStyle(fontSize: 13),
                             ),
-                            const Divider(),
-                            const SizedBox(height: 8),
-                            _buildInfoRow(
-                                l10n.category, _getCategoryName(product.category)),
-                            _buildInfoRow(l10n.barcode, product.barcode),
-                            _buildInfoRow(l10n.price,
-                                'SAR ${product.price.toStringAsFixed(2)}'),
-                            _buildInfoRow(l10n.cost,
-                                'SAR ${product.cost.toStringAsFixed(2)}'),
-                            _buildInfoRow(l10n.stock, '${product.quantity} ${l10n.units}'),
-                            _buildInfoRow(l10n.vat,
-                                '${product.vatRate.toStringAsFixed(0)}%'),
-                            if (product.description != null &&
-                                product.description!.isNotEmpty) ...[
-                              const SizedBox(height: 8),
-                              Text(
-                                product.description!,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey.shade600,
-                                  fontStyle: FontStyle.italic,
-                                ),
+                            Text(
+                              l10n.price + ': SAR ${product.price.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.green.shade700,
                               ),
-                            ],
+                            ),
                           ],
                         ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit, color: Colors.blue),
+                              onPressed: () => showProductDialog(product),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () => _deleteProduct(context, product),
+                            ),
+                          ],
+                        ),
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildInfoRow(l10n.barcode, product.barcode),
+                                _buildInfoRow(l10n.cost,
+                                    'SAR ${product.cost.toStringAsFixed(2)}'),
+                                _buildInfoRow(l10n.stock,
+                                    '${product.quantity} ${l10n.units}'),
+                                _buildInfoRow(l10n.vat,
+                                    '${product.vatRate.toStringAsFixed(0)}%'),
+                                if (product.description != null &&
+                                    product.description!.isNotEmpty) ...[
+                                  const SizedBox(height: 8),
+                                  const Divider(),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    l10n.description,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    product.description!,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     );
                   },

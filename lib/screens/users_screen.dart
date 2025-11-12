@@ -171,80 +171,87 @@ class _UsersScreenState extends State<UsersScreen> {
               final l10n = AppLocalizations.of(context)!;
 
               if (isDesktop) {
-                // Desktop/Tablet: DataTable layout
+                // Desktop/Tablet: DataTable layout that fills width
                 return SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
-                    child: DataTable(
-                      columns: [
-                        DataColumn(label: Text(l10n.username)),
-                        DataColumn(label: Text(l10n.fullName)),
-                        DataColumn(label: Text(l10n.role)),
-                        DataColumn(label: Text(l10n.status)),
-                        DataColumn(label: Text(l10n.invoiceCount)),
-                        DataColumn(label: Text(l10n.totalSales)),
-                        DataColumn(label: Text(l10n.actions)),
-                      ],
-                      rows: users.map((user) {
-                        final stats = userSalesStats[user.id] ?? {};
-                        final invoiceCount = stats['invoiceCount'] ?? 0;
-                        final totalSales = stats['totalSales'] ?? 0.0;
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: constraints.maxWidth,
+                      ),
+                      child: DataTable(
+                        columnSpacing: 24,
+                        horizontalMargin: 16,
+                        columns: [
+                          DataColumn(label: Text(l10n.username)),
+                          DataColumn(label: Text(l10n.fullName)),
+                          DataColumn(label: Text(l10n.role)),
+                          DataColumn(label: Text(l10n.status)),
+                          DataColumn(label: Text(l10n.invoiceCount)),
+                          DataColumn(label: Text(l10n.totalSales)),
+                          DataColumn(label: Text(l10n.actions)),
+                        ],
+                        rows: users.map((user) {
+                          final stats = userSalesStats[user.id] ?? {};
+                          final invoiceCount = stats['invoiceCount'] ?? 0;
+                          final totalSales = stats['totalSales'] ?? 0.0;
 
-                        return DataRow(cells: [
-                          DataCell(Text(user.username)),
-                          DataCell(Text(user.fullName)),
-                          DataCell(
-                            Chip(
-                              label: Text(
-                                user.role == UserRole.admin
-                                    ? l10n.admin
-                                    : l10n.cashier,
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                              backgroundColor: user.role == UserRole.admin
-                                  ? Colors.blue.shade100
-                                  : Colors.green.shade100,
-                            ),
-                          ),
-                          DataCell(
-                            Chip(
-                              label: Text(
-                                user.isActive ? l10n.active : l10n.inactive,
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                              backgroundColor: user.isActive
-                                  ? Colors.green.shade100
-                                  : Colors.red.shade100,
-                            ),
-                          ),
-                          DataCell(Text(invoiceCount.toString())),
-                          DataCell(
-                            Text('SAR ${totalSales.toStringAsFixed(2)}'),
-                          ),
-                          DataCell(
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.edit, size: 20),
-                                  onPressed: () => showUserDialog(user),
+                          return DataRow(cells: [
+                            DataCell(Text(user.username)),
+                            DataCell(Text(user.fullName)),
+                            DataCell(
+                              Chip(
+                                label: Text(
+                                  user.role == UserRole.admin
+                                      ? l10n.admin
+                                      : l10n.cashier,
+                                  style: const TextStyle(fontSize: 12),
                                 ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete,
-                                      size: 20, color: Colors.red),
-                                  onPressed: () => _deleteUser(context, user),
-                                ),
-                              ],
+                                backgroundColor: user.role == UserRole.admin
+                                    ? Colors.blue.shade100
+                                    : Colors.green.shade100,
+                              ),
                             ),
-                          ),
-                        ]);
-                      }).toList(),
+                            DataCell(
+                              Chip(
+                                label: Text(
+                                  user.isActive ? l10n.active : l10n.inactive,
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                                backgroundColor: user.isActive
+                                    ? Colors.green.shade100
+                                    : Colors.red.shade100,
+                              ),
+                            ),
+                            DataCell(Text(invoiceCount.toString())),
+                            DataCell(
+                              Text('SAR ${totalSales.toStringAsFixed(2)}'),
+                            ),
+                            DataCell(
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.edit, size: 20),
+                                    onPressed: () => showUserDialog(user),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete,
+                                        size: 20, color: Colors.red),
+                                    onPressed: () => _deleteUser(context, user),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ]);
+                        }).toList(),
+                      ),
                     ),
                   ),
                 );
               } else {
-                // Mobile: Card layout
+                // Mobile: Card with ExpansionTile layout
                 return ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: users.length,
@@ -257,61 +264,90 @@ class _UsersScreenState extends State<UsersScreen> {
                     return Card(
                       margin: const EdgeInsets.only(bottom: 12),
                       elevation: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
+                      child: ExpansionTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Theme.of(context)
+                              .primaryColor
+                              .withValues(alpha: 0.1),
+                          child: Icon(
+                            user.role == UserRole.admin
+                                ? Icons.admin_panel_settings
+                                : Icons.person,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        title: Text(
+                          user.fullName,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Text(
+                              l10n.usernameLabel + ': ' + user.username,
+                              style: const TextStyle(fontSize: 13),
+                            ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Expanded(
-                                  child: Text(
-                                    user.fullName,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                Chip(
+                                  label: Text(
+                                    user.role == UserRole.admin
+                                        ? l10n.admin
+                                        : l10n.cashier,
+                                    style: const TextStyle(fontSize: 11),
                                   ),
+                                  backgroundColor: user.role == UserRole.admin
+                                      ? Colors.blue.shade100
+                                      : Colors.green.shade100,
+                                  visualDensity: VisualDensity.compact,
                                 ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.edit,
-                                          color: Colors.blue),
-                                      onPressed: () => showUserDialog(user),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete,
-                                          color: Colors.red),
-                                      onPressed: () =>
-                                          _deleteUser(context, user),
-                                    ),
-                                  ],
+                                const SizedBox(width: 8),
+                                Chip(
+                                  label: Text(
+                                    user.isActive ? l10n.active : l10n.inactive,
+                                    style: const TextStyle(fontSize: 11),
+                                  ),
+                                  backgroundColor: user.isActive
+                                      ? Colors.green.shade100
+                                      : Colors.red.shade100,
+                                  visualDensity: VisualDensity.compact,
                                 ),
                               ],
                             ),
-                            const Divider(),
-                            _buildInfoRow(l10n.usernameLabel, user.username),
-                            _buildInfoRow(
-                              l10n.roleLabel,
-                              user.role == UserRole.admin
-                                  ? l10n.admin
-                                  : l10n.cashier,
+                          ],
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit, color: Colors.blue),
+                              onPressed: () => showUserDialog(user),
                             ),
-                            _buildInfoRow(
-                              l10n.statusLabel,
-                              user.isActive ? l10n.active : l10n.inactive,
-                            ),
-                            _buildInfoRow(
-                                l10n.invoiceCount, invoiceCount.toString()),
-                            _buildInfoRow(
-                              l10n.totalSales,
-                              'SAR ${totalSales.toStringAsFixed(2)}',
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () => _deleteUser(context, user),
                             ),
                           ],
                         ),
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildInfoRow(
+                                    l10n.invoiceCount, invoiceCount.toString()),
+                                _buildInfoRow(
+                                  l10n.totalSales,
+                                  'SAR ${totalSales.toStringAsFixed(2)}',
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     );
                   },

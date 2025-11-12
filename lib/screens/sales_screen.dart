@@ -306,26 +306,94 @@ class _SalesScreenState extends State<SalesScreen> {
 
           return LayoutBuilder(
             builder: (context, constraints) {
-              final isWideScreen = constraints.maxWidth >= 900;
+              final isDesktop = constraints.maxWidth >= 900;
+              final l10n = AppLocalizations.of(context)!;
 
-              if (isWideScreen) {
-                // Desktop: Grid layout with 2 columns
-                return GridView.builder(
-                  padding: const EdgeInsets.all(16),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 2.5,
+              if (isDesktop) {
+                // Desktop: DataTable layout that fills width
+                return SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: constraints.maxWidth,
+                      ),
+                      child: DataTable(
+                        columnSpacing: 24,
+                        horizontalMargin: 16,
+                        columns: [
+                          DataColumn(label: Text(l10n.invoiceLabel(''))),
+                          DataColumn(label: Text(l10n.dateLabel(''))),
+                          DataColumn(label: Text(l10n.totalLabel(''))),
+                          DataColumn(label: Text(l10n.statusLabelText(''))),
+                          DataColumn(label: Text(l10n.itemsLabel)),
+                          DataColumn(label: Text(l10n.actions)),
+                        ],
+                        rows: sales.map((sale) {
+                          final statusColor = sale.status == SaleStatus.completed
+                              ? Colors.green
+                              : sale.status == SaleStatus.returned
+                                  ? Colors.orange
+                                  : Colors.red;
+
+                          final statusText = sale.status == SaleStatus.completed
+                              ? l10n.completed
+                              : sale.status == SaleStatus.returned
+                                  ? l10n.returned
+                                  : sale.status.toString().split('.').last.toUpperCase();
+
+                          return DataRow(cells: [
+                            DataCell(Text(sale.invoiceNumber)),
+                            DataCell(Text(dateFormat.format(sale.saleDate))),
+                            DataCell(Text(
+                                'SAR ${sale.totalAmount.toStringAsFixed(2)}')),
+                            DataCell(
+                              Chip(
+                                label: Text(
+                                  statusText,
+                                  style: const TextStyle(fontSize: 11),
+                                ),
+                                backgroundColor: statusColor.withValues(alpha: 0.2),
+                                labelStyle: TextStyle(color: statusColor),
+                              ),
+                            ),
+                            DataCell(Text(sale.items.length.toString())),
+                            DataCell(
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.print, size: 20),
+                                    onPressed: () => _reprintInvoice(sale),
+                                    tooltip: l10n.reprint,
+                                  ),
+                                  if (sale.status == SaleStatus.completed)
+                                    BlocBuilder<AuthBloc, AuthState>(
+                                      builder: (context, authState) {
+                                        if (authState is Authenticated &&
+                                            authState.isAdmin) {
+                                          return IconButton(
+                                            icon: const Icon(Icons.undo,
+                                                size: 20, color: Colors.orange),
+                                            onPressed: () => _returnSale(sale),
+                                            tooltip: l10n.return_sale,
+                                          );
+                                        }
+                                        return const SizedBox.shrink();
+                                      },
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ]);
+                        }).toList(),
+                      ),
+                    ),
                   ),
-                  itemCount: sales.length,
-                  itemBuilder: (context, index) {
-                    return _buildSaleCard(
-                        sales[index], dateFormat, context);
-                  },
                 );
               } else {
-                // Mobile/Tablet: List layout
+                // Mobile: Card with ExpansionTile layout
                 return ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: sales.length,
