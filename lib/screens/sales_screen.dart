@@ -325,6 +325,7 @@ class _SalesScreenState extends State<SalesScreen> {
                         columns: [
                           DataColumn(label: Text(l10n.invoiceLabel(''))),
                           DataColumn(label: Text(l10n.dateLabel(''))),
+                          DataColumn(label: Text('${l10n.vat} Amount')),
                           DataColumn(label: Text(l10n.totalLabel(''))),
                           DataColumn(label: Text(l10n.statusLabelText(''))),
                           DataColumn(label: Text(l10n.itemsLabel)),
@@ -346,6 +347,8 @@ class _SalesScreenState extends State<SalesScreen> {
                           return DataRow(cells: [
                             DataCell(Text(sale.invoiceNumber)),
                             DataCell(Text(dateFormat.format(sale.saleDate))),
+                            DataCell(Text(
+                                'SAR ${sale.vatAmount.toStringAsFixed(2)}')),
                             DataCell(Text(
                                 'SAR ${sale.totalAmount.toStringAsFixed(2)}')),
                             DataCell(
