@@ -140,17 +140,24 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
-            child: Center(
-              child: SingleChildScrollView(
-                child: Card(
-                  margin: const EdgeInsets.all(32),
-                  elevation: 8,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+            child: SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
                   child: Container(
                     constraints: const BoxConstraints(maxWidth: 500),
-                    padding: const EdgeInsets.all(40),
+                    padding: const EdgeInsets.all(32),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.95),
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -418,12 +425,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                       ),
-                  ],
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
           ),
 
           // Notification Bar
