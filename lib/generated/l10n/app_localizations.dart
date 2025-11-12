@@ -2153,7 +2153,7 @@ abstract class AppLocalizations {
   /// No description provided for @preview.
   ///
   /// In en, this message translates to:
-  /// **'Preview:'**
+  /// **'Preview'**
   String get preview;
 
   /// No description provided for @totalInvoices.
@@ -2263,6 +2263,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Switch Language'**
   String get switchLanguage;
+
+  /// No description provided for @printSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Print Settings'**
+  String get printSettings;
+
+  /// No description provided for @printFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Print Format'**
+  String get printFormat;
+
+  /// No description provided for @displayOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Display Options'**
+  String get displayOptions;
+
+  /// No description provided for @showCompanyLogo.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Company Logo'**
+  String get showCompanyLogo;
+
+  /// No description provided for @displayLogoPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Display logo placeholder in invoice header'**
+  String get displayLogoPlaceholder;
+
+  /// No description provided for @showQrCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Show QR Code'**
+  String get showQrCode;
+
+  /// No description provided for @displayZatcaQrCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Display ZATCA-compliant QR code'**
+  String get displayZatcaQrCode;
+
+  /// No description provided for @showCustomerInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Customer Information'**
+  String get showCustomerInformation;
+
+  /// No description provided for @displayCustomerDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Display customer details when available'**
+  String get displayCustomerDetails;
+
+  /// No description provided for @showNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Notes'**
+  String get showNotes;
+
+  /// No description provided for @displaySaleNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Display sale notes when available'**
+  String get displaySaleNotes;
+
+  /// No description provided for @selectFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Format'**
+  String get selectFormat;
+
+  /// No description provided for @printNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Print Now'**
+  String get printNow;
+
+  /// No description provided for @thermalReceiptPrinter.
+  ///
+  /// In en, this message translates to:
+  /// **'Thermal receipt printer'**
+  String get thermalReceiptPrinter;
+
+  /// No description provided for @standardPaperFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Standard paper format'**
+  String get standardPaperFormat;
+
+  /// No description provided for @a4Format.
+  ///
+  /// In en, this message translates to:
+  /// **'A4 (210×297mm)'**
+  String get a4Format;
+
+  /// No description provided for @thermal80mmFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'80mm Thermal'**
+  String get thermal80mmFormat;
+
+  /// No description provided for @thermal58mmFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'58mm Thermal'**
+  String get thermal58mmFormat;
+
+  /// No description provided for @mmWidth.
+  ///
+  /// In en, this message translates to:
+  /// **'{width}mm width'**
+  String mmWidth(String width);
 }
 
 class _AppLocalizationsDelegate

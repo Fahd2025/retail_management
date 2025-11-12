@@ -1088,7 +1088,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get endDate => 'End Date';
 
   @override
-  String get preview => 'Preview:';
+  String get preview => 'Preview';
 
   @override
   String totalInvoices(int count) {
@@ -1158,4 +1158,65 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get switchLanguage => 'Switch Language';
+
+  @override
+  String get printSettings => 'Print Settings';
+
+  @override
+  String get printFormat => 'Print Format';
+
+  @override
+  String get displayOptions => 'Display Options';
+
+  @override
+  String get showCompanyLogo => 'Show Company Logo';
+
+  @override
+  String get displayLogoPlaceholder =>
+      'Display logo placeholder in invoice header';
+
+  @override
+  String get showQrCode => 'Show QR Code';
+
+  @override
+  String get displayZatcaQrCode => 'Display ZATCA-compliant QR code';
+
+  @override
+  String get showCustomerInformation => 'Show Customer Information';
+
+  @override
+  String get displayCustomerDetails =>
+      'Display customer details when available';
+
+  @override
+  String get showNotes => 'Show Notes';
+
+  @override
+  String get displaySaleNotes => 'Display sale notes when available';
+
+  @override
+  String get selectFormat => 'Select Format';
+
+  @override
+  String get printNow => 'Print Now';
+
+  @override
+  String get thermalReceiptPrinter => 'Thermal receipt printer';
+
+  @override
+  String get standardPaperFormat => 'Standard paper format';
+
+  @override
+  String get a4Format => 'A4 (210×297mm)';
+
+  @override
+  String get thermal80mmFormat => '80mm Thermal';
+
+  @override
+  String get thermal58mmFormat => '58mm Thermal';
+
+  @override
+  String mmWidth(String width) {
+    return '${width}mm width';
+  }
 }

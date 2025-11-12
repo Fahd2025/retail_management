@@ -1087,7 +1087,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get endDate => 'تاريخ النهاية';
 
   @override
-  String get preview => 'معاينة:';
+  String get preview => 'معاينة';
 
   @override
   String totalInvoices(int count) {
@@ -1157,4 +1157,64 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get switchLanguage => 'تبديل اللغة';
+
+  @override
+  String get printSettings => 'إعدادات الطباعة';
+
+  @override
+  String get printFormat => 'تنسيق الطباعة';
+
+  @override
+  String get displayOptions => 'خيارات العرض';
+
+  @override
+  String get showCompanyLogo => 'إظهار شعار الشركة';
+
+  @override
+  String get displayLogoPlaceholder => 'عرض مكان الشعار في رأس الفاتورة';
+
+  @override
+  String get showQrCode => 'إظهار رمز الاستجابة السريعة';
+
+  @override
+  String get displayZatcaQrCode =>
+      'عرض رمز QR المتوافق مع هيئة الزكاة والضريبة والجمارك';
+
+  @override
+  String get showCustomerInformation => 'إظهار معلومات العميل';
+
+  @override
+  String get displayCustomerDetails => 'عرض تفاصيل العميل عند توفرها';
+
+  @override
+  String get showNotes => 'إظهار الملاحظات';
+
+  @override
+  String get displaySaleNotes => 'عرض ملاحظات البيع عند توفرها';
+
+  @override
+  String get selectFormat => 'اختر التنسيق';
+
+  @override
+  String get printNow => 'اطبع الآن';
+
+  @override
+  String get thermalReceiptPrinter => 'طابعة إيصالات حرارية';
+
+  @override
+  String get standardPaperFormat => 'تنسيق ورق قياسي';
+
+  @override
+  String get a4Format => 'A4 (210×297 ملم)';
+
+  @override
+  String get thermal80mmFormat => 'حراري 80 ملم';
+
+  @override
+  String get thermal58mmFormat => 'حراري 58 ملم';
+
+  @override
+  String mmWidth(String width) {
+    return 'عرض $width ملم';
+  }
 }
