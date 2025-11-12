@@ -29,6 +29,25 @@ class InvoicePreviewDialog extends StatefulWidget {
 
   @override
   State<InvoicePreviewDialog> createState() => _InvoicePreviewDialogState();
+
+  /// Show the invoice preview dialog
+  static Future<void> show({
+    required BuildContext context,
+    required Sale sale,
+    required CompanyInfo companyInfo,
+    Customer? customer,
+    PrintFormatConfig? initialConfig,
+  }) {
+    return showDialog(
+      context: context,
+      builder: (context) => InvoicePreviewDialog(
+        sale: sale,
+        companyInfo: companyInfo,
+        customer: customer,
+        initialConfig: initialConfig,
+      ),
+    );
+  }
 }
 
 class _InvoicePreviewDialogState extends State<InvoicePreviewDialog> {
@@ -150,25 +169,6 @@ class _InvoicePreviewDialogState extends State<InvoicePreviewDialog> {
       ),
     );
   }
-
-  /// Show the invoice preview dialog
-  static Future<void> show({
-    required BuildContext context,
-    required Sale sale,
-    required CompanyInfo companyInfo,
-    Customer? customer,
-    PrintFormatConfig? initialConfig,
-  }) {
-    return showDialog(
-      context: context,
-      builder: (context) => InvoicePreviewDialog(
-        sale: sale,
-        companyInfo: companyInfo,
-        customer: customer,
-        initialConfig: initialConfig,
-      ),
-    );
-  }
 }
 
 /// Bottom sheet for quick invoice preview and print
@@ -191,6 +191,27 @@ class InvoicePreviewBottomSheet extends StatefulWidget {
   @override
   State<InvoicePreviewBottomSheet> createState() =>
       _InvoicePreviewBottomSheetState();
+
+  /// Show the invoice preview bottom sheet
+  static Future<void> show({
+    required BuildContext context,
+    required Sale sale,
+    required CompanyInfo companyInfo,
+    Customer? customer,
+    PrintFormatConfig? initialConfig,
+  }) {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => InvoicePreviewBottomSheet(
+        sale: sale,
+        companyInfo: companyInfo,
+        customer: customer,
+        initialConfig: initialConfig,
+      ),
+    );
+  }
 }
 
 class _InvoicePreviewBottomSheetState
@@ -336,27 +357,6 @@ class _InvoicePreviewBottomSheetState
           ),
         );
       },
-    );
-  }
-
-  /// Show the invoice preview bottom sheet
-  static Future<void> show({
-    required BuildContext context,
-    required Sale sale,
-    required CompanyInfo companyInfo,
-    Customer? customer,
-    PrintFormatConfig? initialConfig,
-  }) {
-    return showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => InvoicePreviewBottomSheet(
-        sale: sale,
-        companyInfo: companyInfo,
-        customer: customer,
-        initialConfig: initialConfig,
-      ),
     );
   }
 }
