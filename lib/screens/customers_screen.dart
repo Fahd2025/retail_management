@@ -91,141 +91,276 @@ class _CustomersScreenState extends State<CustomersScreen> {
             );
           }
 
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: customers.length,
-            itemBuilder: (context, index) {
-              final customer = customers[index];
-              return Card(
-                margin: const EdgeInsets.only(bottom: 8),
-                child: ExpansionTile(
-                  leading: CircleAvatar(
-                    child: Text(customer.name[0].toUpperCase()),
-                  ),
-                  title: Text(customer.name),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (customer.phone != null)
-                        Text(
-                          AppLocalizations.of(
-                            context,
-                          )!
-                              .phoneLabel(customer.phone!),
-                        ),
-                      if (customer.email != null)
-                        Text(
-                          AppLocalizations.of(
-                            context,
-                          )!
-                              .emailLabel(customer.email!),
-                        ),
-                      if (customer.vatNumber != null)
-                        Text(
-                          AppLocalizations.of(
-                            context,
-                          )!
-                              .vatLabel2(customer.vatNumber!),
-                        ),
-                      const SizedBox(height: 4),
-                      FutureBuilder<Map<String, dynamic>>(
-                        future: AppDatabase().getCustomerSalesStatistics(
-                          customer.id,
-                        ),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            final stats = snapshot.data!;
-                            final invoiceCount = stats['invoiceCount'] as int;
-                            final totalAmount = stats['totalAmount'] as double;
-                            final currencyFormat = NumberFormat.currency(
-                              symbol: 'SAR ',
-                              decimalDigits: 2,
-                            );
-                            final l10n = AppLocalizations.of(context)!;
-                            return Text(
-                              l10n.invoicesTotal(
-                                invoiceCount,
-                                currencyFormat.format(totalAmount),
-                              ),
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            );
-                          }
-                          return Text(
-                            AppLocalizations.of(context)!.loadingStatistics,
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.picture_as_pdf,
-                          color: Colors.blue,
-                        ),
-                        tooltip: AppLocalizations.of(
-                          context,
-                        )!
-                            .exportInvoicesToPdf,
-                        onPressed: () => _showExportDialog(context, customer),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        onPressed: () => showCustomerDialog(customer),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () async {
-                          final l10n = AppLocalizations.of(context)!;
-                          final confirm = await showDialog<bool>(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text(l10n.deleteCustomer),
-                              content: Text(l10n.deleteCustomerConfirm),
-                              actions: [
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(context, false),
-                                  child: Text(l10n.cancel),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () => Navigator.pop(context, true),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red,
-                                  ),
-                                  child: Text(l10n.delete),
-                                ),
-                              ],
-                            ),
-                          );
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final isDesktop = constraints.maxWidth >= 800;
+              final l10n = AppLocalizations.of(context)!;
 
-                          if (confirm == true && mounted) {
-                            context.read<CustomerBloc>().add(
-                                  DeleteCustomerEvent(customer.id),
-                                );
-                          }
-                        },
+              if (isDesktop) {
+                // Desktop/Tablet: DataTable layout that fills width
+                return SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: constraints.maxWidth,
                       ),
-                    ],
+                      child: DataTable(
+                        columnSpacing: 24,
+                        horizontalMargin: 16,
+                        columns: [
+                          DataColumn(label: Text(l10n.nameFieldLabel)),
+                          DataColumn(label: Text(l10n.phoneFieldLabel)),
+                          DataColumn(label: Text(l10n.emailFieldLabel)),
+                          DataColumn(label: Text(l10n.vatNumberFieldLabel)),
+                          DataColumn(label: Text(l10n.invoiceCount)),
+                          DataColumn(label: Text(l10n.totalAmount(''))),
+                          DataColumn(label: Text(l10n.actions)),
+                        ],
+                        rows: customers.map((customer) {
+                          return DataRow(cells: [
+                            DataCell(Text(customer.name)),
+                            DataCell(Text(customer.phone ?? '-')),
+                            DataCell(Text(customer.email ?? '-')),
+                            DataCell(Text(customer.vatNumber ?? '-')),
+                            DataCell(
+                              FutureBuilder<Map<String, dynamic>>(
+                                future: AppDatabase()
+                                    .getCustomerSalesStatistics(customer.id),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    final stats = snapshot.data!;
+                                    final invoiceCount =
+                                        stats['invoiceCount'] as int;
+                                    return Text(invoiceCount.toString());
+                                  }
+                                  return const Text('...');
+                                },
+                              ),
+                            ),
+                            DataCell(
+                              FutureBuilder<Map<String, dynamic>>(
+                                future: AppDatabase()
+                                    .getCustomerSalesStatistics(customer.id),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    final stats = snapshot.data!;
+                                    final totalAmount =
+                                        stats['totalAmount'] as double;
+                                    return Text(
+                                        'SAR ${totalAmount.toStringAsFixed(2)}');
+                                  }
+                                  return const Text('...');
+                                },
+                              ),
+                            ),
+                            DataCell(
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.picture_as_pdf,
+                                      size: 20,
+                                      color: Colors.blue,
+                                    ),
+                                    tooltip: l10n.exportInvoicesToPdf,
+                                    onPressed: () =>
+                                        _showExportDialog(context, customer),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.edit, size: 20),
+                                    onPressed: () =>
+                                        showCustomerDialog(customer),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete,
+                                        size: 20, color: Colors.red),
+                                    onPressed: () async {
+                                      final confirm = await showDialog<bool>(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: Text(l10n.deleteCustomer),
+                                          content:
+                                              Text(l10n.deleteCustomerConfirm),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context, false),
+                                              child: Text(l10n.cancel),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context, true),
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.red,
+                                              ),
+                                              child: Text(l10n.delete),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+
+                                      if (confirm == true && mounted) {
+                                        context.read<CustomerBloc>().add(
+                                              DeleteCustomerEvent(customer.id),
+                                            );
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ]);
+                        }).toList(),
+                      ),
+                    ),
                   ),
-                  children: [
-                    if (customer.saudiAddress != null)
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          AppLocalizations.of(context)!.addressLabel(
-                            customer.saudiAddress!.formattedAddress,
-                          ),
+                );
+              } else {
+                // Mobile: Card with ExpansionTile layout
+                return ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: customers.length,
+                  itemBuilder: (context, index) {
+                    final customer = customers[index];
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      child: ExpansionTile(
+                        leading: CircleAvatar(
+                          child: Text(customer.name[0].toUpperCase()),
                         ),
+                        title: Text(customer.name),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (customer.phone != null)
+                              Text(
+                                l10n.phoneLabel(customer.phone!),
+                              ),
+                            if (customer.email != null)
+                              Text(
+                                l10n.emailLabel(customer.email!),
+                              ),
+                            if (customer.vatNumber != null)
+                              Text(
+                                l10n.vatLabel2(customer.vatNumber!),
+                              ),
+                            const SizedBox(height: 4),
+                            FutureBuilder<Map<String, dynamic>>(
+                              future: AppDatabase().getCustomerSalesStatistics(
+                                customer.id,
+                              ),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  final stats = snapshot.data!;
+                                  final invoiceCount =
+                                      stats['invoiceCount'] as int;
+                                  final totalAmount =
+                                      stats['totalAmount'] as double;
+                                  final currencyFormat = NumberFormat.currency(
+                                    symbol: 'SAR ',
+                                    decimalDigits: 2,
+                                  );
+                                  return Text(
+                                    l10n.invoicesTotal(
+                                      invoiceCount,
+                                      currencyFormat.format(totalAmount),
+                                    ),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  );
+                                }
+                                return Text(l10n.loadingStatistics);
+                              },
+                            ),
+                          ],
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.picture_as_pdf,
+                                color: Colors.blue,
+                              ),
+                              tooltip: l10n.exportInvoicesToPdf,
+                              onPressed: () =>
+                                  _showExportDialog(context, customer),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () => showCustomerDialog(customer),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () async {
+                                final confirm = await showDialog<bool>(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text(l10n.deleteCustomer),
+                                    content: Text(l10n.deleteCustomerConfirm),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, false),
+                                        child: Text(l10n.cancel),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, true),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.red,
+                                        ),
+                                        child: Text(l10n.delete),
+                                      ),
+                                    ],
+                                  ),
+                                );
+
+                                if (confirm == true && mounted) {
+                                  context.read<CustomerBloc>().add(
+                                        DeleteCustomerEvent(customer.id),
+                                      );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                        children: [
+                          if (customer.saudiAddress != null)
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    l10n.saudiNationalAddress,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    customer.saudiAddress!.formattedAddress,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
                       ),
-                  ],
-                ),
-              );
+                    );
+                  },
+                );
+              }
             },
           );
         },
