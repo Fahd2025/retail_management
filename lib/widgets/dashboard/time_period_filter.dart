@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../../models/dashboard_statistics.dart';
 
 /// Widget for time period filter dropdown with custom date picker
@@ -18,6 +19,7 @@ class TimePeriodFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Card(
       elevation: 2,
@@ -38,7 +40,7 @@ class TimePeriodFilter extends StatelessWidget {
                 ),
                 SizedBox(width: 8.w),
                 Text(
-                  'Time Period',
+                  l10n.timePeriod,
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -61,7 +63,7 @@ class TimePeriodFilter extends StatelessWidget {
                           ),
                           SizedBox(width: 8.w),
                           Text(
-                            period.displayName,
+                            _getLocalizedPeriodName(period, l10n),
                             style: theme.textTheme.bodyMedium,
                           ),
                         ],
@@ -140,8 +142,22 @@ class TimePeriodFilter extends StatelessWidget {
     }
   }
 
+  String _getLocalizedPeriodName(TimePeriod period, AppLocalizations l10n) {
+    switch (period) {
+      case TimePeriod.last7Days:
+        return l10n.last7Days;
+      case TimePeriod.lastMonth:
+        return l10n.lastMonth;
+      case TimePeriod.lastYear:
+        return l10n.lastYear;
+      case TimePeriod.custom:
+        return l10n.customPeriod;
+    }
+  }
+
   void _showCustomDatePicker(BuildContext context) async {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     DateTime? startDate = dateRange.start;
     DateTime? endDate = dateRange.end;
 
@@ -158,7 +174,7 @@ class TimePeriodFilter extends StatelessWidget {
                     color: theme.colorScheme.primary,
                   ),
                   SizedBox(width: 8.w),
-                  const Text('Custom Date Range'),
+                  Text(l10n.customDateRange),
                 ],
               ),
               content: SizedBox(
@@ -168,7 +184,7 @@ class TimePeriodFilter extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Select the start and end dates for your custom period',
+                      l10n.selectStartAndEndDates,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.onSurface.withOpacity(0.7),
                       ),
@@ -176,7 +192,7 @@ class TimePeriodFilter extends StatelessWidget {
                     SizedBox(height: 24.h),
                     // Start Date
                     Text(
-                      'Start Date',
+                      l10n.startDate,
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -229,7 +245,7 @@ class TimePeriodFilter extends StatelessWidget {
                             Text(
                               startDate != null
                                   ? '${startDate!.day.toString().padLeft(2, '0')}/${startDate!.month.toString().padLeft(2, '0')}/${startDate!.year}'
-                                  : 'Select start date',
+                                  : l10n.selectStartDate,
                               style: theme.textTheme.bodyMedium,
                             ),
                           ],
@@ -239,7 +255,7 @@ class TimePeriodFilter extends StatelessWidget {
                     SizedBox(height: 16.h),
                     // End Date
                     Text(
-                      'End Date',
+                      l10n.endDate,
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -288,7 +304,7 @@ class TimePeriodFilter extends StatelessWidget {
                             Text(
                               endDate != null
                                   ? '${endDate!.day.toString().padLeft(2, '0')}/${endDate!.month.toString().padLeft(2, '0')}/${endDate!.year}'
-                                  : 'Select end date',
+                                  : l10n.selectEndDate,
                               style: theme.textTheme.bodyMedium,
                             ),
                           ],
@@ -313,7 +329,7 @@ class TimePeriodFilter extends StatelessWidget {
                             SizedBox(width: 8.w),
                             Expanded(
                               child: Text(
-                                'Duration: ${endDate!.difference(startDate!).inDays + 1} days',
+                                l10n.durationDays(endDate!.difference(startDate!).inDays + 1),
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: theme.colorScheme.onPrimaryContainer,
                                 ),
@@ -329,7 +345,7 @@ class TimePeriodFilter extends StatelessWidget {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Cancel'),
+                  child: Text(l10n.cancel),
                 ),
                 FilledButton(
                   onPressed: startDate != null && endDate != null
@@ -341,7 +357,7 @@ class TimePeriodFilter extends StatelessWidget {
                           );
                         }
                       : null,
-                  child: const Text('Apply'),
+                  child: Text(l10n.apply),
                 ),
               ],
             );

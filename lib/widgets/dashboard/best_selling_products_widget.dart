@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../../models/dashboard_statistics.dart';
 
 /// Widget to display best-selling products
@@ -17,6 +18,7 @@ class BestSellingProductsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final currencyFormatter = NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
     final numberFormatter = NumberFormat('#,##0.##');
 
@@ -39,7 +41,7 @@ class BestSellingProductsWidget extends StatelessWidget {
                 ),
                 SizedBox(width: 8.w),
                 Text(
-                  'Best Selling Products',
+                  l10n.bestSellingProducts,
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -67,7 +69,7 @@ class BestSellingProductsWidget extends StatelessWidget {
                       ),
                       SizedBox(height: 8.h),
                       Text(
-                        'No sales data available',
+                        l10n.noSalesDataAvailable,
                         style: theme.textTheme.bodyLarge?.copyWith(
                           color: theme.colorScheme.onSurface.withOpacity(0.6),
                         ),
@@ -131,7 +133,7 @@ class BestSellingProductsWidget extends StatelessWidget {
                       children: [
                         SizedBox(height: 4.h),
                         Text(
-                          'Qty: ${numberFormatter.format(product.totalQuantitySold)} • ${product.transactionCount} sales',
+                          '${l10n.quantitySold}: ${numberFormatter.format(product.totalQuantitySold)} • ${l10n.salesCount(product.transactionCount)}',
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurface.withOpacity(0.6),
                           ),
