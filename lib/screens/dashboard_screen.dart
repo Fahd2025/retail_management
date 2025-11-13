@@ -362,17 +362,44 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
           const SizedBox(height: 12),
-          // Branch/Company Name
-          Text(
-            _companyInfo?.name ?? 'Retail Management',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+          // Company Name (localized - English or Arabic based on app language)
+          Builder(
+            builder: (context) {
+              final locale = Localizations.localeOf(context);
+              final isArabic = locale.languageCode == 'ar';
+              final companyName = isArabic
+                  ? (_companyInfo?.nameArabic ?? _companyInfo?.name ?? 'إدارة التجزئة')
+                  : (_companyInfo?.name ?? 'Retail Management');
+
+              return Text(
+                companyName,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              );
+            },
           ),
+          const SizedBox(height: 8),
+          // VAT Number
+          if (_companyInfo?.vatNumber != null)
+            Builder(
+              builder: (context) {
+                final l10n = AppLocalizations.of(context)!;
+                return Text(
+                  '${l10n.vatNumber}: ${_companyInfo!.vatNumber}',
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.9),
+                    fontSize: 13,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                );
+              },
+            ),
         ],
       ),
     );
