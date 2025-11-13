@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:retail_management/generated/l10n/app_localizations.dart';
+import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/sale/sale_bloc.dart';
 import '../blocs/sale/sale_event.dart';
 import '../blocs/sale/sale_state.dart';
@@ -39,7 +39,7 @@ class _SalesScreenState extends State<SalesScreen> {
         if (mounted) {
           final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.companyInfoNotConfigured)),
+            SnackBar(content: Text(l10n.companyInfoNotFound)),
           );
         }
         return;
@@ -81,9 +81,9 @@ class _SalesScreenState extends State<SalesScreen> {
             : Colors.red;
 
     final statusText = sale.status == SaleStatus.completed
-        ? l10n.completed
+        ? l10n.complete
         : sale.status == SaleStatus.returned
-            ? l10n.returned
+            ? l10n.return_sale
             : sale.status.toString().split('.').last.toUpperCase();
 
     return Card(
@@ -339,9 +339,9 @@ class _SalesScreenState extends State<SalesScreen> {
                                       : Colors.red;
 
                           final statusText = sale.status == SaleStatus.completed
-                              ? l10n.completed
+                              ? l10n.complete
                               : sale.status == SaleStatus.returned
-                                  ? l10n.returned
+                                  ? l10n.return_sale
                                   : sale.status
                                       .toString()
                                       .split('.')

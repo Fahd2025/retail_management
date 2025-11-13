@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:retail_management/blocs/app_config/app_config_state.dart';
-import 'package:retail_management/generated/l10n/app_localizations.dart';
+import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/product/product_bloc.dart';
 import '../blocs/product/product_event.dart';
 import '../blocs/product/product_state.dart';
@@ -271,7 +271,7 @@ class _CashierScreenState extends State<CashierScreen>
                 ),
                 ElevatedButton(
                   onPressed: () => Navigator.pop(context, true),
-                  child: Text(AppLocalizations.of(context)!.print),
+                  child: Text(AppLocalizations.of(context)!.printInvoice),
                 ),
               ],
             ),
@@ -642,15 +642,16 @@ class _CashierScreenState extends State<CashierScreen>
                                 children: [
                                   _SummaryRow(
                                       AppLocalizations.of(context)!
-                                          .subtotalColon,
+                                          .subtotalLabel,
                                       cartSubtotal),
                                   const SizedBox(height: 8),
                                   _SummaryRow(
-                                      AppLocalizations.of(context)!.vatColon,
+                                      AppLocalizations.of(context)!.vatLabel,
                                       cartVatAmount),
                                   const Divider(),
                                   _SummaryRow(
-                                    AppLocalizations.of(context)!.totalColon,
+                                    AppLocalizations.of(context)!
+                                        .totalLabelColon,
                                     cartTotal,
                                     isBold: true,
                                     fontSize: 20,

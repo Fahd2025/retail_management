@@ -293,8 +293,10 @@ class SaleBloc extends Bloc<SaleEvent, SaleState> {
       final invoiceNumber = _generateInvoiceNumber();
 
       // Calculate totals
-      final cartSubtotal = cartItems.fold(0.0, (sum, item) => sum + item.subtotal);
-      final cartVatAmount = cartItems.fold(0.0, (sum, item) => sum + item.vatAmount);
+      final cartSubtotal =
+          cartItems.fold(0.0, (sum, item) => sum + item.subtotal);
+      final cartVatAmount =
+          cartItems.fold(0.0, (sum, item) => sum + item.vatAmount);
       final cartTotal = cartItems.fold(0.0, (sum, item) => sum + item.total);
 
       // Update sale items with sale ID

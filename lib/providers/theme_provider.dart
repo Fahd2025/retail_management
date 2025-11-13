@@ -51,7 +51,8 @@ class ThemeProvider with ChangeNotifier {
   /// Toggles between light and dark theme modes
   /// Persists the selection to SharedPreferences
   Future<void> toggleTheme() async {
-    _themeMode = _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    _themeMode =
+        _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
     await _saveThemePreference();
     notifyListeners();
   }

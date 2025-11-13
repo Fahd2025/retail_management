@@ -175,7 +175,8 @@ class ImageService {
         return 'data:image/jpeg;base64,${imageToBase64(optimizedBytes)}';
       } else {
         // For mobile: save to file
-        final fileName = 'company_logo_${DateTime.now().millisecondsSinceEpoch}.jpg';
+        final fileName =
+            'company_logo_${DateTime.now().millisecondsSinceEpoch}.jpg';
         final filePath = await saveImageToFile(optimizedBytes, fileName);
         return filePath;
       }

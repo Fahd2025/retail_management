@@ -69,7 +69,8 @@ class UpdateCartItemQuantityEvent extends SaleEvent {
   final int newQuantity;
   final bool vatIncludedInPrice;
 
-  const UpdateCartItemQuantityEvent(this.itemId, this.newQuantity, {this.vatIncludedInPrice = true});
+  const UpdateCartItemQuantityEvent(this.itemId, this.newQuantity,
+      {this.vatIncludedInPrice = true});
 
   @override
   List<Object?> get props => [itemId, newQuantity, vatIncludedInPrice];

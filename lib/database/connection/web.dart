@@ -19,4 +19,3 @@ QueryExecutor connect() {
     return result.resolvedExecutor;
   });
 }
-

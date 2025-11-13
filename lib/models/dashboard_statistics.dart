@@ -324,7 +324,9 @@ extension TimePeriodExtension on TimePeriod {
       case TimePeriod.last7Days:
         return DateRange(
           start: today.subtract(const Duration(days: 6)),
-          end: today.add(const Duration(days: 1)).subtract(const Duration(microseconds: 1)),
+          end: today
+              .add(const Duration(days: 1))
+              .subtract(const Duration(microseconds: 1)),
         );
       case TimePeriod.lastMonth:
         final lastMonth = DateTime(now.year, now.month - 1, 1);
@@ -344,7 +346,9 @@ extension TimePeriodExtension on TimePeriod {
         // For custom, we'll use last 30 days as default
         return DateRange(
           start: today.subtract(const Duration(days: 29)),
-          end: today.add(const Duration(days: 1)).subtract(const Duration(microseconds: 1)),
+          end: today
+              .add(const Duration(days: 1))
+              .subtract(const Duration(microseconds: 1)),
         );
     }
   }

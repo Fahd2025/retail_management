@@ -32,7 +32,8 @@ class SaleLoaded extends SaleState {
   double get cartVatAmount =>
       cartItems.fold(0, (sum, item) => sum + item.vatAmount);
   double get cartTotal => cartItems.fold(0, (sum, item) => sum + item.total);
-  int get cartItemCount => cartItems.fold(0, (sum, item) => sum + item.quantity);
+  int get cartItemCount =>
+      cartItems.fold(0, (sum, item) => sum + item.quantity);
 
   @override
   List<Object?> get props => [sales, currentSale, cartItems];
@@ -56,7 +57,8 @@ class SaleError extends SaleState {
   double get cartVatAmount =>
       cartItems.fold(0, (sum, item) => sum + item.vatAmount);
   double get cartTotal => cartItems.fold(0, (sum, item) => sum + item.total);
-  int get cartItemCount => cartItems.fold(0, (sum, item) => sum + item.quantity);
+  int get cartItemCount =>
+      cartItems.fold(0, (sum, item) => sum + item.quantity);
 
   @override
   List<Object?> get props => [message, sales, currentSale, cartItems];
@@ -95,7 +97,8 @@ class SaleOperationSuccess extends SaleState {
   double get cartVatAmount =>
       cartItems.fold(0, (sum, item) => sum + item.vatAmount);
   double get cartTotal => cartItems.fold(0, (sum, item) => sum + item.total);
-  int get cartItemCount => cartItems.fold(0, (sum, item) => sum + item.quantity);
+  int get cartItemCount =>
+      cartItems.fold(0, (sum, item) => sum + item.quantity);
 
   @override
   List<Object?> get props => [sales, currentSale, cartItems, message];

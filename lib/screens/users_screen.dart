@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:retail_management/generated/l10n/app_localizations.dart';
+import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/user/user_bloc.dart';
 import '../blocs/user/user_event.dart';
 import '../blocs/user/user_state.dart';
@@ -189,7 +189,7 @@ class _UsersScreenState extends State<UsersScreen> {
                           DataColumn(label: Text(l10n.role)),
                           DataColumn(label: Text(l10n.status)),
                           DataColumn(label: Text(l10n.invoiceCount)),
-                          DataColumn(label: Text(l10n.totalSales)),
+                          DataColumn(label: Text(l10n.total)),
                           DataColumn(label: Text(l10n.actions)),
                         ],
                         rows: users.map((user) {
@@ -287,7 +287,7 @@ class _UsersScreenState extends State<UsersScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              l10n.usernameLabel + ': ' + user.username,
+                              l10n.username + ': ' + user.username,
                               style: const TextStyle(fontSize: 13),
                             ),
                             Row(
@@ -341,7 +341,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                 _buildInfoRow(
                                     l10n.invoiceCount, invoiceCount.toString()),
                                 _buildInfoRow(
-                                  l10n.totalSales,
+                                  l10n.total,
                                   'SAR ${totalSales.toStringAsFixed(2)}',
                                 ),
                               ],

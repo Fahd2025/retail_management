@@ -31,7 +31,8 @@ class InvoiceService {
     PrintFormatConfig config = PrintFormatConfig.defaultConfig,
   }) async {
     // Load Arabic font for proper Arabic text rendering
-    final arabicFont = await rootBundle.load('assets/fonts/NotoSansArabic-Regular.ttf');
+    final arabicFont =
+        await rootBundle.load('assets/fonts/NotoSansArabic-Regular.ttf');
     final arabicTtf = pw.Font.ttf(arabicFont);
 
     final pdf = pw.Document();

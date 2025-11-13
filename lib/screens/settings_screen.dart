@@ -11,7 +11,7 @@ import '../widgets/print_format_selector.dart';
 import '../widgets/settings_section.dart';
 import '../widgets/company_logo_picker.dart';
 import 'package:uuid/uuid.dart';
-import 'package:retail_management/generated/l10n/app_localizations.dart';
+import 'package:retail_management/l10n/app_localizations.dart';
 
 /// Improved Settings Screen with responsive design and reusable components
 ///
@@ -318,7 +318,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 onChanged: (Locale? newLocale) {
                   if (newLocale != null) {
                     if (newLocale.languageCode == 'en') {
-                      context.read<AppConfigBloc>().add(const SetEnglishEvent());
+                      context
+                          .read<AppConfigBloc>()
+                          .add(const SetEnglishEvent());
                     } else if (newLocale.languageCode == 'ar') {
                       context.read<AppConfigBloc>().add(const SetArabicEvent());
                     }
@@ -352,7 +354,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return SettingsSection(
-      title: l10n.companyInformation,
+      title: l10n.companyNameEnglish,
       icon: Icons.business,
       subtitle: 'Business details and contact information',
       children: [

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:retail_management/generated/l10n/app_localizations.dart';
+import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/dashboard/dashboard_bloc.dart';
 import '../blocs/dashboard/dashboard_event.dart';
 import '../blocs/dashboard/dashboard_state.dart';
@@ -170,7 +170,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
               childAspectRatio: 1.5,
               children: [
                 MetricCard.currency(
-                  title: l10n.totalSales,
+                  title: l10n.sales,
                   amount: statistics.totalSales,
                   icon: Icons.attach_money,
                   color: Colors.green,
@@ -297,14 +297,14 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                         ),
                         _buildStatItem(
                           context,
-                          l10n.completed,
+                          l10n.complete,
                           statistics.completedInvoices.toString(),
                           Colors.green,
                           Icons.check_circle,
                         ),
                         _buildStatItem(
                           context,
-                          l10n.returned,
+                          l10n.return_sale,
                           statistics.returnedInvoices.toString(),
                           Colors.orange,
                           Icons.undo,

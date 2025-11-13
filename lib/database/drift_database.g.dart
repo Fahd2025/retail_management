@@ -453,11 +453,22 @@ class $CategoriesTableTable extends CategoriesTable
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
       'name', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _nameArMeta = const VerificationMeta('nameAr');
+  @override
+  late final GeneratedColumn<String> nameAr = GeneratedColumn<String>(
+      'name_ar', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _descriptionMeta =
       const VerificationMeta('description');
   @override
   late final GeneratedColumn<String> description = GeneratedColumn<String>(
       'description', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _descriptionArMeta =
+      const VerificationMeta('descriptionAr');
+  @override
+  late final GeneratedColumn<String> descriptionAr = GeneratedColumn<String>(
+      'description_ar', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _imageUrlMeta =
       const VerificationMeta('imageUrl');
@@ -499,7 +510,9 @@ class $CategoriesTableTable extends CategoriesTable
   List<GeneratedColumn> get $columns => [
         id,
         name,
+        nameAr,
         description,
+        descriptionAr,
         imageUrl,
         isActive,
         createdAt,
@@ -528,11 +541,21 @@ class $CategoriesTableTable extends CategoriesTable
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
+    if (data.containsKey('name_ar')) {
+      context.handle(_nameArMeta,
+          nameAr.isAcceptableOrUnknown(data['name_ar']!, _nameArMeta));
+    }
     if (data.containsKey('description')) {
       context.handle(
           _descriptionMeta,
           description.isAcceptableOrUnknown(
               data['description']!, _descriptionMeta));
+    }
+    if (data.containsKey('description_ar')) {
+      context.handle(
+          _descriptionArMeta,
+          descriptionAr.isAcceptableOrUnknown(
+              data['description_ar']!, _descriptionArMeta));
     }
     if (data.containsKey('image_url')) {
       context.handle(_imageUrlMeta,
@@ -575,8 +598,12 @@ class $CategoriesTableTable extends CategoriesTable
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      nameAr: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name_ar']),
       description: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}description']),
+      descriptionAr: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description_ar']),
       imageUrl: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}image_url']),
       isActive: attachedDatabase.typeMapping
@@ -600,7 +627,9 @@ class CategoriesTableData extends DataClass
     implements Insertable<CategoriesTableData> {
   final String id;
   final String name;
+  final String? nameAr;
   final String? description;
+  final String? descriptionAr;
   final String? imageUrl;
   final bool isActive;
   final String createdAt;
@@ -609,7 +638,9 @@ class CategoriesTableData extends DataClass
   const CategoriesTableData(
       {required this.id,
       required this.name,
+      this.nameAr,
       this.description,
+      this.descriptionAr,
       this.imageUrl,
       required this.isActive,
       required this.createdAt,
@@ -620,8 +651,14 @@ class CategoriesTableData extends DataClass
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['name'] = Variable<String>(name);
+    if (!nullToAbsent || nameAr != null) {
+      map['name_ar'] = Variable<String>(nameAr);
+    }
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || descriptionAr != null) {
+      map['description_ar'] = Variable<String>(descriptionAr);
     }
     if (!nullToAbsent || imageUrl != null) {
       map['image_url'] = Variable<String>(imageUrl);
@@ -637,9 +674,14 @@ class CategoriesTableData extends DataClass
     return CategoriesTableCompanion(
       id: Value(id),
       name: Value(name),
+      nameAr:
+          nameAr == null && nullToAbsent ? const Value.absent() : Value(nameAr),
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
+      descriptionAr: descriptionAr == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionAr),
       imageUrl: imageUrl == null && nullToAbsent
           ? const Value.absent()
           : Value(imageUrl),
@@ -656,7 +698,9 @@ class CategoriesTableData extends DataClass
     return CategoriesTableData(
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
+      nameAr: serializer.fromJson<String?>(json['nameAr']),
       description: serializer.fromJson<String?>(json['description']),
+      descriptionAr: serializer.fromJson<String?>(json['descriptionAr']),
       imageUrl: serializer.fromJson<String?>(json['imageUrl']),
       isActive: serializer.fromJson<bool>(json['isActive']),
       createdAt: serializer.fromJson<String>(json['createdAt']),
@@ -670,7 +714,9 @@ class CategoriesTableData extends DataClass
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'name': serializer.toJson<String>(name),
+      'nameAr': serializer.toJson<String?>(nameAr),
       'description': serializer.toJson<String?>(description),
+      'descriptionAr': serializer.toJson<String?>(descriptionAr),
       'imageUrl': serializer.toJson<String?>(imageUrl),
       'isActive': serializer.toJson<bool>(isActive),
       'createdAt': serializer.toJson<String>(createdAt),
@@ -682,7 +728,9 @@ class CategoriesTableData extends DataClass
   CategoriesTableData copyWith(
           {String? id,
           String? name,
+          Value<String?> nameAr = const Value.absent(),
           Value<String?> description = const Value.absent(),
+          Value<String?> descriptionAr = const Value.absent(),
           Value<String?> imageUrl = const Value.absent(),
           bool? isActive,
           String? createdAt,
@@ -691,7 +739,10 @@ class CategoriesTableData extends DataClass
       CategoriesTableData(
         id: id ?? this.id,
         name: name ?? this.name,
+        nameAr: nameAr.present ? nameAr.value : this.nameAr,
         description: description.present ? description.value : this.description,
+        descriptionAr:
+            descriptionAr.present ? descriptionAr.value : this.descriptionAr,
         imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
         isActive: isActive ?? this.isActive,
         createdAt: createdAt ?? this.createdAt,
@@ -702,8 +753,12 @@ class CategoriesTableData extends DataClass
     return CategoriesTableData(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
+      nameAr: data.nameAr.present ? data.nameAr.value : this.nameAr,
       description:
           data.description.present ? data.description.value : this.description,
+      descriptionAr: data.descriptionAr.present
+          ? data.descriptionAr.value
+          : this.descriptionAr,
       imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
@@ -717,7 +772,9 @@ class CategoriesTableData extends DataClass
     return (StringBuffer('CategoriesTableData(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('nameAr: $nameAr, ')
           ..write('description: $description, ')
+          ..write('descriptionAr: $descriptionAr, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('isActive: $isActive, ')
           ..write('createdAt: $createdAt, ')
@@ -728,15 +785,17 @@ class CategoriesTableData extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(id, name, description, imageUrl, isActive,
-      createdAt, updatedAt, needsSync);
+  int get hashCode => Object.hash(id, name, nameAr, description, descriptionAr,
+      imageUrl, isActive, createdAt, updatedAt, needsSync);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is CategoriesTableData &&
           other.id == this.id &&
           other.name == this.name &&
+          other.nameAr == this.nameAr &&
           other.description == this.description &&
+          other.descriptionAr == this.descriptionAr &&
           other.imageUrl == this.imageUrl &&
           other.isActive == this.isActive &&
           other.createdAt == this.createdAt &&
@@ -747,7 +806,9 @@ class CategoriesTableData extends DataClass
 class CategoriesTableCompanion extends UpdateCompanion<CategoriesTableData> {
   final Value<String> id;
   final Value<String> name;
+  final Value<String?> nameAr;
   final Value<String?> description;
+  final Value<String?> descriptionAr;
   final Value<String?> imageUrl;
   final Value<bool> isActive;
   final Value<String> createdAt;
@@ -757,7 +818,9 @@ class CategoriesTableCompanion extends UpdateCompanion<CategoriesTableData> {
   const CategoriesTableCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
+    this.nameAr = const Value.absent(),
     this.description = const Value.absent(),
+    this.descriptionAr = const Value.absent(),
     this.imageUrl = const Value.absent(),
     this.isActive = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -768,7 +831,9 @@ class CategoriesTableCompanion extends UpdateCompanion<CategoriesTableData> {
   CategoriesTableCompanion.insert({
     required String id,
     required String name,
+    this.nameAr = const Value.absent(),
     this.description = const Value.absent(),
+    this.descriptionAr = const Value.absent(),
     this.imageUrl = const Value.absent(),
     required bool isActive,
     required String createdAt,
@@ -784,7 +849,9 @@ class CategoriesTableCompanion extends UpdateCompanion<CategoriesTableData> {
   static Insertable<CategoriesTableData> custom({
     Expression<String>? id,
     Expression<String>? name,
+    Expression<String>? nameAr,
     Expression<String>? description,
+    Expression<String>? descriptionAr,
     Expression<String>? imageUrl,
     Expression<bool>? isActive,
     Expression<String>? createdAt,
@@ -795,7 +862,9 @@ class CategoriesTableCompanion extends UpdateCompanion<CategoriesTableData> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
+      if (nameAr != null) 'name_ar': nameAr,
       if (description != null) 'description': description,
+      if (descriptionAr != null) 'description_ar': descriptionAr,
       if (imageUrl != null) 'image_url': imageUrl,
       if (isActive != null) 'is_active': isActive,
       if (createdAt != null) 'created_at': createdAt,
@@ -808,7 +877,9 @@ class CategoriesTableCompanion extends UpdateCompanion<CategoriesTableData> {
   CategoriesTableCompanion copyWith(
       {Value<String>? id,
       Value<String>? name,
+      Value<String?>? nameAr,
       Value<String?>? description,
+      Value<String?>? descriptionAr,
       Value<String?>? imageUrl,
       Value<bool>? isActive,
       Value<String>? createdAt,
@@ -818,7 +889,9 @@ class CategoriesTableCompanion extends UpdateCompanion<CategoriesTableData> {
     return CategoriesTableCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
+      nameAr: nameAr ?? this.nameAr,
       description: description ?? this.description,
+      descriptionAr: descriptionAr ?? this.descriptionAr,
       imageUrl: imageUrl ?? this.imageUrl,
       isActive: isActive ?? this.isActive,
       createdAt: createdAt ?? this.createdAt,
@@ -837,8 +910,14 @@ class CategoriesTableCompanion extends UpdateCompanion<CategoriesTableData> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
+    if (nameAr.present) {
+      map['name_ar'] = Variable<String>(nameAr.value);
+    }
     if (description.present) {
       map['description'] = Variable<String>(description.value);
+    }
+    if (descriptionAr.present) {
+      map['description_ar'] = Variable<String>(descriptionAr.value);
     }
     if (imageUrl.present) {
       map['image_url'] = Variable<String>(imageUrl.value);
@@ -866,7 +945,9 @@ class CategoriesTableCompanion extends UpdateCompanion<CategoriesTableData> {
     return (StringBuffer('CategoriesTableCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('nameAr: $nameAr, ')
           ..write('description: $description, ')
+          ..write('descriptionAr: $descriptionAr, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('isActive: $isActive, ')
           ..write('createdAt: $createdAt, ')
@@ -893,11 +974,22 @@ class $ProductsTable extends Products with TableInfo<$ProductsTable, Product> {
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
       'name', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _nameArMeta = const VerificationMeta('nameAr');
+  @override
+  late final GeneratedColumn<String> nameAr = GeneratedColumn<String>(
+      'name_ar', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _descriptionMeta =
       const VerificationMeta('description');
   @override
   late final GeneratedColumn<String> description = GeneratedColumn<String>(
       'description', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _descriptionArMeta =
+      const VerificationMeta('descriptionAr');
+  @override
+  late final GeneratedColumn<String> descriptionAr = GeneratedColumn<String>(
+      'description_ar', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _barcodeMeta =
       const VerificationMeta('barcode');
@@ -976,7 +1068,9 @@ class $ProductsTable extends Products with TableInfo<$ProductsTable, Product> {
   List<GeneratedColumn> get $columns => [
         id,
         name,
+        nameAr,
         description,
+        descriptionAr,
         barcode,
         price,
         cost,
@@ -1010,11 +1104,21 @@ class $ProductsTable extends Products with TableInfo<$ProductsTable, Product> {
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
+    if (data.containsKey('name_ar')) {
+      context.handle(_nameArMeta,
+          nameAr.isAcceptableOrUnknown(data['name_ar']!, _nameArMeta));
+    }
     if (data.containsKey('description')) {
       context.handle(
           _descriptionMeta,
           description.isAcceptableOrUnknown(
               data['description']!, _descriptionMeta));
+    }
+    if (data.containsKey('description_ar')) {
+      context.handle(
+          _descriptionArMeta,
+          descriptionAr.isAcceptableOrUnknown(
+              data['description_ar']!, _descriptionArMeta));
     }
     if (data.containsKey('barcode')) {
       context.handle(_barcodeMeta,
@@ -1095,8 +1199,12 @@ class $ProductsTable extends Products with TableInfo<$ProductsTable, Product> {
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      nameAr: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name_ar']),
       description: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}description']),
+      descriptionAr: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description_ar']),
       barcode: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}barcode'])!,
       price: attachedDatabase.typeMapping
@@ -1131,7 +1239,9 @@ class $ProductsTable extends Products with TableInfo<$ProductsTable, Product> {
 class Product extends DataClass implements Insertable<Product> {
   final String id;
   final String name;
+  final String? nameAr;
   final String? description;
+  final String? descriptionAr;
   final String barcode;
   final double price;
   final double cost;
@@ -1146,7 +1256,9 @@ class Product extends DataClass implements Insertable<Product> {
   const Product(
       {required this.id,
       required this.name,
+      this.nameAr,
       this.description,
+      this.descriptionAr,
       required this.barcode,
       required this.price,
       required this.cost,
@@ -1163,8 +1275,14 @@ class Product extends DataClass implements Insertable<Product> {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['name'] = Variable<String>(name);
+    if (!nullToAbsent || nameAr != null) {
+      map['name_ar'] = Variable<String>(nameAr);
+    }
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || descriptionAr != null) {
+      map['description_ar'] = Variable<String>(descriptionAr);
     }
     map['barcode'] = Variable<String>(barcode);
     map['price'] = Variable<double>(price);
@@ -1186,9 +1304,14 @@ class Product extends DataClass implements Insertable<Product> {
     return ProductsCompanion(
       id: Value(id),
       name: Value(name),
+      nameAr:
+          nameAr == null && nullToAbsent ? const Value.absent() : Value(nameAr),
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
+      descriptionAr: descriptionAr == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionAr),
       barcode: Value(barcode),
       price: Value(price),
       cost: Value(cost),
@@ -1211,7 +1334,9 @@ class Product extends DataClass implements Insertable<Product> {
     return Product(
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
+      nameAr: serializer.fromJson<String?>(json['nameAr']),
       description: serializer.fromJson<String?>(json['description']),
+      descriptionAr: serializer.fromJson<String?>(json['descriptionAr']),
       barcode: serializer.fromJson<String>(json['barcode']),
       price: serializer.fromJson<double>(json['price']),
       cost: serializer.fromJson<double>(json['cost']),
@@ -1231,7 +1356,9 @@ class Product extends DataClass implements Insertable<Product> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'name': serializer.toJson<String>(name),
+      'nameAr': serializer.toJson<String?>(nameAr),
       'description': serializer.toJson<String?>(description),
+      'descriptionAr': serializer.toJson<String?>(descriptionAr),
       'barcode': serializer.toJson<String>(barcode),
       'price': serializer.toJson<double>(price),
       'cost': serializer.toJson<double>(cost),
@@ -1249,7 +1376,9 @@ class Product extends DataClass implements Insertable<Product> {
   Product copyWith(
           {String? id,
           String? name,
+          Value<String?> nameAr = const Value.absent(),
           Value<String?> description = const Value.absent(),
+          Value<String?> descriptionAr = const Value.absent(),
           String? barcode,
           double? price,
           double? cost,
@@ -1264,7 +1393,10 @@ class Product extends DataClass implements Insertable<Product> {
       Product(
         id: id ?? this.id,
         name: name ?? this.name,
+        nameAr: nameAr.present ? nameAr.value : this.nameAr,
         description: description.present ? description.value : this.description,
+        descriptionAr:
+            descriptionAr.present ? descriptionAr.value : this.descriptionAr,
         barcode: barcode ?? this.barcode,
         price: price ?? this.price,
         cost: cost ?? this.cost,
@@ -1281,8 +1413,12 @@ class Product extends DataClass implements Insertable<Product> {
     return Product(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
+      nameAr: data.nameAr.present ? data.nameAr.value : this.nameAr,
       description:
           data.description.present ? data.description.value : this.description,
+      descriptionAr: data.descriptionAr.present
+          ? data.descriptionAr.value
+          : this.descriptionAr,
       barcode: data.barcode.present ? data.barcode.value : this.barcode,
       price: data.price.present ? data.price.value : this.price,
       cost: data.cost.present ? data.cost.value : this.cost,
@@ -1303,7 +1439,9 @@ class Product extends DataClass implements Insertable<Product> {
     return (StringBuffer('Product(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('nameAr: $nameAr, ')
           ..write('description: $description, ')
+          ..write('descriptionAr: $descriptionAr, ')
           ..write('barcode: $barcode, ')
           ..write('price: $price, ')
           ..write('cost: $cost, ')
@@ -1323,7 +1461,9 @@ class Product extends DataClass implements Insertable<Product> {
   int get hashCode => Object.hash(
       id,
       name,
+      nameAr,
       description,
+      descriptionAr,
       barcode,
       price,
       cost,
@@ -1341,7 +1481,9 @@ class Product extends DataClass implements Insertable<Product> {
       (other is Product &&
           other.id == this.id &&
           other.name == this.name &&
+          other.nameAr == this.nameAr &&
           other.description == this.description &&
+          other.descriptionAr == this.descriptionAr &&
           other.barcode == this.barcode &&
           other.price == this.price &&
           other.cost == this.cost &&
@@ -1358,7 +1500,9 @@ class Product extends DataClass implements Insertable<Product> {
 class ProductsCompanion extends UpdateCompanion<Product> {
   final Value<String> id;
   final Value<String> name;
+  final Value<String?> nameAr;
   final Value<String?> description;
+  final Value<String?> descriptionAr;
   final Value<String> barcode;
   final Value<double> price;
   final Value<double> cost;
@@ -1374,7 +1518,9 @@ class ProductsCompanion extends UpdateCompanion<Product> {
   const ProductsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
+    this.nameAr = const Value.absent(),
     this.description = const Value.absent(),
+    this.descriptionAr = const Value.absent(),
     this.barcode = const Value.absent(),
     this.price = const Value.absent(),
     this.cost = const Value.absent(),
@@ -1391,7 +1537,9 @@ class ProductsCompanion extends UpdateCompanion<Product> {
   ProductsCompanion.insert({
     required String id,
     required String name,
+    this.nameAr = const Value.absent(),
     this.description = const Value.absent(),
+    this.descriptionAr = const Value.absent(),
     required String barcode,
     required double price,
     required double cost,
@@ -1419,7 +1567,9 @@ class ProductsCompanion extends UpdateCompanion<Product> {
   static Insertable<Product> custom({
     Expression<String>? id,
     Expression<String>? name,
+    Expression<String>? nameAr,
     Expression<String>? description,
+    Expression<String>? descriptionAr,
     Expression<String>? barcode,
     Expression<double>? price,
     Expression<double>? cost,
@@ -1436,7 +1586,9 @@ class ProductsCompanion extends UpdateCompanion<Product> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
+      if (nameAr != null) 'name_ar': nameAr,
       if (description != null) 'description': description,
+      if (descriptionAr != null) 'description_ar': descriptionAr,
       if (barcode != null) 'barcode': barcode,
       if (price != null) 'price': price,
       if (cost != null) 'cost': cost,
@@ -1455,7 +1607,9 @@ class ProductsCompanion extends UpdateCompanion<Product> {
   ProductsCompanion copyWith(
       {Value<String>? id,
       Value<String>? name,
+      Value<String?>? nameAr,
       Value<String?>? description,
+      Value<String?>? descriptionAr,
       Value<String>? barcode,
       Value<double>? price,
       Value<double>? cost,
@@ -1471,7 +1625,9 @@ class ProductsCompanion extends UpdateCompanion<Product> {
     return ProductsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
+      nameAr: nameAr ?? this.nameAr,
       description: description ?? this.description,
+      descriptionAr: descriptionAr ?? this.descriptionAr,
       barcode: barcode ?? this.barcode,
       price: price ?? this.price,
       cost: cost ?? this.cost,
@@ -1496,8 +1652,14 @@ class ProductsCompanion extends UpdateCompanion<Product> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
+    if (nameAr.present) {
+      map['name_ar'] = Variable<String>(nameAr.value);
+    }
     if (description.present) {
       map['description'] = Variable<String>(description.value);
+    }
+    if (descriptionAr.present) {
+      map['description_ar'] = Variable<String>(descriptionAr.value);
     }
     if (barcode.present) {
       map['barcode'] = Variable<String>(barcode.value);
@@ -1543,7 +1705,9 @@ class ProductsCompanion extends UpdateCompanion<Product> {
     return (StringBuffer('ProductsCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('nameAr: $nameAr, ')
           ..write('description: $description, ')
+          ..write('descriptionAr: $descriptionAr, ')
           ..write('barcode: $barcode, ')
           ..write('price: $price, ')
           ..write('cost: $cost, ')
@@ -4276,7 +4440,9 @@ typedef $$CategoriesTableTableCreateCompanionBuilder = CategoriesTableCompanion
     Function({
   required String id,
   required String name,
+  Value<String?> nameAr,
   Value<String?> description,
+  Value<String?> descriptionAr,
   Value<String?> imageUrl,
   required bool isActive,
   required String createdAt,
@@ -4288,7 +4454,9 @@ typedef $$CategoriesTableTableUpdateCompanionBuilder = CategoriesTableCompanion
     Function({
   Value<String> id,
   Value<String> name,
+  Value<String?> nameAr,
   Value<String?> description,
+  Value<String?> descriptionAr,
   Value<String?> imageUrl,
   Value<bool> isActive,
   Value<String> createdAt,
@@ -4333,8 +4501,14 @@ class $$CategoriesTableTableFilterComposer
   ColumnFilters<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnFilters(column));
 
+  ColumnFilters<String> get nameAr => $composableBuilder(
+      column: $table.nameAr, builder: (column) => ColumnFilters(column));
+
   ColumnFilters<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get descriptionAr => $composableBuilder(
+      column: $table.descriptionAr, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get imageUrl => $composableBuilder(
       column: $table.imageUrl, builder: (column) => ColumnFilters(column));
@@ -4388,8 +4562,15 @@ class $$CategoriesTableTableOrderingComposer
   ColumnOrderings<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<String> get nameAr => $composableBuilder(
+      column: $table.nameAr, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get descriptionAr => $composableBuilder(
+      column: $table.descriptionAr,
+      builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get imageUrl => $composableBuilder(
       column: $table.imageUrl, builder: (column) => ColumnOrderings(column));
@@ -4422,8 +4603,14 @@ class $$CategoriesTableTableAnnotationComposer
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
+  GeneratedColumn<String> get nameAr =>
+      $composableBuilder(column: $table.nameAr, builder: (column) => column);
+
   GeneratedColumn<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionAr => $composableBuilder(
+      column: $table.descriptionAr, builder: (column) => column);
 
   GeneratedColumn<String> get imageUrl =>
       $composableBuilder(column: $table.imageUrl, builder: (column) => column);
@@ -4488,7 +4675,9 @@ class $$CategoriesTableTableTableManager extends RootTableManager<
           updateCompanionCallback: ({
             Value<String> id = const Value.absent(),
             Value<String> name = const Value.absent(),
+            Value<String?> nameAr = const Value.absent(),
             Value<String?> description = const Value.absent(),
+            Value<String?> descriptionAr = const Value.absent(),
             Value<String?> imageUrl = const Value.absent(),
             Value<bool> isActive = const Value.absent(),
             Value<String> createdAt = const Value.absent(),
@@ -4499,7 +4688,9 @@ class $$CategoriesTableTableTableManager extends RootTableManager<
               CategoriesTableCompanion(
             id: id,
             name: name,
+            nameAr: nameAr,
             description: description,
+            descriptionAr: descriptionAr,
             imageUrl: imageUrl,
             isActive: isActive,
             createdAt: createdAt,
@@ -4510,7 +4701,9 @@ class $$CategoriesTableTableTableManager extends RootTableManager<
           createCompanionCallback: ({
             required String id,
             required String name,
+            Value<String?> nameAr = const Value.absent(),
             Value<String?> description = const Value.absent(),
+            Value<String?> descriptionAr = const Value.absent(),
             Value<String?> imageUrl = const Value.absent(),
             required bool isActive,
             required String createdAt,
@@ -4521,7 +4714,9 @@ class $$CategoriesTableTableTableManager extends RootTableManager<
               CategoriesTableCompanion.insert(
             id: id,
             name: name,
+            nameAr: nameAr,
             description: description,
+            descriptionAr: descriptionAr,
             imageUrl: imageUrl,
             isActive: isActive,
             createdAt: createdAt,
@@ -4577,7 +4772,9 @@ typedef $$CategoriesTableTableProcessedTableManager = ProcessedTableManager<
 typedef $$ProductsTableCreateCompanionBuilder = ProductsCompanion Function({
   required String id,
   required String name,
+  Value<String?> nameAr,
   Value<String?> description,
+  Value<String?> descriptionAr,
   required String barcode,
   required double price,
   required double cost,
@@ -4594,7 +4791,9 @@ typedef $$ProductsTableCreateCompanionBuilder = ProductsCompanion Function({
 typedef $$ProductsTableUpdateCompanionBuilder = ProductsCompanion Function({
   Value<String> id,
   Value<String> name,
+  Value<String?> nameAr,
   Value<String?> description,
+  Value<String?> descriptionAr,
   Value<String> barcode,
   Value<double> price,
   Value<double> cost,
@@ -4645,8 +4844,14 @@ class $$ProductsTableFilterComposer
   ColumnFilters<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnFilters(column));
 
+  ColumnFilters<String> get nameAr => $composableBuilder(
+      column: $table.nameAr, builder: (column) => ColumnFilters(column));
+
   ColumnFilters<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get descriptionAr => $composableBuilder(
+      column: $table.descriptionAr, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get barcode => $composableBuilder(
       column: $table.barcode, builder: (column) => ColumnFilters(column));
@@ -4714,8 +4919,15 @@ class $$ProductsTableOrderingComposer
   ColumnOrderings<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<String> get nameAr => $composableBuilder(
+      column: $table.nameAr, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get descriptionAr => $composableBuilder(
+      column: $table.descriptionAr,
+      builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get barcode => $composableBuilder(
       column: $table.barcode, builder: (column) => ColumnOrderings(column));
@@ -4783,8 +4995,14 @@ class $$ProductsTableAnnotationComposer
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
+  GeneratedColumn<String> get nameAr =>
+      $composableBuilder(column: $table.nameAr, builder: (column) => column);
+
   GeneratedColumn<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionAr => $composableBuilder(
+      column: $table.descriptionAr, builder: (column) => column);
 
   GeneratedColumn<String> get barcode =>
       $composableBuilder(column: $table.barcode, builder: (column) => column);
@@ -4862,7 +5080,9 @@ class $$ProductsTableTableManager extends RootTableManager<
           updateCompanionCallback: ({
             Value<String> id = const Value.absent(),
             Value<String> name = const Value.absent(),
+            Value<String?> nameAr = const Value.absent(),
             Value<String?> description = const Value.absent(),
+            Value<String?> descriptionAr = const Value.absent(),
             Value<String> barcode = const Value.absent(),
             Value<double> price = const Value.absent(),
             Value<double> cost = const Value.absent(),
@@ -4879,7 +5099,9 @@ class $$ProductsTableTableManager extends RootTableManager<
               ProductsCompanion(
             id: id,
             name: name,
+            nameAr: nameAr,
             description: description,
+            descriptionAr: descriptionAr,
             barcode: barcode,
             price: price,
             cost: cost,
@@ -4896,7 +5118,9 @@ class $$ProductsTableTableManager extends RootTableManager<
           createCompanionCallback: ({
             required String id,
             required String name,
+            Value<String?> nameAr = const Value.absent(),
             Value<String?> description = const Value.absent(),
+            Value<String?> descriptionAr = const Value.absent(),
             required String barcode,
             required double price,
             required double cost,
@@ -4913,7 +5137,9 @@ class $$ProductsTableTableManager extends RootTableManager<
               ProductsCompanion.insert(
             id: id,
             name: name,
+            nameAr: nameAr,
             description: description,
+            descriptionAr: descriptionAr,
             barcode: barcode,
             price: price,
             cost: cost,

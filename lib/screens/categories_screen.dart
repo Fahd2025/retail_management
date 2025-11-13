@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-import 'package:retail_management/generated/l10n/app_localizations.dart';
+import 'package:retail_management/l10n/app_localizations.dart';
 import '../database/drift_database.dart';
 import '../models/category.dart' as models;
 import '../widgets/form_bottom_sheet.dart';
@@ -73,7 +73,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               TextFormField(
                 controller: nameController,
                 decoration: InputDecoration(
-                  labelText: l10n.nameFieldLabel,
+                  labelText: l10n.name,
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.category_outlined),
                 ),
@@ -132,7 +132,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
         // Wrap in FormBottomSheet
         return FormBottomSheet(
-          title: category == null ? l10n.addCategory : l10n.editCategory,
+          title: category == null ? l10n.add : l10n.editCategory,
           saveButtonText: category == null ? l10n.add : l10n.save,
           cancelButtonText: l10n.cancel,
           onSave: () async {
@@ -232,7 +232,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(AppLocalizations.of(context)!.deleteCategory),
-        content: Text(AppLocalizations.of(context)!.deleteCategoryConfirm(category.name)),
+        content: Text(
+            AppLocalizations.of(context)!.deleteCategoryConfirm(category.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -318,15 +319,18 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                               columnSpacing: 24,
                               horizontalMargin: 16,
                               columns: [
-                                DataColumn(label: Text(l10n.nameFieldLabel)),
+                                DataColumn(label: Text(l10n.name)),
                                 DataColumn(label: Text(l10n.description)),
-                                DataColumn(label: Text(l10n.productCount(0).split(' ')[0])),
+                                DataColumn(
+                                    label: Text(
+                                        l10n.productCount(0).split(' ')[0])),
                                 DataColumn(label: Text(l10n.actions)),
                               ],
                               rows: _categoriesWithCount.map((data) {
                                 final category =
                                     data['category'] as models.Category;
-                                final productCount = data['productCount'] as int;
+                                final productCount =
+                                    data['productCount'] as int;
 
                                 return DataRow(cells: [
                                   DataCell(Text(
@@ -349,7 +353,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         IconButton(
-                                          icon: const Icon(Icons.edit, size: 20),
+                                          icon:
+                                              const Icon(Icons.edit, size: 20),
                                           onPressed: () =>
                                               showCategoryDialog(category),
                                           tooltip: l10n.tooltipEdit,

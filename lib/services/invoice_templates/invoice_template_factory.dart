@@ -33,7 +33,8 @@ class InvoiceTemplateFactory {
   }
 
   /// Get a template for a specific format (convenience method)
-  static InvoiceTemplate createForFormat(PrintFormat format, {
+  static InvoiceTemplate createForFormat(
+    PrintFormat format, {
     bool showLogo = true,
     bool showQrCode = true,
     bool showCustomerInfo = true,

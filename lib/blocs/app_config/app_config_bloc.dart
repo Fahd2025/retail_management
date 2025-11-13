@@ -11,7 +11,8 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   static const String _localePreferenceKey = 'app_locale';
   static const String _printFormatPreferenceKey = 'print_format_config';
   static const String _vatRatePreferenceKey = 'vat_rate';
-  static const String _vatIncludedInPricePreferenceKey = 'vat_included_in_price';
+  static const String _vatIncludedInPricePreferenceKey =
+      'vat_included_in_price';
 
   static const Locale englishLocale = Locale('en', 'US');
   static const Locale arabicLocale = Locale('ar', 'SA');
@@ -48,12 +49,14 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
       final savedLocale = prefs.getString(_localePreferenceKey);
       final savedPrintFormat = prefs.getString(_printFormatPreferenceKey);
       final savedVatRate = prefs.getDouble(_vatRatePreferenceKey);
-      final savedVatIncludedInPrice = prefs.getBool(_vatIncludedInPricePreferenceKey);
+      final savedVatIncludedInPrice =
+          prefs.getBool(_vatIncludedInPricePreferenceKey);
 
       final themeMode = savedTheme == 'dark' ? ThemeMode.dark : ThemeMode.light;
       final locale = savedLocale == 'ar' ? arabicLocale : englishLocale;
       final vatRate = savedVatRate ?? 15.0; // Default Saudi VAT rate
-      final vatIncludedInPrice = savedVatIncludedInPrice ?? true; // Default: VAT included in price
+      final vatIncludedInPrice =
+          savedVatIncludedInPrice ?? true; // Default: VAT included in price
 
       PrintFormatConfig printFormatConfig = PrintFormatConfig.defaultConfig;
       if (savedPrintFormat != null) {

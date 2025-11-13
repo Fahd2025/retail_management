@@ -69,9 +69,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get loginTitle => 'إدارة البيع بالتجزئة';
 
   @override
-  String get loginSubtitle => 'نظام نقاط البيع';
-
-  @override
   String get username => 'اسم المستخدم';
 
   @override
@@ -110,9 +107,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get welcome => 'مرحباً';
 
   @override
-  String get totalSales => 'إجمالي المبيعات';
-
-  @override
   String get totalProducts => 'إجمالي المنتجات';
 
   @override
@@ -146,9 +140,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get productList => 'قائمة المنتجات';
 
   @override
-  String get addProduct => 'إضافة منتج';
-
-  @override
   String get editProduct => 'تعديل المنتج';
 
   @override
@@ -164,9 +155,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get price => 'السعر';
 
   @override
-  String get cost => 'التكلفة';
-
-  @override
   String get quantity => 'الكمية';
 
   @override
@@ -176,16 +164,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get description => 'الوصف';
 
   @override
-  String get barcode => 'الرمز الشريطي';
-
-  @override
   String get inStock => 'متوفر';
 
   @override
   String get outOfStock => 'نفذ من المخزون';
-
-  @override
-  String get lowStock => 'مخزون منخفض';
 
   @override
   String get productDetails => 'تفاصيل المنتج';
@@ -195,9 +177,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get categories => 'الفئات';
-
-  @override
-  String get addCategory => 'إضافة فئة';
 
   @override
   String get editCategory => 'تعديل الفئة';
@@ -248,6 +227,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get totalPurchases => 'إجمالي المشتريات';
 
   @override
+  String get customerInformation => 'معلومات العميل';
+
+  @override
+  String get customer => 'العميل';
+
+  @override
+  String get customerId => 'معرف العميل';
+
+  @override
   String get sales => 'المبيعات';
 
   @override
@@ -290,12 +278,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get paymentMethod => 'طريقة الدفع';
 
   @override
-  String get cash => 'نقدي';
-
-  @override
-  String get card => 'بطاقة';
-
-  @override
   String get change => 'الباقي';
 
   @override
@@ -327,9 +309,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get admin => 'مدير';
-
-  @override
-  String get cashier => 'أمين الصندوق';
 
   @override
   String get createdAt => 'تاريخ الإنشاء';
@@ -422,6 +401,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get confirmLogout => 'هل أنت متأكد من تسجيل الخروج؟';
 
   @override
+  String get confirmExit => 'هل أنت متأكد من الخروج من التطبيق؟';
+
+  @override
   String get noDataAvailable => 'لا توجد بيانات متاحة';
 
   @override
@@ -462,9 +444,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get view => 'عرض';
-
-  @override
-  String get print => 'طباعة';
 
   @override
   String get export => 'تصدير';
@@ -524,7 +503,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get selectTime => 'اختر الوقت';
 
   @override
-  String get cashierMode => 'وضع أمين الصندوق';
+  String get cashier => 'وضع أمين الصندوق';
 
   @override
   String get scanBarcode => 'مسح الرمز الشريطي';
@@ -570,4 +549,732 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get reportPeriod => 'فترة التقرير';
+
+  @override
+  String get companyNameEnglish => 'اسم الشركة (إنجليزي)';
+
+  @override
+  String get companyNameArabic => 'اسم الشركة (عربي)';
+
+  @override
+  String get addressEnglish => 'العنوان (إنجليزي)';
+
+  @override
+  String get addressArabic => 'العنوان (عربي)';
+
+  @override
+  String get required => 'مطلوب';
+
+  @override
+  String get vatNumber => 'الرقم الضريبي';
+
+  @override
+  String get crnNumber => 'رقم السجل التجاري';
+
+  @override
+  String get saveCompanyInformation => 'حفظ معلومات الشركة';
+
+  @override
+  String get companyInfoSavedSuccess => 'تم حفظ معلومات الشركة بنجاح';
+
+  @override
+  String errorLoadingCompanyInfo(String error) {
+    return 'خطأ في تحميل معلومات الشركة: $error';
+  }
+
+  @override
+  String errorSaving(String error) {
+    return 'خطأ في الحفظ: $error';
+  }
+
+  @override
+  String get changesAppliedImmediately => 'سيتم تطبيق التغييرات على الفور';
+
+  @override
+  String get dataSynchronization => 'مزامنة البيانات';
+
+  @override
+  String get syncDescription =>
+      'مزامنة بياناتك المحلية مع السحابة عند توفر الاتصال بالإنترنت.';
+
+  @override
+  String get syncing => 'جاري المزامنة...';
+
+  @override
+  String get syncNow => 'مزامنة الآن';
+
+  @override
+  String get version => 'الإصدار';
+
+  @override
+  String get appVersion => '1.0.0';
+
+  @override
+  String get posWithOfflineSupport => 'نظام نقاط البيع مع دعم العمل بلا اتصال';
+
+  @override
+  String get pointOfSale => 'نقطة البيع';
+
+  @override
+  String get productsManagement => 'إدارة المنتجات';
+
+  @override
+  String get customersManagement => 'إدارة العملاء';
+
+  @override
+  String get usersManagement => 'إدارة المستخدمين';
+
+  @override
+  String get cannotDeleteCategory => 'لا يمكن حذف الفئة';
+
+  @override
+  String get categoryHasProducts => 'هذه الفئة تحتوي على منتجات مرتبطة بها';
+
+  @override
+  String deleteProductConfirm(String productName) {
+    return 'حذف $productName؟';
+  }
+
+  @override
+  String deleteCategoryConfirm(String categoryName) {
+    return 'حذف $categoryName؟ لا يمكن التراجع عن هذا الإجراء.';
+  }
+
+  @override
+  String get deleteCustomerConfirm => 'هل أنت متأكد من حذف هذا العميل؟';
+
+  @override
+  String deleteUserConfirm(String username) {
+    return 'حذف المستخدم $username؟ لا يمكن التراجع عن هذا الإجراء.';
+  }
+
+  @override
+  String get returnSale => 'إرجاع البيع';
+
+  @override
+  String returnSaleConfirm(String invoiceNumber) {
+    return 'إرجاع البيع $invoiceNumber؟';
+  }
+
+  @override
+  String get printInvoiceQuestion => 'هل تريد طباعة الفاتورة؟';
+
+  @override
+  String get complete => 'إتمام';
+
+  @override
+  String get name => 'الاسم';
+
+  @override
+  String get stock => 'المخزون';
+
+  @override
+  String get vat => 'الضريبة %';
+
+  @override
+  String get actions => 'الإجراءات';
+
+  @override
+  String get status => 'الحالة';
+
+  @override
+  String get invoiceCount => 'عدد الفواتير';
+
+  @override
+  String get noSalesFound => 'لم يتم العثور على مبيعات';
+
+  @override
+  String get noCustomersFound => 'لم يتم العثور على عملاء';
+
+  @override
+  String get noProductsFound => 'لم يتم العثور على منتجات';
+
+  @override
+  String get noUsersFound => 'لم يتم العثور على مستخدمين';
+
+  @override
+  String get cannotDeleteOwnAccount => 'لا يمكنك حذف حسابك الخاص';
+
+  @override
+  String get selectACategory => 'اختر فئة';
+
+  @override
+  String get invalid => 'غير صحيح';
+
+  @override
+  String get units => 'وحدات';
+
+  @override
+  String failedToLoadCategories(String error) {
+    return 'فشل تحميل الفئات: $error';
+  }
+
+  @override
+  String get descriptionOptional => 'الوصف (اختياري)';
+
+  @override
+  String get pleaseEnterCategoryName => 'الرجاء إدخال اسم الفئة';
+
+  @override
+  String get categoryAddedSuccess => 'تمت إضافة الفئة بنجاح';
+
+  @override
+  String get categoryUpdatedSuccess => 'تم تحديث الفئة بنجاح';
+
+  @override
+  String get categoryDeletedSuccess => 'تم حذف الفئة بنجاح';
+
+  @override
+  String errorSavingCategory(String error) {
+    return 'خطأ في حفظ الفئة: $error';
+  }
+
+  @override
+  String errorDeletingCategory(String error) {
+    return 'خطأ في حذف الفئة: $error';
+  }
+
+  @override
+  String get noCategoriesFound => 'لم يتم العثور على فئات';
+
+  @override
+  String productCount(int count) {
+    return '$count منتج';
+  }
+
+  @override
+  String get tooltipEdit => 'تعديل';
+
+  @override
+  String get tooltipDelete => 'حذف';
+
+  @override
+  String get userDeletedSuccess => 'تم حذف المستخدم بنجاح';
+
+  @override
+  String get failedToDeleteUser => 'فشل حذف المستخدم';
+
+  @override
+  String get userCreatedSuccess => 'تم إنشاء المستخدم بنجاح';
+
+  @override
+  String get userUpdatedSuccess => 'تم تحديث المستخدم بنجاح';
+
+  @override
+  String get anErrorOccurred => 'حدث خطأ';
+
+  @override
+  String get usernameRequired => 'اسم المستخدم مطلوب';
+
+  @override
+  String get usernameMinLength => 'يجب أن يكون اسم المستخدم 3 أحرف على الأقل';
+
+  @override
+  String get fullNameRequired => 'الاسم الكامل مطلوب';
+
+  @override
+  String get passwordRequired => 'كلمة المرور مطلوبة';
+
+  @override
+  String get passwordMinLength => 'يجب أن تكون كلمة المرور 6 أحرف على الأقل';
+
+  @override
+  String get passwordLeaveEmpty =>
+      'كلمة المرور (اتركها فارغة للاحتفاظ بالحالية)';
+
+  @override
+  String printError(String error) {
+    return 'خطأ في الطباعة: $error';
+  }
+
+  @override
+  String get invoice => 'الفاتورة';
+
+  @override
+  String invoiceLabel(String invoiceNumber) {
+    return 'الفاتورة: $invoiceNumber';
+  }
+
+  @override
+  String dateLabel(String date) {
+    return 'التاريخ: $date';
+  }
+
+  @override
+  String totalLabel(String total) {
+    return 'الإجمالي: $total ر.س';
+  }
+
+  @override
+  String statusLabelText(String status) {
+    return 'الحالة: $status';
+  }
+
+  @override
+  String get reprint => 'إعادة الطباعة';
+
+  @override
+  String get return_sale => 'إرجاع';
+
+  @override
+  String get itemsLabel => 'العناصر:';
+
+  @override
+  String get subtotalLabel => 'المجموع الفرعي:';
+
+  @override
+  String get vatLabel => 'الضريبة:';
+
+  @override
+  String get totalLabelColon => 'الإجمالي:';
+
+  @override
+  String get paidLabel => 'المدفوع:';
+
+  @override
+  String get changeLabel => 'الباقي:';
+
+  @override
+  String get saleReturnedSuccess => 'تم إرجاع البيع بنجاح';
+
+  @override
+  String get errorLoadingCategories => 'خطأ في تحميل الفئات';
+
+  @override
+  String get productNameRequired => 'اسم المنتج *';
+
+  @override
+  String get barcodeRequired => 'الرمز الشريطي *';
+
+  @override
+  String get categoryRequired => 'الفئة *';
+
+  @override
+  String get priceRequired => 'السعر *';
+
+  @override
+  String get costRequired => 'التكلفة *';
+
+  @override
+  String get quantityRequired => 'الكمية *';
+
+  @override
+  String get vatRateRequired => 'الضريبة % *';
+
+  @override
+  String get usernameFieldLabel => 'اسم المستخدم *';
+
+  @override
+  String get fullNameFieldLabel => 'الاسم الكامل *';
+
+  @override
+  String get passwordFieldLabel => 'كلمة المرور *';
+
+  @override
+  String get roleFieldLabel => 'الدور *';
+
+  @override
+  String get customerNameRequired => 'اسم العميل *';
+
+  @override
+  String get emailFieldLabel => 'البريد الإلكتروني';
+
+  @override
+  String get phoneFieldLabel => 'الهاتف';
+
+  @override
+  String get vatNumberFieldLabel => 'الرقم الضريبي';
+
+  @override
+  String get crnNumberFieldLabel => 'رقم السجل التجاري';
+
+  @override
+  String get saudiNationalAddress => 'العنوان الوطني السعودي';
+
+  @override
+  String get buildingNumber => 'رقم المبنى';
+
+  @override
+  String get streetName => 'اسم الشارع';
+
+  @override
+  String get district => 'الحي';
+
+  @override
+  String get city => 'المدينة';
+
+  @override
+  String get postalCode => 'الرمز البريدي';
+
+  @override
+  String get additionalNumber => 'الرقم الإضافي';
+
+  @override
+  String phoneLabel(String phone) {
+    return 'الهاتف: $phone';
+  }
+
+  @override
+  String emailLabel(String email) {
+    return 'البريد: $email';
+  }
+
+  @override
+  String vatLabel2(String vatNumber) {
+    return 'ضريبة القيمة المضافة';
+  }
+
+  @override
+  String addressLabel(String address) {
+    return 'العنوان: $address';
+  }
+
+  @override
+  String get cart => 'السلة';
+
+  @override
+  String cartItems(int count) {
+    return '$count عناصر';
+  }
+
+  @override
+  String get cartIsEmpty => 'السلة فارغة';
+
+  @override
+  String get scanOrEnterBarcode => 'امسح أو أدخل الرمز الشريطي...';
+
+  @override
+  String productAddedToCart(String productName) {
+    return 'تمت إضافة $productName إلى السلة';
+  }
+
+  @override
+  String get productNotFound => 'المنتج غير موجود';
+
+  @override
+  String get walkInCustomer => 'عميل عابر';
+
+  @override
+  String get amountPaid => 'المبلغ المدفوع';
+
+  @override
+  String changeColon(String amount) {
+    return 'الباقي: $amount ر.س';
+  }
+
+  @override
+  String get insufficientPayment => 'المبلغ المدفوع غير كافٍ';
+
+  @override
+  String get cashPayment => 'نقدي';
+
+  @override
+  String get cardPayment => 'بطاقة';
+
+  @override
+  String get transferPayment => 'تحويل';
+
+  @override
+  String get allDataSynchronized => 'جميع البيانات متزامنة بالفعل';
+
+  @override
+  String get noInternetConnection => 'لا يوجد اتصال بالإنترنت';
+
+  @override
+  String successfullySynchronized(int count) {
+    return 'تمت مزامنة $count عنصر بنجاح';
+  }
+
+  @override
+  String get syncFailed => 'فشلت المزامنة';
+
+  @override
+  String get exportInvoicesToPdf => 'تصدير الفواتير إلى PDF';
+
+  @override
+  String get exportCustomerInvoices => 'تصدير فواتير العميل إلى PDF';
+
+  @override
+  String customerLabel(String name) {
+    return 'العميل: $name';
+  }
+
+  @override
+  String get selectPeriod => 'اختر الفترة:';
+
+  @override
+  String get allTime => 'كل الفترات';
+
+  @override
+  String get lastThreeMonths => 'آخر 3 أشهر';
+
+  @override
+  String get preview => 'معاينة';
+
+  @override
+  String totalInvoices(int count) {
+    return 'إجمالي الفواتير: $count';
+  }
+
+  @override
+  String totalAmount(String amount) {
+    return 'المبلغ الإجمالي: $amount';
+  }
+
+  @override
+  String get exporting => 'جاري التصدير...';
+
+  @override
+  String get exportToPdf => 'تصدير إلى PDF';
+
+  @override
+  String get loadingStatistics => 'جاري تحميل الإحصائيات...';
+
+  @override
+  String get invoices => 'الفواتير';
+
+  @override
+  String invoicesCount(int count) {
+    return 'الفواتير: $count';
+  }
+
+  @override
+  String invoicesTotal(int count, String total) {
+    return 'الفواتير: $count | الإجمالي: $total';
+  }
+
+  @override
+  String get companyInfoNotFound =>
+      'معلومات الشركة غير موجودة. يرجى التكوين في الإعدادات.';
+
+  @override
+  String get noInvoicesFound => 'لم يتم العثور على فواتير للفترة المحددة.';
+
+  @override
+  String exportedInvoicesSuccess(int count) {
+    return 'تم تصدير $count فاتورة إلى PDF بنجاح';
+  }
+
+  @override
+  String errorExportingInvoices(String error) {
+    return 'خطأ في تصدير الفواتير: $error';
+  }
+
+  @override
+  String loginSuccess(String username) {
+    return 'تم تسجيل الدخول بنجاح! مرحباً $username';
+  }
+
+  @override
+  String get defaultCredentials => 'بيانات الدخول الافتراضية';
+
+  @override
+  String get adminCredentials => 'المدير: admin / admin123';
+
+  @override
+  String get cashierCredentials => 'أمين الصندوق: cashier / cashier123';
+
+  @override
+  String get switchTheme => 'تبديل السمة';
+
+  @override
+  String get switchLanguage => 'تبديل اللغة';
+
+  @override
+  String get printSettings => 'إعدادات الطباعة';
+
+  @override
+  String get printFormat => 'تنسيق الطباعة';
+
+  @override
+  String get displayOptions => 'خيارات العرض';
+
+  @override
+  String get showCompanyLogo => 'إظهار شعار الشركة';
+
+  @override
+  String get displayLogoPlaceholder => 'عرض مكان الشعار في رأس الفاتورة';
+
+  @override
+  String get showQrCode => 'إظهار رمز الاستجابة السريعة';
+
+  @override
+  String get displayZatcaQrCode =>
+      'عرض رمز QR المتوافق مع هيئة الزكاة والضريبة والجمارك';
+
+  @override
+  String get showCustomerInformation => 'إظهار معلومات العميل';
+
+  @override
+  String get displayCustomerDetails => 'عرض تفاصيل العميل عند توفرها';
+
+  @override
+  String get showNotes => 'إظهار الملاحظات';
+
+  @override
+  String get displaySaleNotes => 'عرض ملاحظات البيع عند توفرها';
+
+  @override
+  String get selectFormat => 'اختر التنسيق';
+
+  @override
+  String get printNow => 'اطبع الآن';
+
+  @override
+  String get thermalReceiptPrinter => 'طابعة إيصالات حرارية';
+
+  @override
+  String get standardPaperFormat => 'تنسيق ورق قياسي';
+
+  @override
+  String get a4Format => 'A4 (210×297 ملم)';
+
+  @override
+  String get thermal80mmFormat => 'حراري 80 ملم';
+
+  @override
+  String get thermal58mmFormat => 'حراري 58 ملم';
+
+  @override
+  String mmWidth(String width) {
+    return 'عرض $width ملم';
+  }
+
+  @override
+  String get analyticsDashboard => 'لوحة التحليلات';
+
+  @override
+  String get keyMetrics => 'المؤشرات الرئيسية';
+
+  @override
+  String get totalVat => 'إجمالي ضريبة القيمة المضافة';
+
+  @override
+  String get vatCollected => 'ضريبة القيمة المضافة المحصلة';
+
+  @override
+  String get activeProducts => 'نشط';
+
+  @override
+  String get activeCustomers => 'نشط';
+
+  @override
+  String get completedInvoices => 'فاتورة مكتملة';
+
+  @override
+  String get bestSellingProducts => 'المنتجات الأكثر مبيعاً';
+
+  @override
+  String get lowStockNotifications => 'تنبيهات المخزون المنخفض';
+
+  @override
+  String get latestSalesInvoices => 'آخر فواتير المبيعات';
+
+  @override
+  String get salesTrend => 'اتجاه المبيعات';
+
+  @override
+  String get salesByCategory => 'المبيعات حسب الفئة';
+
+  @override
+  String get timePeriod => 'الفترة الزمنية';
+
+  @override
+  String get last7Days => 'آخر 7 أيام';
+
+  @override
+  String get customPeriod => 'فترة مخصصة';
+
+  @override
+  String get selectStartAndEndDates =>
+      'حدد تاريخ البداية والنهاية للفترة المخصصة';
+
+  @override
+  String get selectStartDate => 'اختر تاريخ البداية';
+
+  @override
+  String get selectEndDate => 'اختر تاريخ النهاية';
+
+  @override
+  String get duration => 'المدة';
+
+  @override
+  String get days => 'أيام';
+
+  @override
+  String durationDays(int count) {
+    return 'المدة: $count أيام';
+  }
+
+  @override
+  String get cancelled => 'ملغى';
+
+  @override
+  String get unitsLeft => 'وحدة متبقية';
+
+  @override
+  String get critical => 'حرج';
+
+  @override
+  String viewAllItems(int count) {
+    return 'عرض كل $count عنصر';
+  }
+
+  @override
+  String viewAllLowStockItems(int count) {
+    return 'عرض كل $count عنصر منخفض المخزون';
+  }
+
+  @override
+  String viewAllInvoices(int count) {
+    return 'عرض كل $count فاتورة';
+  }
+
+  @override
+  String get noSalesDataAvailable => 'لا توجد بيانات مبيعات متاحة';
+
+  @override
+  String get noInvoicesAvailable => 'لا توجد فواتير متاحة';
+
+  @override
+  String get noCategoryDataAvailable => 'لا توجد بيانات فئات متاحة';
+
+  @override
+  String get allProductsWellStocked => 'جميع المنتجات متوفرة بمخزون جيد';
+
+  @override
+  String errorLoadingInvoice(String error) {
+    return 'خطأ في تحميل الفاتورة: $error';
+  }
+
+  @override
+  String get refreshDashboard => 'تحديث لوحة التحكم';
+
+  @override
+  String get invoiceStatistics => 'إحصائيات الفواتير';
+
+  @override
+  String get loadingDashboardData => 'جاري تحميل بيانات لوحة التحكم...';
+
+  @override
+  String get errorLoadingDashboard => 'خطأ في تحميل لوحة التحكم';
+
+  @override
+  String get retry => 'إعادة المحاولة';
+
+  @override
+  String get salesLabel => 'المبيعات';
+
+  @override
+  String quantitySold(String quantity) {
+    return 'الكمية: $quantity';
+  }
+
+  @override
+  String salesCount(int count) {
+    return '$count عملية بيع';
+  }
+
+  @override
+  String get transfer => 'تحويل';
 }

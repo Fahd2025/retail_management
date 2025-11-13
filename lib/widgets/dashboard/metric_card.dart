@@ -61,7 +61,8 @@ class MetricCard extends StatelessWidget {
                           child: Text(
                             title,
                             style: theme.textTheme.titleMedium?.copyWith(
-                              color: theme.colorScheme.onSurface.withOpacity(0.7),
+                              color:
+                                  theme.colorScheme.onSurface.withOpacity(0.7),
                               fontWeight: FontWeight.w500,
                             ),
                             maxLines: 2,

@@ -206,12 +206,16 @@ void main() {
 
     test('should have correct text styles for different formats', () {
       final a4Template = InvoiceTemplateFactory.createForFormat(PrintFormat.a4);
-      final thermal80Template = InvoiceTemplateFactory.createForFormat(PrintFormat.thermal80mm);
-      final thermal58Template = InvoiceTemplateFactory.createForFormat(PrintFormat.thermal58mm);
+      final thermal80Template =
+          InvoiceTemplateFactory.createForFormat(PrintFormat.thermal80mm);
+      final thermal58Template =
+          InvoiceTemplateFactory.createForFormat(PrintFormat.thermal58mm);
 
       // A4 should have larger fonts
-      expect(a4Template.getDefaultTextStyle().fontSize, greaterThan(thermal80Template.getDefaultTextStyle().fontSize!));
-      expect(thermal80Template.getDefaultTextStyle().fontSize, greaterThan(thermal58Template.getDefaultTextStyle().fontSize!));
+      expect(a4Template.getDefaultTextStyle().fontSize,
+          greaterThan(thermal80Template.getDefaultTextStyle().fontSize!));
+      expect(thermal80Template.getDefaultTextStyle().fontSize,
+          greaterThan(thermal58Template.getDefaultTextStyle().fontSize!));
     });
   });
 }
