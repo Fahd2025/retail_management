@@ -118,6 +118,7 @@ class SaleBloc extends Bloc<SaleEvent, SaleState> {
     final cartItems = List<SaleItem>.from(_getCurrentCartItems());
     final product = event.product;
     final quantity = event.quantity;
+    final vatIncludedInPrice = event.vatIncludedInPrice;
 
     final existingIndex = cartItems.indexWhere(
       (item) => item.productId == product.id,
@@ -127,9 +128,20 @@ class SaleBloc extends Bloc<SaleEvent, SaleState> {
       // Update existing item
       final existingItem = cartItems[existingIndex];
       final newQuantity = existingItem.quantity + quantity;
-      final subtotal = product.price * newQuantity;
-      final vatAmount = (product.price * product.vatRate / 100) * newQuantity;
-      final total = subtotal + vatAmount;
+
+      // Calculate VAT based on whether it's included or excluded
+      final double subtotal, vatAmount, total;
+      if (vatIncludedInPrice) {
+        // VAT is included in the price
+        total = product.price * newQuantity;
+        vatAmount = total - (total / (1 + product.vatRate / 100));
+        subtotal = total - vatAmount;
+      } else {
+        // VAT is excluded from the price
+        subtotal = product.price * newQuantity;
+        vatAmount = (product.price * product.vatRate / 100) * newQuantity;
+        total = subtotal + vatAmount;
+      }
 
       cartItems[existingIndex] = SaleItem(
         id: existingItem.id,
@@ -145,9 +157,19 @@ class SaleBloc extends Bloc<SaleEvent, SaleState> {
       );
     } else {
       // Add new item
-      final subtotal = product.price * quantity;
-      final vatAmount = (product.price * product.vatRate / 100) * quantity;
-      final total = subtotal + vatAmount;
+      // Calculate VAT based on whether it's included or excluded
+      final double subtotal, vatAmount, total;
+      if (vatIncludedInPrice) {
+        // VAT is included in the price
+        total = product.price * quantity;
+        vatAmount = total - (total / (1 + product.vatRate / 100));
+        subtotal = total - vatAmount;
+      } else {
+        // VAT is excluded from the price
+        subtotal = product.price * quantity;
+        vatAmount = (product.price * product.vatRate / 100) * quantity;
+        total = subtotal + vatAmount;
+      }
 
       cartItems.add(SaleItem(
         id: _uuid.v4(),
@@ -184,9 +206,21 @@ class SaleBloc extends Bloc<SaleEvent, SaleState> {
 
     if (index >= 0) {
       final item = cartItems[index];
-      final subtotal = item.unitPrice * event.newQuantity;
-      final vatAmount = (item.unitPrice * item.vatRate / 100) * event.newQuantity;
-      final total = subtotal + vatAmount;
+      final vatIncludedInPrice = event.vatIncludedInPrice;
+
+      // Calculate VAT based on whether it's included or excluded
+      final double subtotal, vatAmount, total;
+      if (vatIncludedInPrice) {
+        // VAT is included in the price
+        total = item.unitPrice * event.newQuantity;
+        vatAmount = total - (total / (1 + item.vatRate / 100));
+        subtotal = total - vatAmount;
+      } else {
+        // VAT is excluded from the price
+        subtotal = item.unitPrice * event.newQuantity;
+        vatAmount = (item.unitPrice * item.vatRate / 100) * event.newQuantity;
+        total = subtotal + vatAmount;
+      }
 
       cartItems[index] = SaleItem(
         id: item.id,

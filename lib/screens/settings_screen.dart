@@ -423,6 +423,56 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 }
                               },
                             ),
+                            const SizedBox(height: 24),
+                            const Divider(),
+                            const SizedBox(height: 8),
+                            Text(
+                              'VAT Calculation Method',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Choose whether VAT is included in the product price or added on top',
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Card(
+                              elevation: 0,
+                              color: configState.vatIncludedInPrice
+                                ? Colors.green.shade50
+                                : Colors.blue.shade50,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                  color: configState.vatIncludedInPrice
+                                    ? Colors.green.shade200
+                                    : Colors.blue.shade200,
+                                ),
+                              ),
+                              child: SwitchListTile(
+                                title: Text(
+                                  configState.vatIncludedInPrice
+                                    ? 'VAT Included in Price'
+                                    : 'VAT Excluded from Price',
+                                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  configState.vatIncludedInPrice
+                                    ? 'Product prices include VAT (VAT will be extracted from the total)'
+                                    : 'Product prices exclude VAT (VAT will be added to the total)',
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                                value: configState.vatIncludedInPrice,
+                                onChanged: (value) {
+                                  context.read<AppConfigBloc>().add(UpdateVatInclusionEvent(value));
+                                },
+                                activeColor: Colors.green.shade700,
+                              ),
+                            ),
                             const SizedBox(height: 12),
                             Container(
                               padding: const EdgeInsets.all(12),

@@ -141,7 +141,8 @@ class _CashierScreenState extends State<CashierScreen>
   }
 
   void _addProductToCart(Product product) {
-    context.read<SaleBloc>().add(AddToCartEvent(product));
+    final vatIncludedInPrice = context.read<AppConfigBloc>().state.vatIncludedInPrice;
+    context.read<SaleBloc>().add(AddToCartEvent(product, vatIncludedInPrice: vatIncludedInPrice));
     final l10n = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -402,6 +403,44 @@ class _CashierScreenState extends State<CashierScreen>
                               ),
                               onSubmitted: (_) => _scanBarcode(),
                             ),
+                          ),
+                          // VAT Information Note
+                          BlocBuilder<AppConfigBloc, AppConfigState>(
+                            builder: (context, configState) {
+                              return Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                color: configState.vatIncludedInPrice
+                                  ? Colors.green.shade50
+                                  : Colors.blue.shade50,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.info_outline,
+                                      size: 16,
+                                      color: configState.vatIncludedInPrice
+                                        ? Colors.green.shade700
+                                        : Colors.blue.shade700,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        configState.vatIncludedInPrice
+                                          ? 'VAT ${configState.vatRate.toStringAsFixed(1)}% - Included in price'
+                                          : 'VAT ${configState.vatRate.toStringAsFixed(1)}% - Excluded from price',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          color: configState.vatIncludedInPrice
+                                            ? Colors.green.shade900
+                                            : Colors.blue.shade900,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                           ),
                           // Category tabs
                           Container(
@@ -836,9 +875,10 @@ class _CartItem extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.remove),
                   onPressed: () {
+                    final vatIncludedInPrice = context.read<AppConfigBloc>().state.vatIncludedInPrice;
                     context.read<SaleBloc>().add(
                           UpdateCartItemQuantityEvent(
-                              item.id, item.quantity - 1),
+                              item.id, item.quantity - 1, vatIncludedInPrice: vatIncludedInPrice),
                         );
                   },
                   iconSize: 20,
@@ -850,9 +890,10 @@ class _CartItem extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.add),
                   onPressed: () {
+                    final vatIncludedInPrice = context.read<AppConfigBloc>().state.vatIncludedInPrice;
                     context.read<SaleBloc>().add(
                           UpdateCartItemQuantityEvent(
-                              item.id, item.quantity + 1),
+                              item.id, item.quantity + 1, vatIncludedInPrice: vatIncludedInPrice),
                         );
                   },
                   iconSize: 20,

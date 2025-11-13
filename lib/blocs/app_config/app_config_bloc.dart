@@ -11,6 +11,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   static const String _localePreferenceKey = 'app_locale';
   static const String _printFormatPreferenceKey = 'print_format_config';
   static const String _vatRatePreferenceKey = 'vat_rate';
+  static const String _vatIncludedInPricePreferenceKey = 'vat_included_in_price';
 
   static const Locale englishLocale = Locale('en', 'US');
   static const Locale arabicLocale = Locale('ar', 'SA');
@@ -22,6 +23,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
           isLoading: true,
           printFormatConfig: PrintFormatConfig.defaultConfig,
           vatRate: 15.0,
+          vatIncludedInPrice: false,
         )) {
     on<InitializeAppConfigEvent>(_onInitialize);
     on<UpdateThemeEvent>(_onUpdateTheme);
@@ -31,6 +33,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     on<SetArabicEvent>(_onSetArabic);
     on<UpdatePrintFormatEvent>(_onUpdatePrintFormat);
     on<UpdateVatRateEvent>(_onUpdateVatRate);
+    on<UpdateVatInclusionEvent>(_onUpdateVatInclusion);
   }
 
   Future<void> _onInitialize(
@@ -45,10 +48,12 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
       final savedLocale = prefs.getString(_localePreferenceKey);
       final savedPrintFormat = prefs.getString(_printFormatPreferenceKey);
       final savedVatRate = prefs.getDouble(_vatRatePreferenceKey);
+      final savedVatIncludedInPrice = prefs.getBool(_vatIncludedInPricePreferenceKey);
 
       final themeMode = savedTheme == 'dark' ? ThemeMode.dark : ThemeMode.light;
       final locale = savedLocale == 'ar' ? arabicLocale : englishLocale;
       final vatRate = savedVatRate ?? 15.0; // Default Saudi VAT rate
+      final vatIncludedInPrice = savedVatIncludedInPrice ?? false; // Default: VAT not included
 
       PrintFormatConfig printFormatConfig = PrintFormatConfig.defaultConfig;
       if (savedPrintFormat != null) {
@@ -65,6 +70,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
         locale: locale,
         printFormatConfig: printFormatConfig,
         vatRate: vatRate,
+        vatIncludedInPrice: vatIncludedInPrice,
         isLoading: false,
       ));
     } catch (e) {
@@ -74,6 +80,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
         locale: englishLocale,
         printFormatConfig: PrintFormatConfig.defaultConfig,
         vatRate: 15.0,
+        vatIncludedInPrice: false,
         isLoading: false,
       ));
     }
@@ -181,6 +188,25 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
       await prefs.setDouble(_vatRatePreferenceKey, vatRate);
     } catch (e) {
       debugPrint('Error saving VAT rate preference: $e');
+    }
+  }
+
+  Future<void> _onUpdateVatInclusion(
+    UpdateVatInclusionEvent event,
+    Emitter<AppConfigState> emit,
+  ) async {
+    if (state.vatIncludedInPrice != event.vatIncludedInPrice) {
+      await _saveVatInclusionPreference(event.vatIncludedInPrice);
+      emit(state.copyWith(vatIncludedInPrice: event.vatIncludedInPrice));
+    }
+  }
+
+  Future<void> _saveVatInclusionPreference(bool vatIncludedInPrice) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(_vatIncludedInPricePreferenceKey, vatIncludedInPrice);
+    } catch (e) {
+      debugPrint('Error saving VAT inclusion preference: $e');
     }
   }
 }
