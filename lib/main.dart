@@ -13,6 +13,7 @@ import 'blocs/product/product_bloc.dart';
 import 'blocs/customer/customer_bloc.dart';
 import 'blocs/sale/sale_bloc.dart';
 import 'blocs/user/user_bloc.dart';
+import 'blocs/dashboard/dashboard_bloc.dart';
 import 'config/app_theme.dart';
 import 'screens/login_screen.dart';
 import 'screens/dashboard_screen.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => CustomerBloc()),
         BlocProvider(create: (_) => SaleBloc()),
         BlocProvider(create: (_) => UserBloc()),
+        BlocProvider(create: (_) => DashboardBloc()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(1920, 1080), // Desktop/Tablet design size
