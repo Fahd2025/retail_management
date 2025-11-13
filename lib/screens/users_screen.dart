@@ -205,7 +205,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                 label: Text(
                                   user.role == UserRole.admin
                                       ? l10n.admin
-                                      : l10n.cashierMode,
+                                      : l10n.cashier,
                                   style: const TextStyle(fontSize: 12),
                                 ),
                                 backgroundColor: user.role == UserRole.admin
@@ -296,7 +296,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                   label: Text(
                                     user.role == UserRole.admin
                                         ? l10n.admin
-                                        : l10n.cashierMode,
+                                        : l10n.cashier,
                                     style: const TextStyle(fontSize: 11),
                                   ),
                                   backgroundColor: user.role == UserRole.admin
@@ -520,7 +520,7 @@ class _UserDialogState extends State<_UserDialog> {
               ),
               DropdownMenuItem(
                 value: UserRole.cashier,
-                child: Text(l10n.cashierMode),
+                child: Text(l10n.cashier),
               ),
             ],
             onChanged: (value) {

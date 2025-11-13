@@ -503,7 +503,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get selectTime => 'اختر الوقت';
 
   @override
-  String get cashierMode => 'وضع أمين الصندوق';
+  String get cashier => 'وضع أمين الصندوق';
 
   @override
   String get scanBarcode => 'مسح الرمز الشريطي';

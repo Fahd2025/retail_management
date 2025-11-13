@@ -1082,11 +1082,11 @@ abstract class AppLocalizations {
   /// **'Select Time'**
   String get selectTime;
 
-  /// No description provided for @cashierMode.
+  /// No description provided for @cashier.
   ///
   /// In en, this message translates to:
   /// **'Cashier Mode'**
-  String get cashierMode;
+  String get cashier;
 
   /// No description provided for @scanBarcode.
   ///

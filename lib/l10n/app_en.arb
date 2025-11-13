@@ -171,7 +171,7 @@
     "to": "To",
     "selectDate": "Select Date",
     "selectTime": "Select Time",
-    "cashierMode": "Cashier Mode",
+    "cashier": "Cashier",
     "scanBarcode": "Scan Barcode",
     "addItem": "Add Item",
     "removeItem": "Remove Item",

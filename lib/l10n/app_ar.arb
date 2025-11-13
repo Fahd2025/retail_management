@@ -176,7 +176,7 @@
   "to": "إلى",
   "selectDate": "اختر التاريخ",
   "selectTime": "اختر الوقت",
-  "cashierMode": "وضع أمين الصندوق",
+  "cashier": "أمين الصندوق",
   "scanBarcode": "مسح الرمز الشريطي",
   "addItem": "إضافة عنصر",
   "removeItem": "إزالة عنصر",
