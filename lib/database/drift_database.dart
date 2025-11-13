@@ -1375,6 +1375,7 @@ class AppDatabase extends _$AppDatabase {
       email: 'info@saudiretail.sa',
       vatNumber: '300123456789003',
       crnNumber: '1010987654',
+      logoPath: 'assets/images/sample_company_logo.png',
       createdAt: now,
       updatedAt: now,
     );

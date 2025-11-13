@@ -8,6 +8,8 @@ import '../models/print_format.dart';
 import '../utils/zatca_qr_generator.dart';
 import 'invoice_templates/invoice_template.dart';
 import 'invoice_templates/invoice_template_factory.dart';
+import 'image_service.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class InvoiceService {
   /// Generate an invoice PDF using the specified print format configuration
@@ -39,12 +41,31 @@ class InvoiceService {
       vatAmount: sale.vatAmount,
     );
 
+    // Load company logo if available
+    Uint8List? logoBytes;
+    if (companyInfo.logoPath != null && companyInfo.logoPath!.isNotEmpty) {
+      try {
+        if (companyInfo.logoPath!.startsWith('assets/')) {
+          // Load from assets
+          final data = await rootBundle.load(companyInfo.logoPath!);
+          logoBytes = data.buffer.asUint8List();
+        } else {
+          // Load from storage (file or base64)
+          logoBytes = await ImageService.getImageBytes(companyInfo.logoPath);
+        }
+      } catch (e) {
+        print('Error loading logo for invoice: $e');
+        // Continue without logo
+      }
+    }
+
     // Create invoice data container
     final invoiceData = InvoiceData(
       sale: sale,
       companyInfo: companyInfo,
       customer: customer,
       zatcaQrData: qrData,
+      logoBytes: logoBytes,
     );
 
     // Get the appropriate template for the format
