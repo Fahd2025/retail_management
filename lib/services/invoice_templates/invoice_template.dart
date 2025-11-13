@@ -108,9 +108,9 @@ abstract class InvoiceTemplate {
   String getPaymentMethodLabel(PaymentMethod method) {
     switch (method) {
       case PaymentMethod.cash:
-        return 'Cash / نقداً';
+        return 'Cash /  نقدي ';
       case PaymentMethod.card:
-        return 'Card / بطاقة';
+        return ' Card / بطاقة';
       case PaymentMethod.transfer:
         return 'Transfer / تحويل';
     }

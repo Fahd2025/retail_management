@@ -59,8 +59,11 @@ class Thermal80mmTemplate extends InvoiceTemplate {
 
         // VAT Note
         pw.Text(
-          'Prices exclusive of VAT / الأسعار لا تشمل الضريبة',
-          style: pw.TextStyle(fontSize: 6, fontStyle: pw.FontStyle.italic, font: data.arabicFont),
+          'Prices exclusive of VAT /  الأسعار لا تشمل الضريبة ',
+          style: pw.TextStyle(
+              fontSize: 6,
+              fontStyle: pw.FontStyle.italic,
+              font: data.arabicFont),
           textAlign: pw.TextAlign.center,
         ),
 
@@ -174,8 +177,10 @@ class Thermal80mmTemplate extends InvoiceTemplate {
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         _buildLabelValueRow('Invoice:', data.sale.invoiceNumber, data),
-        _buildLabelValueRow('Date:', dateFormat.format(data.sale.saleDate), data),
-        _buildLabelValueRow('Payment:', getPaymentMethodLabel(data.sale.paymentMethod), data),
+        _buildLabelValueRow(
+            'Date:', dateFormat.format(data.sale.saleDate), data),
+        _buildLabelValueRow(
+            'Payment:', getPaymentMethodLabel(data.sale.paymentMethod), data),
       ],
     );
   }
@@ -346,7 +351,8 @@ class Thermal80mmTemplate extends InvoiceTemplate {
                   padding: const pw.EdgeInsets.only(left: 5, top: 1),
                   child: pw.Text(
                     'VAT: ${currencyFormat.format(item.vatAmount)}',
-                    style: const pw.TextStyle(fontSize: 6, color: PdfColors.grey600),
+                    style: const pw.TextStyle(
+                        fontSize: 6, color: PdfColors.grey600),
                   ),
                 ),
               ],
@@ -363,7 +369,8 @@ class Thermal80mmTemplate extends InvoiceTemplate {
       crossAxisAlignment: pw.CrossAxisAlignment.stretch,
       children: [
         _buildTotalRow('Subtotal:', currencyFormat.format(data.sale.subtotal)),
-        _buildTotalRow('VAT Amount:', currencyFormat.format(data.sale.vatAmount)),
+        _buildTotalRow(
+            'VAT Amount:', currencyFormat.format(data.sale.vatAmount)),
         pw.Container(
           margin: const pw.EdgeInsets.symmetric(vertical: 3),
           height: 1,
@@ -379,7 +386,8 @@ class Thermal80mmTemplate extends InvoiceTemplate {
           pw.SizedBox(height: 3),
           _buildTotalRow('Paid:', currencyFormat.format(data.sale.paidAmount)),
           if (data.sale.changeAmount > 0)
-            _buildTotalRow('Change:', currencyFormat.format(data.sale.changeAmount)),
+            _buildTotalRow(
+                'Change:', currencyFormat.format(data.sale.changeAmount)),
         ],
       ],
     );

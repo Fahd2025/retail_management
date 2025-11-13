@@ -62,7 +62,10 @@ class A4InvoiceTemplate extends InvoiceTemplate {
         // VAT Note
         pw.Text(
           'Note: Prices are exclusive of VAT / ملاحظة: الأسعار غير شاملة لضريبة القيمة المضافة',
-          style: pw.TextStyle(fontSize: 8, fontStyle: pw.FontStyle.italic, font: data.arabicFont),
+          style: pw.TextStyle(
+              fontSize: 8,
+              fontStyle: pw.FontStyle.italic,
+              font: data.arabicFont),
         ),
         pw.SizedBox(height: 15),
 
@@ -207,7 +210,8 @@ class A4InvoiceTemplate extends InvoiceTemplate {
           pw.SizedBox(height: 5),
           _buildInfoRow('Invoice Number:', data.sale.invoiceNumber, data),
           _buildInfoRow('Date:', dateFormat.format(data.sale.saleDate), data),
-          _buildInfoRow('Payment Method:', getPaymentMethodLabel(data.sale.paymentMethod), data),
+          _buildInfoRow('Payment Method:',
+              getPaymentMethodLabel(data.sale.paymentMethod), data),
         ],
       ),
     );
@@ -283,11 +287,24 @@ class A4InvoiceTemplate extends InvoiceTemplate {
             color: PdfColors.grey300,
           ),
           children: [
-            _buildTableCell('Item / المنتج', isHeader: true, font: data.arabicFont),
-            _buildTableCell('Qty\nالكمية', isHeader: true, align: pw.TextAlign.center, font: data.arabicFont),
-            _buildTableCell('Price\nالسعر', isHeader: true, align: pw.TextAlign.right, font: data.arabicFont),
-            _buildTableCell('VAT\nضريبة', isHeader: true, align: pw.TextAlign.right, font: data.arabicFont),
-            _buildTableCell('Total\nالإجمالي', isHeader: true, align: pw.TextAlign.right, font: data.arabicFont),
+            _buildTableCell('Item / الوصف ',
+                isHeader: true, font: data.arabicFont),
+            _buildTableCell('Qty\nالكمية ',
+                isHeader: true,
+                align: pw.TextAlign.center,
+                font: data.arabicFont),
+            _buildTableCell('Price\n  السعر',
+                isHeader: true,
+                align: pw.TextAlign.right,
+                font: data.arabicFont),
+            _buildTableCell('VAT\n الضريبة ',
+                isHeader: true,
+                align: pw.TextAlign.right,
+                font: data.arabicFont),
+            _buildTableCell('Total\n الإجمالي ',
+                isHeader: true,
+                align: pw.TextAlign.right,
+                font: data.arabicFont),
           ],
         ),
         // Item Rows
@@ -352,8 +369,10 @@ class A4InvoiceTemplate extends InvoiceTemplate {
         child: pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.stretch,
           children: [
-            _buildTotalRow('Subtotal:', currencyFormat.format(data.sale.subtotal)),
-            _buildTotalRow('VAT Amount:', currencyFormat.format(data.sale.vatAmount)),
+            _buildTotalRow(
+                'Subtotal:', currencyFormat.format(data.sale.subtotal)),
+            _buildTotalRow(
+                'VAT Amount:', currencyFormat.format(data.sale.vatAmount)),
             pw.Divider(color: PdfColors.grey),
             _buildTotalRow(
               'Total Amount:',
@@ -363,9 +382,11 @@ class A4InvoiceTemplate extends InvoiceTemplate {
             ),
             if (data.sale.paidAmount > 0) ...[
               pw.SizedBox(height: 5),
-              _buildTotalRow('Paid:', currencyFormat.format(data.sale.paidAmount)),
+              _buildTotalRow(
+                  'Paid:', currencyFormat.format(data.sale.paidAmount)),
               if (data.sale.changeAmount > 0)
-                _buildTotalRow('Change:', currencyFormat.format(data.sale.changeAmount)),
+                _buildTotalRow(
+                    'Change:', currencyFormat.format(data.sale.changeAmount)),
             ],
           ],
         ),

@@ -170,7 +170,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
               final isDesktop = constraints.maxWidth >= 800;
               final l10n = AppLocalizations.of(context)!;
 
-              final vatIncludedInPrice = context.read<AppConfigBloc>().state.vatIncludedInPrice;
+              final vatIncludedInPrice =
+                  context.read<AppConfigBloc>().state.vatIncludedInPrice;
 
               if (isDesktop) {
                 // Desktop/Tablet: DataTable layout that fills width
@@ -179,30 +180,31 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     // VAT Information Note
                     Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                       color: vatIncludedInPrice
-                        ? Colors.green.shade50
-                        : Colors.blue.shade50,
+                          ? Colors.green.shade50
+                          : Colors.blue.shade50,
                       child: Row(
                         children: [
                           Icon(
                             Icons.info_outline,
                             size: 18,
                             color: vatIncludedInPrice
-                              ? Colors.green.shade700
-                              : Colors.blue.shade700,
+                                ? Colors.green.shade700
+                                : Colors.blue.shade700,
                           ),
                           const SizedBox(width: 8),
                           Text(
                             vatIncludedInPrice
-                              ? 'Prices shown include VAT - VAT will be extracted from the listed price'
-                              : 'Prices shown exclude VAT - VAT will be added on top of the listed price',
+                                ? 'Prices shown include VAT - VAT will be extracted from the listed price'
+                                : 'Prices shown exclude VAT - VAT will be added on top of the listed price',
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
                               color: vatIncludedInPrice
-                                ? Colors.green.shade900
-                                : Colors.blue.shade900,
+                                  ? Colors.green.shade900
+                                  : Colors.blue.shade900,
                             ),
                           ),
                         ],
@@ -215,68 +217,85 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: DataTable(
-                                columnSpacing: 20,
-                                horizontalMargin: 16,
-                                columns: [
-                                  DataColumn(label: Text(l10n.name)),
-                                  DataColumn(label: Text(l10n.barcode)),
-                                  DataColumn(label: Text(l10n.category)),
-                                  DataColumn(label: Text(vatIncludedInPrice ? 'Price (Incl.)' : 'Price (Excl.)')),
-                                  DataColumn(label: Text('Before ${l10n.vat}')),
-                                  DataColumn(label: Text('${l10n.vat} Amount')),
-                                  DataColumn(label: Text('After ${l10n.vat}')),
-                                  DataColumn(label: Text(l10n.cost)),
-                                  DataColumn(label: Text(l10n.stock)),
-                                  DataColumn(label: Text(l10n.actions)),
-                                ],
-                                rows: products.map((product) {
-                                  // Calculate VAT breakdown based on inclusion mode
-                                  final double priceBeforeVat, vatAmount, priceAfterVat;
-                                  if (vatIncludedInPrice) {
-                                    // VAT is included in the price
-                                    priceAfterVat = product.price;
-                                    vatAmount = priceAfterVat - (priceAfterVat / (1 + product.vatRate / 100));
-                                    priceBeforeVat = priceAfterVat - vatAmount;
-                                  } else {
-                                    // VAT is excluded from the price
-                                    priceBeforeVat = product.price;
-                                    vatAmount = product.price * (product.vatRate / 100);
-                                    priceAfterVat = priceBeforeVat + vatAmount;
-                                  }
+                            columnSpacing: 20,
+                            horizontalMargin: 16,
+                            columns: [
+                              DataColumn(label: Text(l10n.name)),
+                              DataColumn(label: Text(l10n.barcode)),
+                              DataColumn(label: Text(l10n.category)),
+                              DataColumn(
+                                  label: Text(vatIncludedInPrice
+                                      ? 'Price (Incl.)'
+                                      : 'Price (Excl.)')),
+                              DataColumn(label: Text('Before ${l10n.vat}')),
+                              DataColumn(label: Text('${l10n.vat} Amount')),
+                              DataColumn(label: Text('After ${l10n.vat}')),
+                              DataColumn(label: Text(l10n.cost)),
+                              DataColumn(label: Text(l10n.stock)),
+                              DataColumn(label: Text(l10n.actions)),
+                            ],
+                            rows: products.map((product) {
+                              // Calculate VAT breakdown based on inclusion mode
+                              final double priceBeforeVat,
+                                  vatAmount,
+                                  priceAfterVat;
+                              if (vatIncludedInPrice) {
+                                // VAT is included in the price
+                                priceAfterVat = product.price;
+                                vatAmount = priceAfterVat -
+                                    (priceAfterVat /
+                                        (1 + product.vatRate / 100));
+                                priceBeforeVat = priceAfterVat - vatAmount;
+                              } else {
+                                // VAT is excluded from the price
+                                priceBeforeVat = product.price;
+                                vatAmount =
+                                    product.price * (product.vatRate / 100);
+                                priceAfterVat = priceBeforeVat + vatAmount;
+                              }
 
-                                  return DataRow(cells: [
-                                    DataCell(Text(product.name)),
-                                    DataCell(Text(product.barcode)),
-                                    DataCell(Text(_getCategoryName(product.category))),
-                                    DataCell(Text('SAR ${product.price.toStringAsFixed(2)}')),
-                                    DataCell(Text('SAR ${priceBeforeVat.toStringAsFixed(2)}')),
-                                    DataCell(Text('SAR ${vatAmount.toStringAsFixed(2)}')),
-                                    DataCell(Text('SAR ${priceAfterVat.toStringAsFixed(2)}')),
-                                    DataCell(Text('SAR ${product.cost.toStringAsFixed(2)}')),
-                                    DataCell(Text(product.quantity.toString())),
-                                    DataCell(
-                                      Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(Icons.edit, size: 20),
-                                            onPressed: () => showProductDialog(product),
-                                          ),
-                                          IconButton(
-                                            icon: const Icon(Icons.delete, size: 20, color: Colors.red),
-                                            onPressed: () => _deleteProduct(context, product),
-                                          ),
-                                        ],
+                              return DataRow(cells: [
+                                DataCell(Text(product.name)),
+                                DataCell(Text(product.barcode)),
+                                DataCell(
+                                    Text(_getCategoryName(product.category))),
+                                DataCell(Text(
+                                    'SAR ${product.price.toStringAsFixed(2)}')),
+                                DataCell(Text(
+                                    'SAR ${priceBeforeVat.toStringAsFixed(2)}')),
+                                DataCell(Text(
+                                    'SAR ${vatAmount.toStringAsFixed(2)}')),
+                                DataCell(Text(
+                                    'SAR ${priceAfterVat.toStringAsFixed(2)}')),
+                                DataCell(Text(
+                                    'SAR ${product.cost.toStringAsFixed(2)}')),
+                                DataCell(Text(product.quantity.toString())),
+                                DataCell(
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.edit, size: 20),
+                                        onPressed: () =>
+                                            showProductDialog(product),
                                       ),
-                                    ),
-                                  ]);
-                                }).toList(),
-                              ),
-                            ),
+                                      IconButton(
+                                        icon: const Icon(Icons.delete,
+                                            size: 20, color: Colors.red),
+                                        onPressed: () =>
+                                            _deleteProduct(context, product),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ]);
+                            }).toList(),
                           ),
                         ),
-                      ],
-                    );
+                      ),
+                    ),
+                  ],
+                );
               } else {
                 // Mobile: Card with ExpansionTile layout
                 return Column(
@@ -284,31 +303,32 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     // VAT Information Note
                     Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                       color: vatIncludedInPrice
-                        ? Colors.green.shade50
-                        : Colors.blue.shade50,
+                          ? Colors.green.shade50
+                          : Colors.blue.shade50,
                       child: Row(
                         children: [
                           Icon(
                             Icons.info_outline,
                             size: 18,
                             color: vatIncludedInPrice
-                              ? Colors.green.shade700
-                              : Colors.blue.shade700,
+                                ? Colors.green.shade700
+                                : Colors.blue.shade700,
                           ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               vatIncludedInPrice
-                                ? 'Prices shown include VAT - VAT will be extracted from the listed price'
-                                : 'Prices shown exclude VAT - VAT will be added on top of the listed price',
+                                  ? 'Prices shown include VAT - VAT will be extracted from the listed price'
+                                  : 'Prices shown exclude VAT - VAT will be added on top of the listed price',
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                                 color: vatIncludedInPrice
-                                  ? Colors.green.shade900
-                                  : Colors.blue.shade900,
+                                    ? Colors.green.shade900
+                                    : Colors.blue.shade900,
                               ),
                             ),
                           ),
@@ -328,7 +348,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           if (vatIncludedInPrice) {
                             // VAT is included in the price
                             priceAfterVat = product.price;
-                            vatAmount = priceAfterVat - (priceAfterVat / (1 + product.vatRate / 100));
+                            vatAmount = priceAfterVat -
+                                (priceAfterVat / (1 + product.vatRate / 100));
                             priceBeforeVat = priceAfterVat - vatAmount;
                           } else {
                             // VAT is excluded from the price
@@ -338,111 +359,120 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           }
 
                           return Card(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      elevation: 2,
-                      child: ExpansionTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Theme.of(context)
-                              .primaryColor
-                              .withValues(alpha: 0.1),
-                          child: Icon(
-                            Icons.inventory_2,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        title: Text(
-                          product.name,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              l10n.category + ': ' + _getCategoryName(product.category),
-                              style: const TextStyle(fontSize: 13),
-                            ),
-                            Text(
-                              (vatIncludedInPrice ? 'Price (Incl. ${l10n.vat})' : 'Price (Excl. ${l10n.vat})') +
-                                ': SAR ${product.price.toStringAsFixed(2)}',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.green.shade700,
-                              ),
-                            ),
-                          ],
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit, color: Colors.blue),
-                              onPressed: () => showProductDialog(product),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () => _deleteProduct(context, product),
-                            ),
-                          ],
-                        ),
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _buildInfoRow(l10n.barcode, product.barcode),
-                                _buildInfoRow(l10n.cost,
-                                    'SAR ${product.cost.toStringAsFixed(2)}'),
-                                _buildInfoRow(l10n.stock,
-                                    '${product.quantity} ${l10n.units}'),
-                                const SizedBox(height: 8),
-                                const Divider(),
-                                const SizedBox(height: 8),
-                                Text(
-                                  '${l10n.vat} Breakdown',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
+                            margin: const EdgeInsets.only(bottom: 12),
+                            elevation: 2,
+                            child: ExpansionTile(
+                              leading: CircleAvatar(
+                                backgroundColor: Theme.of(context)
+                                    .primaryColor
+                                    .withValues(alpha: 0.1),
+                                child: Icon(
+                                  Icons.inventory_2,
+                                  color: Theme.of(context).primaryColor,
                                 ),
-                                const SizedBox(height: 8),
-                                _buildInfoRow('Before ${l10n.vat}',
-                                    'SAR ${priceBeforeVat.toStringAsFixed(2)}'),
-                                _buildInfoRow('${l10n.vat} Amount',
-                                    'SAR ${vatAmount.toStringAsFixed(2)}'),
-                                _buildInfoRow('After ${l10n.vat}',
-                                    'SAR ${priceAfterVat.toStringAsFixed(2)}'),
-                                if (product.description != null &&
-                                    product.description!.isNotEmpty) ...[
-                                  const SizedBox(height: 8),
-                                  const Divider(),
-                                  const SizedBox(height: 8),
+                              ),
+                              title: Text(
+                                product.name,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
                                   Text(
-                                    l10n.description,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
+                                    l10n.category +
+                                        ': ' +
+                                        _getCategoryName(product.category),
+                                    style: const TextStyle(fontSize: 13),
                                   ),
-                                  const SizedBox(height: 4),
                                   Text(
-                                    product.description!,
+                                    (vatIncludedInPrice
+                                            ? 'Price (Incl. ${l10n.vat})'
+                                            : 'Price (Excl. ${l10n.vat})') +
+                                        ': SAR ${product.price.toStringAsFixed(2)}',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: Colors.grey.shade600,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.green.shade700,
                                     ),
                                   ),
                                 ],
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.edit,
+                                        color: Colors.blue),
+                                    onPressed: () => showProductDialog(product),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete,
+                                        color: Colors.red),
+                                    onPressed: () =>
+                                        _deleteProduct(context, product),
+                                  ),
+                                ],
+                              ),
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildInfoRow(
+                                          l10n.barcode, product.barcode),
+                                      _buildInfoRow(l10n.cost,
+                                          'SAR ${product.cost.toStringAsFixed(2)}'),
+                                      _buildInfoRow(l10n.stock,
+                                          '${product.quantity} ${l10n.units}'),
+                                      const SizedBox(height: 8),
+                                      const Divider(),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        '${l10n.vat} Breakdown',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      _buildInfoRow('Before ${l10n.vat}',
+                                          'SAR ${priceBeforeVat.toStringAsFixed(2)}'),
+                                      _buildInfoRow('${l10n.vat} Amount',
+                                          'SAR ${vatAmount.toStringAsFixed(2)}'),
+                                      _buildInfoRow('After ${l10n.vat}',
+                                          'SAR ${priceAfterVat.toStringAsFixed(2)}'),
+                                      if (product.description != null &&
+                                          product.description!.isNotEmpty) ...[
+                                        const SizedBox(height: 8),
+                                        const Divider(),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          l10n.description,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          product.description!,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey.shade600,
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
-                          ),
-                        ],
-                      ),
-                    );
+                          );
                         },
                       ),
                     ),
@@ -532,32 +562,32 @@ class _ProductDialogState extends State<_ProductDialog> {
 
     if (widget.product == null) {
       context.read<ProductBloc>().add(AddProductEvent(
-        name: _nameController.text,
-        barcode: _barcodeController.text,
-        category: _selectedCategoryId!,
-        price: double.parse(_priceController.text),
-        cost: double.parse(_costController.text),
-        quantity: int.parse(_quantityController.text),
-        vatRate: vatRate,
-        description: _descriptionController.text.isEmpty
-            ? null
-            : _descriptionController.text,
-      ));
+            name: _nameController.text,
+            barcode: _barcodeController.text,
+            category: _selectedCategoryId!,
+            price: double.parse(_priceController.text),
+            cost: double.parse(_costController.text),
+            quantity: int.parse(_quantityController.text),
+            vatRate: vatRate,
+            description: _descriptionController.text.isEmpty
+                ? null
+                : _descriptionController.text,
+          ));
     } else {
       context.read<ProductBloc>().add(UpdateProductEvent(
-        widget.product!.copyWith(
-          name: _nameController.text,
-          barcode: _barcodeController.text,
-          category: _selectedCategoryId!,
-          price: double.parse(_priceController.text),
-          cost: double.parse(_costController.text),
-          quantity: int.parse(_quantityController.text),
-          vatRate: vatRate,
-          description: _descriptionController.text.isEmpty
-              ? null
-              : _descriptionController.text,
-        ),
-      ));
+            widget.product!.copyWith(
+              name: _nameController.text,
+              barcode: _barcodeController.text,
+              category: _selectedCategoryId!,
+              price: double.parse(_priceController.text),
+              cost: double.parse(_costController.text),
+              quantity: int.parse(_quantityController.text),
+              vatRate: vatRate,
+              description: _descriptionController.text.isEmpty
+                  ? null
+                  : _descriptionController.text,
+            ),
+          ));
     }
 
     // Wait for operation to complete
@@ -612,7 +642,7 @@ class _ProductDialogState extends State<_ProductDialog> {
                   ),
                 )
               : DropdownButtonFormField<String>(
-                  value: _selectedCategoryId,
+                  initialValue: _selectedCategoryId,
                   decoration: InputDecoration(
                     labelText: l10n.categoryRequired,
                     border: const OutlineInputBorder(),
@@ -708,8 +738,10 @@ class _ProductDialogState extends State<_ProductDialog> {
                         filled: true,
                         fillColor: Colors.grey.shade100,
                         suffixIcon: Tooltip(
-                          message: 'VAT amount calculated automatically (${appConfig.vatRate.toStringAsFixed(1)}%)',
-                          child: Icon(Icons.info_outline, size: 18, color: Colors.blue.shade600),
+                          message:
+                              'VAT amount calculated automatically (${appConfig.vatRate.toStringAsFixed(1)}%)',
+                          child: Icon(Icons.info_outline,
+                              size: 18, color: Colors.blue.shade600),
                         ),
                       ),
                       readOnly: true,
