@@ -6,6 +6,7 @@ import 'package:retail_management/blocs/app_config/app_config_bloc.dart';
 import 'package:retail_management/blocs/app_config/app_config_event.dart';
 import 'package:retail_management/blocs/app_config/app_config_state.dart';
 import 'package:retail_management/widgets/print_format_selector.dart';
+import 'package:retail_management/l10n/app_localizations.dart';
 
 class MockAppConfigBloc extends AppConfigBloc {
   Stream<AppConfigState> mapEventToState(AppConfigEvent event) async* {
@@ -31,6 +32,8 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: BlocProvider<AppConfigBloc>(
               create: (_) => appConfigBloc,
@@ -50,6 +53,8 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: BlocProvider<AppConfigBloc>(
               create: (_) => appConfigBloc,
@@ -70,6 +75,8 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: BlocProvider<AppConfigBloc>(
               create: (_) => appConfigBloc,
@@ -97,6 +104,8 @@ void main() {
     testWidgets('should toggle switch values', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: BlocProvider<AppConfigBloc>(
               create: (_) => appConfigBloc,
@@ -139,6 +148,8 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: PrintFormatQuickSelector(
               selectedFormat: selectedFormat,
@@ -160,6 +171,8 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: PrintFormatQuickSelector(
               selectedFormat: PrintFormat.thermal80mm,
@@ -188,6 +201,8 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: PrintFormatQuickSelector(
               selectedFormat: PrintFormat.a4,
@@ -216,6 +231,8 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: PrintFormatQuickSelector(
               selectedFormat: PrintFormat.a4,
