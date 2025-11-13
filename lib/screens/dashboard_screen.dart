@@ -97,7 +97,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (role == UserRole.admin) {
       return [
         {'icon': Icons.dashboard, 'label': l10n.dashboard},
-        {'icon': Icons.point_of_sale, 'label': l10n.cashier},
+        {'icon': Icons.point_of_sale, 'label': l10n.cashierMode},
         {'icon': Icons.inventory, 'label': l10n.products},
         {'icon': Icons.category, 'label': l10n.categories},
         {'icon': Icons.people, 'label': l10n.customers},
@@ -107,7 +107,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ];
     } else {
       return [
-        {'icon': Icons.point_of_sale, 'label': l10n.cashier},
+        {'icon': Icons.point_of_sale, 'label': l10n.cashierMode},
         {'icon': Icons.receipt_long, 'label': l10n.sales},
       ];
     }
@@ -143,7 +143,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
 
     // Build AppBar based on selected screen label
-    if (label == l10n.pointOfSale || label == l10n.cashier) {
+    if (label == l10n.pointOfSale || label == l10n.cashierMode) {
       // Cashier Screen
       return PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
@@ -193,7 +193,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onPressed: () {
               (_productsKey.currentState as dynamic)?.showProductDialog();
             },
-            tooltip: l10n.addProduct,
+            tooltip: l10n.add,
           ),
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -215,7 +215,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onPressed: () {
               (_categoriesKey.currentState as dynamic)?.showCategoryDialog();
             },
-            tooltip: l10n.addCategory,
+            tooltip: l10n.add,
           ),
           IconButton(
             icon: const Icon(Icons.refresh),

@@ -10,7 +10,8 @@ import '../models/company_info.dart';
 class CustomerInvoiceExportService {
   final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
   final shortDateFormat = DateFormat('dd/MM/yyyy');
-  final currencyFormat = NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
+  final currencyFormat =
+      NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
 
   Future<Uint8List> generateCustomerInvoicesPdf({
     required Customer customer,
@@ -109,7 +110,8 @@ class CustomerInvoiceExportService {
     );
   }
 
-  pw.Widget _buildCustomerInfo(Customer customer, List<Sale> sales, DateTime? startDate, DateTime? endDate) {
+  pw.Widget _buildCustomerInfo(Customer customer, List<Sale> sales,
+      DateTime? startDate, DateTime? endDate) {
     return pw.Container(
       padding: const pw.EdgeInsets.all(10),
       decoration: pw.BoxDecoration(
@@ -134,16 +136,21 @@ class CustomerInvoiceExportService {
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
                   pw.Text('Customer: ${customer.name}'),
-                  if (customer.phone != null) pw.Text('Phone: ${customer.phone}'),
-                  if (customer.email != null) pw.Text('Email: ${customer.email}'),
-                  if (customer.vatNumber != null) pw.Text('VAT: ${customer.vatNumber}'),
-                  if (customer.crnNumber != null) pw.Text('CR: ${customer.crnNumber}'),
+                  if (customer.phone != null)
+                    pw.Text('Phone: ${customer.phone}'),
+                  if (customer.email != null)
+                    pw.Text('Email: ${customer.email}'),
+                  if (customer.vatNumber != null)
+                    pw.Text('VAT: ${customer.vatNumber}'),
+                  if (customer.crnNumber != null)
+                    pw.Text('CR: ${customer.crnNumber}'),
                 ],
               ),
               pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.end,
                 children: [
-                  pw.Text('Report Date: ${shortDateFormat.format(DateTime.now())}'),
+                  pw.Text(
+                      'Report Date: ${shortDateFormat.format(DateTime.now())}'),
                   if (startDate != null && endDate != null) ...[
                     pw.Text('Period: ${shortDateFormat.format(startDate)}'),
                     pw.Text('to ${shortDateFormat.format(endDate)}'),
@@ -160,9 +167,11 @@ class CustomerInvoiceExportService {
   }
 
   pw.Widget _buildSummaryStatistics(List<Sale> sales) {
-    final totalSubtotal = sales.fold<double>(0, (sum, sale) => sum + sale.subtotal);
+    final totalSubtotal =
+        sales.fold<double>(0, (sum, sale) => sum + sale.subtotal);
     final totalVat = sales.fold<double>(0, (sum, sale) => sum + sale.vatAmount);
-    final totalAmount = sales.fold<double>(0, (sum, sale) => sum + sale.totalAmount);
+    final totalAmount =
+        sales.fold<double>(0, (sum, sale) => sum + sale.totalAmount);
 
     return pw.Container(
       padding: const pw.EdgeInsets.all(10),
@@ -173,10 +182,14 @@ class CustomerInvoiceExportService {
       child: pw.Row(
         mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
         children: [
-          _buildStatisticItem('Total Invoices\nإجمالي الفواتير', sales.length.toString()),
-          _buildStatisticItem('Subtotal\nالمجموع الفرعي', currencyFormat.format(totalSubtotal)),
-          _buildStatisticItem('VAT Amount\nقيمة الضريبة', currencyFormat.format(totalVat)),
-          _buildStatisticItem('Total Amount\nالمبلغ الإجمالي', currencyFormat.format(totalAmount)),
+          _buildStatisticItem(
+              'Total Invoices\nإجمالي الفواتير', sales.length.toString()),
+          _buildStatisticItem(
+              'Subtotal\nالمجموع الفرعي', currencyFormat.format(totalSubtotal)),
+          _buildStatisticItem(
+              'VAT Amount\nقيمة الضريبة', currencyFormat.format(totalVat)),
+          _buildStatisticItem('Total Amount\nالمبلغ الإجمالي',
+              currencyFormat.format(totalAmount)),
         ],
       ),
     );
@@ -238,9 +251,12 @@ class CustomerInvoiceExportService {
             children: [
               _buildTableCell(sale.invoiceNumber),
               _buildTableCell(dateFormat.format(sale.saleDate)),
-              _buildTableCell(currencyFormat.format(sale.subtotal), align: pw.TextAlign.right),
-              _buildTableCell(currencyFormat.format(sale.vatAmount), align: pw.TextAlign.right),
-              _buildTableCell(currencyFormat.format(sale.totalAmount), align: pw.TextAlign.right),
+              _buildTableCell(currencyFormat.format(sale.subtotal),
+                  align: pw.TextAlign.right),
+              _buildTableCell(currencyFormat.format(sale.vatAmount),
+                  align: pw.TextAlign.right),
+              _buildTableCell(currencyFormat.format(sale.totalAmount),
+                  align: pw.TextAlign.right),
               _buildTableCell(_getPaymentMethodLabel(sale.paymentMethod)),
             ],
           );
@@ -253,17 +269,20 @@ class CustomerInvoiceExportService {
           children: [
             _buildTableCell('Total / الإجمالي', isHeader: true, colspan: 2),
             _buildTableCell(
-              currencyFormat.format(sales.fold<double>(0, (sum, sale) => sum + sale.subtotal)),
+              currencyFormat.format(
+                  sales.fold<double>(0, (sum, sale) => sum + sale.subtotal)),
               isHeader: true,
               align: pw.TextAlign.right,
             ),
             _buildTableCell(
-              currencyFormat.format(sales.fold<double>(0, (sum, sale) => sum + sale.vatAmount)),
+              currencyFormat.format(
+                  sales.fold<double>(0, (sum, sale) => sum + sale.vatAmount)),
               isHeader: true,
               align: pw.TextAlign.right,
             ),
             _buildTableCell(
-              currencyFormat.format(sales.fold<double>(0, (sum, sale) => sum + sale.totalAmount)),
+              currencyFormat.format(
+                  sales.fold<double>(0, (sum, sale) => sum + sale.totalAmount)),
               isHeader: true,
               align: pw.TextAlign.right,
             ),
@@ -322,7 +341,8 @@ class CustomerInvoiceExportService {
 
     // Generate filename
     final dateStr = DateFormat('yyyyMMdd').format(DateTime.now());
-    final filename = 'Customer_Invoices_${customer.name.replaceAll(' ', '_')}_$dateStr.pdf';
+    final filename =
+        'Customer_Invoices_${customer.name.replaceAll(' ', '_')}_$dateStr.pdf';
 
     // Use printing package which handles both web download and mobile save
     await Printing.sharePdf(bytes: pdfBytes, filename: filename);

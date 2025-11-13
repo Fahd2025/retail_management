@@ -69,9 +69,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get loginTitle => 'إدارة البيع بالتجزئة';
 
   @override
-  String get loginSubtitle => 'نظام نقاط البيع';
-
-  @override
   String get username => 'اسم المستخدم';
 
   @override
@@ -110,9 +107,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get welcome => 'مرحباً';
 
   @override
-  String get totalSales => 'إجمالي المبيعات';
-
-  @override
   String get totalProducts => 'إجمالي المنتجات';
 
   @override
@@ -146,9 +140,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get productList => 'قائمة المنتجات';
 
   @override
-  String get addProduct => 'إضافة منتج';
-
-  @override
   String get editProduct => 'تعديل المنتج';
 
   @override
@@ -164,9 +155,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get price => 'السعر';
 
   @override
-  String get cost => 'التكلفة';
-
-  @override
   String get quantity => 'الكمية';
 
   @override
@@ -176,16 +164,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get description => 'الوصف';
 
   @override
-  String get barcode => 'الرمز الشريطي';
-
-  @override
   String get inStock => 'متوفر';
 
   @override
   String get outOfStock => 'نفذ من المخزون';
-
-  @override
-  String get lowStock => 'مخزون منخفض';
 
   @override
   String get productDetails => 'تفاصيل المنتج';
@@ -195,9 +177,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get categories => 'الفئات';
-
-  @override
-  String get addCategory => 'إضافة فئة';
 
   @override
   String get editCategory => 'تعديل الفئة';
@@ -299,12 +278,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get paymentMethod => 'طريقة الدفع';
 
   @override
-  String get cash => 'نقدي';
-
-  @override
-  String get card => 'بطاقة';
-
-  @override
   String get change => 'الباقي';
 
   @override
@@ -336,9 +309,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get admin => 'مدير';
-
-  @override
-  String get cashier => 'أمين الصندوق';
 
   @override
   String get createdAt => 'تاريخ الإنشاء';
@@ -476,9 +446,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get view => 'عرض';
 
   @override
-  String get print => 'طباعة';
-
-  @override
   String get export => 'تصدير';
 
   @override
@@ -582,9 +549,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get reportPeriod => 'فترة التقرير';
-
-  @override
-  String get companyInformation => 'معلومات الشركة';
 
   @override
   String get companyNameEnglish => 'اسم الشركة (إنجليزي)';
@@ -791,15 +755,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get failedToDeleteUser => 'فشل حذف المستخدم';
 
   @override
-  String get usernameLabel => 'اسم المستخدم';
-
-  @override
-  String get roleLabel => 'الدور';
-
-  @override
-  String get statusLabel => 'الحالة';
-
-  @override
   String get userCreatedSuccess => 'تم إنشاء المستخدم بنجاح';
 
   @override
@@ -828,9 +783,6 @@ class AppLocalizationsAr extends AppLocalizations {
       'كلمة المرور (اتركها فارغة للاحتفاظ بالحالية)';
 
   @override
-  String get companyInfoNotConfigured => 'معلومات الشركة غير مكونة';
-
-  @override
   String printError(String error) {
     return 'خطأ في الطباعة: $error';
   }
@@ -857,12 +809,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String statusLabelText(String status) {
     return 'الحالة: $status';
   }
-
-  @override
-  String get completed => 'مكتمل';
-
-  @override
-  String get returned => 'مرتجع';
 
   @override
   String get reprint => 'إعادة الطباعة';
@@ -926,9 +872,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get roleFieldLabel => 'الدور *';
-
-  @override
-  String get nameFieldLabel => 'الاسم';
 
   @override
   String get customerNameRequired => 'اسم العميل *';
@@ -1009,15 +952,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get productNotFound => 'المنتج غير موجود';
 
   @override
-  String get subtotalColon => 'المجموع الفرعي:';
-
-  @override
-  String get vatColon => 'الضريبة:';
-
-  @override
-  String get totalColon => 'الإجمالي:';
-
-  @override
   String get walkInCustomer => 'عميل عابر';
 
   @override
@@ -1072,22 +1006,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get allTime => 'كل الفترات';
 
   @override
-  String get lastMonth => 'الشهر الماضي';
-
-  @override
   String get lastThreeMonths => 'آخر 3 أشهر';
-
-  @override
-  String get lastYear => 'السنة الماضية';
-
-  @override
-  String get customDateRange => 'نطاق تاريخ مخصص';
-
-  @override
-  String get startDate => 'تاريخ البداية';
-
-  @override
-  String get endDate => 'تاريخ النهاية';
 
   @override
   String get preview => 'معاينة';

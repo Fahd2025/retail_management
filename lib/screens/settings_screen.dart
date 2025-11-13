@@ -354,7 +354,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return SettingsSection(
-      title: l10n.companyInformation,
+      title: l10n.companyNameEnglish,
       icon: Icons.business,
       subtitle: 'Business details and contact information',
       children: [

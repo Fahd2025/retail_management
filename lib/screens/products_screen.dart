@@ -158,7 +158,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   ElevatedButton.icon(
                     onPressed: () => showProductDialog(),
                     icon: const Icon(Icons.add),
-                    label: Text(l10n.addProduct),
+                    label: Text(l10n.add),
                   ),
                 ],
               ),
@@ -221,7 +221,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             horizontalMargin: 16,
                             columns: [
                               DataColumn(label: Text(l10n.name)),
-                              DataColumn(label: Text(l10n.barcode)),
+                              DataColumn(label: Text(l10n.barcodeRequired)),
                               DataColumn(label: Text(l10n.category)),
                               DataColumn(
                                   label: Text(vatIncludedInPrice
@@ -230,7 +230,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               DataColumn(label: Text('Before ${l10n.vat}')),
                               DataColumn(label: Text('${l10n.vat} Amount')),
                               DataColumn(label: Text('After ${l10n.vat}')),
-                              DataColumn(label: Text(l10n.cost)),
+                              DataColumn(label: Text(l10n.costRequired)),
                               DataColumn(label: Text(l10n.stock)),
                               DataColumn(label: Text(l10n.actions)),
                             ],
@@ -423,9 +423,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      _buildInfoRow(
-                                          l10n.barcode, product.barcode),
-                                      _buildInfoRow(l10n.cost,
+                                      _buildInfoRow(l10n.barcodeRequired,
+                                          product.barcode),
+                                      _buildInfoRow(l10n.costRequired,
                                           'SAR ${product.cost.toStringAsFixed(2)}'),
                                       _buildInfoRow(l10n.stock,
                                           '${product.quantity} ${l10n.units}'),
@@ -772,7 +772,7 @@ class _ProductDialogState extends State<_ProductDialog> {
 
     // Wrap in FormBottomSheet for consistent modal design
     return FormBottomSheet(
-      title: widget.product == null ? l10n.addProduct : l10n.editProduct,
+      title: widget.product == null ? l10n.add : l10n.editProduct,
       saveButtonText: l10n.save,
       cancelButtonText: l10n.cancel,
       onSave: _save,

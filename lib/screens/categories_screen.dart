@@ -70,7 +70,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               TextFormField(
                 controller: nameController,
                 decoration: InputDecoration(
-                  labelText: l10n.nameFieldLabel,
+                  labelText: l10n.name,
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.category_outlined),
                 ),
@@ -103,7 +103,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
         // Wrap in FormBottomSheet
         return FormBottomSheet(
-          title: category == null ? l10n.addCategory : l10n.editCategory,
+          title: category == null ? l10n.add : l10n.editCategory,
           saveButtonText: category == null ? l10n.add : l10n.save,
           cancelButtonText: l10n.cancel,
           onSave: () async {
@@ -282,7 +282,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                               columnSpacing: 24,
                               horizontalMargin: 16,
                               columns: [
-                                DataColumn(label: Text(l10n.nameFieldLabel)),
+                                DataColumn(label: Text(l10n.name)),
                                 DataColumn(label: Text(l10n.description)),
                                 DataColumn(
                                     label: Text(

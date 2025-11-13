@@ -170,7 +170,9 @@ class LowStockWidget extends StatelessWidget {
                             ),
                             SizedBox(width: 4.w),
                             Text(
-                              isCritical ? l10n.critical : l10n.lowStock,
+                              isCritical
+                                  ? l10n.critical
+                                  : l10n.lowStockNotifications,
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: isCritical ? Colors.red : Colors.orange,
                                 fontWeight: FontWeight.w600,

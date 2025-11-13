@@ -21,10 +21,13 @@ class SaleProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
-  double get cartSubtotal => _cartItems.fold(0, (sum, item) => sum + item.subtotal);
-  double get cartVatAmount => _cartItems.fold(0, (sum, item) => sum + item.vatAmount);
+  double get cartSubtotal =>
+      _cartItems.fold(0, (sum, item) => sum + item.subtotal);
+  double get cartVatAmount =>
+      _cartItems.fold(0, (sum, item) => sum + item.vatAmount);
   double get cartTotal => _cartItems.fold(0, (sum, item) => sum + item.total);
-  int get cartItemCount => _cartItems.fold(0, (sum, item) => sum + item.quantity);
+  int get cartItemCount =>
+      _cartItems.fold(0, (sum, item) => sum + item.quantity);
 
   Future<void> loadSales() async {
     _isLoading = true;
@@ -45,8 +48,10 @@ class SaleProvider with ChangeNotifier {
     return await _db.getSalesByDateRange(start, end);
   }
 
-  Future<List<Sale>> getCustomerSales(String customerId, {DateTime? startDate, DateTime? endDate}) async {
-    return await _db.getSalesByCustomer(customerId, startDate: startDate, endDate: endDate);
+  Future<List<Sale>> getCustomerSales(String customerId,
+      {DateTime? startDate, DateTime? endDate}) async {
+    return await _db.getSalesByCustomer(customerId,
+        startDate: startDate, endDate: endDate);
   }
 
   Future<Map<String, dynamic>> getCustomerStatistics(String customerId) async {

@@ -170,7 +170,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
               childAspectRatio: 1.5,
               children: [
                 MetricCard.currency(
-                  title: l10n.totalSales,
+                  title: l10n.sales,
                   amount: statistics.totalSales,
                   icon: Icons.attach_money,
                   color: Colors.green,
@@ -297,14 +297,14 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                         ),
                         _buildStatItem(
                           context,
-                          l10n.completed,
+                          l10n.complete,
                           statistics.completedInvoices.toString(),
                           Colors.green,
                           Icons.check_circle,
                         ),
                         _buildStatItem(
                           context,
-                          l10n.returned,
+                          l10n.return_sale,
                           statistics.returnedInvoices.toString(),
                           Colors.orange,
                           Icons.undo,

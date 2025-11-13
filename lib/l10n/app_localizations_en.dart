@@ -69,9 +69,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginTitle => 'Retail Management';
 
   @override
-  String get loginSubtitle => 'Point of Sale System';
-
-  @override
   String get username => 'Username';
 
   @override
@@ -110,9 +107,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcome => 'Welcome';
 
   @override
-  String get totalSales => 'Total Sales';
-
-  @override
   String get totalProducts => 'Total Products';
 
   @override
@@ -146,9 +140,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get productList => 'Product List';
 
   @override
-  String get addProduct => 'Add Product';
-
-  @override
   String get editProduct => 'Edit Product';
 
   @override
@@ -164,9 +155,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get price => 'Price';
 
   @override
-  String get cost => 'Cost';
-
-  @override
   String get quantity => 'Quantity';
 
   @override
@@ -176,16 +164,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get description => 'Description';
 
   @override
-  String get barcode => 'Barcode';
-
-  @override
   String get inStock => 'In Stock';
 
   @override
   String get outOfStock => 'Out of Stock';
-
-  @override
-  String get lowStock => 'Low Stock';
 
   @override
   String get productDetails => 'Product Details';
@@ -195,9 +177,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get categories => 'Categories';
-
-  @override
-  String get addCategory => 'Add Category';
 
   @override
   String get editCategory => 'Edit Category';
@@ -299,12 +278,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paymentMethod => 'Payment Method';
 
   @override
-  String get cash => 'Cash';
-
-  @override
-  String get card => 'Card';
-
-  @override
   String get change => 'Change';
 
   @override
@@ -336,9 +309,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get admin => 'Admin';
-
-  @override
-  String get cashier => 'Cashier';
 
   @override
   String get createdAt => 'Created At';
@@ -476,9 +446,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get view => 'View';
 
   @override
-  String get print => 'Print';
-
-  @override
   String get export => 'Export';
 
   @override
@@ -582,9 +549,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reportPeriod => 'Report Period';
-
-  @override
-  String get companyInformation => 'Company Information';
 
   @override
   String get companyNameEnglish => 'Company Name (English)';
@@ -793,15 +757,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get failedToDeleteUser => 'Failed to delete user';
 
   @override
-  String get usernameLabel => 'Username';
-
-  @override
-  String get roleLabel => 'Role';
-
-  @override
-  String get statusLabel => 'Status';
-
-  @override
   String get userCreatedSuccess => 'User created successfully';
 
   @override
@@ -827,9 +782,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get passwordLeaveEmpty => 'Password (leave empty to keep current)';
-
-  @override
-  String get companyInfoNotConfigured => 'Company info not configured';
 
   @override
   String printError(String error) {
@@ -858,12 +810,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String statusLabelText(String status) {
     return 'Status: $status';
   }
-
-  @override
-  String get completed => 'Completed';
-
-  @override
-  String get returned => 'Returned';
 
   @override
   String get reprint => 'Reprint';
@@ -927,9 +873,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get roleFieldLabel => 'Role *';
-
-  @override
-  String get nameFieldLabel => 'Name';
 
   @override
   String get customerNameRequired => 'Customer Name *';
@@ -1010,15 +953,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get productNotFound => 'Product not found';
 
   @override
-  String get subtotalColon => 'Subtotal:';
-
-  @override
-  String get vatColon => 'VAT:';
-
-  @override
-  String get totalColon => 'Total:';
-
-  @override
   String get walkInCustomer => 'Walk-in Customer';
 
   @override
@@ -1073,25 +1007,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get allTime => 'All Time';
 
   @override
-  String get lastMonth => 'Last Month';
-
-  @override
   String get lastThreeMonths => 'Last 3 Months';
 
   @override
-  String get lastYear => 'Last Year';
-
-  @override
-  String get customDateRange => 'Custom Date Range';
-
-  @override
-  String get startDate => 'Start Date';
-
-  @override
-  String get endDate => 'End Date';
-
-  @override
-  String get preview => 'Preview';
+  String get preview => 'Preview:';
 
   @override
   String totalInvoices(int count) {
@@ -1210,7 +1129,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get standardPaperFormat => 'Standard paper format';
 
   @override
-  String get a4Format => 'A4 (210×297mm)';
+  String get a4Format => 'A4 (210x297mm)';
 
   @override
   String get thermal80mmFormat => '80mm Thermal';

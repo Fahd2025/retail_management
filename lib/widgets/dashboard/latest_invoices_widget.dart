@@ -206,11 +206,11 @@ class LatestInvoicesWidget extends StatelessWidget {
 
     switch (status) {
       case SaleStatus.completed:
-        text = l10n.completed;
+        text = l10n.complete;
         color = Colors.green;
         break;
       case SaleStatus.returned:
-        text = l10n.returned;
+        text = l10n.return_sale;
         color = Colors.orange;
         break;
       case SaleStatus.cancelled:
@@ -244,11 +244,11 @@ class LatestInvoicesWidget extends StatelessWidget {
     switch (method) {
       case PaymentMethod.cash:
         icon = Icons.payments_outlined;
-        text = l10n.cash;
+        text = l10n.cashPayment;
         break;
       case PaymentMethod.card:
         icon = Icons.credit_card;
-        text = l10n.card;
+        text = l10n.cardPayment;
         break;
       case PaymentMethod.transfer:
         icon = Icons.account_balance;

@@ -1,754 +1,681 @@
 {
-  "@@locale": "en",
-
-  "appTitle": "Retail Management System",
-  "appSubtitle": "Point of Sale System",
-  "ok": "OK",
-  "cancel": "Cancel",
-  "save": "Save",
-  "delete": "Delete",
-  "edit": "Edit",
-  "add": "Add",
-  "search": "Search",
-  "filter": "Filter",
-  "refresh": "Refresh",
-  "loading": "Loading...",
-  "error": "Error",
-  "success": "Success",
-  "confirm": "Confirm",
-  "yes": "Yes",
-  "no": "No",
-  "close": "Close",
-  "submit": "Submit",
-
-  "loginTitle": "Retail Management",
-  "loginSubtitle": "Point of Sale System",
-  "username": "Username",
-  "password": "Password",
-  "login": "LOGIN",
-  "logout": "Logout",
-  "pleaseEnterUsername": "Please enter username",
-  "pleaseEnterPassword": "Please enter password",
-  "loginFailed": "Login failed",
-  "invalidCredentials": "Invalid username or password",
-  "initializingSystem": "Initializing system...",
-  "initializationError": "Initialization error: {error}",
-  "@initializationError": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-
-  "dashboard": "Dashboard",
-  "welcome": "Welcome",
-  "totalSales": "Total Sales",
-  "totalProducts": "Total Products",
-  "totalCustomers": "Total Customers",
-  "recentSales": "Recent Sales",
-  "quickActions": "Quick Actions",
-  "viewAll": "View All",
-  "statistics": "Statistics",
-  "today": "Today",
-  "thisWeek": "This Week",
-  "thisMonth": "This Month",
-
-  "products": "Products",
-  "productList": "Product List",
-  "addProduct": "Add Product",
-  "editProduct": "Edit Product",
-  "deleteProduct": "Delete Product",
-  "productName": "Product Name",
-  "productCode": "Product Code",
-  "price": "Price",
-  "cost": "Cost",
-  "quantity": "Quantity",
-  "category": "Category",
-  "description": "Description",
-  "barcode": "Barcode",
-  "inStock": "In Stock",
-  "outOfStock": "Out of Stock",
-  "lowStock": "Low Stock",
-  "productDetails": "Product Details",
-  "stockLevel": "Stock Level",
-
-  "categories": "Categories",
-  "addCategory": "Add Category",
-  "editCategory": "Edit Category",
-  "deleteCategory": "Delete Category",
-  "categoryName": "Category Name",
-  "categoryDescription": "Category Description",
-
-  "customers": "Customers",
-  "customerList": "Customer List",
-  "addCustomer": "Add Customer",
-  "editCustomer": "Edit Customer",
-  "deleteCustomer": "Delete Customer",
-  "customerName": "Customer Name",
-  "customerCode": "Customer Code",
-  "phone": "Phone",
-  "email": "Email",
-  "address": "Address",
-  "customerDetails": "Customer Details",
-  "totalPurchases": "Total Purchases",
-  "customerInformation": "Customer Information",
-  "customer": "Customer",
-  "customerId": "Customer ID",
-
-  "sales": "Sales",
-  "salesList": "Sales List",
-  "newSale": "New Sale",
-  "saleDetails": "Sale Details",
-  "invoiceNumber": "Invoice Number",
-  "date": "Date",
-  "time": "Time",
-  "items": "Items",
-  "subtotal": "Subtotal",
-  "discount": "Discount",
-  "tax": "Tax",
-  "total": "Total",
-  "payment": "Payment",
-  "paymentMethod": "Payment Method",
-  "cash": "Cash",
-  "card": "Card",
-  "change": "Change",
-  "printInvoice": "Print Invoice",
-  "completeSale": "Complete Sale",
-
-  "users": "Users",
-  "userList": "User List",
-  "addUser": "Add User",
-  "editUser": "Edit User",
-  "deleteUser": "Delete User",
-  "fullName": "Full Name",
-  "role": "Role",
-  "admin": "Admin",
-  "cashier": "Cashier",
-  "createdAt": "Created At",
-  "lastLogin": "Last Login",
-  "active": "Active",
-  "inactive": "Inactive",
-
-  "settings": "Settings",
-  "generalSettings": "General Settings",
-  "appearance": "Appearance",
-  "language": "Language",
-  "theme": "Theme",
-  "lightMode": "Light Mode",
-  "darkMode": "Dark Mode",
-  "english": "English",
-  "arabic": "Arabic",
-  "selectLanguage": "Select Language",
-  "selectTheme": "Select Theme",
-  "changeLanguage": "Change Language",
-  "changeTheme": "Change Theme",
-  "preferences": "Preferences",
-  "notifications": "Notifications",
-  "backup": "Backup",
-  "restore": "Restore",
-  "about": "About",
-
-  "saveSuccess": "Saved successfully",
-  "deleteSuccess": "Deleted successfully",
-  "updateSuccess": "Updated successfully",
-  "saveFailed": "Save failed",
-  "deleteFailed": "Delete failed",
-  "updateFailed": "Update failed",
-  "confirmDelete": "Are you sure you want to delete this item?",
-  "confirmLogout": "Are you sure you want to logout?",
-  "confirmExit": "Are you sure you want to exit the application?",
-  "noDataAvailable": "No data available",
-  "noItemsFound": "No items found",
-  "searchResults": "Search Results",
-  "requiredField": "This field is required",
-  "invalidEmail": "Invalid email address",
-  "invalidPhone": "Invalid phone number",
-
-  "fieldRequired": "This field is required",
-  "enterValidEmail": "Please enter a valid email",
-  "enterValidPhone": "Please enter a valid phone number",
-  "enterValidPrice": "Please enter a valid price",
-  "enterValidQuantity": "Please enter a valid quantity",
-  "nameTooShort": "Name is too short",
-  "passwordTooShort": "Password must be at least 6 characters",
-
-  "view": "View",
-  "print": "Print",
-  "export": "Export",
-  "import": "Import",
-  "download": "Download",
-  "upload": "Upload",
-  "share": "Share",
-  "copy": "Copy",
-  "paste": "Paste",
-  "clear": "Clear",
-  "reset": "Reset",
-  "apply": "Apply",
-
-  "daily": "Daily",
-  "weekly": "Weekly",
-  "monthly": "Monthly",
-  "yearly": "Yearly",
-  "custom": "Custom",
-  "from": "From",
-  "to": "To",
-  "selectDate": "Select Date",
-  "selectTime": "Select Time",
-
-  "cashierMode": "Cashier Mode",
-  "scanBarcode": "Scan Barcode",
-  "addItem": "Add Item",
-  "removeItem": "Remove Item",
-  "clearCart": "Clear Cart",
-  "checkout": "Checkout",
-  "paymentReceived": "Payment Received",
-  "returnChange": "Return Change",
-  "saleCompleted": "Sale Completed",
-  "thankYou": "Thank you!",
-
-  "reports": "Reports",
-  "salesReport": "Sales Report",
-  "inventoryReport": "Inventory Report",
-  "customerReport": "Customer Report",
-  "generateReport": "Generate Report",
-  "reportPeriod": "Report Period",
-
-  "companyInformation": "Company Information",
-  "companyNameEnglish": "Company Name (English)",
-  "companyNameArabic": "Company Name (Arabic)",
-  "addressEnglish": "Address (English)",
-  "addressArabic": "Address (Arabic)",
-  "required": "Required",
-  "vatNumber": "VAT Number",
-  "crnNumber": "CRN Number",
-  "saveCompanyInformation": "Save Company Information",
-  "companyInfoSavedSuccess": "Company info saved successfully",
-  "errorLoadingCompanyInfo": "Error loading company info: {error}",
-  "@errorLoadingCompanyInfo": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "errorSaving": "Error saving: {error}",
-  "@errorSaving": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "changesAppliedImmediately": "Changes will be applied immediately",
-  "dataSynchronization": "Data Synchronization",
-  "syncDescription": "Sync your local data with the cloud when internet connection is available.",
-  "syncing": "Syncing...",
-  "syncNow": "Sync Now",
-  "version": "Version",
-  "appVersion": "1.0.0",
-  "posWithOfflineSupport": "Point of Sale with Offline Support",
-
-  "pointOfSale": "Point of Sale",
-  "productsManagement": "Products Management",
-  "customersManagement": "Customers Management",
-  "usersManagement": "Users Management",
-  "addProduct": "Add Product",
-  "addCategory": "Add Category",
-  "cashier": "Cashier",
-
-  "cannotDeleteCategory": "Cannot Delete Category",
-  "categoryHasProducts": "This category has products associated with it",
-  "deleteProductConfirm": "Delete {productName}?",
-  "@deleteProductConfirm": {
-    "placeholders": {
-      "productName": {
-        "type": "String"
-      }
-    }
-  },
-  "deleteCategoryConfirm": "Delete {categoryName}? This action cannot be undone.",
-  "@deleteCategoryConfirm": {
-    "placeholders": {
-      "categoryName": {
-        "type": "String"
-      }
-    }
-  },
-  "deleteCustomerConfirm": "Are you sure you want to delete this customer?",
-  "deleteUserConfirm": "Delete user {username}? This action cannot be undone.",
-  "@deleteUserConfirm": {
-    "placeholders": {
-      "username": {
-        "type": "String"
-      }
-    }
-  },
-  "returnSale": "Return Sale",
-  "returnSaleConfirm": "Return sale {invoiceNumber}?",
-  "@returnSaleConfirm": {
-    "placeholders": {
-      "invoiceNumber": {
-        "type": "String"
-      }
-    }
-  },
-  "printInvoiceQuestion": "Would you like to print the invoice?",
-  "print": "Print",
-  "complete": "Complete",
-
-  "name": "Name",
-  "barcode": "Barcode",
-  "stock": "Stock",
-  "cost": "Cost",
-  "vat": "VAT %",
-  "actions": "Actions",
-  "status": "Status",
-  "invoiceCount": "Invoice Count",
-  "totalSales": "Total Sales",
-  "noSalesFound": "No sales found",
-  "noCustomersFound": "No customers found",
-  "noProductsFound": "No products found",
-  "noUsersFound": "No users found",
-  "cannotDeleteOwnAccount": "You cannot delete your own account",
-
-  "selectACategory": "Select a category",
-  "invalid": "Invalid",
-  "units": "units",
-  "failedToLoadCategories": "Failed to load categories: {error}",
-  "@failedToLoadCategories": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "descriptionOptional": "Description (Optional)",
-  "pleaseEnterCategoryName": "Please enter a category name",
-  "categoryAddedSuccess": "Category added successfully",
-  "categoryUpdatedSuccess": "Category updated successfully",
-  "categoryDeletedSuccess": "Category deleted successfully",
-  "errorSavingCategory": "Error saving category: {error}",
-  "@errorSavingCategory": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "errorDeletingCategory": "Error deleting category: {error}",
-  "@errorDeletingCategory": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "noCategoriesFound": "No categories found",
-  "productCount": "{count} product(s)",
-  "@productCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "tooltipEdit": "Edit",
-  "tooltipDelete": "Delete",
-  "userDeletedSuccess": "User deleted successfully",
-  "failedToDeleteUser": "Failed to delete user",
-  "usernameLabel": "Username",
-  "roleLabel": "Role",
-  "statusLabel": "Status",
-  "userCreatedSuccess": "User created successfully",
-  "userUpdatedSuccess": "User updated successfully",
-  "anErrorOccurred": "An error occurred",
-  "usernameRequired": "Username is required",
-  "usernameMinLength": "Username must be at least 3 characters",
-  "fullNameRequired": "Full name is required",
-  "passwordRequired": "Password is required",
-  "passwordMinLength": "Password must be at least 6 characters",
-  "passwordLeaveEmpty": "Password (leave empty to keep current)",
-  "companyInfoNotConfigured": "Company info not configured",
-  "printError": "Print error: {error}",
-  "@printError": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "invoice": "Invoice",
-  "invoiceLabel": "Invoice: {invoiceNumber}",
-  "@invoiceLabel": {
-    "placeholders": {
-      "invoiceNumber": {
-        "type": "String"
-      }
-    }
-  },
-  "dateLabel": "Date: {date}",
-  "@dateLabel": {
-    "placeholders": {
-      "date": {
-        "type": "String"
-      }
-    }
-  },
-  "totalLabel": "Total: SAR {total}",
-  "@totalLabel": {
-    "placeholders": {
-      "total": {
-        "type": "String"
-      }
-    }
-  },
-  "statusLabelText": "Status: {status}",
-  "@statusLabelText": {
-    "placeholders": {
-      "status": {
-        "type": "String"
-      }
-    }
-  },
-  "completed": "COMPLETED",
-  "returned": "RETURNED",
-  "reprint": "Reprint",
-  "return_sale": "Return",
-  "itemsLabel": "Items:",
-  "subtotalLabel": "Subtotal:",
-  "vatLabel": "VAT:",
-  "totalLabelColon": "Total:",
-  "paidLabel": "Paid:",
-  "changeLabel": "Change:",
-  "saleReturnedSuccess": "Sale returned successfully",
-  "errorLoadingCategories": "Error loading categories",
-  "productNameRequired": "Product Name *",
-  "barcodeRequired": "Barcode *",
-  "categoryRequired": "Category *",
-  "priceRequired": "Price *",
-  "costRequired": "Cost *",
-  "quantityRequired": "Quantity *",
-  "vatRateRequired": "VAT % *",
-  "usernameFieldLabel": "Username *",
-  "fullNameFieldLabel": "Full Name *",
-  "passwordFieldLabel": "Password *",
-  "roleFieldLabel": "Role *",
-  "nameFieldLabel": "Name",
-
-  "customerNameRequired": "Customer Name *",
-  "emailFieldLabel": "Email",
-  "phoneFieldLabel": "Phone",
-  "vatNumberFieldLabel": "VAT Number",
-  "crnNumberFieldLabel": "CRN Number",
-  "saudiNationalAddress": "Saudi National Address",
-  "buildingNumber": "Building Number",
-  "streetName": "Street Name",
-  "district": "District",
-  "city": "City",
-  "postalCode": "Postal Code",
-  "additionalNumber": "Additional Number",
-  "phoneLabel": "Phone: {phone}",
-  "@phoneLabel": {
-    "placeholders": {
-      "phone": {
-        "type": "String"
-      }
-    }
-  },
-  "emailLabel": "Email: {email}",
-  "@emailLabel": {
-    "placeholders": {
-      "email": {
-        "type": "String"
-      }
-    }
-  },
-  "vatLabel2": "VAT: {vatNumber}",
-  "@vatLabel2": {
-    "placeholders": {
-      "vatNumber": {
-        "type": "String"
-      }
-    }
-  },
-  "addressLabel": "Address: {address}",
-  "@addressLabel": {
-    "placeholders": {
-      "address": {
-        "type": "String"
-      }
-    }
-  },
-  "cart": "Cart",
-  "cartItems": "{count} items",
-  "@cartItems": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "cartIsEmpty": "Cart is empty",
-  "scanOrEnterBarcode": "Scan or enter barcode...",
-  "productAddedToCart": "{productName} added to cart",
-  "@productAddedToCart": {
-    "placeholders": {
-      "productName": {
-        "type": "String"
-      }
-    }
-  },
-  "productNotFound": "Product not found",
-  "subtotalColon": "Subtotal:",
-  "vatColon": "VAT:",
-  "totalColon": "Total:",
-  "walkInCustomer": "Walk-in Customer",
-  "amountPaid": "Amount Paid",
-  "changeColon": "Change: SAR {amount}",
-  "@changeColon": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
-  "insufficientPayment": "Insufficient payment",
-  "cashPayment": "Cash",
-  "cardPayment": "Card",
-  "transferPayment": "Transfer",
-  "allDataSynchronized": "All data is already synchronized",
-  "noInternetConnection": "No internet connection",
-  "successfullySynchronized": "Successfully synchronized {count} items",
-  "@successfullySynchronized": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "syncFailed": "Sync failed",
-
-  "exportInvoicesToPdf": "Export Invoices to PDF",
-  "exportCustomerInvoices": "Export Customer Invoices to PDF",
-  "customerLabel": "Customer: {name}",
-  "@customerLabel": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "selectPeriod": "Select Period:",
-  "allTime": "All Time",
-  "lastMonth": "Last Month",
-  "lastThreeMonths": "Last 3 Months",
-  "lastYear": "Last Year",
-  "customDateRange": "Custom Date Range",
-  "startDate": "Start Date",
-  "endDate": "End Date",
-  "preview": "Preview:",
-  "totalInvoices": "Total Invoices: {count}",
-  "@totalInvoices": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "totalAmount": "Total Amount: {amount}",
-  "@totalAmount": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
-  "exporting": "Exporting...",
-  "exportToPdf": "Export to PDF",
-  "loadingStatistics": "Loading statistics...",
-  "invoices":"Invoices",
-  "invoicesCount": "Invoices: {count}",
-  "@invoicesCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "invoicesTotal": "Invoices: {count} | Total: {total}",
-  "@invoicesTotal": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      },
-      "total": {
-        "type": "String"
-      }
-    }
-  },
-  "companyInfoNotFound": "Company information not found. Please set up company info first.",
-  "noInvoicesFound": "No invoices found for the selected period.",
-  "exportedInvoicesSuccess": "Successfully exported {count} invoices to PDF",
-  "@exportedInvoicesSuccess": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "errorExportingInvoices": "Error exporting invoices: {error}",
-  "@errorExportingInvoices": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-
-  "loginSuccess": "Login successful! Welcome {username}",
-  "@loginSuccess": {
-    "placeholders": {
-      "username": {
-        "type": "String"
-      }
-    }
-  },
-  "defaultCredentials": "Default Credentials",
-  "adminCredentials": "Admin: admin / admin123",
-  "cashierCredentials": "Cashier: cashier / cashier123",
-  "switchTheme": "Switch Theme",
-  "switchLanguage": "Switch Language",
-
-  "printSettings": "Print Settings",
-  "printFormat": "Print Format",
-  "displayOptions": "Display Options",
-  "showCompanyLogo": "Show Company Logo",
-  "displayLogoPlaceholder": "Display logo placeholder in invoice header",
-  "showQrCode": "Show QR Code",
-  "displayZatcaQrCode": "Display ZATCA-compliant QR code",
-  "showCustomerInformation": "Show Customer Information",
-  "displayCustomerDetails": "Display customer details when available",
-  "showNotes": "Show Notes",
-  "displaySaleNotes": "Display sale notes when available",
-  "selectFormat": "Select Format",
-  "printNow": "Print Now",
-  "preview": "Preview",
-  "thermalReceiptPrinter": "Thermal receipt printer",
-  "standardPaperFormat": "Standard paper format",
-  "a4Format": "A4 (210×297mm)",
-  "thermal80mmFormat": "80mm Thermal",
-  "thermal58mmFormat": "58mm Thermal",
-  "mmWidth": "{width}mm width",
-  "@mmWidth": {
-    "placeholders": {
-      "width": {
-        "type": "String"
-      }
-    }
-  },
-
-  "analyticsDashboard": "Analytics Dashboard",
-  "keyMetrics": "Key Metrics",
-  "totalVat": "Total VAT",
-  "vatCollected": "VAT collected",
-  "activeProducts": "active",
-  "activeCustomers": "active",
-  "completedInvoices": "completed invoices",
-  "bestSellingProducts": "Best Selling Products",
-  "lowStockNotifications": "Low Stock Notifications",
-  "latestSalesInvoices": "Latest Sales Invoices",
-  "salesTrend": "Sales Trend",
-  "salesByCategory": "Sales by Category",
-  "timePeriod": "Time Period",
-  "last7Days": "Last 7 Days",
-  "lastMonth": "Last Month",
-  "lastYear": "Last Year",
-  "customPeriod": "Custom Period",
-  "customDateRange": "Custom Date Range",
-  "selectStartAndEndDates": "Select the start and end dates for your custom period",
-  "startDate": "Start Date",
-  "endDate": "End Date",
-  "selectStartDate": "Select start date",
-  "selectEndDate": "Select end date",
-  "duration": "Duration",
-  "days": "days",
-  "durationDays": "Duration: {count} days",
-  "@durationDays": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "apply": "Apply",
-  "completed": "Completed",
-  "returned": "Returned",
-  "cancelled": "Cancelled",
-  "unitsLeft": "units left",
-  "lowStock": "Low Stock",
-  "critical": "Critical",
-  "viewAllItems": "View all {count} items",
-  "@viewAllItems": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "viewAllLowStockItems": "View all {count} low stock items",
-  "@viewAllLowStockItems": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "viewAllInvoices": "View all {count} invoices",
-  "@viewAllInvoices": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "noSalesDataAvailable": "No sales data available",
-  "noInvoicesAvailable": "No invoices available",
-  "noCategoryDataAvailable": "No category data available",
-  "allProductsWellStocked": "All products are well stocked",
-  "companyInfoNotFound": "Company information not found. Please configure in Settings.",
-  "errorLoadingInvoice": "Error loading invoice: {error}",
-  "@errorLoadingInvoice": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "refreshDashboard": "Refresh Dashboard",
-  "invoiceStatistics": "Invoice Statistics",
-  "loadingDashboardData": "Loading dashboard data...",
-  "errorLoadingDashboard": "Error loading dashboard",
-  "retry": "Retry",
-  "salesLabel": "Sales",
-  "vatLabel2": "VAT",
-  "quantitySold": "Qty: {quantity}",
-  "@quantitySold": {
-    "placeholders": {
-      "quantity": {
-        "type": "String"
-      }
-    }
-  },
-  "salesCount": "{count} sales",
-  "@salesCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "cash": "Cash",
-  "card": "Card",
-  "transfer": "Transfer"
+    "@@locale": "en",
+    "appTitle": "Retail Management System",
+    "appSubtitle": "Point of Sale System",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "refresh": "Refresh",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "submit": "Submit",
+    "loginTitle": "Retail Management",
+    "username": "Username",
+    "password": "Password",
+    "login": "LOGIN",
+    "logout": "Logout",
+    "pleaseEnterUsername": "Please enter username",
+    "pleaseEnterPassword": "Please enter password",
+    "loginFailed": "Login failed",
+    "invalidCredentials": "Invalid username or password",
+    "initializingSystem": "Initializing system...",
+    "initializationError": "Initialization error: {error}",
+    "@initializationError": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "dashboard": "Dashboard",
+    "welcome": "Welcome",
+    "totalProducts": "Total Products",
+    "totalCustomers": "Total Customers",
+    "recentSales": "Recent Sales",
+    "quickActions": "Quick Actions",
+    "viewAll": "View All",
+    "statistics": "Statistics",
+    "today": "Today",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "products": "Products",
+    "productList": "Product List",
+    "editProduct": "Edit Product",
+    "deleteProduct": "Delete Product",
+    "productName": "Product Name",
+    "productCode": "Product Code",
+    "price": "Price",
+    "quantity": "Quantity",
+    "category": "Category",
+    "description": "Description",
+    "inStock": "In Stock",
+    "outOfStock": "Out of Stock",
+    "productDetails": "Product Details",
+    "stockLevel": "Stock Level",
+    "categories": "Categories",
+    "editCategory": "Edit Category",
+    "deleteCategory": "Delete Category",
+    "categoryName": "Category Name",
+    "categoryDescription": "Category Description",
+    "customers": "Customers",
+    "customerList": "Customer List",
+    "addCustomer": "Add Customer",
+    "editCustomer": "Edit Customer",
+    "deleteCustomer": "Delete Customer",
+    "customerName": "Customer Name",
+    "customerCode": "Customer Code",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address",
+    "customerDetails": "Customer Details",
+    "totalPurchases": "Total Purchases",
+    "customerInformation": "Customer Information",
+    "customer": "Customer",
+    "customerId": "Customer ID",
+    "sales": "Sales",
+    "salesList": "Sales List",
+    "newSale": "New Sale",
+    "saleDetails": "Sale Details",
+    "invoiceNumber": "Invoice Number",
+    "date": "Date",
+    "time": "Time",
+    "items": "Items",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "tax": "Tax",
+    "total": "Total",
+    "payment": "Payment",
+    "paymentMethod": "Payment Method",
+    "change": "Change",
+    "printInvoice": "Print Invoice",
+    "completeSale": "Complete Sale",
+    "users": "Users",
+    "userList": "User List",
+    "addUser": "Add User",
+    "editUser": "Edit User",
+    "deleteUser": "Delete User",
+    "fullName": "Full Name",
+    "role": "Role",
+    "admin": "Admin",
+    "createdAt": "Created At",
+    "lastLogin": "Last Login",
+    "active": "Active",
+    "inactive": "Inactive",
+    "settings": "Settings",
+    "generalSettings": "General Settings",
+    "appearance": "Appearance",
+    "language": "Language",
+    "theme": "Theme",
+    "lightMode": "Light Mode",
+    "darkMode": "Dark Mode",
+    "english": "English",
+    "arabic": "Arabic",
+    "selectLanguage": "Select Language",
+    "selectTheme": "Select Theme",
+    "changeLanguage": "Change Language",
+    "changeTheme": "Change Theme",
+    "preferences": "Preferences",
+    "notifications": "Notifications",
+    "backup": "Backup",
+    "restore": "Restore",
+    "about": "About",
+    "saveSuccess": "Saved successfully",
+    "deleteSuccess": "Deleted successfully",
+    "updateSuccess": "Updated successfully",
+    "saveFailed": "Save failed",
+    "deleteFailed": "Delete failed",
+    "updateFailed": "Update failed",
+    "confirmDelete": "Are you sure you want to delete this item?",
+    "confirmLogout": "Are you sure you want to logout?",
+    "confirmExit": "Are you sure you want to exit the application?",
+    "noDataAvailable": "No data available",
+    "noItemsFound": "No items found",
+    "searchResults": "Search Results",
+    "requiredField": "This field is required",
+    "invalidEmail": "Invalid email address",
+    "invalidPhone": "Invalid phone number",
+    "fieldRequired": "This field is required",
+    "enterValidEmail": "Please enter a valid email",
+    "enterValidPhone": "Please enter a valid phone number",
+    "enterValidPrice": "Please enter a valid price",
+    "enterValidQuantity": "Please enter a valid quantity",
+    "nameTooShort": "Name is too short",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "view": "View",
+    "export": "Export",
+    "import": "Import",
+    "download": "Download",
+    "upload": "Upload",
+    "share": "Share",
+    "copy": "Copy",
+    "paste": "Paste",
+    "clear": "Clear",
+    "reset": "Reset",
+    "apply": "Apply",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "custom": "Custom",
+    "from": "From",
+    "to": "To",
+    "selectDate": "Select Date",
+    "selectTime": "Select Time",
+    "cashierMode": "Cashier Mode",
+    "scanBarcode": "Scan Barcode",
+    "addItem": "Add Item",
+    "removeItem": "Remove Item",
+    "clearCart": "Clear Cart",
+    "checkout": "Checkout",
+    "paymentReceived": "Payment Received",
+    "returnChange": "Return Change",
+    "saleCompleted": "Sale Completed",
+    "thankYou": "Thank you!",
+    "reports": "Reports",
+    "salesReport": "Sales Report",
+    "inventoryReport": "Inventory Report",
+    "customerReport": "Customer Report",
+    "generateReport": "Generate Report",
+    "reportPeriod": "Report Period",
+    "companyNameEnglish": "Company Name (English)",
+    "companyNameArabic": "Company Name (Arabic)",
+    "addressEnglish": "Address (English)",
+    "addressArabic": "Address (Arabic)",
+    "required": "Required",
+    "vatNumber": "VAT Number",
+    "crnNumber": "CRN Number",
+    "saveCompanyInformation": "Save Company Information",
+    "companyInfoSavedSuccess": "Company info saved successfully",
+    "errorLoadingCompanyInfo": "Error loading company info: {error}",
+    "@errorLoadingCompanyInfo": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "errorSaving": "Error saving: {error}",
+    "@errorSaving": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "changesAppliedImmediately": "Changes will be applied immediately",
+    "dataSynchronization": "Data Synchronization",
+    "syncDescription": "Sync your local data with the cloud when internet connection is available.",
+    "syncing": "Syncing...",
+    "syncNow": "Sync Now",
+    "version": "Version",
+    "appVersion": "1.0.0",
+    "posWithOfflineSupport": "Point of Sale with Offline Support",
+    "pointOfSale": "Point of Sale",
+    "productsManagement": "Products Management",
+    "customersManagement": "Customers Management",
+    "usersManagement": "Users Management",
+    "cannotDeleteCategory": "Cannot Delete Category",
+    "categoryHasProducts": "This category has products associated with it",
+    "deleteProductConfirm": "Delete {productName}?",
+    "@deleteProductConfirm": {
+        "placeholders": {
+            "productName": {
+                "type": "String"
+            }
+        }
+    },
+    "deleteCategoryConfirm": "Delete {categoryName}? This action cannot be undone.",
+    "@deleteCategoryConfirm": {
+        "placeholders": {
+            "categoryName": {
+                "type": "String"
+            }
+        }
+    },
+    "deleteCustomerConfirm": "Are you sure you want to delete this customer?",
+    "deleteUserConfirm": "Delete user {username}? This action cannot be undone.",
+    "@deleteUserConfirm": {
+        "placeholders": {
+            "username": {
+                "type": "String"
+            }
+        }
+    },
+    "returnSale": "Return Sale",
+    "returnSaleConfirm": "Return sale {invoiceNumber}?",
+    "@returnSaleConfirm": {
+        "placeholders": {
+            "invoiceNumber": {
+                "type": "String"
+            }
+        }
+    },
+    "printInvoiceQuestion": "Would you like to print the invoice?",
+    "complete": "Complete",
+    "name": "Name",
+    "stock": "Stock",
+    "vat": "VAT %",
+    "actions": "Actions",
+    "status": "Status",
+    "invoiceCount": "Invoice Count",
+    "noSalesFound": "No sales found",
+    "noCustomersFound": "No customers found",
+    "noProductsFound": "No products found",
+    "noUsersFound": "No users found",
+    "cannotDeleteOwnAccount": "You cannot delete your own account",
+    "selectACategory": "Select a category",
+    "invalid": "Invalid",
+    "units": "units",
+    "failedToLoadCategories": "Failed to load categories: {error}",
+    "@failedToLoadCategories": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "descriptionOptional": "Description (Optional)",
+    "pleaseEnterCategoryName": "Please enter a category name",
+    "categoryAddedSuccess": "Category added successfully",
+    "categoryUpdatedSuccess": "Category updated successfully",
+    "categoryDeletedSuccess": "Category deleted successfully",
+    "errorSavingCategory": "Error saving category: {error}",
+    "@errorSavingCategory": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "errorDeletingCategory": "Error deleting category: {error}",
+    "@errorDeletingCategory": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "noCategoriesFound": "No categories found",
+    "productCount": "{count} product(s)",
+    "@productCount": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "tooltipEdit": "Edit",
+    "tooltipDelete": "Delete",
+    "userDeletedSuccess": "User deleted successfully",
+    "failedToDeleteUser": "Failed to delete user",
+    "userCreatedSuccess": "User created successfully",
+    "userUpdatedSuccess": "User updated successfully",
+    "anErrorOccurred": "An error occurred",
+    "usernameRequired": "Username is required",
+    "usernameMinLength": "Username must be at least 3 characters",
+    "fullNameRequired": "Full name is required",
+    "passwordRequired": "Password is required",
+    "passwordMinLength": "Password must be at least 6 characters",
+    "passwordLeaveEmpty": "Password (leave empty to keep current)",
+    "printError": "Print error: {error}",
+    "@printError": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "invoice": "Invoice",
+    "invoiceLabel": "Invoice: {invoiceNumber}",
+    "@invoiceLabel": {
+        "placeholders": {
+            "invoiceNumber": {
+                "type": "String"
+            }
+        }
+    },
+    "dateLabel": "Date: {date}",
+    "@dateLabel": {
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "totalLabel": "Total: SAR {total}",
+    "@totalLabel": {
+        "placeholders": {
+            "total": {
+                "type": "String"
+            }
+        }
+    },
+    "statusLabelText": "Status: {status}",
+    "@statusLabelText": {
+        "placeholders": {
+            "status": {
+                "type": "String"
+            }
+        }
+    },
+    "reprint": "Reprint",
+    "return_sale": "Return",
+    "itemsLabel": "Items:",
+    "subtotalLabel": "Subtotal:",
+    "vatLabel": "VAT:",
+    "totalLabelColon": "Total:",
+    "paidLabel": "Paid:",
+    "changeLabel": "Change:",
+    "saleReturnedSuccess": "Sale returned successfully",
+    "errorLoadingCategories": "Error loading categories",
+    "productNameRequired": "Product Name *",
+    "barcodeRequired": "Barcode *",
+    "categoryRequired": "Category *",
+    "priceRequired": "Price *",
+    "costRequired": "Cost *",
+    "quantityRequired": "Quantity *",
+    "vatRateRequired": "VAT % *",
+    "usernameFieldLabel": "Username *",
+    "fullNameFieldLabel": "Full Name *",
+    "passwordFieldLabel": "Password *",
+    "roleFieldLabel": "Role *",
+    "customerNameRequired": "Customer Name *",
+    "emailFieldLabel": "Email",
+    "phoneFieldLabel": "Phone",
+    "vatNumberFieldLabel": "VAT Number",
+    "crnNumberFieldLabel": "CRN Number",
+    "saudiNationalAddress": "Saudi National Address",
+    "buildingNumber": "Building Number",
+    "streetName": "Street Name",
+    "district": "District",
+    "city": "City",
+    "postalCode": "Postal Code",
+    "additionalNumber": "Additional Number",
+    "phoneLabel": "Phone: {phone}",
+    "@phoneLabel": {
+        "placeholders": {
+            "phone": {
+                "type": "String"
+            }
+        }
+    },
+    "emailLabel": "Email: {email}",
+    "@emailLabel": {
+        "placeholders": {
+            "email": {
+                "type": "String"
+            }
+        }
+    },
+    "vatLabel2": "VAT",
+    "@vatLabel2": {
+        "placeholders": {
+            "vatNumber": {
+                "type": "String"
+            }
+        }
+    },
+    "addressLabel": "Address: {address}",
+    "@addressLabel": {
+        "placeholders": {
+            "address": {
+                "type": "String"
+            }
+        }
+    },
+    "cart": "Cart",
+    "cartItems": "{count} items",
+    "@cartItems": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "cartIsEmpty": "Cart is empty",
+    "scanOrEnterBarcode": "Scan or enter barcode...",
+    "productAddedToCart": "{productName} added to cart",
+    "@productAddedToCart": {
+        "placeholders": {
+            "productName": {
+                "type": "String"
+            }
+        }
+    },
+    "productNotFound": "Product not found",
+    "walkInCustomer": "Walk-in Customer",
+    "amountPaid": "Amount Paid",
+    "changeColon": "Change: SAR {amount}",
+    "@changeColon": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "insufficientPayment": "Insufficient payment",
+    "cashPayment": "Cash",
+    "cardPayment": "Card",
+    "transferPayment": "Transfer",
+    "allDataSynchronized": "All data is already synchronized",
+    "noInternetConnection": "No internet connection",
+    "successfullySynchronized": "Successfully synchronized {count} items",
+    "@successfullySynchronized": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "syncFailed": "Sync failed",
+    "exportInvoicesToPdf": "Export Invoices to PDF",
+    "exportCustomerInvoices": "Export Customer Invoices to PDF",
+    "customerLabel": "Customer: {name}",
+    "@customerLabel": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "selectPeriod": "Select Period:",
+    "allTime": "All Time",
+    "lastThreeMonths": "Last 3 Months",
+    "preview": "Preview:",
+    "totalInvoices": "Total Invoices: {count}",
+    "@totalInvoices": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "totalAmount": "Total Amount: {amount}",
+    "@totalAmount": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "exporting": "Exporting...",
+    "exportToPdf": "Export to PDF",
+    "loadingStatistics": "Loading statistics...",
+    "invoices": "Invoices",
+    "invoicesCount": "Invoices: {count}",
+    "@invoicesCount": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "invoicesTotal": "Invoices: {count} | Total: {total}",
+    "@invoicesTotal": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            },
+            "total": {
+                "type": "String"
+            }
+        }
+    },
+    "companyInfoNotFound": "Company information not found. Please configure in Settings.",
+    "noInvoicesFound": "No invoices found for the selected period.",
+    "exportedInvoicesSuccess": "Successfully exported {count} invoices to PDF",
+    "@exportedInvoicesSuccess": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "errorExportingInvoices": "Error exporting invoices: {error}",
+    "@errorExportingInvoices": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "loginSuccess": "Login successful! Welcome {username}",
+    "@loginSuccess": {
+        "placeholders": {
+            "username": {
+                "type": "String"
+            }
+        }
+    },
+    "defaultCredentials": "Default Credentials",
+    "adminCredentials": "Admin: admin / admin123",
+    "cashierCredentials": "Cashier: cashier / cashier123",
+    "switchTheme": "Switch Theme",
+    "switchLanguage": "Switch Language",
+    "printSettings": "Print Settings",
+    "printFormat": "Print Format",
+    "displayOptions": "Display Options",
+    "showCompanyLogo": "Show Company Logo",
+    "displayLogoPlaceholder": "Display logo placeholder in invoice header",
+    "showQrCode": "Show QR Code",
+    "displayZatcaQrCode": "Display ZATCA-compliant QR code",
+    "showCustomerInformation": "Show Customer Information",
+    "displayCustomerDetails": "Display customer details when available",
+    "showNotes": "Show Notes",
+    "displaySaleNotes": "Display sale notes when available",
+    "selectFormat": "Select Format",
+    "printNow": "Print Now",
+    "thermalReceiptPrinter": "Thermal receipt printer",
+    "standardPaperFormat": "Standard paper format",
+    "a4Format": "A4 (210x297mm)",
+    "thermal80mmFormat": "80mm Thermal",
+    "thermal58mmFormat": "58mm Thermal",
+    "mmWidth": "{width}mm width",
+    "@mmWidth": {
+        "placeholders": {
+            "width": {
+                "type": "String"
+            }
+        }
+    },
+    "analyticsDashboard": "Analytics Dashboard",
+    "keyMetrics": "Key Metrics",
+    "totalVat": "Total VAT",
+    "vatCollected": "VAT collected",
+    "activeProducts": "active",
+    "activeCustomers": "active",
+    "completedInvoices": "completed invoices",
+    "bestSellingProducts": "Best Selling Products",
+    "lowStockNotifications": "Low Stock Notifications",
+    "latestSalesInvoices": "Latest Sales Invoices",
+    "salesTrend": "Sales Trend",
+    "salesByCategory": "Sales by Category",
+    "timePeriod": "Time Period",
+    "last7Days": "Last 7 Days",
+    "customPeriod": "Custom Period",
+    "selectStartAndEndDates": "Select the start and end dates for your custom period",
+    "selectStartDate": "Select start date",
+    "selectEndDate": "Select end date",
+    "duration": "Duration",
+    "days": "days",
+    "durationDays": "Duration: {count} days",
+    "@durationDays": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "cancelled": "Cancelled",
+    "unitsLeft": "units left",
+    "critical": "Critical",
+    "viewAllItems": "View all {count} items",
+    "@viewAllItems": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "viewAllLowStockItems": "View all {count} low stock items",
+    "@viewAllLowStockItems": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "viewAllInvoices": "View all {count} invoices",
+    "@viewAllInvoices": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "noSalesDataAvailable": "No sales data available",
+    "noInvoicesAvailable": "No invoices available",
+    "noCategoryDataAvailable": "No category data available",
+    "allProductsWellStocked": "All products are well stocked",
+    "errorLoadingInvoice": "Error loading invoice: {error}",
+    "@errorLoadingInvoice": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "refreshDashboard": "Refresh Dashboard",
+    "invoiceStatistics": "Invoice Statistics",
+    "loadingDashboardData": "Loading dashboard data...",
+    "errorLoadingDashboard": "Error loading dashboard",
+    "retry": "Retry",
+    "salesLabel": "Sales",
+    "quantitySold": "Qty: {quantity}",
+    "@quantitySold": {
+        "placeholders": {
+            "quantity": {
+                "type": "String"
+            }
+        }
+    },
+    "salesCount": "{count} sales",
+    "@salesCount": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "transfer": "Transfer"
 }

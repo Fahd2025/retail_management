@@ -1550,7 +1550,8 @@ class AppDatabase extends _$AppDatabase {
       id: 'company-1',
       name: 'Saudi Retail Solutions',
       nameArabic: 'حلول التجزئة السعودية',
-      address: 'Building 1234, King Abdullah Road, Al Olaya District, Riyadh 12345',
+      address:
+          'Building 1234, King Abdullah Road, Al Olaya District, Riyadh 12345',
       addressArabic: 'مبنى 1234، طريق الملك عبدالله، حي العليا، الرياض 12345',
       phone: '+966112345678',
       email: 'info@saudiretail.sa',

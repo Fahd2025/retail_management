@@ -147,9 +147,9 @@ class TimePeriodFilter extends StatelessWidget {
       case TimePeriod.last7Days:
         return l10n.last7Days;
       case TimePeriod.lastMonth:
-        return l10n.lastMonth;
+        return l10n.monthly;
       case TimePeriod.lastYear:
-        return l10n.lastYear;
+        return l10n.yearly;
       case TimePeriod.custom:
         return l10n.customPeriod;
     }
@@ -174,7 +174,7 @@ class TimePeriodFilter extends StatelessWidget {
                     color: theme.colorScheme.primary,
                   ),
                   SizedBox(width: 8.w),
-                  Text(l10n.customDateRange),
+                  Text(l10n.custom),
                 ],
               ),
               content: SizedBox(
@@ -192,7 +192,7 @@ class TimePeriodFilter extends StatelessWidget {
                     SizedBox(height: 24.h),
                     // Start Date
                     Text(
-                      l10n.startDate,
+                      l10n.from,
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -256,7 +256,7 @@ class TimePeriodFilter extends StatelessWidget {
                     SizedBox(height: 16.h),
                     // End Date
                     Text(
-                      l10n.endDate,
+                      l10n.to,
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),

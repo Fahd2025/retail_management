@@ -263,7 +263,7 @@ class _CashierScreenState extends State<CashierScreen>
                 ),
                 ElevatedButton(
                   onPressed: () => Navigator.pop(context, true),
-                  child: Text(AppLocalizations.of(context)!.print),
+                  child: Text(AppLocalizations.of(context)!.printInvoice),
                 ),
               ],
             ),
@@ -634,15 +634,16 @@ class _CashierScreenState extends State<CashierScreen>
                                 children: [
                                   _SummaryRow(
                                       AppLocalizations.of(context)!
-                                          .subtotalColon,
+                                          .subtotalLabel,
                                       cartSubtotal),
                                   const SizedBox(height: 8),
                                   _SummaryRow(
-                                      AppLocalizations.of(context)!.vatColon,
+                                      AppLocalizations.of(context)!.vatLabel,
                                       cartVatAmount),
                                   const Divider(),
                                   _SummaryRow(
-                                    AppLocalizations.of(context)!.totalColon,
+                                    AppLocalizations.of(context)!
+                                        .totalLabelColon,
                                     cartTotal,
                                     isBold: true,
                                     fontSize: 20,

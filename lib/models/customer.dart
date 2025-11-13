@@ -129,7 +129,8 @@ class SaudiAddress {
 
   String get formattedAddress {
     final parts = <String>[];
-    if (buildingNumber?.isNotEmpty ?? false) parts.add('Building: $buildingNumber');
+    if (buildingNumber?.isNotEmpty ?? false)
+      parts.add('Building: $buildingNumber');
     if (streetName?.isNotEmpty ?? false) parts.add(streetName!);
     if (district?.isNotEmpty ?? false) parts.add(district!);
     if (city?.isNotEmpty ?? false) parts.add(city!);

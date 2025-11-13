@@ -10,7 +10,8 @@ class SyncService {
   bool _isSyncing = false;
 
   void startListening(Function() onSyncComplete) {
-    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((result) {
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen((result) {
       if (result != ConnectivityResult.none && !_isSyncing) {
         syncData(onSyncComplete);
       }
@@ -79,9 +80,8 @@ class SyncService {
       final customersToSync = await _db.getCustomersNeedingSync();
       final salesToSync = await _db.getSalesNeedingSync();
 
-      final totalItems = productsToSync.length +
-                        customersToSync.length +
-                        salesToSync.length;
+      final totalItems =
+          productsToSync.length + customersToSync.length + salesToSync.length;
 
       if (totalItems == 0) {
         return SyncResult(

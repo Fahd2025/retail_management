@@ -218,12 +218,6 @@ abstract class AppLocalizations {
   /// **'Retail Management'**
   String get loginTitle;
 
-  /// No description provided for @loginSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Point of Sale System'**
-  String get loginSubtitle;
-
   /// No description provided for @username.
   ///
   /// In en, this message translates to:
@@ -296,12 +290,6 @@ abstract class AppLocalizations {
   /// **'Welcome'**
   String get welcome;
 
-  /// No description provided for @totalSales.
-  ///
-  /// In en, this message translates to:
-  /// **'Total Sales'**
-  String get totalSales;
-
   /// No description provided for @totalProducts.
   ///
   /// In en, this message translates to:
@@ -368,12 +356,6 @@ abstract class AppLocalizations {
   /// **'Product List'**
   String get productList;
 
-  /// No description provided for @addProduct.
-  ///
-  /// In en, this message translates to:
-  /// **'Add Product'**
-  String get addProduct;
-
   /// No description provided for @editProduct.
   ///
   /// In en, this message translates to:
@@ -404,12 +386,6 @@ abstract class AppLocalizations {
   /// **'Price'**
   String get price;
 
-  /// No description provided for @cost.
-  ///
-  /// In en, this message translates to:
-  /// **'Cost'**
-  String get cost;
-
   /// No description provided for @quantity.
   ///
   /// In en, this message translates to:
@@ -428,12 +404,6 @@ abstract class AppLocalizations {
   /// **'Description'**
   String get description;
 
-  /// No description provided for @barcode.
-  ///
-  /// In en, this message translates to:
-  /// **'Barcode'**
-  String get barcode;
-
   /// No description provided for @inStock.
   ///
   /// In en, this message translates to:
@@ -445,12 +415,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Out of Stock'**
   String get outOfStock;
-
-  /// No description provided for @lowStock.
-  ///
-  /// In en, this message translates to:
-  /// **'Low Stock'**
-  String get lowStock;
 
   /// No description provided for @productDetails.
   ///
@@ -469,12 +433,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Categories'**
   String get categories;
-
-  /// No description provided for @addCategory.
-  ///
-  /// In en, this message translates to:
-  /// **'Add Category'**
-  String get addCategory;
 
   /// No description provided for @editCategory.
   ///
@@ -674,18 +632,6 @@ abstract class AppLocalizations {
   /// **'Payment Method'**
   String get paymentMethod;
 
-  /// No description provided for @cash.
-  ///
-  /// In en, this message translates to:
-  /// **'Cash'**
-  String get cash;
-
-  /// No description provided for @card.
-  ///
-  /// In en, this message translates to:
-  /// **'Card'**
-  String get card;
-
   /// No description provided for @change.
   ///
   /// In en, this message translates to:
@@ -751,12 +697,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Admin'**
   String get admin;
-
-  /// No description provided for @cashier.
-  ///
-  /// In en, this message translates to:
-  /// **'Cashier'**
-  String get cashier;
 
   /// No description provided for @createdAt.
   ///
@@ -1028,12 +968,6 @@ abstract class AppLocalizations {
   /// **'View'**
   String get view;
 
-  /// No description provided for @print.
-  ///
-  /// In en, this message translates to:
-  /// **'Print'**
-  String get print;
-
   /// No description provided for @export.
   ///
   /// In en, this message translates to:
@@ -1243,12 +1177,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Report Period'**
   String get reportPeriod;
-
-  /// No description provided for @companyInformation.
-  ///
-  /// In en, this message translates to:
-  /// **'Company Information'**
-  String get companyInformation;
 
   /// No description provided for @companyNameEnglish.
   ///
@@ -1616,24 +1544,6 @@ abstract class AppLocalizations {
   /// **'Failed to delete user'**
   String get failedToDeleteUser;
 
-  /// No description provided for @usernameLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Username'**
-  String get usernameLabel;
-
-  /// No description provided for @roleLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Role'**
-  String get roleLabel;
-
-  /// No description provided for @statusLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Status'**
-  String get statusLabel;
-
   /// No description provided for @userCreatedSuccess.
   ///
   /// In en, this message translates to:
@@ -1688,12 +1598,6 @@ abstract class AppLocalizations {
   /// **'Password (leave empty to keep current)'**
   String get passwordLeaveEmpty;
 
-  /// No description provided for @companyInfoNotConfigured.
-  ///
-  /// In en, this message translates to:
-  /// **'Company info not configured'**
-  String get companyInfoNotConfigured;
-
   /// No description provided for @printError.
   ///
   /// In en, this message translates to:
@@ -1729,18 +1633,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Status: {status}'**
   String statusLabelText(String status);
-
-  /// No description provided for @completed.
-  ///
-  /// In en, this message translates to:
-  /// **'Completed'**
-  String get completed;
-
-  /// No description provided for @returned.
-  ///
-  /// In en, this message translates to:
-  /// **'Returned'**
-  String get returned;
 
   /// No description provided for @reprint.
   ///
@@ -1867,12 +1759,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Role *'**
   String get roleFieldLabel;
-
-  /// No description provided for @nameFieldLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Name'**
-  String get nameFieldLabel;
 
   /// No description provided for @customerNameRequired.
   ///
@@ -2006,24 +1892,6 @@ abstract class AppLocalizations {
   /// **'Product not found'**
   String get productNotFound;
 
-  /// No description provided for @subtotalColon.
-  ///
-  /// In en, this message translates to:
-  /// **'Subtotal:'**
-  String get subtotalColon;
-
-  /// No description provided for @vatColon.
-  ///
-  /// In en, this message translates to:
-  /// **'VAT:'**
-  String get vatColon;
-
-  /// No description provided for @totalColon.
-  ///
-  /// In en, this message translates to:
-  /// **'Total:'**
-  String get totalColon;
-
   /// No description provided for @walkInCustomer.
   ///
   /// In en, this message translates to:
@@ -2120,46 +1988,16 @@ abstract class AppLocalizations {
   /// **'All Time'**
   String get allTime;
 
-  /// No description provided for @lastMonth.
-  ///
-  /// In en, this message translates to:
-  /// **'Last Month'**
-  String get lastMonth;
-
   /// No description provided for @lastThreeMonths.
   ///
   /// In en, this message translates to:
   /// **'Last 3 Months'**
   String get lastThreeMonths;
 
-  /// No description provided for @lastYear.
-  ///
-  /// In en, this message translates to:
-  /// **'Last Year'**
-  String get lastYear;
-
-  /// No description provided for @customDateRange.
-  ///
-  /// In en, this message translates to:
-  /// **'Custom Date Range'**
-  String get customDateRange;
-
-  /// No description provided for @startDate.
-  ///
-  /// In en, this message translates to:
-  /// **'Start Date'**
-  String get startDate;
-
-  /// No description provided for @endDate.
-  ///
-  /// In en, this message translates to:
-  /// **'End Date'**
-  String get endDate;
-
   /// No description provided for @preview.
   ///
   /// In en, this message translates to:
-  /// **'Preview'**
+  /// **'Preview:'**
   String get preview;
 
   /// No description provided for @totalInvoices.
@@ -2363,7 +2201,7 @@ abstract class AppLocalizations {
   /// No description provided for @a4Format.
   ///
   /// In en, this message translates to:
-  /// **'A4 (210×297mm)'**
+  /// **'A4 (210x297mm)'**
   String get a4Format;
 
   /// No description provided for @thermal80mmFormat.

@@ -110,7 +110,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                         columnSpacing: 24,
                         horizontalMargin: 16,
                         columns: [
-                          DataColumn(label: Text(l10n.nameFieldLabel)),
+                          DataColumn(label: Text(l10n.name)),
                           DataColumn(label: Text(l10n.phoneFieldLabel)),
                           DataColumn(label: Text(l10n.emailFieldLabel)),
                           DataColumn(label: Text(l10n.vatNumberFieldLabel)),
@@ -917,7 +917,7 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
             DropdownMenuItem(value: 'all', child: Text(l10n.allTime)),
             DropdownMenuItem(
               value: 'last_month',
-              child: Text(l10n.lastMonth),
+              child: Text(l10n.monthly),
             ),
             DropdownMenuItem(
               value: 'last_3_months',
@@ -925,11 +925,11 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
             ),
             DropdownMenuItem(
               value: 'last_year',
-              child: Text(l10n.lastYear),
+              child: Text(l10n.yearly),
             ),
             DropdownMenuItem(
               value: 'custom',
-              child: Text(l10n.customDateRange),
+              child: Text(l10n.custom),
             ),
           ],
           onChanged: (value) {
@@ -951,7 +951,7 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
                   icon: const Icon(Icons.calendar_today),
                   label: Text(
                     _startDate == null
-                        ? l10n.startDate
+                        ? l10n.from
                         : dateFormat.format(_startDate!),
                   ),
                 ),
@@ -962,9 +962,7 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
                   onPressed: _selectEndDate,
                   icon: const Icon(Icons.calendar_today),
                   label: Text(
-                    _endDate == null
-                        ? l10n.endDate
-                        : dateFormat.format(_endDate!),
+                    _endDate == null ? l10n.to : dateFormat.format(_endDate!),
                   ),
                 ),
               ),

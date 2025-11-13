@@ -45,5 +45,12 @@ class AppConfigState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [themeMode, locale, isLoading, printFormatConfig, vatRate, vatIncludedInPrice];
+  List<Object?> get props => [
+        themeMode,
+        locale,
+        isLoading,
+        printFormatConfig,
+        vatRate,
+        vatIncludedInPrice
+      ];
 }

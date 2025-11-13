@@ -52,7 +52,8 @@ class AddToCartEvent extends SaleEvent {
   final int quantity;
   final bool vatIncludedInPrice;
 
-  const AddToCartEvent(this.product, {this.quantity = 1, this.vatIncludedInPrice = true});
+  const AddToCartEvent(this.product,
+      {this.quantity = 1, this.vatIncludedInPrice = true});
 
   @override
   List<Object?> get props => [product, quantity, vatIncludedInPrice];
@@ -63,7 +64,8 @@ class UpdateCartItemQuantityEvent extends SaleEvent {
   final int newQuantity;
   final bool vatIncludedInPrice;
 
-  const UpdateCartItemQuantityEvent(this.itemId, this.newQuantity, {this.vatIncludedInPrice = true});
+  const UpdateCartItemQuantityEvent(this.itemId, this.newQuantity,
+      {this.vatIncludedInPrice = true});
 
   @override
   List<Object?> get props => [itemId, newQuantity, vatIncludedInPrice];

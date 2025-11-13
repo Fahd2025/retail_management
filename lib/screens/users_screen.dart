@@ -189,7 +189,7 @@ class _UsersScreenState extends State<UsersScreen> {
                           DataColumn(label: Text(l10n.role)),
                           DataColumn(label: Text(l10n.status)),
                           DataColumn(label: Text(l10n.invoiceCount)),
-                          DataColumn(label: Text(l10n.totalSales)),
+                          DataColumn(label: Text(l10n.total)),
                           DataColumn(label: Text(l10n.actions)),
                         ],
                         rows: users.map((user) {
@@ -205,7 +205,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                 label: Text(
                                   user.role == UserRole.admin
                                       ? l10n.admin
-                                      : l10n.cashier,
+                                      : l10n.cashierMode,
                                   style: const TextStyle(fontSize: 12),
                                 ),
                                 backgroundColor: user.role == UserRole.admin
@@ -287,7 +287,7 @@ class _UsersScreenState extends State<UsersScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              l10n.usernameLabel + ': ' + user.username,
+                              l10n.username + ': ' + user.username,
                               style: const TextStyle(fontSize: 13),
                             ),
                             Row(
@@ -296,7 +296,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                   label: Text(
                                     user.role == UserRole.admin
                                         ? l10n.admin
-                                        : l10n.cashier,
+                                        : l10n.cashierMode,
                                     style: const TextStyle(fontSize: 11),
                                   ),
                                   backgroundColor: user.role == UserRole.admin
@@ -341,7 +341,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                 _buildInfoRow(
                                     l10n.invoiceCount, invoiceCount.toString()),
                                 _buildInfoRow(
-                                  l10n.totalSales,
+                                  l10n.total,
                                   'SAR ${totalSales.toStringAsFixed(2)}',
                                 ),
                               ],
@@ -520,7 +520,7 @@ class _UserDialogState extends State<_UserDialog> {
               ),
               DropdownMenuItem(
                 value: UserRole.cashier,
-                child: Text(l10n.cashier),
+                child: Text(l10n.cashierMode),
               ),
             ],
             onChanged: (value) {

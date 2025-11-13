@@ -76,7 +76,8 @@ class LocaleProvider with ChangeNotifier {
 
   /// Toggles between English and Arabic
   Future<void> toggleLocale() async {
-    final newLocale = _locale.languageCode == 'en' ? arabicLocale : englishLocale;
+    final newLocale =
+        _locale.languageCode == 'en' ? arabicLocale : englishLocale;
     await setLocale(newLocale);
   }
 

@@ -267,7 +267,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                l10n.loginSubtitle,
+                                l10n.appSubtitle,
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyMedium
