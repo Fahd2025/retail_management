@@ -8,7 +8,6 @@ import 'package:retail_management/blocs/app_config/app_config_state.dart';
 import 'package:retail_management/widgets/print_format_selector.dart';
 
 class MockAppConfigBloc extends AppConfigBloc {
-  @override
   Stream<AppConfigState> mapEventToState(AppConfigEvent event) async* {
     if (event is UpdatePrintFormatEvent) {
       yield state.copyWith(printFormatConfig: event.config);
@@ -28,7 +27,8 @@ void main() {
       appConfigBloc.close();
     });
 
-    testWidgets('should display all print formats', (WidgetTester tester) async {
+    testWidgets('should display all print formats',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -46,7 +46,8 @@ void main() {
       expect(find.text('58mm Thermal'), findsOneWidget);
     });
 
-    testWidgets('should display display options switches', (WidgetTester tester) async {
+    testWidgets('should display display options switches',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -65,7 +66,8 @@ void main() {
       expect(find.text('Show Notes'), findsOneWidget);
     });
 
-    testWidgets('should show correct initial selected format', (WidgetTester tester) async {
+    testWidgets('should show correct initial selected format',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -88,8 +90,7 @@ void main() {
       expect(a4Radio, findsOneWidget);
 
       // Get the RadioListTile widget
-      final RadioListTile<PrintFormat> radioTile =
-          tester.widget(a4Radio);
+      final RadioListTile<PrintFormat> radioTile = tester.widget(a4Radio);
       expect(radioTile.groupValue, PrintFormat.a4);
     });
 
@@ -132,7 +133,8 @@ void main() {
   });
 
   group('PrintFormatQuickSelector Widget Tests', () {
-    testWidgets('should display all print formats', (WidgetTester tester) async {
+    testWidgets('should display all print formats',
+        (WidgetTester tester) async {
       PrintFormat selectedFormat = PrintFormat.a4;
 
       await tester.pumpWidget(
@@ -154,7 +156,8 @@ void main() {
       expect(find.text('58mm Thermal'), findsOneWidget);
     });
 
-    testWidgets('should show correct selected format', (WidgetTester tester) async {
+    testWidgets('should show correct selected format',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -175,12 +178,12 @@ void main() {
 
       expect(radio80mm, findsOneWidget);
 
-      final RadioListTile<PrintFormat> radioTile =
-          tester.widget(radio80mm);
+      final RadioListTile<PrintFormat> radioTile = tester.widget(radio80mm);
       expect(radioTile.groupValue, PrintFormat.thermal80mm);
     });
 
-    testWidgets('should call callback when format changes', (WidgetTester tester) async {
+    testWidgets('should call callback when format changes',
+        (WidgetTester tester) async {
       PrintFormat? changedFormat;
 
       await tester.pumpWidget(
@@ -209,7 +212,8 @@ void main() {
       expect(changedFormat, PrintFormat.thermal58mm);
     });
 
-    testWidgets('should display width information', (WidgetTester tester) async {
+    testWidgets('should display width information',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
