@@ -664,6 +664,7 @@
   "lastMonth": "Last Month",
   "lastYear": "Last Year",
   "customPeriod": "Custom Period",
+  "customDateRange": "Custom Date Range",
   "selectStartAndEndDates": "Select the start and end dates for your custom period",
   "startDate": "Start Date",
   "endDate": "End Date",

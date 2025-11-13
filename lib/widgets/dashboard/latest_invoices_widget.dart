@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../../models/sale.dart';
 
 /// Widget to display latest sales invoices
@@ -19,6 +20,7 @@ class LatestInvoicesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final currencyFormatter = NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
     final dateFormatter = DateFormat('dd/MM/yyyy HH:mm');
 
@@ -41,7 +43,7 @@ class LatestInvoicesWidget extends StatelessWidget {
                 ),
                 SizedBox(width: 8.w),
                 Text(
-                  'Latest Sales Invoices',
+                  l10n.latestSalesInvoices,
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -69,7 +71,7 @@ class LatestInvoicesWidget extends StatelessWidget {
                       ),
                       SizedBox(height: 8.h),
                       Text(
-                        'No invoices available',
+                        l10n.noInvoicesAvailable,
                         style: theme.textTheme.bodyLarge?.copyWith(
                           color: theme.colorScheme.onSurface.withOpacity(0.6),
                         ),
@@ -118,7 +120,7 @@ class LatestInvoicesWidget extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 8.w),
-                        _buildStatusBadge(invoice.status, theme),
+                        _buildStatusBadge(invoice.status, theme, context),
                       ],
                     ),
                     subtitle: Column(
@@ -142,7 +144,7 @@ class LatestInvoicesWidget extends StatelessWidget {
                               ),
                               SizedBox(width: 4.w),
                               Text(
-                                'Customer ID: ${invoice.customerId}',
+                                '${l10n.customerId}: ${invoice.customerId}',
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: theme.colorScheme.onSurface.withOpacity(0.6),
                                 ),
@@ -166,7 +168,7 @@ class LatestInvoicesWidget extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 2.h),
-                        _buildPaymentMethodBadge(invoice.paymentMethod, theme),
+                        _buildPaymentMethodBadge(invoice.paymentMethod, theme, context),
                       ],
                     ),
                   );
@@ -179,7 +181,7 @@ class LatestInvoicesWidget extends StatelessWidget {
                   onPressed: () {
                     // Navigate to sales screen
                   },
-                  child: Text('View all ${invoices.length} invoices'),
+                  child: Text(l10n.viewAllInvoices(invoices.length)),
                 ),
               ),
             ],
@@ -189,21 +191,22 @@ class LatestInvoicesWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusBadge(SaleStatus status, ThemeData theme) {
+  Widget _buildStatusBadge(SaleStatus status, ThemeData theme, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     String text;
     Color color;
 
     switch (status) {
       case SaleStatus.completed:
-        text = 'Completed';
+        text = l10n.completed;
         color = Colors.green;
         break;
       case SaleStatus.returned:
-        text = 'Returned';
+        text = l10n.returned;
         color = Colors.orange;
         break;
       case SaleStatus.cancelled:
-        text = 'Cancelled';
+        text = l10n.cancelled;
         color = Colors.red;
         break;
     }
@@ -224,22 +227,23 @@ class LatestInvoicesWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildPaymentMethodBadge(PaymentMethod method, ThemeData theme) {
+  Widget _buildPaymentMethodBadge(PaymentMethod method, ThemeData theme, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     IconData icon;
     String text;
 
     switch (method) {
       case PaymentMethod.cash:
         icon = Icons.payments_outlined;
-        text = 'Cash';
+        text = l10n.cash;
         break;
       case PaymentMethod.card:
         icon = Icons.credit_card;
-        text = 'Card';
+        text = l10n.card;
         break;
       case PaymentMethod.transfer:
         icon = Icons.account_balance;
-        text = 'Transfer';
+        text = l10n.transfer;
         break;
     }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
+import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../../models/dashboard_statistics.dart';
 
 /// Widget to display sales chart (line chart for daily sales)
@@ -25,6 +26,7 @@ class _SalesChartWidgetState extends State<SalesChartWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Card(
       elevation: 2,
@@ -48,7 +50,7 @@ class _SalesChartWidgetState extends State<SalesChartWidget> {
                     ),
                     SizedBox(width: 8.w),
                     Text(
-                      'Sales Trend',
+                      l10n.salesTrend,
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -56,16 +58,16 @@ class _SalesChartWidgetState extends State<SalesChartWidget> {
                   ],
                 ),
                 SegmentedButton<bool>(
-                  segments: const [
+                  segments: [
                     ButtonSegment(
                       value: false,
-                      label: Text('Sales'),
-                      icon: Icon(Icons.attach_money, size: 16),
+                      label: Text(l10n.salesLabel),
+                      icon: const Icon(Icons.attach_money, size: 16),
                     ),
                     ButtonSegment(
                       value: true,
-                      label: Text('VAT'),
-                      icon: Icon(Icons.receipt, size: 16),
+                      label: Text(l10n.vatLabel2),
+                      icon: const Icon(Icons.receipt, size: 16),
                     ),
                   ],
                   selected: {showVat},
@@ -98,7 +100,7 @@ class _SalesChartWidgetState extends State<SalesChartWidget> {
                       ),
                       SizedBox(height: 8.h),
                       Text(
-                        'No sales data available',
+                        l10n.noSalesDataAvailable,
                         style: theme.textTheme.bodyLarge?.copyWith(
                           color: theme.colorScheme.onSurface.withOpacity(0.6),
                         ),
@@ -281,6 +283,7 @@ class _CategorySalesChartWidgetState extends State<CategorySalesChartWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Card(
       elevation: 2,
@@ -301,7 +304,7 @@ class _CategorySalesChartWidgetState extends State<CategorySalesChartWidget> {
                 ),
                 SizedBox(width: 8.w),
                 Text(
-                  'Sales by Category',
+                  l10n.salesByCategory,
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -329,7 +332,7 @@ class _CategorySalesChartWidgetState extends State<CategorySalesChartWidget> {
                       ),
                       SizedBox(height: 8.h),
                       Text(
-                        'No category data available',
+                        l10n.noCategoryDataAvailable,
                         style: theme.textTheme.bodyLarge?.copyWith(
                           color: theme.colorScheme.onSurface.withOpacity(0.6),
                         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../../models/dashboard_statistics.dart';
 
 /// Widget to display low stock notifications
@@ -17,6 +18,7 @@ class LowStockWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final numberFormatter = NumberFormat('#,##0.##');
 
     return Card(
@@ -39,7 +41,7 @@ class LowStockWidget extends StatelessWidget {
                 SizedBox(width: 8.w),
                 Expanded(
                   child: Text(
-                    'Low Stock Notifications',
+                    l10n.lowStockNotifications,
                     style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -86,7 +88,7 @@ class LowStockWidget extends StatelessWidget {
                       ),
                       SizedBox(height: 8.h),
                       Text(
-                        'All products are well stocked',
+                        l10n.allProductsWellStocked,
                         style: theme.textTheme.bodyLarge?.copyWith(
                           color: theme.colorScheme.onSurface.withOpacity(0.6),
                         ),
@@ -167,7 +169,7 @@ class LowStockWidget extends StatelessWidget {
                             ),
                             SizedBox(width: 4.w),
                             Text(
-                              isCritical ? 'Critical' : 'Low Stock',
+                              isCritical ? l10n.critical : l10n.lowStock,
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: isCritical ? Colors.red : Colors.orange,
                                 fontWeight: FontWeight.w600,
@@ -202,7 +204,7 @@ class LowStockWidget extends StatelessWidget {
                         ),
                         SizedBox(height: 2.h),
                         Text(
-                          'units left',
+                          l10n.unitsLeft,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurface.withOpacity(0.6),
                           ),
@@ -219,7 +221,7 @@ class LowStockWidget extends StatelessWidget {
                   onPressed: () {
                     // Navigate to products screen with low stock filter
                   },
-                  child: Text('View all ${products.length} low stock items'),
+                  child: Text(l10n.viewAllLowStockItems(products.length)),
                 ),
               ),
             ],

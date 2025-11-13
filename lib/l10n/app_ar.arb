@@ -408,6 +408,7 @@
   "lastMonth": "الشهر الماضي",
   "lastYear": "السنة الماضية",
   "customPeriod": "فترة مخصصة",
+  "customDateRange": "نطاق تاريخ مخصص",
   "selectStartAndEndDates": "حدد تاريخ البداية والنهاية للفترة المخصصة",
   "startDate": "تاريخ البداية",
   "endDate": "تاريخ النهاية",
