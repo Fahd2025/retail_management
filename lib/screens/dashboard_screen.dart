@@ -34,6 +34,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
+  int _previousIndex = 0;
   CompanyInfo? _companyInfo;
 
   // GlobalKeys for screen access
