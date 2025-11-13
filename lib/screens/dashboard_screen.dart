@@ -96,7 +96,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final l10n = AppLocalizations.of(context)!;
     if (role == UserRole.admin) {
       return [
-        {'icon': Icons.dashboard, 'label': 'Dashboard'},
+        {'icon': Icons.dashboard, 'label': l10n.dashboard},
         {'icon': Icons.point_of_sale, 'label': l10n.cashier},
         {'icon': Icons.inventory, 'label': l10n.products},
         {'icon': Icons.category, 'label': l10n.categories},
@@ -119,13 +119,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final label = navItems[_selectedIndex]['label'] as String;
 
     // Check if it's the Analytics Dashboard
-    if (label == 'Dashboard') {
+    if (label == l10n.dashboard) {
       return AppBar(
         title: Row(
           children: [
             const Icon(Icons.dashboard),
             const SizedBox(width: 8),
-            const Text('Analytics Dashboard'),
+            Text(l10n.analyticsDashboard),
           ],
         ),
         backgroundColor: Colors.blue.shade700,
@@ -136,7 +136,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onPressed: () {
               context.read<DashboardBloc>().add(const RefreshDashboardEvent());
             },
-            tooltip: 'Refresh Dashboard',
+            tooltip: l10n.refreshDashboard,
           ),
         ],
       );

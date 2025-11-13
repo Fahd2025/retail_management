@@ -645,5 +645,100 @@
         "type": "String"
       }
     }
-  }
+  },
+
+  "analyticsDashboard": "Analytics Dashboard",
+  "keyMetrics": "Key Metrics",
+  "totalVat": "Total VAT",
+  "vatCollected": "VAT collected",
+  "activeProducts": "active",
+  "activeCustomers": "active",
+  "completedInvoices": "completed invoices",
+  "bestSellingProducts": "Best Selling Products",
+  "lowStockNotifications": "Low Stock Notifications",
+  "latestSalesInvoices": "Latest Sales Invoices",
+  "salesTrend": "Sales Trend",
+  "salesByCategory": "Sales by Category",
+  "timePeriod": "Time Period",
+  "last7Days": "Last 7 Days",
+  "lastMonth": "Last Month",
+  "lastYear": "Last Year",
+  "customPeriod": "Custom Period",
+  "selectStartAndEndDates": "Select the start and end dates for your custom period",
+  "startDate": "Start Date",
+  "endDate": "End Date",
+  "selectStartDate": "Select start date",
+  "selectEndDate": "Select end date",
+  "duration": "Duration",
+  "days": "days",
+  "apply": "Apply",
+  "completed": "Completed",
+  "returned": "Returned",
+  "cancelled": "Cancelled",
+  "unitsLeft": "units left",
+  "lowStock": "Low Stock",
+  "critical": "Critical",
+  "viewAllItems": "View all {count} items",
+  "@viewAllItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "viewAllLowStockItems": "View all {count} low stock items",
+  "@viewAllLowStockItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "viewAllInvoices": "View all {count} invoices",
+  "@viewAllInvoices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noSalesDataAvailable": "No sales data available",
+  "noInvoicesAvailable": "No invoices available",
+  "noCategoryDataAvailable": "No category data available",
+  "allProductsWellStocked": "All products are well stocked",
+  "companyInfoNotFound": "Company information not found. Please configure in Settings.",
+  "errorLoadingInvoice": "Error loading invoice: {error}",
+  "@errorLoadingInvoice": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "refreshDashboard": "Refresh Dashboard",
+  "invoiceStatistics": "Invoice Statistics",
+  "loadingDashboardData": "Loading dashboard data...",
+  "errorLoadingDashboard": "Error loading dashboard",
+  "retry": "Retry",
+  "salesLabel": "Sales",
+  "vatLabel2": "VAT",
+  "quantitySold": "Qty: {quantity}",
+  "@quantitySold": {
+    "placeholders": {
+      "quantity": {
+        "type": "String"
+      }
+    }
+  },
+  "salesCount": "{count} sales",
+  "@salesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cash": "Cash",
+  "card": "Card",
+  "transfer": "Transfer"
 }

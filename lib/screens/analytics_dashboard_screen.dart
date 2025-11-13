@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../blocs/dashboard/dashboard_bloc.dart';
 import '../blocs/dashboard/dashboard_event.dart';
 import '../blocs/dashboard/dashboard_state.dart';
@@ -39,6 +40,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return BlocBuilder<DashboardBloc, DashboardState>(
         builder: (context, state) {
@@ -50,7 +52,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                   const CircularProgressIndicator(),
                   SizedBox(height: 16.h),
                   Text(
-                    'Loading dashboard data...',
+                    l10n.loadingDashboardData,
                     style: theme.textTheme.bodyLarge?.copyWith(
                       color: theme.colorScheme.onSurface.withOpacity(0.6),
                     ),
@@ -72,7 +74,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                   ),
                   SizedBox(height: 16.h),
                   Text(
-                    'Error loading dashboard',
+                    l10n.errorLoadingDashboard,
                     style: theme.textTheme.titleLarge?.copyWith(
                       color: theme.colorScheme.error,
                     ),
@@ -96,7 +98,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                           .add(const RefreshDashboardEvent());
                     },
                     icon: const Icon(Icons.refresh),
-                    label: const Text('Retry'),
+                    label: Text(l10n.retry),
                   ),
                 ],
               ),
@@ -114,6 +116,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
 
   Widget _buildDashboardContent(BuildContext context, DashboardLoaded state) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final statistics = state.statistics;
 
     return RefreshIndicator(
@@ -145,7 +148,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
 
             // Key Metrics Cards
             Text(
-              'Key Metrics',
+              l10n.keyMetrics,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -160,32 +163,32 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
               childAspectRatio: 1.5,
               children: [
                 MetricCard.currency(
-                  title: 'Total Sales',
+                  title: l10n.totalSales,
                   amount: statistics.totalSales,
                   icon: Icons.attach_money,
                   color: Colors.green,
-                  subtitle: '${statistics.completedInvoices} completed invoices',
+                  subtitle: '${statistics.completedInvoices} ${l10n.completedInvoices}',
                 ),
                 MetricCard.currency(
-                  title: 'Total VAT',
+                  title: l10n.totalVat,
                   amount: statistics.totalVat,
                   icon: Icons.receipt,
                   color: Colors.orange,
-                  subtitle: 'VAT collected',
+                  subtitle: l10n.vatCollected,
                 ),
                 MetricCard.count(
-                  title: 'Total Products',
+                  title: l10n.totalProducts,
                   count: statistics.totalProducts,
                   icon: Icons.inventory_2,
                   color: Colors.blue,
-                  subtitle: '${statistics.activeProducts} active',
+                  subtitle: '${statistics.activeProducts} ${l10n.activeProducts}',
                 ),
                 MetricCard.count(
-                  title: 'Total Customers',
+                  title: l10n.totalCustomers,
                   count: statistics.totalCustomers,
                   icon: Icons.people,
                   color: Colors.purple,
-                  subtitle: '${statistics.activeCustomers} active',
+                  subtitle: '${statistics.activeCustomers} ${l10n.activeCustomers}',
                 ),
               ],
             ),
@@ -266,7 +269,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Invoice Statistics',
+                      l10n.invoiceStatistics,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -277,28 +280,28 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                       children: [
                         _buildStatItem(
                           context,
-                          'Total',
+                          l10n.total,
                           statistics.totalInvoices.toString(),
                           Colors.blue,
                           Icons.receipt_long,
                         ),
                         _buildStatItem(
                           context,
-                          'Completed',
+                          l10n.completed,
                           statistics.completedInvoices.toString(),
                           Colors.green,
                           Icons.check_circle,
                         ),
                         _buildStatItem(
                           context,
-                          'Returned',
+                          l10n.returned,
                           statistics.returnedInvoices.toString(),
                           Colors.orange,
                           Icons.undo,
                         ),
                         _buildStatItem(
                           context,
-                          'Cancelled',
+                          l10n.cancelled,
                           statistics.cancelledInvoices.toString(),
                           Colors.red,
                           Icons.cancel,
@@ -358,6 +361,8 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
   }
 
   void _showInvoiceDetails(BuildContext context, Sale sale) async {
+    final l10n = AppLocalizations.of(context)!;
+
     try {
       // Show loading indicator
       showDialog(
@@ -393,8 +398,8 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
       } else if (context.mounted) {
         // Show error if company info not found
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Company information not found. Please configure in Settings.'),
+          SnackBar(
+            content: Text(l10n.companyInfoNotFound),
             backgroundColor: Colors.red,
           ),
         );
@@ -409,7 +414,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error loading invoice: ${e.toString()}'),
+            content: Text(l10n.errorLoadingInvoice(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
