@@ -20,7 +20,7 @@ class ProductsScreen extends StatefulWidget {
 
 class _ProductsScreenState extends State<ProductsScreen> {
   final AppDatabase _db = AppDatabase();
-  Map<String, String> _categoryNames = {};
+  Map<String, Category> _categories = {};
 
   @override
   void initState() {
@@ -38,8 +38,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
       final categories = await _db.getAllCategories();
       if (mounted) {
         setState(() {
-          _categoryNames = {
-            for (var category in categories) category.id: category.name
+          _categories = {
+            for (var category in categories) category.id: category
           };
         });
       }
@@ -49,7 +49,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   String _getCategoryName(String categoryId) {
-    return _categoryNames[categoryId] ?? categoryId;
+    final category = _categories[categoryId];
+    if (category == null) return categoryId;
+
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    return isArabic ? (category.nameAr ?? category.name) : category.name;
   }
 
   @override
@@ -255,7 +259,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               }
 
                               return DataRow(cells: [
-                                DataCell(Text(product.name)),
+                                DataCell(Text(
+                                  Localizations.localeOf(context).languageCode == 'ar'
+                                      ? (product.nameAr ?? product.name)
+                                      : product.name,
+                                )),
                                 DataCell(Text(product.barcode)),
                                 DataCell(
                                     Text(_getCategoryName(product.category))),
@@ -372,7 +380,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 ),
                               ),
                               title: Text(
-                                product.name,
+                                Localizations.localeOf(context).languageCode == 'ar'
+                                    ? (product.nameAr ?? product.name)
+                                    : product.name,
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -500,11 +510,13 @@ class _ProductDialogState extends State<_ProductDialog> {
   final _formKey = GlobalKey<FormState>();
   final AppDatabase _db = AppDatabase();
   late TextEditingController _nameController;
+  late TextEditingController _nameArController;
   late TextEditingController _barcodeController;
   late TextEditingController _priceController;
   late TextEditingController _costController;
   late TextEditingController _quantityController;
   late TextEditingController _descriptionController;
+  late TextEditingController _descriptionArController;
 
   List<Category> _categories = [];
   String? _selectedCategoryId;
@@ -514,6 +526,7 @@ class _ProductDialogState extends State<_ProductDialog> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.product?.name);
+    _nameArController = TextEditingController(text: widget.product?.nameAr);
     _barcodeController = TextEditingController(text: widget.product?.barcode);
     _selectedCategoryId = widget.product?.category;
     _priceController = TextEditingController(
@@ -527,6 +540,9 @@ class _ProductDialogState extends State<_ProductDialog> {
     );
     _descriptionController = TextEditingController(
       text: widget.product?.description,
+    );
+    _descriptionArController = TextEditingController(
+      text: widget.product?.descriptionAr,
     );
     _loadCategories();
   }
@@ -563,6 +579,9 @@ class _ProductDialogState extends State<_ProductDialog> {
     if (widget.product == null) {
       context.read<ProductBloc>().add(AddProductEvent(
             name: _nameController.text,
+            nameAr: _nameArController.text.isEmpty
+                ? null
+                : _nameArController.text,
             barcode: _barcodeController.text,
             category: _selectedCategoryId!,
             price: double.parse(_priceController.text),
@@ -572,11 +591,17 @@ class _ProductDialogState extends State<_ProductDialog> {
             description: _descriptionController.text.isEmpty
                 ? null
                 : _descriptionController.text,
+            descriptionAr: _descriptionArController.text.isEmpty
+                ? null
+                : _descriptionArController.text,
           ));
     } else {
       context.read<ProductBloc>().add(UpdateProductEvent(
             widget.product!.copyWith(
               name: _nameController.text,
+              nameAr: _nameArController.text.isEmpty
+                  ? null
+                  : _nameArController.text,
               barcode: _barcodeController.text,
               category: _selectedCategoryId!,
               price: double.parse(_priceController.text),
@@ -586,6 +611,9 @@ class _ProductDialogState extends State<_ProductDialog> {
               description: _descriptionController.text.isEmpty
                   ? null
                   : _descriptionController.text,
+              descriptionAr: _descriptionArController.text.isEmpty
+                  ? null
+                  : _descriptionArController.text,
             ),
           ));
     }
@@ -616,6 +644,18 @@ class _ProductDialogState extends State<_ProductDialog> {
               prefixIcon: const Icon(Icons.inventory_2_outlined),
             ),
             validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
+            textInputAction: TextInputAction.next,
+          ),
+          const SizedBox(height: 16),
+
+          // Product Name (Arabic) Field
+          TextFormField(
+            controller: _nameArController,
+            decoration: InputDecoration(
+              labelText: '${l10n.productName} (عربي)',
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.translate),
+            ),
             textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: 16),
@@ -764,6 +804,20 @@ class _ProductDialogState extends State<_ProductDialog> {
               alignLabelWithHint: true,
             ),
             maxLines: 3,
+            textInputAction: TextInputAction.next,
+          ),
+          const SizedBox(height: 16),
+
+          // Description (Arabic) Field
+          TextFormField(
+            controller: _descriptionArController,
+            decoration: InputDecoration(
+              labelText: '${l10n.description} (عربي)',
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.translate),
+              alignLabelWithHint: true,
+            ),
+            maxLines: 3,
             textInputAction: TextInputAction.done,
           ),
         ],
@@ -783,11 +837,13 @@ class _ProductDialogState extends State<_ProductDialog> {
   @override
   void dispose() {
     _nameController.dispose();
+    _nameArController.dispose();
     _barcodeController.dispose();
     _priceController.dispose();
     _costController.dispose();
     _quantityController.dispose();
     _descriptionController.dispose();
+    _descriptionArController.dispose();
     // Don't close the singleton database instance
     super.dispose();
   }

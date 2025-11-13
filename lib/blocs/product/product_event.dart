@@ -41,7 +41,9 @@ class GetProductByBarcodeEvent extends ProductEvent {
 
 class AddProductEvent extends ProductEvent {
   final String name;
+  final String? nameAr;
   final String? description;
+  final String? descriptionAr;
   final String barcode;
   final double price;
   final double cost;
@@ -52,7 +54,9 @@ class AddProductEvent extends ProductEvent {
 
   const AddProductEvent({
     required this.name,
+    this.nameAr,
     this.description,
+    this.descriptionAr,
     required this.barcode,
     required this.price,
     required this.cost,
@@ -65,7 +69,9 @@ class AddProductEvent extends ProductEvent {
   @override
   List<Object?> get props => [
         name,
+        nameAr,
         description,
+        descriptionAr,
         barcode,
         price,
         cost,

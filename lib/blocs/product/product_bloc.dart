@@ -113,7 +113,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       final product = Product(
         id: _uuid.v4(),
         name: event.name,
+        nameAr: event.nameAr,
         description: event.description,
+        descriptionAr: event.descriptionAr,
         barcode: event.barcode,
         price: event.price,
         cost: event.cost,

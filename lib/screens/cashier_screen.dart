@@ -808,7 +808,9 @@ class _ProductCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product.name,
+                    Localizations.localeOf(context).languageCode == 'ar'
+                        ? (product.nameAr ?? product.name)
+                        : product.name,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
