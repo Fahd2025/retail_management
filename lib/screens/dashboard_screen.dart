@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:retail_management/generated/l10n/app_localizations.dart';
@@ -368,7 +367,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               final locale = Localizations.localeOf(context);
               final isArabic = locale.languageCode == 'ar';
               final companyName = isArabic
-                  ? (_companyInfo?.nameArabic ?? _companyInfo?.name ?? 'إدارة التجزئة')
+                  ? (_companyInfo?.nameArabic ??
+                      _companyInfo?.name ??
+                      'إدارة التجزئة')
                   : (_companyInfo?.name ?? 'Retail Management');
 
               return Text(
@@ -455,88 +456,88 @@ class _DashboardScreenState extends State<DashboardScreen> {
             }
           },
           child: Scaffold(
-          appBar: _buildAppBar(navItems, context),
-          drawer: Drawer(
-            child: Column(
-              children: [
-                _buildDrawerHeader(),
-                Expanded(
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    itemCount: navItems.length,
-                    itemBuilder: (context, index) {
-                      final item = navItems[index];
-                      final isSelected = _selectedIndex == index;
+            appBar: _buildAppBar(navItems, context),
+            drawer: Drawer(
+              child: Column(
+                children: [
+                  _buildDrawerHeader(),
+                  Expanded(
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      itemCount: navItems.length,
+                      itemBuilder: (context, index) {
+                        final item = navItems[index];
+                        final isSelected = _selectedIndex == index;
 
-                      return ListTile(
-                        leading: Icon(
-                          item['icon'] as IconData,
-                          color: isSelected
-                              ? Colors.blue.shade700
-                              : Colors.grey.shade700,
-                        ),
-                        title: Text(
-                          item['label'] as String,
-                          style: TextStyle(
-                            fontWeight: isSelected
-                                ? FontWeight.bold
-                                : FontWeight.normal,
+                        return ListTile(
+                          leading: Icon(
+                            item['icon'] as IconData,
                             color: isSelected
                                 ? Colors.blue.shade700
                                 : Colors.grey.shade700,
                           ),
+                          title: Text(
+                            item['label'] as String,
+                            style: TextStyle(
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                              color: isSelected
+                                  ? Colors.blue.shade700
+                                  : Colors.grey.shade700,
+                            ),
+                          ),
+                          selected: isSelected,
+                          selectedTileColor: Colors.blue.shade50,
+                          onTap: () {
+                            setState(() => _selectedIndex = index);
+                            Navigator.pop(context); // Close drawer
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  const Divider(height: 1),
+                  ListTile(
+                    leading: const Icon(Icons.logout, color: Colors.red),
+                    title: Text(
+                      AppLocalizations.of(context)!.logout,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                    onTap: () async {
+                      final l10n = AppLocalizations.of(context)!;
+                      final confirm = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text(l10n.logout),
+                          content: Text(l10n.confirmLogout),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, false),
+                              child: Text(l10n.cancel),
+                            ),
+                            ElevatedButton(
+                              onPressed: () => Navigator.pop(context, true),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                foregroundColor: Colors.white,
+                              ),
+                              child: Text(l10n.logout),
+                            ),
+                          ],
                         ),
-                        selected: isSelected,
-                        selectedTileColor: Colors.blue.shade50,
-                        onTap: () {
-                          setState(() => _selectedIndex = index);
-                          Navigator.pop(context); // Close drawer
-                        },
                       );
+
+                      if (confirm == true && mounted) {
+                        Navigator.pop(context); // Close drawer
+                        context.read<AuthBloc>().add(const LogoutEvent());
+                      }
                     },
                   ),
-                ),
-                const Divider(height: 1),
-                ListTile(
-                  leading: const Icon(Icons.logout, color: Colors.red),
-                  title: Text(
-                    AppLocalizations.of(context)!.logout,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                  onTap: () async {
-                    final l10n = AppLocalizations.of(context)!;
-                    final confirm = await showDialog<bool>(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text(l10n.logout),
-                        content: Text(l10n.confirmLogout),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, false),
-                            child: Text(l10n.cancel),
-                          ),
-                          ElevatedButton(
-                            onPressed: () => Navigator.pop(context, true),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
-                              foregroundColor: Colors.white,
-                            ),
-                            child: Text(l10n.logout),
-                          ),
-                        ],
-                      ),
-                    );
-
-                    if (confirm == true && mounted) {
-                      Navigator.pop(context); // Close drawer
-                      context.read<AuthBloc>().add(const LogoutEvent());
-                    }
-                  },
-                ),
-                const SizedBox(height: 8),
-              ],
+                  const SizedBox(height: 8),
+                ],
+              ),
             ),
-          ),
             body: screens[_selectedIndex],
           ),
         );
