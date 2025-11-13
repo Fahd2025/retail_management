@@ -1085,7 +1085,7 @@ abstract class AppLocalizations {
   /// No description provided for @cashier.
   ///
   /// In en, this message translates to:
-  /// **'Cashier Mode'**
+  /// **'Cashier'**
   String get cashier;
 
   /// No description provided for @scanBarcode.

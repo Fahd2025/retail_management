@@ -503,7 +503,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectTime => 'Select Time';
 
   @override
-  String get cashier => 'Cashier Mode';
+  String get cashier => 'Cashier';
 
   @override
   String get scanBarcode => 'Scan Barcode';
