@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:retail_management/generated/l10n/app_localizations.dart';
+import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/auth/auth_bloc.dart';
 import '../blocs/auth/auth_event.dart';
 import '../blocs/auth/auth_state.dart';
@@ -512,7 +512,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           selectedTileColor: Colors.blue.shade50,
                           onTap: () async {
                             // Check if we're navigating away from settings (index 6 for admin)
-                            final isLeavingSettings = (_previousIndex == 6 && user.role == UserRole.admin);
+                            final isLeavingSettings = (_previousIndex == 6 &&
+                                user.role == UserRole.admin);
 
                             setState(() {
                               _previousIndex = _selectedIndex;

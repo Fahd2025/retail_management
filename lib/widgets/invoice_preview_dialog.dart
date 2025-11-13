@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:printing/printing.dart';
-import 'package:retail_management/generated/l10n/app_localizations.dart';
+import 'package:retail_management/l10n/app_localizations.dart';
 import '../models/sale.dart';
 import '../models/company_info.dart';
 import '../models/customer.dart';
@@ -215,16 +215,14 @@ class InvoicePreviewBottomSheet extends StatefulWidget {
   }
 }
 
-class _InvoicePreviewBottomSheetState
-    extends State<InvoicePreviewBottomSheet> {
+class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
   late PrintFormat _selectedFormat;
   final _invoiceService = InvoiceService();
 
   @override
   void initState() {
     super.initState();
-    _selectedFormat =
-        widget.initialConfig?.format ?? PrintFormat.a4;
+    _selectedFormat = widget.initialConfig?.format ?? PrintFormat.a4;
   }
 
   @override
@@ -296,7 +294,8 @@ class _InvoicePreviewBottomSheetState
                           children: [
                             Text(
                               '${l10n.selectFormat}:',
-                              style: const TextStyle(fontWeight: FontWeight.bold),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 8),
                             Wrap(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:retail_management/generated/l10n/app_localizations.dart';
+import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/customer/customer_bloc.dart';
 import '../blocs/customer/customer_event.dart';
 import '../blocs/customer/customer_state.dart';

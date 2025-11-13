@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:retail_management/generated/l10n/app_localizations.dart';
+import 'package:retail_management/l10n/app_localizations.dart';
 import '../../models/dashboard_statistics.dart';
 
 /// Widget to display low stock notifications
@@ -134,7 +134,8 @@ class LowStockWidget extends StatelessWidget {
                                 errorBuilder: (context, error, stackTrace) {
                                   return Icon(
                                     Icons.inventory_2,
-                                    color: isCritical ? Colors.red : Colors.orange,
+                                    color:
+                                        isCritical ? Colors.red : Colors.orange,
                                     size: 24.sp,
                                   );
                                 },
@@ -182,7 +183,8 @@ class LowStockWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(2.r),
                           child: LinearProgressIndicator(
                             value: stockPercentage.clamp(0.0, 100.0) / 100,
-                            backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                            backgroundColor:
+                                theme.colorScheme.surfaceContainerHighest,
                             valueColor: AlwaysStoppedAnimation<Color>(
                               isCritical ? Colors.red : Colors.orange,
                             ),

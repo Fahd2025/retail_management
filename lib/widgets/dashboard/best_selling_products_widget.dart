@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:retail_management/generated/l10n/app_localizations.dart';
+import 'package:retail_management/l10n/app_localizations.dart';
 import '../../models/dashboard_statistics.dart';
 
 /// Widget to display best-selling products
@@ -19,7 +19,8 @@ class BestSellingProductsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormatter = NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
+    final currencyFormatter =
+        NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
     final numberFormatter = NumberFormat('#,##0.##');
 
     return Card(

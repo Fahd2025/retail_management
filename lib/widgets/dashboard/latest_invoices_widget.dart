@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:retail_management/generated/l10n/app_localizations.dart';
+import 'package:retail_management/l10n/app_localizations.dart';
 import '../../models/sale.dart';
 
 /// Widget to display latest sales invoices
@@ -21,7 +21,8 @@ class LatestInvoicesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormatter = NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
+    final currencyFormatter =
+        NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
     final dateFormatter = DateFormat('dd/MM/yyyy HH:mm');
 
     return Card(
@@ -93,12 +94,15 @@ class LatestInvoicesWidget extends StatelessWidget {
                       horizontal: 8.w,
                       vertical: 8.h,
                     ),
-                    onTap: onInvoiceTap != null ? () => onInvoiceTap!(invoice) : null,
+                    onTap: onInvoiceTap != null
+                        ? () => onInvoiceTap!(invoice)
+                        : null,
                     leading: Container(
                       width: 50.w,
                       height: 50.w,
                       decoration: BoxDecoration(
-                        color: _getStatusColor(invoice.status, theme).withOpacity(0.1),
+                        color: _getStatusColor(invoice.status, theme)
+                            .withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: Icon(
@@ -140,13 +144,15 @@ class LatestInvoicesWidget extends StatelessWidget {
                               Icon(
                                 Icons.person_outline,
                                 size: 12.sp,
-                                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                                color: theme.colorScheme.onSurface
+                                    .withOpacity(0.6),
                               ),
                               SizedBox(width: 4.w),
                               Text(
                                 '${l10n.customerId}: ${invoice.customerId}',
                                 style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onSurface.withOpacity(0.6),
+                                  color: theme.colorScheme.onSurface
+                                      .withOpacity(0.6),
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -168,7 +174,8 @@ class LatestInvoicesWidget extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 2.h),
-                        _buildPaymentMethodBadge(invoice.paymentMethod, theme, context),
+                        _buildPaymentMethodBadge(
+                            invoice.paymentMethod, theme, context),
                       ],
                     ),
                   );
@@ -191,7 +198,8 @@ class LatestInvoicesWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusBadge(SaleStatus status, ThemeData theme, BuildContext context) {
+  Widget _buildStatusBadge(
+      SaleStatus status, ThemeData theme, BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     String text;
     Color color;
@@ -227,7 +235,8 @@ class LatestInvoicesWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildPaymentMethodBadge(PaymentMethod method, ThemeData theme, BuildContext context) {
+  Widget _buildPaymentMethodBadge(
+      PaymentMethod method, ThemeData theme, BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     IconData icon;
     String text;

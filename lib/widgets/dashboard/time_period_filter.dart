@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:retail_management/generated/l10n/app_localizations.dart';
+import 'package:retail_management/l10n/app_localizations.dart';
 import '../../models/dashboard_statistics.dart';
 
 /// Widget for time period filter dropdown with custom date picker
@@ -217,7 +217,8 @@ class TimePeriodFilter extends StatelessWidget {
                               0,
                             );
                             // If end date is before start date, adjust it
-                            if (endDate != null && endDate!.isBefore(startDate!)) {
+                            if (endDate != null &&
+                                endDate!.isBefore(startDate!)) {
                               endDate = startDate;
                             }
                           });
@@ -329,7 +330,8 @@ class TimePeriodFilter extends StatelessWidget {
                             SizedBox(width: 8.w),
                             Expanded(
                               child: Text(
-                                l10n.durationDays(endDate!.difference(startDate!).inDays + 1),
+                                l10n.durationDays(
+                                    endDate!.difference(startDate!).inDays + 1),
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: theme.colorScheme.onPrimaryContainer,
                                 ),

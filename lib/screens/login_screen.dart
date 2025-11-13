@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:retail_management/generated/l10n/app_localizations.dart';
+import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/auth/auth_bloc.dart';
 import '../blocs/auth/auth_event.dart';
 import '../blocs/auth/auth_state.dart';
@@ -101,9 +101,9 @@ class _LoginScreenState extends State<LoginScreen> {
     final password = _passwordController.text;
 
     context.read<AuthBloc>().add(LoginEvent(
-      username: username,
-      password: password,
-    ));
+          username: username,
+          password: password,
+        ));
   }
 
   @override
@@ -124,384 +124,385 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       child: Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Colors.blue.shade700,
-                  Colors.blue.shade500,
-                ],
+        body: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.blue.shade700,
+                    Colors.blue.shade500,
+                  ],
+                ),
               ),
-            ),
-            child: SafeArea(
-              child: Center(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-                  child: BlocBuilder<AppConfigBloc, AppConfigState>(
-                    builder: (context, configState) {
-                      return Container(
-                        constraints: const BoxConstraints(maxWidth: 500),
-                        padding: const EdgeInsets.all(32),
-                        decoration: BoxDecoration(
-                          color: configState.isDarkMode
-                              ? const Color(0xFF1E1E1E).withOpacity(0.95)
-                              : Colors.white.withOpacity(0.95),
-                          borderRadius: BorderRadius.circular(24),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            // Theme and Language Switchers Row
-                            BlocBuilder<AppConfigBloc, AppConfigState>(
-                              builder: (context, configState) {
-                                return Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    // Theme Switcher
-                                    Tooltip(
-                                      message: l10n.switchTheme,
-                                      child: IconButton(
-                                        icon: Icon(
-                                          configState.isDarkMode
-                                              ? Icons.light_mode
-                                              : Icons.dark_mode,
+              child: SafeArea(
+                child: Center(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 32),
+                    child: BlocBuilder<AppConfigBloc, AppConfigState>(
+                      builder: (context, configState) {
+                        return Container(
+                          constraints: const BoxConstraints(maxWidth: 500),
+                          padding: const EdgeInsets.all(32),
+                          decoration: BoxDecoration(
+                            color: configState.isDarkMode
+                                ? const Color(0xFF1E1E1E).withOpacity(0.95)
+                                : Colors.white.withOpacity(0.95),
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 20,
+                                offset: const Offset(0, 10),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Theme and Language Switchers Row
+                              BlocBuilder<AppConfigBloc, AppConfigState>(
+                                builder: (context, configState) {
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      // Theme Switcher
+                                      Tooltip(
+                                        message: l10n.switchTheme,
+                                        child: IconButton(
+                                          icon: Icon(
+                                            configState.isDarkMode
+                                                ? Icons.light_mode
+                                                : Icons.dark_mode,
+                                          ),
+                                          onPressed: () {
+                                            context
+                                                .read<AppConfigBloc>()
+                                                .add(const ToggleThemeEvent());
+                                          },
                                         ),
-                                        onPressed: () {
-                                          context.read<AppConfigBloc>().add(const ToggleThemeEvent());
-                                        },
+                                      ),
+                                      const SizedBox(width: 8),
+                                      // Language Switcher
+                                      Tooltip(
+                                        message: l10n.switchLanguage,
+                                        child: PopupMenuButton<String>(
+                                          icon: const Icon(Icons.language),
+                                          onSelected: (String value) {
+                                            if (value == 'en') {
+                                              context
+                                                  .read<AppConfigBloc>()
+                                                  .add(const SetEnglishEvent());
+                                            } else {
+                                              context
+                                                  .read<AppConfigBloc>()
+                                                  .add(const SetArabicEvent());
+                                            }
+                                          },
+                                          itemBuilder: (BuildContext context) =>
+                                              [
+                                            PopupMenuItem(
+                                              value: 'en',
+                                              child: Row(
+                                                children: [
+                                                  if (configState.isEnglish)
+                                                    const Icon(Icons.check,
+                                                        size: 18),
+                                                  if (configState.isEnglish)
+                                                    const SizedBox(width: 8),
+                                                  Text(l10n.english),
+                                                ],
+                                              ),
+                                            ),
+                                            PopupMenuItem(
+                                              value: 'ar',
+                                              child: Row(
+                                                children: [
+                                                  if (configState.isArabic)
+                                                    const Icon(Icons.check,
+                                                        size: 18),
+                                                  if (configState.isArabic)
+                                                    const SizedBox(width: 8),
+                                                  Text(l10n.arabic),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                              const SizedBox(height: 8),
+                              // Logo/Icon
+                              Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.shade100,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.store,
+                                  size: 50,
+                                  color: Colors.blue.shade700,
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+
+                              // Title
+                              Text(
+                                l10n.loginTitle,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineSmall
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue.shade700,
+                                    ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                l10n.loginSubtitle,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: Colors.grey.shade600,
+                                    ),
+                              ),
+                              const SizedBox(height: 24),
+
+                              // Default Credentials Display
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.shade50,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: Colors.blue.shade200,
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.info_outline,
+                                          size: 20,
+                                          color: Colors.blue.shade700,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          l10n.defaultCredentials,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.blue.shade700,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      l10n.adminCredentials,
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.grey.shade700,
                                       ),
                                     ),
-                                    const SizedBox(width: 8),
-                                    // Language Switcher
-                                    Tooltip(
-                                      message: l10n.switchLanguage,
-                                      child: PopupMenuButton<String>(
-                                        icon: const Icon(Icons.language),
-                                        onSelected: (String value) {
-                                          if (value == 'en') {
-                                            context.read<AppConfigBloc>().add(const SetEnglishEvent());
-                                          } else {
-                                            context.read<AppConfigBloc>().add(const SetArabicEvent());
-                                          }
-                                        },
-                                        itemBuilder: (BuildContext context) => [
-                                          PopupMenuItem(
-                                            value: 'en',
-                                            child: Row(
-                                              children: [
-                                                if (configState.isEnglish)
-                                                  const Icon(Icons.check, size: 18),
-                                                if (configState.isEnglish)
-                                                  const SizedBox(width: 8),
-                                                Text(l10n.english),
-                                              ],
-                                            ),
-                                          ),
-                                          PopupMenuItem(
-                                            value: 'ar',
-                                            child: Row(
-                                              children: [
-                                                if (configState.isArabic)
-                                                  const Icon(Icons.check, size: 18),
-                                                if (configState.isArabic)
-                                                  const SizedBox(width: 8),
-                                                Text(l10n.arabic),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      l10n.cashierCredentials,
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.grey.shade700,
                                       ),
                                     ),
                                   ],
-                                );
-                              },
-                            ),
-                            const SizedBox(height: 8),
-                            // Logo/Icon
-                            Container(
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                color: Colors.blue.shade100,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.store,
-                                size: 50,
-                                color: Colors.blue.shade700,
-                              ),
-                            ),
-                            const SizedBox(height: 24),
-
-                            // Title
-                            Text(
-                              l10n.loginTitle,
-                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue.shade700,
-                                  ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              l10n.loginSubtitle,
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Colors.grey.shade600,
-                                  ),
-                            ),
-                            const SizedBox(height: 24),
-
-                            // Default Credentials Display
-                            Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Colors.blue.shade50,
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: Colors.blue.shade200,
-                                  width: 1,
                                 ),
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
+                              const SizedBox(height: 24),
+
+                              if (_isInitializing)
+                                Column(
+                                  children: [
+                                    const CircularProgressIndicator(),
+                                    const SizedBox(height: 16),
+                                    Text(l10n.initializingSystem),
+                                  ],
+                                )
+                              else
+                                Form(
+                                  key: _formKey,
+                                  child: Column(
                                     children: [
-                                      Icon(
-                                        Icons.info_outline,
-                                        size: 20,
-                                        color: Colors.blue.shade700,
+                                      // Username field
+                                      TextFormField(
+                                        controller: _usernameController,
+                                        decoration: InputDecoration(
+                                          labelText: l10n.username,
+                                          prefixIcon: const Icon(Icons.person),
+                                        ),
+                                        autofillHints: const [
+                                          AutofillHints.username
+                                        ],
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return l10n.pleaseEnterUsername;
+                                          }
+                                          return null;
+                                        },
+                                        textInputAction: TextInputAction.next,
+                                        onFieldSubmitted: (_) {
+                                          // Move focus to password field
+                                          FocusScope.of(context).nextFocus();
+                                        },
                                       ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        l10n.defaultCredentials,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.blue.shade700,
+                                      const SizedBox(height: 16),
+
+                                      // Password field
+                                      TextFormField(
+                                        controller: _passwordController,
+                                        decoration: InputDecoration(
+                                          labelText: l10n.password,
+                                          prefixIcon: const Icon(Icons.lock),
+                                          suffixIcon: IconButton(
+                                            icon: Icon(
+                                              _obscurePassword
+                                                  ? Icons.visibility
+                                                  : Icons.visibility_off,
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                _obscurePassword =
+                                                    !_obscurePassword;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        autofillHints: const [
+                                          AutofillHints.password
+                                        ],
+                                        obscureText: _obscurePassword,
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return l10n.pleaseEnterPassword;
+                                          }
+                                          return null;
+                                        },
+                                        onFieldSubmitted: (_) {
+                                          // Submit form on Enter key
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            _login();
+                                          }
+                                        },
+                                      ),
+                                      const SizedBox(height: 32),
+
+                                      // Login button
+                                      SizedBox(
+                                        width: double.infinity,
+                                        child: BlocBuilder<AuthBloc, AuthState>(
+                                          builder: (context, state) {
+                                            final isLoading =
+                                                state is AuthLoading;
+                                            return ElevatedButton(
+                                              onPressed:
+                                                  isLoading ? null : _login,
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    Colors.blue.shade700,
+                                                foregroundColor: Colors.white,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  vertical: 16,
+                                                ),
+                                              ),
+                                              child: isLoading
+                                                  ? const SizedBox(
+                                                      height: 20,
+                                                      width: 20,
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                        strokeWidth: 2,
+                                                        color: Colors.white,
+                                                      ),
+                                                    )
+                                                  : Text(
+                                                      l10n.login,
+                                                      style: const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                            );
+                                          },
                                         ),
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    l10n.adminCredentials,
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.grey.shade700,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    l10n.cashierCredentials,
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.grey.shade700,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 24),
-
-                            if (_isInitializing)
-                              Column(
-                                children: [
-                                  const CircularProgressIndicator(),
-                                  const SizedBox(height: 16),
-                                  Text(l10n.initializingSystem),
-                                ],
-                              )
-                            else
-                              Form(
-                                key: _formKey,
-                                child: Column(
-                                  children: [
-                                    // Username field
-                                    TextFormField(
-                                      controller: _usernameController,
-                                      decoration: InputDecoration(
-                                        labelText: l10n.username,
-                                        prefixIcon: const Icon(Icons.person),
-                                      ),
-                                      autofillHints: const [AutofillHints.username],
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return l10n.pleaseEnterUsername;
-                                        }
-                                        return null;
-                                      },
-                                      textInputAction: TextInputAction.next,
-                                      onFieldSubmitted: (_) {
-                                        // Move focus to password field
-                                        FocusScope.of(context).nextFocus();
-                                      },
-                                    ),
-                                    const SizedBox(height: 16),
-
-                                    // Password field
-                                    TextFormField(
-                                      controller: _passwordController,
-                                      decoration: InputDecoration(
-                                        labelText: l10n.password,
-                                        prefixIcon: const Icon(Icons.lock),
-                                        suffixIcon: IconButton(
-                                          icon: Icon(
-                                            _obscurePassword
-                                                ? Icons.visibility
-                                                : Icons.visibility_off,
-                                          ),
-                                          onPressed: () {
-                                            setState(() {
-                                              _obscurePassword = !_obscurePassword;
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      autofillHints: const [AutofillHints.password],
-                                      obscureText: _obscurePassword,
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return l10n.pleaseEnterPassword;
-                                        }
-                                        return null;
-                                      },
-                                      onFieldSubmitted: (_) {
-                                        // Submit form on Enter key
-                                        if (_formKey.currentState!.validate()) {
-                                          _login();
-                                        }
-                                      },
-                                    ),
-                                    const SizedBox(height: 32),
-
-                                    // Login button
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: BlocBuilder<AuthBloc, AuthState>(
-                                        builder: (context, state) {
-                                          final isLoading = state is AuthLoading;
-                                          return ElevatedButton(
-                                            onPressed: isLoading ? null : _login,
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.blue.shade700,
-                                              foregroundColor: Colors.white,
-                                              padding: const EdgeInsets.symmetric(
-                                                vertical: 16,
-                                              ),
-                                            ),
-                                            child: isLoading
-                                                ? const SizedBox(
-                                                    height: 20,
-                                                    width: 20,
-                                                    child: CircularProgressIndicator(
-                                                      strokeWidth: 2,
-                                                      color: Colors.white,
-                                                    ),
-                                                  )
-                                                : Text(
-                                                    l10n.login,
-                                                    style: const TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                  ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ],
                                 ),
-                              ),
-                          ],
-                        ),
-                      );
-                    },
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
 
-          // Notification Bar
-          if (_notificationMessage != null)
-            BlocBuilder<AppConfigBloc, AppConfigState>(
-              builder: (context, configState) {
-                return Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: SafeArea(
-                    child: Material(
-                      elevation: 4,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 16,
-                        ),
-                        decoration: BoxDecoration(
-                          color: _isNotificationError
-                              ? (configState.isDarkMode
-                                  ? Colors.red.shade900.withOpacity(0.9)
-                                  : Colors.red.shade50)
-                              : (configState.isDarkMode
-                                  ? Colors.green.shade900.withOpacity(0.9)
-                                  : Colors.green.shade50),
-                          border: Border(
-                            bottom: BorderSide(
-                              color: _isNotificationError
-                                  ? (configState.isDarkMode
-                                      ? Colors.red.shade700
-                                      : Colors.red.shade200)
-                                  : (configState.isDarkMode
-                                      ? Colors.green.shade700
-                                      : Colors.green.shade200),
-                              width: 2,
-                            ),
+            // Notification Bar
+            if (_notificationMessage != null)
+              BlocBuilder<AppConfigBloc, AppConfigState>(
+                builder: (context, configState) {
+                  return Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: SafeArea(
+                      child: Material(
+                        elevation: 4,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 16,
                           ),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              _isNotificationError
-                                  ? Icons.error_outline
-                                  : Icons.check_circle_outline,
-                              color: _isNotificationError
-                                  ? (configState.isDarkMode
-                                      ? Colors.red.shade300
-                                      : Colors.red.shade700)
-                                  : (configState.isDarkMode
-                                      ? Colors.green.shade300
-                                      : Colors.green.shade700),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                _notificationMessage!,
-                                style: TextStyle(
-                                  color: _isNotificationError
-                                      ? (configState.isDarkMode
-                                          ? Colors.red.shade100
-                                          : Colors.red.shade900)
-                                      : (configState.isDarkMode
-                                          ? Colors.green.shade100
-                                          : Colors.green.shade900),
-                                  fontWeight: FontWeight.w500,
-                                ),
+                          decoration: BoxDecoration(
+                            color: _isNotificationError
+                                ? (configState.isDarkMode
+                                    ? Colors.red.shade900.withOpacity(0.9)
+                                    : Colors.red.shade50)
+                                : (configState.isDarkMode
+                                    ? Colors.green.shade900.withOpacity(0.9)
+                                    : Colors.green.shade50),
+                            border: Border(
+                              bottom: BorderSide(
+                                color: _isNotificationError
+                                    ? (configState.isDarkMode
+                                        ? Colors.red.shade700
+                                        : Colors.red.shade200)
+                                    : (configState.isDarkMode
+                                        ? Colors.green.shade700
+                                        : Colors.green.shade200),
+                                width: 2,
                               ),
                             ),
-                            IconButton(
-                              icon: Icon(
-                                Icons.close,
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                _isNotificationError
+                                    ? Icons.error_outline
+                                    : Icons.check_circle_outline,
                                 color: _isNotificationError
                                     ? (configState.isDarkMode
                                         ? Colors.red.shade300
@@ -510,22 +511,49 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ? Colors.green.shade300
                                         : Colors.green.shade700),
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  _notificationMessage = null;
-                                });
-                              },
-                            ),
-                          ],
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  _notificationMessage!,
+                                  style: TextStyle(
+                                    color: _isNotificationError
+                                        ? (configState.isDarkMode
+                                            ? Colors.red.shade100
+                                            : Colors.red.shade900)
+                                        : (configState.isDarkMode
+                                            ? Colors.green.shade100
+                                            : Colors.green.shade900),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.close,
+                                  color: _isNotificationError
+                                      ? (configState.isDarkMode
+                                          ? Colors.red.shade300
+                                          : Colors.red.shade700)
+                                      : (configState.isDarkMode
+                                          ? Colors.green.shade300
+                                          : Colors.green.shade700),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _notificationMessage = null;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              },
-            ),
-        ],
-      ),
+                  );
+                },
+              ),
+          ],
+        ),
       ),
     );
   }
