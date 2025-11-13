@@ -151,12 +151,12 @@ class BestSellingProduct extends Equatable {
 
   factory BestSellingProduct.fromJson(Map<String, dynamic> json) {
     return BestSellingProduct(
-      productId: json['productId'] as String,
-      productName: json['productName'] as String,
-      productImage: json['productImage'] as String?,
-      totalQuantitySold: (json['totalQuantitySold'] as num).toDouble(),
-      totalRevenue: (json['totalRevenue'] as num).toDouble(),
-      transactionCount: json['transactionCount'] as int,
+      productId: json['product_id'] as String,
+      productName: json['product_name'] as String,
+      productImage: json['product_image'] as String?,
+      totalQuantitySold: (json['total_quantity_sold'] as num).toDouble(),
+      totalRevenue: (json['total_revenue'] as num).toDouble(),
+      transactionCount: json['transaction_count'] as int,
       category: json['category'] as String?,
     );
   }
@@ -249,9 +249,9 @@ class DailySalesData extends Equatable {
   factory DailySalesData.fromJson(Map<String, dynamic> json) {
     return DailySalesData(
       date: DateTime.parse(json['date'] as String),
-      totalSales: (json['totalSales'] as num).toDouble(),
-      totalVat: (json['totalVat'] as num).toDouble(),
-      invoiceCount: json['invoiceCount'] as int,
+      totalSales: (json['total_sales'] as num).toDouble(),
+      totalVat: (json['total_vat'] as num).toDouble(),
+      invoiceCount: json['invoice_count'] as int,
     );
   }
 }
@@ -285,10 +285,10 @@ class CategorySalesData extends Equatable {
 
   factory CategorySalesData.fromJson(Map<String, dynamic> json) {
     return CategorySalesData(
-      categoryName: json['categoryName'] as String,
-      totalRevenue: (json['totalRevenue'] as num).toDouble(),
-      productCount: json['productCount'] as int,
-      transactionCount: json['transactionCount'] as int,
+      categoryName: json['category_name'] as String,
+      totalRevenue: (json['total_revenue'] as num).toDouble(),
+      productCount: json['product_count'] as int,
+      transactionCount: json['transaction_count'] as int,
     );
   }
 }
