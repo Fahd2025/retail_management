@@ -1,0 +1,408 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../blocs/dashboard/dashboard_bloc.dart';
+import '../blocs/dashboard/dashboard_event.dart';
+import '../blocs/dashboard/dashboard_state.dart';
+import '../models/dashboard_statistics.dart';
+import '../widgets/dashboard/metric_card.dart';
+import '../widgets/dashboard/best_selling_products_widget.dart';
+import '../widgets/dashboard/low_stock_widget.dart';
+import '../widgets/dashboard/latest_invoices_widget.dart';
+import '../widgets/dashboard/sales_chart_widget.dart';
+import '../widgets/dashboard/time_period_filter.dart';
+
+/// Analytics Dashboard Screen - Main dashboard with statistics and charts
+class AnalyticsDashboardScreen extends StatefulWidget {
+  const AnalyticsDashboardScreen({super.key});
+
+  @override
+  State<AnalyticsDashboardScreen> createState() =>
+      _AnalyticsDashboardScreenState();
+}
+
+class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Load initial dashboard data with default time period (last 7 days)
+    context.read<DashboardBloc>().add(
+          const LoadDashboardStatisticsEvent(
+            timePeriod: TimePeriod.last7Days,
+          ),
+        );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Icon(
+              Icons.dashboard,
+              color: theme.colorScheme.onPrimary,
+              size: 24.sp,
+            ),
+            SizedBox(width: 8.w),
+            const Text('Analytics Dashboard'),
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              context.read<DashboardBloc>().add(const RefreshDashboardEvent());
+            },
+            tooltip: 'Refresh Dashboard',
+          ),
+        ],
+      ),
+      body: BlocBuilder<DashboardBloc, DashboardState>(
+        builder: (context, state) {
+          if (state is DashboardInitial || state is DashboardLoading) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircularProgressIndicator(),
+                  SizedBox(height: 16.h),
+                  Text(
+                    'Loading dashboard data...',
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          if (state is DashboardError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 64.sp,
+                    color: theme.colorScheme.error,
+                  ),
+                  SizedBox(height: 16.h),
+                  Text(
+                    'Error loading dashboard',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: theme.colorScheme.error,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 32.w),
+                    child: Text(
+                      state.message,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  SizedBox(height: 24.h),
+                  FilledButton.icon(
+                    onPressed: () {
+                      context
+                          .read<DashboardBloc>()
+                          .add(const RefreshDashboardEvent());
+                    },
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          if (state is DashboardLoaded) {
+            return _buildDashboardContent(context, state);
+          }
+
+          return const SizedBox.shrink();
+        },
+      ),
+    );
+  }
+
+  Widget _buildDashboardContent(BuildContext context, DashboardLoaded state) {
+    final theme = Theme.of(context);
+    final statistics = state.statistics;
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        context.read<DashboardBloc>().add(const RefreshDashboardEvent());
+        // Wait for the refresh to complete
+        await Future.delayed(const Duration(seconds: 1));
+      },
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Time Period Filter
+            TimePeriodFilter(
+              selectedPeriod: state.timePeriod,
+              dateRange: state.dateRange,
+              onPeriodChanged: (period, customRange) {
+                context.read<DashboardBloc>().add(
+                      ChangeTimePeriodEvent(
+                        timePeriod: period,
+                        customDateRange: customRange,
+                      ),
+                    );
+              },
+            ),
+            SizedBox(height: 16.h),
+
+            // Key Metrics Cards
+            Text(
+              'Key Metrics',
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            GridView.count(
+              crossAxisCount: 2,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 12.h,
+              crossAxisSpacing: 12.w,
+              childAspectRatio: 1.5,
+              children: [
+                MetricCard.currency(
+                  title: 'Total Sales',
+                  amount: statistics.totalSales,
+                  icon: Icons.attach_money,
+                  color: Colors.green,
+                  subtitle: '${statistics.completedInvoices} completed invoices',
+                ),
+                MetricCard.currency(
+                  title: 'Total VAT',
+                  amount: statistics.totalVat,
+                  icon: Icons.receipt,
+                  color: Colors.orange,
+                  subtitle: 'VAT collected',
+                ),
+                MetricCard.count(
+                  title: 'Total Products',
+                  count: statistics.totalProducts,
+                  icon: Icons.inventory_2,
+                  color: Colors.blue,
+                  subtitle: '${statistics.activeProducts} active',
+                ),
+                MetricCard.count(
+                  title: 'Total Customers',
+                  count: statistics.totalCustomers,
+                  icon: Icons.people,
+                  color: Colors.purple,
+                  subtitle: '${statistics.activeCustomers} active',
+                ),
+              ],
+            ),
+            SizedBox(height: 24.h),
+
+            // Sales Trend Chart
+            SalesChartWidget(
+              dailySalesData: statistics.dailySalesData,
+            ),
+            SizedBox(height: 16.h),
+
+            // Category Sales Chart
+            if (statistics.categorySalesData.isNotEmpty) ...[
+              CategorySalesChartWidget(
+                categorySalesData: statistics.categorySalesData,
+              ),
+              SizedBox(height: 16.h),
+            ],
+
+            // Two Column Layout for Best Selling and Low Stock
+            LayoutBuilder(
+              builder: (context, constraints) {
+                if (constraints.maxWidth > 900) {
+                  // Wide screen: Two columns
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: BestSellingProductsWidget(
+                          products: statistics.bestSellingProducts,
+                        ),
+                      ),
+                      SizedBox(width: 16.w),
+                      Expanded(
+                        child: LowStockWidget(
+                          products: statistics.lowStockProducts,
+                        ),
+                      ),
+                    ],
+                  );
+                } else {
+                  // Narrow screen: Stacked
+                  return Column(
+                    children: [
+                      BestSellingProductsWidget(
+                        products: statistics.bestSellingProducts,
+                      ),
+                      SizedBox(height: 16.h),
+                      LowStockWidget(
+                        products: statistics.lowStockProducts,
+                      ),
+                    ],
+                  );
+                }
+              },
+            ),
+            SizedBox(height: 16.h),
+
+            // Latest Invoices
+            LatestInvoicesWidget(
+              invoices: state.latestInvoices,
+              onInvoiceTap: (invoice) {
+                // Navigate to invoice details or print
+                _showInvoiceDetails(context, invoice);
+              },
+            ),
+            SizedBox(height: 16.h),
+
+            // Footer with statistics summary
+            Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(16.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Invoice Statistics',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 12.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _buildStatItem(
+                          context,
+                          'Total',
+                          statistics.totalInvoices.toString(),
+                          Colors.blue,
+                          Icons.receipt_long,
+                        ),
+                        _buildStatItem(
+                          context,
+                          'Completed',
+                          statistics.completedInvoices.toString(),
+                          Colors.green,
+                          Icons.check_circle,
+                        ),
+                        _buildStatItem(
+                          context,
+                          'Returned',
+                          statistics.returnedInvoices.toString(),
+                          Colors.orange,
+                          Icons.undo,
+                        ),
+                        _buildStatItem(
+                          context,
+                          'Cancelled',
+                          statistics.cancelledInvoices.toString(),
+                          Colors.red,
+                          Icons.cancel,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 32.h),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatItem(
+    BuildContext context,
+    String label,
+    String value,
+    Color color,
+    IconData icon,
+  ) {
+    final theme = Theme.of(context);
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(12.w),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: Icon(
+            icon,
+            color: color,
+            size: 24.sp,
+          ),
+        ),
+        SizedBox(height: 8.h),
+        Text(
+          value,
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
+        SizedBox(height: 4.h),
+        Text(
+          label,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurface.withOpacity(0.6),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showInvoiceDetails(BuildContext context, invoice) {
+    final theme = Theme.of(context);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Invoice ${invoice.invoiceNumber}'),
+        content: Text(
+          'Invoice details would be displayed here.\nThis can be linked to the invoice preview functionality.',
+          style: theme.textTheme.bodyMedium,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
+          ),
+          FilledButton.icon(
+            onPressed: () {
+              Navigator.of(context).pop();
+              // Add print functionality here
+            },
+            icon: const Icon(Icons.print),
+            label: const Text('Print'),
+          ),
+        ],
+      ),
+    );
+  }
+}

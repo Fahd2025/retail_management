@@ -1,0 +1,286 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
+import '../../models/sale.dart';
+
+/// Widget to display latest sales invoices
+class LatestInvoicesWidget extends StatelessWidget {
+  final List<Sale> invoices;
+  final bool isLoading;
+  final Function(Sale)? onInvoiceTap;
+
+  const LatestInvoicesWidget({
+    super.key,
+    required this.invoices,
+    this.isLoading = false,
+    this.onInvoiceTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final currencyFormatter = NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
+    final dateFormatter = DateFormat('dd/MM/yyyy HH:mm');
+
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.receipt_long,
+                  color: theme.colorScheme.primary,
+                  size: 24.sp,
+                ),
+                SizedBox(width: 8.w),
+                Text(
+                  'Latest Sales Invoices',
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 16.h),
+            if (isLoading)
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.all(32.h),
+                  child: const CircularProgressIndicator(),
+                ),
+              )
+            else if (invoices.isEmpty)
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.all(32.h),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.receipt_outlined,
+                        size: 48.sp,
+                        color: theme.colorScheme.onSurface.withOpacity(0.3),
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        'No invoices available',
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          color: theme.colorScheme.onSurface.withOpacity(0.6),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            else
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: invoices.length > 10 ? 10 : invoices.length,
+                separatorBuilder: (context, index) => Divider(height: 1.h),
+                itemBuilder: (context, index) {
+                  final invoice = invoices[index];
+                  return ListTile(
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 8.h,
+                    ),
+                    onTap: onInvoiceTap != null ? () => onInvoiceTap!(invoice) : null,
+                    leading: Container(
+                      width: 50.w,
+                      height: 50.w,
+                      decoration: BoxDecoration(
+                        color: _getStatusColor(invoice.status, theme).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Icon(
+                        _getStatusIcon(invoice.status),
+                        color: _getStatusColor(invoice.status, theme),
+                        size: 24.sp,
+                      ),
+                    ),
+                    title: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            invoice.invoiceNumber,
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        _buildStatusBadge(invoice.status, theme),
+                      ],
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 4.h),
+                        Text(
+                          dateFormatter.format(invoice.saleDate),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurface.withOpacity(0.6),
+                          ),
+                        ),
+                        if (invoice.customerId != null) ...[
+                          SizedBox(height: 2.h),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.person_outline,
+                                size: 12.sp,
+                                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                              ),
+                              SizedBox(width: 4.w),
+                              Text(
+                                'Customer ID: ${invoice.customerId}',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurface.withOpacity(0.6),
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ],
+                    ),
+                    trailing: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          currencyFormatter.format(invoice.totalAmount),
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.primary,
+                          ),
+                        ),
+                        SizedBox(height: 2.h),
+                        _buildPaymentMethodBadge(invoice.paymentMethod, theme),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            if (invoices.length > 10) ...[
+              SizedBox(height: 8.h),
+              Center(
+                child: TextButton(
+                  onPressed: () {
+                    // Navigate to sales screen
+                  },
+                  child: Text('View all ${invoices.length} invoices'),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusBadge(SaleStatus status, ThemeData theme) {
+    String text;
+    Color color;
+
+    switch (status) {
+      case SaleStatus.completed:
+        text = 'Completed';
+        color = Colors.green;
+        break;
+      case SaleStatus.returned:
+        text = 'Returned';
+        color = Colors.orange;
+        break;
+      case SaleStatus.cancelled:
+        text = 'Cancelled';
+        color = Colors.red;
+        break;
+    }
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(4.r),
+      ),
+      child: Text(
+        text,
+        style: theme.textTheme.labelSmall?.copyWith(
+          color: color,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPaymentMethodBadge(PaymentMethod method, ThemeData theme) {
+    IconData icon;
+    String text;
+
+    switch (method) {
+      case PaymentMethod.cash:
+        icon = Icons.payments_outlined;
+        text = 'Cash';
+        break;
+      case PaymentMethod.card:
+        icon = Icons.credit_card;
+        text = 'Card';
+        break;
+      case PaymentMethod.transfer:
+        icon = Icons.account_balance;
+        text = 'Transfer';
+        break;
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          icon,
+          size: 12.sp,
+          color: theme.colorScheme.onSurface.withOpacity(0.6),
+        ),
+        SizedBox(width: 4.w),
+        Text(
+          text,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurface.withOpacity(0.6),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Color _getStatusColor(SaleStatus status, ThemeData theme) {
+    switch (status) {
+      case SaleStatus.completed:
+        return Colors.green;
+      case SaleStatus.returned:
+        return Colors.orange;
+      case SaleStatus.cancelled:
+        return Colors.red;
+    }
+  }
+
+  IconData _getStatusIcon(SaleStatus status) {
+    switch (status) {
+      case SaleStatus.completed:
+        return Icons.check_circle_outline;
+      case SaleStatus.returned:
+        return Icons.restart_alt;
+      case SaleStatus.cancelled:
+        return Icons.cancel_outlined;
+    }
+  }
+}

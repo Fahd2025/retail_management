@@ -24,6 +24,7 @@ import 'customers_screen.dart';
 import 'sales_screen.dart';
 import 'users_screen.dart';
 import 'settings_screen.dart';
+import 'analytics_dashboard_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -70,6 +71,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<Widget> _getScreens(UserRole role) {
     if (role == UserRole.admin) {
       return [
+        const AnalyticsDashboardScreen(),
         CashierScreen(key: _cashierKey),
         ProductsScreen(key: _productsKey),
         CategoriesScreen(key: _categoriesKey),
@@ -92,6 +94,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final l10n = AppLocalizations.of(context)!;
     if (role == UserRole.admin) {
       return [
+        {'icon': Icons.dashboard, 'label': 'Dashboard'},
         {'icon': Icons.point_of_sale, 'label': l10n.cashier},
         {'icon': Icons.inventory, 'label': l10n.products},
         {'icon': Icons.category, 'label': l10n.categories},
@@ -111,177 +114,170 @@ class _DashboardScreenState extends State<DashboardScreen> {
   PreferredSizeWidget _buildAppBar(
       List<Map<String, dynamic>> navItems, BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    // Build AppBar based on selected screen
-    switch (_selectedIndex) {
-      case 0: // Cashier Screen
-        return PreferredSize(
-          preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: BlocBuilder<SaleBloc, SaleState>(
-            builder: (context, saleState) {
-              int cartItemCount = 0;
-              if (saleState is SaleLoaded) {
-                cartItemCount = saleState.cartItemCount;
-              } else if (saleState is SaleError) {
-                cartItemCount = saleState.cartItemCount;
-              } else if (saleState is SaleOperationSuccess) {
-                cartItemCount = saleState.cartItemCount;
-              }
+    final label = navItems[_selectedIndex]['label'] as String;
 
-              return AppBar(
-                title: Text(l10n.pointOfSale),
-                backgroundColor: Colors.blue.shade700,
-                foregroundColor: Colors.white,
-                actions: [
-                  // Cart icon with badge
-                  Padding(
-                    padding: const EdgeInsets.only(right: 16),
-                    child: Badge(
-                      label: Text('$cartItemCount'),
-                      isLabelVisible: cartItemCount > 0,
-                      child: IconButton(
-                        icon: const Icon(Icons.shopping_cart),
-                        onPressed: () {
-                          (_cashierKey.currentState as dynamic)?.toggleCart();
-                        },
-                      ),
+    // Check if it's the Analytics Dashboard
+    if (label == 'Dashboard') {
+      // The analytics dashboard has its own AppBar defined in the screen
+      return AppBar(
+        title: const Text(''),
+        toolbarHeight: 0,
+        backgroundColor: Colors.transparent,
+      );
+    }
+
+    // Build AppBar based on selected screen label
+    if (label == l10n.pointOfSale || label == l10n.cashier) {
+      // Cashier Screen
+      return PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: BlocBuilder<SaleBloc, SaleState>(
+          builder: (context, saleState) {
+            int cartItemCount = 0;
+            if (saleState is SaleLoaded) {
+              cartItemCount = saleState.cartItemCount;
+            } else if (saleState is SaleError) {
+              cartItemCount = saleState.cartItemCount;
+            } else if (saleState is SaleOperationSuccess) {
+              cartItemCount = saleState.cartItemCount;
+            }
+
+            return AppBar(
+              title: Text(l10n.pointOfSale),
+              backgroundColor: Colors.blue.shade700,
+              foregroundColor: Colors.white,
+              actions: [
+                // Cart icon with badge
+                Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: Badge(
+                    label: Text('$cartItemCount'),
+                    isLabelVisible: cartItemCount > 0,
+                    child: IconButton(
+                      icon: const Icon(Icons.shopping_cart),
+                      onPressed: () {
+                        (_cashierKey.currentState as dynamic)?.toggleCart();
+                      },
                     ),
                   ),
-                ],
-              );
+                ),
+              ],
+            );
+          },
+        ),
+      );
+    } else if (label == l10n.products) {
+      return AppBar(
+        title: Text(l10n.productsManagement),
+        backgroundColor: Colors.blue.shade700,
+        foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              (_productsKey.currentState as dynamic)?.showProductDialog();
+            },
+            tooltip: l10n.addProduct,
+          ),
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              context.read<ProductBloc>().add(const LoadProductsEvent());
+            },
+            tooltip: l10n.refresh,
+          ),
+        ],
+      );
+    } else if (label == l10n.categories) {
+      return AppBar(
+        title: Text(l10n.categories),
+        backgroundColor: Colors.blue.shade700,
+        foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              (_categoriesKey.currentState as dynamic)?.showCategoryDialog();
+            },
+            tooltip: l10n.addCategory,
+          ),
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              (_categoriesKey.currentState as dynamic)?.loadCategories();
+            },
+            tooltip: l10n.refresh,
+          ),
+        ],
+      );
+    } else if (label == l10n.customers) {
+      return AppBar(
+        title: Text(l10n.customersManagement),
+        backgroundColor: Colors.blue.shade700,
+        foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              (_customersKey.currentState as dynamic)?.showCustomerDialog();
             },
           ),
-        );
-      case 1: // Products or Sales Screen (depends on user role)
-        final label = navItems[_selectedIndex]['label'] as String;
-        if (label == l10n.products) {
-          return AppBar(
-            title: Text(l10n.productsManagement),
-            backgroundColor: Colors.blue.shade700,
-            foregroundColor: Colors.white,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.add),
-                onPressed: () {
-                  (_productsKey.currentState as dynamic)?.showProductDialog();
-                },
-                tooltip: l10n.addProduct,
-              ),
-              IconButton(
-                icon: const Icon(Icons.refresh),
-                onPressed: () {
-                  context.read<ProductBloc>().add(const LoadProductsEvent());
-                },
-                tooltip: l10n.refresh,
-              ),
-            ],
-          );
-        } else {
-          // Sales screen for cashier role
-          return AppBar(
-            title: Text(l10n.salesList),
-            backgroundColor: Colors.blue.shade700,
-            foregroundColor: Colors.white,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.refresh),
-                onPressed: () {
-                  context.read<SaleBloc>().add(const LoadSalesEvent());
-                },
-                tooltip: l10n.refresh,
-              ),
-            ],
-          );
-        }
-      case 2: // Categories Screen (admin only)
-        return AppBar(
-          title: Text(l10n.categories),
-          backgroundColor: Colors.blue.shade700,
-          foregroundColor: Colors.white,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                (_categoriesKey.currentState as dynamic)?.showCategoryDialog();
-              },
-              tooltip: l10n.addCategory,
-            ),
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: () {
-                (_categoriesKey.currentState as dynamic)?.loadCategories();
-              },
-              tooltip: l10n.refresh,
-            ),
-          ],
-        );
-      case 3: // Customers Screen (admin only)
-        return AppBar(
-          title: Text(l10n.customersManagement),
-          backgroundColor: Colors.blue.shade700,
-          foregroundColor: Colors.white,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                (_customersKey.currentState as dynamic)?.showCustomerDialog();
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: () {
-                context.read<CustomerBloc>().add(const LoadCustomersEvent());
-              },
-            ),
-          ],
-        );
-      case 4: // Sales Screen (admin only)
-        return AppBar(
-          title: Text(l10n.salesList),
-          backgroundColor: Colors.blue.shade700,
-          foregroundColor: Colors.white,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: () {
-                context.read<SaleBloc>().add(const LoadSalesEvent());
-              },
-            ),
-          ],
-        );
-      case 5: // Users Screen (admin only)
-        return AppBar(
-          title: Text(l10n.usersManagement),
-          backgroundColor: Colors.blue.shade700,
-          foregroundColor: Colors.white,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                (_usersKey.currentState as dynamic)?.showUserDialog();
-              },
-              tooltip: l10n.addUser,
-            ),
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: () {
-                context.read<UserBloc>().add(const LoadUsersEvent());
-              },
-              tooltip: l10n.refresh,
-            ),
-          ],
-        );
-      case 6: // Settings Screen (admin only)
-        return AppBar(
-          title: Text(l10n.settings),
-          backgroundColor: Colors.blue.shade700,
-          foregroundColor: Colors.white,
-        );
-      default:
-        return AppBar(
-          title: Text(navItems[_selectedIndex]['label'] as String),
-          backgroundColor: Colors.blue.shade700,
-          foregroundColor: Colors.white,
-        );
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              context.read<CustomerBloc>().add(const LoadCustomersEvent());
+            },
+          ),
+        ],
+      );
+    } else if (label == l10n.sales) {
+      return AppBar(
+        title: Text(l10n.salesList),
+        backgroundColor: Colors.blue.shade700,
+        foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              context.read<SaleBloc>().add(const LoadSalesEvent());
+            },
+          ),
+        ],
+      );
+    } else if (label == l10n.users) {
+      return AppBar(
+        title: Text(l10n.usersManagement),
+        backgroundColor: Colors.blue.shade700,
+        foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              (_usersKey.currentState as dynamic)?.showUserDialog();
+            },
+            tooltip: l10n.addUser,
+          ),
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              context.read<UserBloc>().add(const LoadUsersEvent());
+            },
+            tooltip: l10n.refresh,
+          ),
+        ],
+      );
+    } else if (label == l10n.settings) {
+      return AppBar(
+        title: Text(l10n.settings),
+        backgroundColor: Colors.blue.shade700,
+        foregroundColor: Colors.white,
+      );
+    } else {
+      return AppBar(
+        title: Text(label),
+        backgroundColor: Colors.blue.shade700,
+        foregroundColor: Colors.white,
+      );
     }
   }
 

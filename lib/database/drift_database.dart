@@ -567,6 +567,187 @@ class AppDatabase extends _$AppDatabase {
     };
   }
 
+  // Dashboard Analytics Queries
+
+  /// Get best-selling products within a date range
+  Future<List<Map<String, dynamic>>> getBestSellingProducts(
+    DateTime start,
+    DateTime end, {
+    int limit = 10,
+  }) async {
+    // Query to get product sales statistics
+    final query = await customSelect(
+      '''
+      SELECT
+        si.product_id,
+        si.product_name,
+        p.image_url as product_image,
+        p.category_id as category,
+        SUM(si.quantity) as total_quantity_sold,
+        SUM(si.total) as total_revenue,
+        COUNT(DISTINCT si.sale_id) as transaction_count
+      FROM sale_items si
+      INNER JOIN sales s ON si.sale_id = s.id
+      LEFT JOIN products p ON si.product_id = p.id
+      WHERE s.sale_date >= ? AND s.sale_date <= ?
+        AND s.status = 'completed'
+      GROUP BY si.product_id, si.product_name, p.image_url, p.category_id
+      ORDER BY total_revenue DESC
+      LIMIT ?
+      ''',
+      variables: [
+        Variable(start.toIso8601String()),
+        Variable(end.toIso8601String()),
+        Variable(limit),
+      ],
+      readsFrom: {saleItems, sales, products},
+    ).get();
+
+    return query.map((row) => row.data).toList();
+  }
+
+  /// Get products with low stock (quantity <= 10)
+  Future<List<Map<String, dynamic>>> getLowStockProducts({
+    int threshold = 10,
+    int limit = 20,
+  }) async {
+    final query = select(products)
+      ..where((tbl) => tbl.quantity.isSmallerOrEqualValue(threshold))
+      ..orderBy([(t) => OrderingTerm(expression: t.quantity)])
+      ..limit(limit);
+
+    final result = await query.get();
+
+    return result.map((row) {
+      return {
+        'productId': row.id,
+        'productName': row.name,
+        'productImage': row.imageUrl,
+        'currentQuantity': row.quantity.toDouble(),
+        'reorderLevel': threshold.toDouble(),
+        'category': row.categoryId,
+        'isActive': row.isActive,
+      };
+    }).toList();
+  }
+
+  /// Get daily sales data for a date range (for line/bar charts)
+  Future<List<Map<String, dynamic>>> getDailySalesData(
+    DateTime start,
+    DateTime end,
+  ) async {
+    final query = await customSelect(
+      '''
+      SELECT
+        DATE(sale_date) as date,
+        SUM(total_amount) as total_sales,
+        SUM(vat_amount) as total_vat,
+        COUNT(*) as invoice_count
+      FROM sales
+      WHERE sale_date >= ? AND sale_date <= ?
+        AND status = 'completed'
+      GROUP BY DATE(sale_date)
+      ORDER BY DATE(sale_date) ASC
+      ''',
+      variables: [
+        Variable(start.toIso8601String()),
+        Variable(end.toIso8601String()),
+      ],
+      readsFrom: {sales},
+    ).get();
+
+    return query.map((row) => row.data).toList();
+  }
+
+  /// Get sales data by category (for pie charts)
+  Future<List<Map<String, dynamic>>> getCategorySalesData(
+    DateTime start,
+    DateTime end,
+  ) async {
+    final query = await customSelect(
+      '''
+      SELECT
+        c.name as category_name,
+        SUM(si.total) as total_revenue,
+        COUNT(DISTINCT si.product_id) as product_count,
+        COUNT(DISTINCT si.sale_id) as transaction_count
+      FROM sale_items si
+      INNER JOIN sales s ON si.sale_id = s.id
+      INNER JOIN products p ON si.product_id = p.id
+      INNER JOIN categories c ON p.category_id = c.id
+      WHERE s.sale_date >= ? AND s.sale_date <= ?
+        AND s.status = 'completed'
+      GROUP BY c.name
+      ORDER BY total_revenue DESC
+      ''',
+      variables: [
+        Variable(start.toIso8601String()),
+        Variable(end.toIso8601String()),
+      ],
+      readsFrom: {saleItems, sales, products, categoriesTable},
+    ).get();
+
+    return query.map((row) => row.data).toList();
+  }
+
+  /// Get comprehensive dashboard statistics for a date range
+  Future<Map<String, dynamic>> getDashboardStatistics(
+    DateTime start,
+    DateTime end,
+  ) async {
+    // Get product counts
+    final totalProductsQuery = select(products);
+    final activeProductsQuery = select(products)
+      ..where((tbl) => tbl.isActive.equals(true));
+
+    final totalProductsCount = await totalProductsQuery.get();
+    final activeProductsCount = await activeProductsQuery.get();
+
+    // Get customer counts
+    final totalCustomersQuery = select(customers);
+    final activeCustomersQuery = select(customers)
+      ..where((tbl) => tbl.isActive.equals(true));
+
+    final totalCustomersCount = await totalCustomersQuery.get();
+    final activeCustomersCount = await activeCustomersQuery.get();
+
+    // Get sales statistics
+    final salesQuery = select(sales)
+      ..where((tbl) =>
+          tbl.saleDate.isBiggerOrEqualValue(start.toIso8601String()) &
+          tbl.saleDate.isSmallerOrEqualValue(end.toIso8601String()));
+
+    final salesList = await salesQuery.get();
+
+    final totalInvoices = salesList.length;
+    final completedInvoices =
+        salesList.where((s) => s.status == 'completed').length;
+    final returnedInvoices =
+        salesList.where((s) => s.status == 'returned').length;
+    final cancelledInvoices =
+        salesList.where((s) => s.status == 'cancelled').length;
+
+    final completedSales =
+        salesList.where((s) => s.status == 'completed').toList();
+    final totalSales =
+        completedSales.fold<double>(0, (sum, sale) => sum + sale.totalAmount);
+    final totalVat =
+        completedSales.fold<double>(0, (sum, sale) => sum + sale.vatAmount);
+
+    return {
+      'totalProducts': totalProductsCount.length,
+      'activeProducts': activeProductsCount.length,
+      'totalSales': totalSales,
+      'totalVat': totalVat,
+      'totalCustomers': totalCustomersCount.length,
+      'activeCustomers': activeCustomersCount.length,
+      'totalInvoices': totalInvoices,
+      'completedInvoices': completedInvoices,
+      'returnedInvoices': returnedInvoices,
+      'cancelledInvoices': cancelledInvoices,
+    };
+  }
+
   Future<int> updateSale(models.Sale sale) async {
     return (update(sales)..where((tbl) => tbl.id.equals(sale.id))).write(
       SalesCompanion(
