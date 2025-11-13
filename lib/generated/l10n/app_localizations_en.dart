@@ -857,10 +857,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get completed => 'COMPLETED';
+  String get completed => 'Completed';
 
   @override
-  String get returned => 'RETURNED';
+  String get returned => 'Returned';
 
   @override
   String get reprint => 'Reprint';
@@ -976,7 +976,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String vatLabel2(String vatNumber) {
-    return 'VAT: $vatNumber';
+    return 'VAT';
   }
 
   @override
@@ -1124,7 +1124,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get companyInfoNotFound =>
-      'Company information not found. Please set up company info first.';
+      'Company information not found. Please configure in Settings.';
 
   @override
   String get noInvoicesFound => 'No invoices found for the selected period.';
@@ -1219,4 +1219,137 @@ class AppLocalizationsEn extends AppLocalizations {
   String mmWidth(String width) {
     return '${width}mm width';
   }
+
+  @override
+  String get analyticsDashboard => 'Analytics Dashboard';
+
+  @override
+  String get keyMetrics => 'Key Metrics';
+
+  @override
+  String get totalVat => 'Total VAT';
+
+  @override
+  String get vatCollected => 'VAT collected';
+
+  @override
+  String get activeProducts => 'active';
+
+  @override
+  String get activeCustomers => 'active';
+
+  @override
+  String get completedInvoices => 'completed invoices';
+
+  @override
+  String get bestSellingProducts => 'Best Selling Products';
+
+  @override
+  String get lowStockNotifications => 'Low Stock Notifications';
+
+  @override
+  String get latestSalesInvoices => 'Latest Sales Invoices';
+
+  @override
+  String get salesTrend => 'Sales Trend';
+
+  @override
+  String get salesByCategory => 'Sales by Category';
+
+  @override
+  String get timePeriod => 'Time Period';
+
+  @override
+  String get last7Days => 'Last 7 Days';
+
+  @override
+  String get customPeriod => 'Custom Period';
+
+  @override
+  String get selectStartAndEndDates =>
+      'Select the start and end dates for your custom period';
+
+  @override
+  String get selectStartDate => 'Select start date';
+
+  @override
+  String get selectEndDate => 'Select end date';
+
+  @override
+  String get duration => 'Duration';
+
+  @override
+  String get days => 'days';
+
+  @override
+  String get cancelled => 'Cancelled';
+
+  @override
+  String get unitsLeft => 'units left';
+
+  @override
+  String get critical => 'Critical';
+
+  @override
+  String viewAllItems(int count) {
+    return 'View all $count items';
+  }
+
+  @override
+  String viewAllLowStockItems(int count) {
+    return 'View all $count low stock items';
+  }
+
+  @override
+  String viewAllInvoices(int count) {
+    return 'View all $count invoices';
+  }
+
+  @override
+  String get noSalesDataAvailable => 'No sales data available';
+
+  @override
+  String get noInvoicesAvailable => 'No invoices available';
+
+  @override
+  String get noCategoryDataAvailable => 'No category data available';
+
+  @override
+  String get allProductsWellStocked => 'All products are well stocked';
+
+  @override
+  String errorLoadingInvoice(String error) {
+    return 'Error loading invoice: $error';
+  }
+
+  @override
+  String get refreshDashboard => 'Refresh Dashboard';
+
+  @override
+  String get invoiceStatistics => 'Invoice Statistics';
+
+  @override
+  String get loadingDashboardData => 'Loading dashboard data...';
+
+  @override
+  String get errorLoadingDashboard => 'Error loading dashboard';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get salesLabel => 'Sales';
+
+  @override
+  String quantitySold(String quantity) {
+    return 'Qty: $quantity';
+  }
+
+  @override
+  String salesCount(int count) {
+    return '$count sales';
+  }
+
+  @override
+  String get transfer => 'Transfer';
 }

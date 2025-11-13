@@ -1727,13 +1727,13 @@ abstract class AppLocalizations {
   /// No description provided for @completed.
   ///
   /// In en, this message translates to:
-  /// **'COMPLETED'**
+  /// **'Completed'**
   String get completed;
 
   /// No description provided for @returned.
   ///
   /// In en, this message translates to:
-  /// **'RETURNED'**
+  /// **'Returned'**
   String get returned;
 
   /// No description provided for @reprint.
@@ -1955,7 +1955,7 @@ abstract class AppLocalizations {
   /// No description provided for @vatLabel2.
   ///
   /// In en, this message translates to:
-  /// **'VAT: {vatNumber}'**
+  /// **'VAT'**
   String vatLabel2(String vatNumber);
 
   /// No description provided for @addressLabel.
@@ -2207,7 +2207,7 @@ abstract class AppLocalizations {
   /// No description provided for @companyInfoNotFound.
   ///
   /// In en, this message translates to:
-  /// **'Company information not found. Please set up company info first.'**
+  /// **'Company information not found. Please configure in Settings.'**
   String get companyInfoNotFound;
 
   /// No description provided for @noInvoicesFound.
@@ -2377,6 +2377,246 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{width}mm width'**
   String mmWidth(String width);
+
+  /// No description provided for @analyticsDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics Dashboard'**
+  String get analyticsDashboard;
+
+  /// No description provided for @keyMetrics.
+  ///
+  /// In en, this message translates to:
+  /// **'Key Metrics'**
+  String get keyMetrics;
+
+  /// No description provided for @totalVat.
+  ///
+  /// In en, this message translates to:
+  /// **'Total VAT'**
+  String get totalVat;
+
+  /// No description provided for @vatCollected.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT collected'**
+  String get vatCollected;
+
+  /// No description provided for @activeProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'active'**
+  String get activeProducts;
+
+  /// No description provided for @activeCustomers.
+  ///
+  /// In en, this message translates to:
+  /// **'active'**
+  String get activeCustomers;
+
+  /// No description provided for @completedInvoices.
+  ///
+  /// In en, this message translates to:
+  /// **'completed invoices'**
+  String get completedInvoices;
+
+  /// No description provided for @bestSellingProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Selling Products'**
+  String get bestSellingProducts;
+
+  /// No description provided for @lowStockNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Stock Notifications'**
+  String get lowStockNotifications;
+
+  /// No description provided for @latestSalesInvoices.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest Sales Invoices'**
+  String get latestSalesInvoices;
+
+  /// No description provided for @salesTrend.
+  ///
+  /// In en, this message translates to:
+  /// **'Sales Trend'**
+  String get salesTrend;
+
+  /// No description provided for @salesByCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Sales by Category'**
+  String get salesByCategory;
+
+  /// No description provided for @timePeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Period'**
+  String get timePeriod;
+
+  /// No description provided for @last7Days.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 7 Days'**
+  String get last7Days;
+
+  /// No description provided for @customPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Period'**
+  String get customPeriod;
+
+  /// No description provided for @selectStartAndEndDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the start and end dates for your custom period'**
+  String get selectStartAndEndDates;
+
+  /// No description provided for @selectStartDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select start date'**
+  String get selectStartDate;
+
+  /// No description provided for @selectEndDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select end date'**
+  String get selectEndDate;
+
+  /// No description provided for @duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get duration;
+
+  /// No description provided for @days.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get days;
+
+  /// No description provided for @cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get cancelled;
+
+  /// No description provided for @unitsLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'units left'**
+  String get unitsLeft;
+
+  /// No description provided for @critical.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get critical;
+
+  /// No description provided for @viewAllItems.
+  ///
+  /// In en, this message translates to:
+  /// **'View all {count} items'**
+  String viewAllItems(int count);
+
+  /// No description provided for @viewAllLowStockItems.
+  ///
+  /// In en, this message translates to:
+  /// **'View all {count} low stock items'**
+  String viewAllLowStockItems(int count);
+
+  /// No description provided for @viewAllInvoices.
+  ///
+  /// In en, this message translates to:
+  /// **'View all {count} invoices'**
+  String viewAllInvoices(int count);
+
+  /// No description provided for @noSalesDataAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No sales data available'**
+  String get noSalesDataAvailable;
+
+  /// No description provided for @noInvoicesAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No invoices available'**
+  String get noInvoicesAvailable;
+
+  /// No description provided for @noCategoryDataAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No category data available'**
+  String get noCategoryDataAvailable;
+
+  /// No description provided for @allProductsWellStocked.
+  ///
+  /// In en, this message translates to:
+  /// **'All products are well stocked'**
+  String get allProductsWellStocked;
+
+  /// No description provided for @errorLoadingInvoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading invoice: {error}'**
+  String errorLoadingInvoice(String error);
+
+  /// No description provided for @refreshDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Dashboard'**
+  String get refreshDashboard;
+
+  /// No description provided for @invoiceStatistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice Statistics'**
+  String get invoiceStatistics;
+
+  /// No description provided for @loadingDashboardData.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading dashboard data...'**
+  String get loadingDashboardData;
+
+  /// No description provided for @errorLoadingDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading dashboard'**
+  String get errorLoadingDashboard;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @salesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Sales'**
+  String get salesLabel;
+
+  /// No description provided for @quantitySold.
+  ///
+  /// In en, this message translates to:
+  /// **'Qty: {quantity}'**
+  String quantitySold(String quantity);
+
+  /// No description provided for @salesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} sales'**
+  String salesCount(int count);
+
+  /// No description provided for @transfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer'**
+  String get transfer;
 }
 
 class _AppLocalizationsDelegate

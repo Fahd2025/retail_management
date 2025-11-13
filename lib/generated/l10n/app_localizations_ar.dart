@@ -975,7 +975,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String vatLabel2(String vatNumber) {
-    return 'ض.ق.م: $vatNumber';
+    return 'ضريبة القيمة المضافة';
   }
 
   @override
@@ -1069,13 +1069,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get allTime => 'كل الفترات';
 
   @override
-  String get lastMonth => 'آخر شهر';
+  String get lastMonth => 'الشهر الماضي';
 
   @override
   String get lastThreeMonths => 'آخر 3 أشهر';
 
   @override
-  String get lastYear => 'آخر سنة';
+  String get lastYear => 'السنة الماضية';
 
   @override
   String get customDateRange => 'نطاق تاريخ مخصص';
@@ -1123,7 +1123,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get companyInfoNotFound =>
-      'معلومات الشركة غير موجودة. الرجاء إعداد معلومات الشركة أولاً.';
+      'معلومات الشركة غير موجودة. يرجى التكوين في الإعدادات.';
 
   @override
   String get noInvoicesFound => 'لم يتم العثور على فواتير للفترة المحددة.';
@@ -1217,4 +1217,137 @@ class AppLocalizationsAr extends AppLocalizations {
   String mmWidth(String width) {
     return 'عرض $width ملم';
   }
+
+  @override
+  String get analyticsDashboard => 'لوحة التحليلات';
+
+  @override
+  String get keyMetrics => 'المؤشرات الرئيسية';
+
+  @override
+  String get totalVat => 'إجمالي ضريبة القيمة المضافة';
+
+  @override
+  String get vatCollected => 'ضريبة القيمة المضافة المحصلة';
+
+  @override
+  String get activeProducts => 'نشط';
+
+  @override
+  String get activeCustomers => 'نشط';
+
+  @override
+  String get completedInvoices => 'فاتورة مكتملة';
+
+  @override
+  String get bestSellingProducts => 'المنتجات الأكثر مبيعاً';
+
+  @override
+  String get lowStockNotifications => 'تنبيهات المخزون المنخفض';
+
+  @override
+  String get latestSalesInvoices => 'آخر فواتير المبيعات';
+
+  @override
+  String get salesTrend => 'اتجاه المبيعات';
+
+  @override
+  String get salesByCategory => 'المبيعات حسب الفئة';
+
+  @override
+  String get timePeriod => 'الفترة الزمنية';
+
+  @override
+  String get last7Days => 'آخر 7 أيام';
+
+  @override
+  String get customPeriod => 'فترة مخصصة';
+
+  @override
+  String get selectStartAndEndDates =>
+      'حدد تاريخ البداية والنهاية للفترة المخصصة';
+
+  @override
+  String get selectStartDate => 'اختر تاريخ البداية';
+
+  @override
+  String get selectEndDate => 'اختر تاريخ النهاية';
+
+  @override
+  String get duration => 'المدة';
+
+  @override
+  String get days => 'أيام';
+
+  @override
+  String get cancelled => 'ملغى';
+
+  @override
+  String get unitsLeft => 'وحدة متبقية';
+
+  @override
+  String get critical => 'حرج';
+
+  @override
+  String viewAllItems(int count) {
+    return 'عرض كل $count عنصر';
+  }
+
+  @override
+  String viewAllLowStockItems(int count) {
+    return 'عرض كل $count عنصر منخفض المخزون';
+  }
+
+  @override
+  String viewAllInvoices(int count) {
+    return 'عرض كل $count فاتورة';
+  }
+
+  @override
+  String get noSalesDataAvailable => 'لا توجد بيانات مبيعات متاحة';
+
+  @override
+  String get noInvoicesAvailable => 'لا توجد فواتير متاحة';
+
+  @override
+  String get noCategoryDataAvailable => 'لا توجد بيانات فئات متاحة';
+
+  @override
+  String get allProductsWellStocked => 'جميع المنتجات متوفرة بمخزون جيد';
+
+  @override
+  String errorLoadingInvoice(String error) {
+    return 'خطأ في تحميل الفاتورة: $error';
+  }
+
+  @override
+  String get refreshDashboard => 'تحديث لوحة التحكم';
+
+  @override
+  String get invoiceStatistics => 'إحصائيات الفواتير';
+
+  @override
+  String get loadingDashboardData => 'جاري تحميل بيانات لوحة التحكم...';
+
+  @override
+  String get errorLoadingDashboard => 'خطأ في تحميل لوحة التحكم';
+
+  @override
+  String get retry => 'إعادة المحاولة';
+
+  @override
+  String get salesLabel => 'المبيعات';
+
+  @override
+  String quantitySold(String quantity) {
+    return 'الكمية: $quantity';
+  }
+
+  @override
+  String salesCount(int count) {
+    return '$count عملية بيع';
+  }
+
+  @override
+  String get transfer => 'تحويل';
 }

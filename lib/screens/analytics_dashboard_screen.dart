@@ -43,19 +43,18 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return BlocBuilder<DashboardBloc, DashboardState>(
-        builder: (context, state) {
-          if (state is DashboardInitial || state is DashboardLoading) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const CircularProgressIndicator(),
-                  SizedBox(height: 16.h),
-                  Text(
-                    l10n.loadingDashboardData,
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.6),
-                    ),
+      builder: (context, state) {
+        if (state is DashboardInitial || state is DashboardLoading) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const CircularProgressIndicator(),
+                SizedBox(height: 16.h),
+                Text(
+                  l10n.loadingDashboardData,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: theme.colorScheme.onSurface.withOpacity(0.6),
                   ),
                 ),
               ],
@@ -79,39 +78,39 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                   style: theme.textTheme.titleLarge?.copyWith(
                     color: theme.colorScheme.error,
                   ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    l10n.errorLoadingDashboard,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: theme.colorScheme.error,
-                    ),
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  l10n.errorLoadingDashboard,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: theme.colorScheme.error,
                   ),
-                  SizedBox(height: 8.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 32.w),
-                    child: Text(
-                      state.message,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.6),
-                      ),
-                      textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 8.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 32.w),
+                  child: Text(
+                    state.message,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurface.withOpacity(0.6),
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 24.h),
-                  FilledButton.icon(
-                    onPressed: () {
-                      context
-                          .read<DashboardBloc>()
-                          .add(const RefreshDashboardEvent());
-                    },
-                    icon: const Icon(Icons.refresh),
-                    label: Text(l10n.retry),
-                  ),
-                ],
-              ),
-            );
-          }
+                ),
+                SizedBox(height: 24.h),
+                FilledButton.icon(
+                  onPressed: () {
+                    context
+                        .read<DashboardBloc>()
+                        .add(const RefreshDashboardEvent());
+                  },
+                  icon: const Icon(Icons.refresh),
+                  label: Text(l10n.retry),
+                ),
+              ],
+            ),
+          );
+        }
 
         if (state is DashboardLoaded) {
           return _buildDashboardContent(context, state);
@@ -175,7 +174,8 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                   amount: statistics.totalSales,
                   icon: Icons.attach_money,
                   color: Colors.green,
-                  subtitle: '${statistics.completedInvoices} ${l10n.completedInvoices}',
+                  subtitle:
+                      '${statistics.completedInvoices} ${l10n.completedInvoices}',
                 ),
                 MetricCard.currency(
                   title: l10n.totalVat,
@@ -189,14 +189,16 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                   count: statistics.totalProducts,
                   icon: Icons.inventory_2,
                   color: Colors.blue,
-                  subtitle: '${statistics.activeProducts} ${l10n.activeProducts}',
+                  subtitle:
+                      '${statistics.activeProducts} ${l10n.activeProducts}',
                 ),
                 MetricCard.count(
                   title: l10n.totalCustomers,
                   count: statistics.totalCustomers,
                   icon: Icons.people,
                   color: Colors.purple,
-                  subtitle: '${statistics.activeCustomers} ${l10n.activeCustomers}',
+                  subtitle:
+                      '${statistics.activeCustomers} ${l10n.activeCustomers}',
                 ),
               ],
             ),
