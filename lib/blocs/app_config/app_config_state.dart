@@ -8,6 +8,7 @@ class AppConfigState extends Equatable {
   final bool isLoading;
   final PrintFormatConfig printFormatConfig;
   final double vatRate;
+  final bool vatIncludedInPrice;
 
   const AppConfigState({
     required this.themeMode,
@@ -15,6 +16,7 @@ class AppConfigState extends Equatable {
     required this.isLoading,
     this.printFormatConfig = PrintFormatConfig.defaultConfig,
     this.vatRate = 15.0, // Default Saudi VAT rate
+    this.vatIncludedInPrice = false, // Default: VAT not included in price
   });
 
   bool get isDarkMode => themeMode == ThemeMode.dark;
@@ -30,6 +32,7 @@ class AppConfigState extends Equatable {
     bool? isLoading,
     PrintFormatConfig? printFormatConfig,
     double? vatRate,
+    bool? vatIncludedInPrice,
   }) {
     return AppConfigState(
       themeMode: themeMode ?? this.themeMode,
@@ -37,9 +40,10 @@ class AppConfigState extends Equatable {
       isLoading: isLoading ?? this.isLoading,
       printFormatConfig: printFormatConfig ?? this.printFormatConfig,
       vatRate: vatRate ?? this.vatRate,
+      vatIncludedInPrice: vatIncludedInPrice ?? this.vatIncludedInPrice,
     );
   }
 
   @override
-  List<Object?> get props => [themeMode, locale, isLoading, printFormatConfig, vatRate];
+  List<Object?> get props => [themeMode, locale, isLoading, printFormatConfig, vatRate, vatIncludedInPrice];
 }

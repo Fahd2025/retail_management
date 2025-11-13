@@ -72,3 +72,12 @@ class UpdateVatRateEvent extends AppConfigEvent {
   @override
   List<Object?> get props => [vatRate];
 }
+
+class UpdateVatInclusionEvent extends AppConfigEvent {
+  final bool vatIncludedInPrice;
+
+  const UpdateVatInclusionEvent(this.vatIncludedInPrice);
+
+  @override
+  List<Object?> get props => [vatIncludedInPrice];
+}
