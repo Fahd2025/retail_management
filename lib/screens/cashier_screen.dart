@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:retail_management/blocs/app_config/app_config_state.dart';
 import 'package:retail_management/generated/l10n/app_localizations.dart';
 import '../blocs/product/product_bloc.dart';
 import '../blocs/product/product_event.dart';
@@ -13,10 +14,8 @@ import '../blocs/customer/customer_bloc.dart';
 import '../blocs/customer/customer_event.dart';
 import '../blocs/customer/customer_state.dart';
 import '../blocs/app_config/app_config_bloc.dart';
-import '../blocs/app_config/app_config_state.dart';
 import '../models/product.dart';
 import '../widgets/form_bottom_sheet.dart';
-import '../widgets/invoice_preview_dialog.dart';
 import '../models/sale.dart';
 import '../models/customer.dart';
 import '../services/invoice_service.dart';
@@ -141,8 +140,11 @@ class _CashierScreenState extends State<CashierScreen>
   }
 
   void _addProductToCart(Product product) {
-    final vatIncludedInPrice = context.read<AppConfigBloc>().state.vatIncludedInPrice;
-    context.read<SaleBloc>().add(AddToCartEvent(product, vatIncludedInPrice: vatIncludedInPrice));
+    final vatIncludedInPrice =
+        context.read<AppConfigBloc>().state.vatIncludedInPrice;
+    context
+        .read<SaleBloc>()
+        .add(AddToCartEvent(product, vatIncludedInPrice: vatIncludedInPrice));
     final l10n = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -409,31 +411,32 @@ class _CashierScreenState extends State<CashierScreen>
                             builder: (context, configState) {
                               return Container(
                                 width: double.infinity,
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
                                 color: configState.vatIncludedInPrice
-                                  ? Colors.green.shade50
-                                  : Colors.blue.shade50,
+                                    ? Colors.green.shade50
+                                    : Colors.blue.shade50,
                                 child: Row(
                                   children: [
                                     Icon(
                                       Icons.info_outline,
                                       size: 16,
                                       color: configState.vatIncludedInPrice
-                                        ? Colors.green.shade700
-                                        : Colors.blue.shade700,
+                                          ? Colors.green.shade700
+                                          : Colors.blue.shade700,
                                     ),
                                     const SizedBox(width: 8),
                                     Expanded(
                                       child: Text(
                                         configState.vatIncludedInPrice
-                                          ? 'VAT ${configState.vatRate.toStringAsFixed(1)}% - Included in price'
-                                          : 'VAT ${configState.vatRate.toStringAsFixed(1)}% - Excluded from price',
+                                            ? 'VAT ${configState.vatRate.toStringAsFixed(1)}% - Included in price'
+                                            : 'VAT ${configState.vatRate.toStringAsFixed(1)}% - Excluded from price',
                                         style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
                                           color: configState.vatIncludedInPrice
-                                            ? Colors.green.shade900
-                                            : Colors.blue.shade900,
+                                              ? Colors.green.shade900
+                                              : Colors.blue.shade900,
                                         ),
                                       ),
                                     ),
@@ -875,10 +878,12 @@ class _CartItem extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.remove),
                   onPressed: () {
-                    final vatIncludedInPrice = context.read<AppConfigBloc>().state.vatIncludedInPrice;
+                    final vatIncludedInPrice =
+                        context.read<AppConfigBloc>().state.vatIncludedInPrice;
                     context.read<SaleBloc>().add(
                           UpdateCartItemQuantityEvent(
-                              item.id, item.quantity - 1, vatIncludedInPrice: vatIncludedInPrice),
+                              item.id, item.quantity - 1,
+                              vatIncludedInPrice: vatIncludedInPrice),
                         );
                   },
                   iconSize: 20,
@@ -890,10 +895,12 @@ class _CartItem extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.add),
                   onPressed: () {
-                    final vatIncludedInPrice = context.read<AppConfigBloc>().state.vatIncludedInPrice;
+                    final vatIncludedInPrice =
+                        context.read<AppConfigBloc>().state.vatIncludedInPrice;
                     context.read<SaleBloc>().add(
                           UpdateCartItemQuantityEvent(
-                              item.id, item.quantity + 1, vatIncludedInPrice: vatIncludedInPrice),
+                              item.id, item.quantity + 1,
+                              vatIncludedInPrice: vatIncludedInPrice),
                         );
                   },
                   iconSize: 20,

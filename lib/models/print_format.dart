@@ -1,5 +1,4 @@
 import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
 
 /// Enum representing available print formats for invoices
 enum PrintFormat {
@@ -36,14 +35,16 @@ enum PrintFormat {
       case PrintFormat.thermal58mm:
         // For thermal printers, height is dynamic based on content
         // Using a large height that will be trimmed by content
-        return PdfPageFormat(widthPt, 842, marginAll: 2 * 2.83465); // ~2mm margins
+        return PdfPageFormat(widthPt, 842,
+            marginAll: 2 * 2.83465); // ~2mm margins
       case PrintFormat.thermal80mm:
-        return PdfPageFormat(widthPt, 842, marginAll: 2 * 2.83465); // ~2mm margins
+        return PdfPageFormat(widthPt, 842,
+            marginAll: 2 * 2.83465); // ~2mm margins
       case PrintFormat.a4:
         return PdfPageFormat.a4.copyWith(
-          marginLeft: 10 * 2.83465,  // 10mm
+          marginLeft: 10 * 2.83465, // 10mm
           marginRight: 10 * 2.83465, // 10mm
-          marginTop: 10 * 2.83465,   // 10mm
+          marginTop: 10 * 2.83465, // 10mm
           marginBottom: 10 * 2.83465, // 10mm
         );
     }

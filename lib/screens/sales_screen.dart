@@ -8,7 +8,6 @@ import '../blocs/sale/sale_state.dart';
 import '../blocs/auth/auth_bloc.dart';
 import '../blocs/auth/auth_state.dart';
 import '../blocs/app_config/app_config_bloc.dart';
-import '../blocs/app_config/app_config_state.dart';
 import '../models/sale.dart';
 import '../widgets/invoice_preview_dialog.dart';
 import '../database/drift_database.dart' hide Sale;
@@ -249,9 +248,9 @@ class _SalesScreenState extends State<SalesScreen> {
 
       if (authState is Authenticated) {
         context.read<SaleBloc>().add(ReturnSaleEvent(
-          sale.id,
-          authState.user.id,
-        ));
+              sale.id,
+              authState.user.id,
+            ));
 
         // Wait for operation to complete
         await Future.delayed(const Duration(milliseconds: 200));
@@ -332,17 +331,22 @@ class _SalesScreenState extends State<SalesScreen> {
                           DataColumn(label: Text(l10n.actions)),
                         ],
                         rows: sales.map((sale) {
-                          final statusColor = sale.status == SaleStatus.completed
-                              ? Colors.green
-                              : sale.status == SaleStatus.returned
-                                  ? Colors.orange
-                                  : Colors.red;
+                          final statusColor =
+                              sale.status == SaleStatus.completed
+                                  ? Colors.green
+                                  : sale.status == SaleStatus.returned
+                                      ? Colors.orange
+                                      : Colors.red;
 
                           final statusText = sale.status == SaleStatus.completed
                               ? l10n.completed
                               : sale.status == SaleStatus.returned
                                   ? l10n.returned
-                                  : sale.status.toString().split('.').last.toUpperCase();
+                                  : sale.status
+                                      .toString()
+                                      .split('.')
+                                      .last
+                                      .toUpperCase();
 
                           return DataRow(cells: [
                             DataCell(Text(sale.invoiceNumber)),
@@ -357,7 +361,8 @@ class _SalesScreenState extends State<SalesScreen> {
                                   statusText,
                                   style: const TextStyle(fontSize: 11),
                                 ),
-                                backgroundColor: statusColor.withValues(alpha: 0.2),
+                                backgroundColor:
+                                    statusColor.withValues(alpha: 0.2),
                                 labelStyle: TextStyle(color: statusColor),
                               ),
                             ),
@@ -403,8 +408,7 @@ class _SalesScreenState extends State<SalesScreen> {
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 8),
-                      child: _buildSaleCard(
-                          sales[index], dateFormat, context),
+                      child: _buildSaleCard(sales[index], dateFormat, context),
                     );
                   },
                 );
