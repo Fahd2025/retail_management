@@ -37,30 +37,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Icon(
-              Icons.dashboard,
-              color: theme.colorScheme.onPrimary,
-              size: 24.sp,
-            ),
-            SizedBox(width: 8.w),
-            const Text('Analytics Dashboard'),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              context.read<DashboardBloc>().add(const RefreshDashboardEvent());
-            },
-            tooltip: 'Refresh Dashboard',
-          ),
-        ],
-      ),
-      body: BlocBuilder<DashboardBloc, DashboardState>(
+    return BlocBuilder<DashboardBloc, DashboardState>(
         builder: (context, state) {
           if (state is DashboardInitial || state is DashboardLoading) {
             return Center(
@@ -129,8 +106,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
 
           return const SizedBox.shrink();
         },
-      ),
-    );
+      );
   }
 
   Widget _buildDashboardContent(BuildContext context, DashboardLoaded state) {

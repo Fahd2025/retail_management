@@ -13,6 +13,8 @@ import '../blocs/sale/sale_event.dart';
 import '../blocs/sale/sale_state.dart';
 import '../blocs/user/user_bloc.dart';
 import '../blocs/user/user_event.dart';
+import '../blocs/dashboard/dashboard_bloc.dart';
+import '../blocs/dashboard/dashboard_event.dart';
 import '../models/user.dart';
 import '../models/company_info.dart';
 import '../database/drift_database.dart';
@@ -118,11 +120,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     // Check if it's the Analytics Dashboard
     if (label == 'Dashboard') {
-      // The analytics dashboard has its own AppBar defined in the screen
       return AppBar(
-        title: const Text(''),
-        toolbarHeight: 0,
-        backgroundColor: Colors.transparent,
+        title: Row(
+          children: [
+            const Icon(Icons.dashboard),
+            const SizedBox(width: 8),
+            const Text('Analytics Dashboard'),
+          ],
+        ),
+        backgroundColor: Colors.blue.shade700,
+        foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              context.read<DashboardBloc>().add(const RefreshDashboardEvent());
+            },
+            tooltip: 'Refresh Dashboard',
+          ),
+        ],
       );
     }
 
