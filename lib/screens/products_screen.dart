@@ -194,13 +194,14 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           DataColumn(label: Text(l10n.actions)),
                         ],
                         rows: products.map((product) {
-                          final vatAmount = product.price * (product.vatRate / 100);
+                          final vatAmount =
+                              product.price * (product.vatRate / 100);
                           return DataRow(cells: [
                             DataCell(Text(product.name)),
                             DataCell(Text(product.barcode)),
                             DataCell(Text(_getCategoryName(product.category))),
-                            DataCell(
-                                Text('SAR ${product.price.toStringAsFixed(2)}')),
+                            DataCell(Text(
+                                'SAR ${product.price.toStringAsFixed(2)}')),
                             DataCell(
                                 Text('SAR ${product.cost.toStringAsFixed(2)}')),
                             DataCell(Text(product.quantity.toString())),
@@ -217,8 +218,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   IconButton(
                                     icon: const Icon(Icons.delete,
                                         size: 20, color: Colors.red),
-                                    onPressed: () => _deleteProduct(
-                                        context, product),
+                                    onPressed: () =>
+                                        _deleteProduct(context, product),
                                   ),
                                 ],
                               ),
@@ -261,11 +262,14 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              l10n.category + ': ' + _getCategoryName(product.category),
+                              l10n.category +
+                                  ': ' +
+                                  _getCategoryName(product.category),
                               style: const TextStyle(fontSize: 13),
                             ),
                             Text(
-                              l10n.price + ': SAR ${product.price.toStringAsFixed(2)}',
+                              l10n.price +
+                                  ': SAR ${product.price.toStringAsFixed(2)}',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -413,32 +417,32 @@ class _ProductDialogState extends State<_ProductDialog> {
 
     if (widget.product == null) {
       context.read<ProductBloc>().add(AddProductEvent(
-        name: _nameController.text,
-        barcode: _barcodeController.text,
-        category: _selectedCategoryId!,
-        price: double.parse(_priceController.text),
-        cost: double.parse(_costController.text),
-        quantity: int.parse(_quantityController.text),
-        vatRate: vatRate,
-        description: _descriptionController.text.isEmpty
-            ? null
-            : _descriptionController.text,
-      ));
+            name: _nameController.text,
+            barcode: _barcodeController.text,
+            category: _selectedCategoryId!,
+            price: double.parse(_priceController.text),
+            cost: double.parse(_costController.text),
+            quantity: int.parse(_quantityController.text),
+            vatRate: vatRate,
+            description: _descriptionController.text.isEmpty
+                ? null
+                : _descriptionController.text,
+          ));
     } else {
       context.read<ProductBloc>().add(UpdateProductEvent(
-        widget.product!.copyWith(
-          name: _nameController.text,
-          barcode: _barcodeController.text,
-          category: _selectedCategoryId!,
-          price: double.parse(_priceController.text),
-          cost: double.parse(_costController.text),
-          quantity: int.parse(_quantityController.text),
-          vatRate: vatRate,
-          description: _descriptionController.text.isEmpty
-              ? null
-              : _descriptionController.text,
-        ),
-      ));
+            widget.product!.copyWith(
+              name: _nameController.text,
+              barcode: _barcodeController.text,
+              category: _selectedCategoryId!,
+              price: double.parse(_priceController.text),
+              cost: double.parse(_costController.text),
+              quantity: int.parse(_quantityController.text),
+              vatRate: vatRate,
+              description: _descriptionController.text.isEmpty
+                  ? null
+                  : _descriptionController.text,
+            ),
+          ));
     }
 
     // Wait for operation to complete
@@ -493,7 +497,7 @@ class _ProductDialogState extends State<_ProductDialog> {
                   ),
                 )
               : DropdownButtonFormField<String>(
-                  value: _selectedCategoryId,
+                  initialValue: _selectedCategoryId,
                   decoration: InputDecoration(
                     labelText: l10n.categoryRequired,
                     border: const OutlineInputBorder(),
@@ -589,8 +593,10 @@ class _ProductDialogState extends State<_ProductDialog> {
                         filled: true,
                         fillColor: Colors.grey.shade100,
                         suffixIcon: Tooltip(
-                          message: 'VAT amount calculated automatically (${appConfig.vatRate.toStringAsFixed(1)}%)',
-                          child: Icon(Icons.info_outline, size: 18, color: Colors.blue.shade600),
+                          message:
+                              'VAT amount calculated automatically (${appConfig.vatRate.toStringAsFixed(1)}%)',
+                          child: Icon(Icons.info_outline,
+                              size: 18, color: Colors.blue.shade600),
                         ),
                       ),
                       readOnly: true,

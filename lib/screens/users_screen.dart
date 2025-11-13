@@ -507,7 +507,7 @@ class _UserDialogState extends State<_UserDialog> {
 
           // Role Dropdown
           DropdownButtonFormField<UserRole>(
-            value: _selectedRole,
+            initialValue: _selectedRole,
             decoration: InputDecoration(
               labelText: l10n.roleFieldLabel,
               border: const OutlineInputBorder(),
