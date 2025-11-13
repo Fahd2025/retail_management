@@ -102,8 +102,9 @@ class Thermal58mmTemplate extends InvoiceTemplate {
         ),
         pw.Text(
           data.companyInfo.nameArabic,
-          style: const pw.TextStyle(fontSize: 9),
+          style: pw.TextStyle(fontSize: 9, font: data.arabicFont),
           textAlign: pw.TextAlign.center,
+          textDirection: pw.TextDirection.rtl,
         ),
         pw.SizedBox(height: 2),
         pw.Text(
@@ -134,8 +135,9 @@ class Thermal58mmTemplate extends InvoiceTemplate {
         ),
         pw.Text(
           'فاتورة ضريبية',
-          style: const pw.TextStyle(fontSize: 8),
+          style: pw.TextStyle(fontSize: 8, font: data.arabicFont),
           textAlign: pw.TextAlign.center,
+          textDirection: pw.TextDirection.rtl,
         ),
       ],
     );
@@ -378,8 +380,9 @@ class Thermal58mmTemplate extends InvoiceTemplate {
         ),
         pw.Text(
           'شكراً لكم',
-          style: const pw.TextStyle(fontSize: 7),
+          style: pw.TextStyle(fontSize: 7, font: data.arabicFont),
           textAlign: pw.TextAlign.center,
+          textDirection: pw.TextDirection.rtl,
         ),
         pw.SizedBox(height: 3),
         // Smaller QR Code for 58mm
