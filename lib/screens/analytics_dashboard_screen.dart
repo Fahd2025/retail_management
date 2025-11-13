@@ -7,7 +7,7 @@ import '../blocs/dashboard/dashboard_event.dart';
 import '../blocs/dashboard/dashboard_state.dart';
 import '../models/dashboard_statistics.dart';
 import '../models/sale.dart';
-import '../database/drift_database.dart';
+import '../database/drift_database.dart' hide Sale;
 import '../widgets/dashboard/metric_card.dart';
 import '../widgets/dashboard/best_selling_products_widget.dart';
 import '../widgets/dashboard/low_stock_widget.dart';
@@ -57,19 +57,26 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                       color: theme.colorScheme.onSurface.withOpacity(0.6),
                     ),
                   ),
-                ],
-              ),
-            );
-          }
+                ),
+              ],
+            ),
+          );
+        }
 
-          if (state is DashboardError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64.sp,
+        if (state is DashboardError) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  size: 64.sp,
+                  color: theme.colorScheme.error,
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  'Error loading dashboard',
+                  style: theme.textTheme.titleLarge?.copyWith(
                     color: theme.colorScheme.error,
                   ),
                   SizedBox(height: 16.h),
@@ -89,6 +96,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                       ),
                       textAlign: TextAlign.center,
                     ),
+                    textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 24.h),
                   FilledButton.icon(
@@ -105,13 +113,13 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
             );
           }
 
-          if (state is DashboardLoaded) {
-            return _buildDashboardContent(context, state);
-          }
+        if (state is DashboardLoaded) {
+          return _buildDashboardContent(context, state);
+        }
 
-          return const SizedBox.shrink();
-        },
-      );
+        return const SizedBox.shrink();
+      },
+    );
   }
 
   Widget _buildDashboardContent(BuildContext context, DashboardLoaded state) {
