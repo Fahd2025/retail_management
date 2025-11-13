@@ -1,7 +1,9 @@
 class Category {
   final String id;
   final String name;
+  final String? nameAr;
   final String? description;
+  final String? descriptionAr;
   final String? imageUrl;
   final bool isActive;
   final DateTime createdAt;
@@ -11,7 +13,9 @@ class Category {
   Category({
     required this.id,
     required this.name,
+    this.nameAr,
     this.description,
+    this.descriptionAr,
     this.imageUrl,
     this.isActive = true,
     required this.createdAt,
@@ -23,7 +27,9 @@ class Category {
     return {
       'id': id,
       'name': name,
+      'nameAr': nameAr,
       'description': description,
+      'descriptionAr': descriptionAr,
       'imageUrl': imageUrl,
       'isActive': isActive ? 1 : 0,
       'createdAt': createdAt.toIso8601String(),
@@ -36,7 +42,9 @@ class Category {
     return Category(
       id: map['id'],
       name: map['name'],
+      nameAr: map['nameAr'],
       description: map['description'],
+      descriptionAr: map['descriptionAr'],
       imageUrl: map['imageUrl'],
       isActive: map['isActive'] == 1,
       createdAt: DateTime.parse(map['createdAt']),
@@ -48,7 +56,9 @@ class Category {
   Category copyWith({
     String? id,
     String? name,
+    String? nameAr,
     String? description,
+    String? descriptionAr,
     String? imageUrl,
     bool? isActive,
     DateTime? createdAt,
@@ -58,7 +68,9 @@ class Category {
     return Category(
       id: id ?? this.id,
       name: name ?? this.name,
+      nameAr: nameAr ?? this.nameAr,
       description: description ?? this.description,
+      descriptionAr: descriptionAr ?? this.descriptionAr,
       imageUrl: imageUrl ?? this.imageUrl,
       isActive: isActive ?? this.isActive,
       createdAt: createdAt ?? this.createdAt,

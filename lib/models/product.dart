@@ -1,7 +1,9 @@
 class Product {
   final String id;
   final String name;
+  final String? nameAr;
   final String? description;
+  final String? descriptionAr;
   final String barcode;
   final double price;
   final double cost;
@@ -17,7 +19,9 @@ class Product {
   Product({
     required this.id,
     required this.name,
+    this.nameAr,
     this.description,
+    this.descriptionAr,
     required this.barcode,
     required this.price,
     required this.cost,
@@ -38,7 +42,9 @@ class Product {
     return {
       'id': id,
       'name': name,
+      'nameAr': nameAr,
       'description': description,
+      'descriptionAr': descriptionAr,
       'barcode': barcode,
       'price': price,
       'cost': cost,
@@ -57,7 +63,9 @@ class Product {
     return Product(
       id: map['id'],
       name: map['name'],
+      nameAr: map['nameAr'],
       description: map['description'],
+      descriptionAr: map['descriptionAr'],
       barcode: map['barcode'],
       price: map['price'].toDouble(),
       cost: map['cost'].toDouble(),
@@ -75,7 +83,9 @@ class Product {
   Product copyWith({
     String? id,
     String? name,
+    String? nameAr,
     String? description,
+    String? descriptionAr,
     String? barcode,
     double? price,
     double? cost,
@@ -91,7 +101,9 @@ class Product {
     return Product(
       id: id ?? this.id,
       name: name ?? this.name,
+      nameAr: nameAr ?? this.nameAr,
       description: description ?? this.description,
+      descriptionAr: descriptionAr ?? this.descriptionAr,
       barcode: barcode ?? this.barcode,
       price: price ?? this.price,
       cost: cost ?? this.cost,
