@@ -1081,7 +1081,9 @@ class AppDatabase extends _$AppDatabase {
       models.Category(
         id: 'cat-1',
         name: 'Electronics',
+        nameAr: 'الإلكترونيات',
         description: 'Electronic devices and accessories',
+        descriptionAr: 'الأجهزة الإلكترونية والملحقات',
         isActive: true,
         createdAt: now,
         updatedAt: now,
@@ -1089,7 +1091,9 @@ class AppDatabase extends _$AppDatabase {
       models.Category(
         id: 'cat-2',
         name: 'Clothing',
+        nameAr: 'الملابس',
         description: 'Apparel and fashion items',
+        descriptionAr: 'الملابس والأزياء',
         isActive: true,
         createdAt: now,
         updatedAt: now,
@@ -1097,7 +1101,9 @@ class AppDatabase extends _$AppDatabase {
       models.Category(
         id: 'cat-3',
         name: 'Food & Beverages',
+        nameAr: 'الأطعمة والمشروبات',
         description: 'Food items and drinks',
+        descriptionAr: 'المواد الغذائية والمشروبات',
         isActive: true,
         createdAt: now,
         updatedAt: now,
@@ -1105,7 +1111,9 @@ class AppDatabase extends _$AppDatabase {
       models.Category(
         id: 'cat-4',
         name: 'Home & Garden',
+        nameAr: 'المنزل والحديقة',
         description: 'Home improvement and garden supplies',
+        descriptionAr: 'مستلزمات تحسين المنزل والحديقة',
         isActive: true,
         createdAt: now,
         updatedAt: now,
@@ -1113,7 +1121,9 @@ class AppDatabase extends _$AppDatabase {
       models.Category(
         id: 'cat-5',
         name: 'Office Supplies',
+        nameAr: 'اللوازم المكتبية',
         description: 'Office and stationery items',
+        descriptionAr: 'المستلزمات المكتبية والقرطاسية',
         isActive: true,
         createdAt: now,
         updatedAt: now,
@@ -1132,7 +1142,9 @@ class AppDatabase extends _$AppDatabase {
       models.Product(
         id: 'prod-1',
         name: 'Wireless Mouse',
+        nameAr: 'ماوس لاسلكي',
         description: 'Ergonomic wireless mouse with USB receiver',
+        descriptionAr: 'ماوس لاسلكي مريح مع مستقبل USB',
         barcode: '1234567890001',
         price: 45.00,
         cost: 30.00,
@@ -1146,7 +1158,9 @@ class AppDatabase extends _$AppDatabase {
       models.Product(
         id: 'prod-6',
         name: 'USB Keyboard',
+        nameAr: 'لوحة مفاتيح USB',
         description: 'Mechanical keyboard with LED backlight',
+        descriptionAr: 'لوحة مفاتيح ميكانيكية مع إضاءة LED',
         barcode: '1234567890006',
         price: 120.00,
         cost: 80.00,
@@ -1160,7 +1174,9 @@ class AppDatabase extends _$AppDatabase {
       models.Product(
         id: 'prod-7',
         name: 'USB-C Cable 2m',
+        nameAr: 'كابل USB-C 2 متر',
         description: 'Fast charging USB-C to USB-C cable',
+        descriptionAr: 'كابل شحن سريع من USB-C إلى USB-C',
         barcode: '1234567890007',
         price: 25.00,
         cost: 12.00,
@@ -1174,7 +1190,9 @@ class AppDatabase extends _$AppDatabase {
       models.Product(
         id: 'prod-8',
         name: 'Wireless Headphones',
+        nameAr: 'سماعات لاسلكية',
         description: 'Bluetooth headphones with noise cancellation',
+        descriptionAr: 'سماعات بلوتوث مع إلغاء الضوضاء',
         barcode: '1234567890008',
         price: 250.00,
         cost: 150.00,
@@ -1190,7 +1208,9 @@ class AppDatabase extends _$AppDatabase {
       models.Product(
         id: 'prod-3',
         name: 'T-Shirt - Medium',
+        nameAr: 'تيشيرت - وسط',
         description: 'Cotton t-shirt, medium size',
+        descriptionAr: 'تيشيرت قطني، مقاس وسط',
         barcode: '1234567890003',
         price: 35.00,
         cost: 20.00,
@@ -1204,7 +1224,9 @@ class AppDatabase extends _$AppDatabase {
       models.Product(
         id: 'prod-9',
         name: 'Jeans - Size 32',
+        nameAr: 'بنطلون جينز - مقاس 32',
         description: 'Blue denim jeans, classic fit',
+        descriptionAr: 'بنطلون جينز أزرق، قصة كلاسيكية',
         barcode: '1234567890009',
         price: 150.00,
         cost: 90.00,
@@ -1218,7 +1240,9 @@ class AppDatabase extends _$AppDatabase {
       models.Product(
         id: 'prod-10',
         name: 'Sports Shoes',
+        nameAr: 'أحذية رياضية',
         description: 'Running shoes with cushioned sole',
+        descriptionAr: 'أحذية جري بنعل مبطن',
         barcode: '1234567890010',
         price: 280.00,
         cost: 180.00,
@@ -1234,7 +1258,9 @@ class AppDatabase extends _$AppDatabase {
       models.Product(
         id: 'prod-4',
         name: 'Water Bottle 1L',
+        nameAr: 'زجاجة ماء 1 لتر',
         description: 'Purified drinking water',
+        descriptionAr: 'مياه شرب نقية',
         barcode: '1234567890004',
         price: 3.50,
         cost: 2.00,
@@ -1248,7 +1274,9 @@ class AppDatabase extends _$AppDatabase {
       models.Product(
         id: 'prod-11',
         name: 'Coffee Beans 250g',
+        nameAr: 'حبوب قهوة 250 جرام',
         description: 'Premium Arabica coffee beans',
+        descriptionAr: 'حبوب قهوة عربية فاخرة',
         barcode: '1234567890011',
         price: 45.00,
         cost: 25.00,
@@ -1262,7 +1290,9 @@ class AppDatabase extends _$AppDatabase {
       models.Product(
         id: 'prod-12',
         name: 'Orange Juice 1L',
+        nameAr: 'عصير برتقال 1 لتر',
         description: 'Fresh squeezed orange juice',
+        descriptionAr: 'عصير برتقال طازج',
         barcode: '1234567890012',
         price: 12.00,
         cost: 7.00,
@@ -1276,7 +1306,9 @@ class AppDatabase extends _$AppDatabase {
       models.Product(
         id: 'prod-13',
         name: 'Chocolate Bar',
+        nameAr: 'لوح شوكولاتة',
         description: 'Premium dark chocolate 100g',
+        descriptionAr: 'شوكولاتة داكنة فاخرة 100 جرام',
         barcode: '1234567890013',
         price: 8.50,
         cost: 4.50,
@@ -1292,7 +1324,9 @@ class AppDatabase extends _$AppDatabase {
       models.Product(
         id: 'prod-5',
         name: 'Garden Shovel',
+        nameAr: 'مجرفة حديقة',
         description: 'Heavy-duty garden shovel',
+        descriptionAr: 'مجرفة حديقة متينة',
         barcode: '1234567890005',
         price: 55.00,
         cost: 35.00,
@@ -1306,7 +1340,9 @@ class AppDatabase extends _$AppDatabase {
       models.Product(
         id: 'prod-14',
         name: 'LED Light Bulb',
+        nameAr: 'مصباح LED',
         description: '10W LED bulb, warm white',
+        descriptionAr: 'مصباح LED 10 واط، أبيض دافئ',
         barcode: '1234567890014',
         price: 15.00,
         cost: 8.00,
@@ -1320,7 +1356,9 @@ class AppDatabase extends _$AppDatabase {
       models.Product(
         id: 'prod-15',
         name: 'Plant Pot 30cm',
+        nameAr: 'أصيص نباتات 30 سم',
         description: 'Ceramic plant pot with drainage',
+        descriptionAr: 'أصيص نباتات خزفي مع تصريف',
         barcode: '1234567890015',
         price: 35.00,
         cost: 20.00,
@@ -1336,7 +1374,9 @@ class AppDatabase extends _$AppDatabase {
       models.Product(
         id: 'prod-2',
         name: 'Notebook A4',
+        nameAr: 'دفتر ملاحظات A4',
         description: '200 pages ruled notebook',
+        descriptionAr: 'دفتر مسطر 200 صفحة',
         barcode: '1234567890002',
         price: 12.00,
         cost: 7.00,
@@ -1350,7 +1390,9 @@ class AppDatabase extends _$AppDatabase {
       models.Product(
         id: 'prod-16',
         name: 'Ballpoint Pen Pack',
+        nameAr: 'عبوة أقلام حبر',
         description: 'Pack of 10 blue ballpoint pens',
+        descriptionAr: 'عبوة من 10 أقلام حبر زرقاء',
         barcode: '1234567890016',
         price: 18.00,
         cost: 10.00,
@@ -1364,7 +1406,9 @@ class AppDatabase extends _$AppDatabase {
       models.Product(
         id: 'prod-17',
         name: 'Stapler',
+        nameAr: 'دباسة',
         description: 'Heavy-duty office stapler',
+        descriptionAr: 'دباسة مكتبية متينة',
         barcode: '1234567890017',
         price: 28.00,
         cost: 16.00,
@@ -1378,7 +1422,9 @@ class AppDatabase extends _$AppDatabase {
       models.Product(
         id: 'prod-18',
         name: 'A4 Paper Ream',
+        nameAr: 'رزمة ورق A4',
         description: '500 sheets white copy paper',
+        descriptionAr: '500 ورقة بيضاء للطباعة',
         barcode: '1234567890018',
         price: 22.00,
         cost: 14.00,
