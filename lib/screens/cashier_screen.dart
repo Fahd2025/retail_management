@@ -142,13 +142,21 @@ class _CashierScreenState extends State<CashierScreen>
   void _addProductToCart(Product product) {
     final vatIncludedInPrice =
         context.read<AppConfigBloc>().state.vatIncludedInPrice;
-    context
-        .read<SaleBloc>()
-        .add(AddToCartEvent(product, vatIncludedInPrice: vatIncludedInPrice));
+
+    // Determine product name based on locale
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    final productName = isArabic ? (product.nameAr ?? product.name) : product.name;
+
+    context.read<SaleBloc>().add(AddToCartEvent(
+      product,
+      vatIncludedInPrice: vatIncludedInPrice,
+      productName: productName,
+    ));
+
     final l10n = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(l10n.productAddedToCart(product.name)),
+        content: Text(l10n.productAddedToCart(productName)),
         duration: const Duration(milliseconds: 500),
         behavior: SnackBarBehavior.floating,
       ),

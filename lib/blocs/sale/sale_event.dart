@@ -51,12 +51,17 @@ class AddToCartEvent extends SaleEvent {
   final Product product;
   final int quantity;
   final bool vatIncludedInPrice;
+  final String? productName; // Optional: for localized product names
 
-  const AddToCartEvent(this.product,
-      {this.quantity = 1, this.vatIncludedInPrice = true});
+  const AddToCartEvent(
+    this.product, {
+    this.quantity = 1,
+    this.vatIncludedInPrice = true,
+    this.productName,
+  });
 
   @override
-  List<Object?> get props => [product, quantity, vatIncludedInPrice];
+  List<Object?> get props => [product, quantity, vatIncludedInPrice, productName];
 }
 
 class UpdateCartItemQuantityEvent extends SaleEvent {
