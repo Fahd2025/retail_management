@@ -5,12 +5,15 @@ import '../blocs/dashboard/dashboard_bloc.dart';
 import '../blocs/dashboard/dashboard_event.dart';
 import '../blocs/dashboard/dashboard_state.dart';
 import '../models/dashboard_statistics.dart';
+import '../models/sale.dart';
+import '../database/drift_database.dart';
 import '../widgets/dashboard/metric_card.dart';
 import '../widgets/dashboard/best_selling_products_widget.dart';
 import '../widgets/dashboard/low_stock_widget.dart';
 import '../widgets/dashboard/latest_invoices_widget.dart';
 import '../widgets/dashboard/sales_chart_widget.dart';
 import '../widgets/dashboard/time_period_filter.dart';
+import '../widgets/invoice_preview_dialog.dart';
 
 /// Analytics Dashboard Screen - Main dashboard with statistics and charts
 class AnalyticsDashboardScreen extends StatefulWidget {
@@ -354,31 +357,63 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
     );
   }
 
-  void _showInvoiceDetails(BuildContext context, invoice) {
-    final theme = Theme.of(context);
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Invoice ${invoice.invoiceNumber}'),
-        content: Text(
-          'Invoice details would be displayed here.\nThis can be linked to the invoice preview functionality.',
-          style: theme.textTheme.bodyMedium,
+  void _showInvoiceDetails(BuildContext context, Sale sale) async {
+    try {
+      // Show loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Close'),
+      );
+
+      // Get company info and customer from database
+      final db = AppDatabase();
+      final companyInfo = await db.getCompanyInfo();
+
+      // Get customer if sale has a customerId
+      final customer = sale.customerId != null
+          ? await db.getCustomerById(sale.customerId!)
+          : null;
+
+      // Close loading indicator
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+
+      // Show invoice preview dialog
+      if (context.mounted && companyInfo != null) {
+        await InvoicePreviewDialog.show(
+          context: context,
+          sale: sale,
+          companyInfo: companyInfo,
+          customer: customer,
+        );
+      } else if (context.mounted) {
+        // Show error if company info not found
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Company information not found. Please configure in Settings.'),
+            backgroundColor: Colors.red,
           ),
-          FilledButton.icon(
-            onPressed: () {
-              Navigator.of(context).pop();
-              // Add print functionality here
-            },
-            icon: const Icon(Icons.print),
-            label: const Text('Print'),
+        );
+      }
+    } catch (e) {
+      // Close loading indicator if still showing
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+
+      // Show error message
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error loading invoice: ${e.toString()}'),
+            backgroundColor: Colors.red,
           ),
-        ],
-      ),
-    );
+        );
+      }
+    }
   }
 }
