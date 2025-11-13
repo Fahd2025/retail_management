@@ -584,6 +584,12 @@ abstract class AppLocalizations {
   /// **'Customer'**
   String get customer;
 
+  /// No description provided for @customerId.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer ID'**
+  String get customerId;
+
   /// No description provided for @sales.
   ///
   /// In en, this message translates to:
@@ -2497,6 +2503,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'days'**
   String get days;
+
+  /// No description provided for @durationDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration: {count} days'**
+  String durationDays(int count);
 
   /// No description provided for @cancelled.
   ///

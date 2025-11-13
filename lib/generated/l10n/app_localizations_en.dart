@@ -254,6 +254,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get customer => 'Customer';
 
   @override
+  String get customerId => 'Customer ID';
+
+  @override
   String get sales => 'Sales';
 
   @override
@@ -1280,6 +1283,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get days => 'days';
+
+  @override
+  String durationDays(int count) {
+    return 'Duration: $count days';
+  }
 
   @override
   String get cancelled => 'Cancelled';

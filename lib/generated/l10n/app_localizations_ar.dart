@@ -254,6 +254,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get customer => 'العميل';
 
   @override
+  String get customerId => 'معرف العميل';
+
+  @override
   String get sales => 'المبيعات';
 
   @override
@@ -1278,6 +1281,11 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get days => 'أيام';
+
+  @override
+  String durationDays(int count) {
+    return 'المدة: $count أيام';
+  }
 
   @override
   String get cancelled => 'ملغى';

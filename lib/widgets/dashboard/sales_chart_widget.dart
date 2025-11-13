@@ -66,7 +66,7 @@ class _SalesChartWidgetState extends State<SalesChartWidget> {
                     ),
                     ButtonSegment(
                       value: true,
-                      label: Text(l10n.vatLabel2),
+                      label: Text(l10n.vatLabel),
                       icon: const Icon(Icons.receipt, size: 16),
                     ),
                   ],
@@ -221,7 +221,8 @@ class _SalesChartWidgetState extends State<SalesChartWidget> {
                 radius: 4,
                 color: Colors.white,
                 strokeWidth: 2,
-                strokeColor: showVat ? Colors.orange : theme.colorScheme.primary,
+                strokeColor:
+                    showVat ? Colors.orange : theme.colorScheme.primary,
               );
             },
           ),
@@ -350,7 +351,8 @@ class _CategorySalesChartWidgetState extends State<CategorySalesChartWidget> {
                       height: 250.h,
                       child: PieChart(
                         _buildPieChartData(theme),
-                        swapAnimationDuration: const Duration(milliseconds: 250),
+                        swapAnimationDuration:
+                            const Duration(milliseconds: 250),
                       ),
                     ),
                   ),
@@ -359,10 +361,8 @@ class _CategorySalesChartWidgetState extends State<CategorySalesChartWidget> {
                     flex: 1,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: widget.categorySalesData
-                          .asMap()
-                          .entries
-                          .map((entry) {
+                      children:
+                          widget.categorySalesData.asMap().entries.map((entry) {
                         final index = entry.key;
                         final category = entry.value;
                         return Padding(

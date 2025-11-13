@@ -94,6 +94,7 @@
   "totalPurchases": "Total Purchases",
   "customerInformation": "Customer Information",
   "customer": "Customer",
+  "customerId": "Customer ID",
 
   "sales": "Sales",
   "salesList": "Sales List",
@@ -672,6 +673,14 @@
   "selectEndDate": "Select end date",
   "duration": "Duration",
   "days": "days",
+  "durationDays": "Duration: {count} days",
+  "@durationDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "apply": "Apply",
   "completed": "Completed",
   "returned": "Returned",

@@ -81,6 +81,7 @@
   "totalPurchases": "إجمالي المشتريات",
   "customerInformation": "معلومات العميل",
   "customer": "العميل",
+  "customerId": "معرف العميل",
 
   "sales": "المبيعات",
   "salesList": "قائمة المبيعات",
@@ -416,6 +417,14 @@
   "selectEndDate": "اختر تاريخ النهاية",
   "duration": "المدة",
   "days": "أيام",
+  "durationDays": "المدة: {count} أيام",
+  "@durationDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "apply": "تطبيق",
   "completed": "مكتمل",
   "returned": "مرتجع",
