@@ -374,7 +374,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
 
       // Get customer if sale has a customerId
       final customer = sale.customerId != null
-          ? await db.getCustomerById(sale.customerId!)
+          ? await db.getCustomer(sale.customerId!)
           : null;
 
       // Close loading indicator
