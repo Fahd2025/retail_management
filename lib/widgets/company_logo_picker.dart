@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_picker/image_picker.dart';
 import '../services/image_service.dart';
-import 'dart:io';
 
 /// Widget for picking and displaying company logo
 /// Supports both web (base64) and mobile (file storage)
