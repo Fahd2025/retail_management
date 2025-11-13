@@ -120,7 +120,8 @@ class A4InvoiceTemplate extends InvoiceTemplate {
             ),
             pw.Text(
               data.companyInfo.nameArabic,
-              style: const pw.TextStyle(fontSize: 14),
+              style: pw.TextStyle(fontSize: 14, font: data.arabicFont),
+              textDirection: pw.TextDirection.rtl,
             ),
             pw.SizedBox(height: 5),
             pw.Text(
@@ -129,7 +130,8 @@ class A4InvoiceTemplate extends InvoiceTemplate {
             ),
             pw.Text(
               data.companyInfo.addressArabic,
-              style: const pw.TextStyle(fontSize: 10),
+              style: pw.TextStyle(fontSize: 10, font: data.arabicFont),
+              textDirection: pw.TextDirection.rtl,
             ),
             pw.SizedBox(height: 5),
             pw.Text(
@@ -153,12 +155,26 @@ class A4InvoiceTemplate extends InvoiceTemplate {
   @override
   pw.Widget buildTitle(InvoiceData data) {
     return pw.Center(
-      child: pw.Text(
-        'TAX INVOICE / فاتورة ضريبية',
-        style: pw.TextStyle(
-          fontSize: 24,
-          fontWeight: pw.FontWeight.bold,
-        ),
+      child: pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.center,
+        children: [
+          pw.Text(
+            'TAX INVOICE / ',
+            style: pw.TextStyle(
+              fontSize: 24,
+              fontWeight: pw.FontWeight.bold,
+            ),
+          ),
+          pw.Text(
+            'فاتورة ضريبية',
+            style: pw.TextStyle(
+              fontSize: 24,
+              fontWeight: pw.FontWeight.bold,
+              font: data.arabicFont,
+            ),
+            textDirection: pw.TextDirection.rtl,
+          ),
+        ],
       ),
     );
   }
@@ -182,9 +198,9 @@ class A4InvoiceTemplate extends InvoiceTemplate {
             ),
           ),
           pw.SizedBox(height: 5),
-          _buildInfoRow('Invoice Number:', data.sale.invoiceNumber),
-          _buildInfoRow('Date:', dateFormat.format(data.sale.saleDate)),
-          _buildInfoRow('Payment Method:', getPaymentMethodLabel(data.sale.paymentMethod)),
+          _buildInfoRow('Invoice Number:', data.sale.invoiceNumber, data),
+          _buildInfoRow('Date:', dateFormat.format(data.sale.saleDate), data),
+          _buildInfoRow('Payment Method:', getPaymentMethodLabel(data.sale.paymentMethod), data),
         ],
       ),
     );
@@ -211,19 +227,19 @@ class A4InvoiceTemplate extends InvoiceTemplate {
             ),
           ),
           pw.SizedBox(height: 5),
-          _buildInfoRow('Name:', data.customer!.name),
+          _buildInfoRow('Name:', data.customer!.name, data),
           if (data.customer!.phone != null)
-            _buildInfoRow('Phone:', data.customer!.phone!),
+            _buildInfoRow('Phone:', data.customer!.phone!, data),
           if (data.customer!.vatNumber != null)
-            _buildInfoRow('VAT:', data.customer!.vatNumber!),
+            _buildInfoRow('VAT:', data.customer!.vatNumber!, data),
           if (data.customer!.crnNumber != null)
-            _buildInfoRow('CR:', data.customer!.crnNumber!),
+            _buildInfoRow('CR:', data.customer!.crnNumber!, data),
         ],
       ),
     );
   }
 
-  pw.Widget _buildInfoRow(String label, String value) {
+  pw.Widget _buildInfoRow(String label, String value, InvoiceData data) {
     return pw.Padding(
       padding: const pw.EdgeInsets.only(bottom: 3),
       child: pw.Row(
@@ -241,7 +257,7 @@ class A4InvoiceTemplate extends InvoiceTemplate {
           pw.Expanded(
             child: pw.Text(
               value,
-              style: const pw.TextStyle(fontSize: 10),
+              style: pw.TextStyle(fontSize: 10, font: data.arabicFont),
             ),
           ),
         ],
@@ -260,11 +276,11 @@ class A4InvoiceTemplate extends InvoiceTemplate {
             color: PdfColors.grey300,
           ),
           children: [
-            _buildTableCell('Item / المنتج', isHeader: true),
-            _buildTableCell('Qty\nالكمية', isHeader: true, align: pw.TextAlign.center),
-            _buildTableCell('Price\nالسعر', isHeader: true, align: pw.TextAlign.right),
-            _buildTableCell('VAT %\nضريبة', isHeader: true, align: pw.TextAlign.center),
-            _buildTableCell('Total\nالإجمالي', isHeader: true, align: pw.TextAlign.right),
+            _buildTableCell('Item / المنتج', isHeader: true, font: data.arabicFont),
+            _buildTableCell('Qty\nالكمية', isHeader: true, align: pw.TextAlign.center, font: data.arabicFont),
+            _buildTableCell('Price\nالسعر', isHeader: true, align: pw.TextAlign.right, font: data.arabicFont),
+            _buildTableCell('VAT %\nضريبة', isHeader: true, align: pw.TextAlign.center, font: data.arabicFont),
+            _buildTableCell('Total\nالإجمالي', isHeader: true, align: pw.TextAlign.right, font: data.arabicFont),
           ],
         ),
         // Item Rows
@@ -299,6 +315,7 @@ class A4InvoiceTemplate extends InvoiceTemplate {
     String text, {
     bool isHeader = false,
     pw.TextAlign align = pw.TextAlign.left,
+    pw.Font? font,
   }) {
     return pw.Padding(
       padding: const pw.EdgeInsets.all(5),
@@ -307,6 +324,7 @@ class A4InvoiceTemplate extends InvoiceTemplate {
         style: pw.TextStyle(
           fontSize: isHeader ? 10 : 9,
           fontWeight: isHeader ? pw.FontWeight.bold : pw.FontWeight.normal,
+          font: font,
         ),
         textAlign: align,
       ),
@@ -426,7 +444,8 @@ class A4InvoiceTemplate extends InvoiceTemplate {
             ),
             pw.Text(
               'شكراً لتعاملكم معنا',
-              style: const pw.TextStyle(fontSize: 11),
+              style: pw.TextStyle(fontSize: 11, font: data.arabicFont),
+              textDirection: pw.TextDirection.rtl,
             ),
           ],
         ),

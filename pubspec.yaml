@@ -77,3 +77,8 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/fonts/
+
+  fonts:
+    - family: NotoSansArabic
+      fonts:
+        - asset: assets/fonts/NotoSansArabic-Regular.ttf

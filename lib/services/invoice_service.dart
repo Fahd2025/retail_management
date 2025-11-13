@@ -30,6 +30,10 @@ class InvoiceService {
     Customer? customer,
     PrintFormatConfig config = PrintFormatConfig.defaultConfig,
   }) async {
+    // Load Arabic font for proper Arabic text rendering
+    final arabicFont = await rootBundle.load('assets/fonts/NotoSansArabic-Regular.ttf');
+    final arabicTtf = pw.Font.ttf(arabicFont);
+
     final pdf = pw.Document();
 
     // Generate ZATCA QR Code
@@ -66,6 +70,7 @@ class InvoiceService {
       customer: customer,
       zatcaQrData: qrData,
       logoBytes: logoBytes,
+      arabicFont: arabicTtf,
     );
 
     // Get the appropriate template for the format

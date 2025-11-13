@@ -14,6 +14,7 @@ class InvoiceData {
   final Customer? customer;
   final String zatcaQrData;
   final Uint8List? logoBytes;
+  final pw.Font? arabicFont;
 
   const InvoiceData({
     required this.sale,
@@ -21,6 +22,7 @@ class InvoiceData {
     required this.customer,
     required this.zatcaQrData,
     this.logoBytes,
+    this.arabicFont,
   });
 }
 

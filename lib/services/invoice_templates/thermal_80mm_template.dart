@@ -101,8 +101,9 @@ class Thermal80mmTemplate extends InvoiceTemplate {
         ),
         pw.Text(
           data.companyInfo.nameArabic,
-          style: const pw.TextStyle(fontSize: 11),
+          style: pw.TextStyle(fontSize: 11, font: data.arabicFont),
           textAlign: pw.TextAlign.center,
+          textDirection: pw.TextDirection.rtl,
         ),
         pw.SizedBox(height: 3),
         pw.Text(
@@ -112,8 +113,9 @@ class Thermal80mmTemplate extends InvoiceTemplate {
         ),
         pw.Text(
           data.companyInfo.addressArabic,
-          style: const pw.TextStyle(fontSize: 7),
+          style: pw.TextStyle(fontSize: 7, font: data.arabicFont),
           textAlign: pw.TextAlign.center,
+          textDirection: pw.TextDirection.rtl,
         ),
         pw.SizedBox(height: 3),
         pw.Text(
@@ -149,8 +151,9 @@ class Thermal80mmTemplate extends InvoiceTemplate {
         ),
         pw.Text(
           'فاتورة ضريبية',
-          style: const pw.TextStyle(fontSize: 10),
+          style: pw.TextStyle(fontSize: 10, font: data.arabicFont),
           textAlign: pw.TextAlign.center,
+          textDirection: pw.TextDirection.rtl,
         ),
       ],
     );
@@ -161,9 +164,9 @@ class Thermal80mmTemplate extends InvoiceTemplate {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
-        _buildLabelValueRow('Invoice:', data.sale.invoiceNumber),
-        _buildLabelValueRow('Date:', dateFormat.format(data.sale.saleDate)),
-        _buildLabelValueRow('Payment:', getPaymentMethodLabel(data.sale.paymentMethod)),
+        _buildLabelValueRow('Invoice:', data.sale.invoiceNumber, data),
+        _buildLabelValueRow('Date:', dateFormat.format(data.sale.saleDate), data),
+        _buildLabelValueRow('Payment:', getPaymentMethodLabel(data.sale.paymentMethod), data),
       ],
     );
   }
@@ -183,16 +186,16 @@ class Thermal80mmTemplate extends InvoiceTemplate {
           ),
         ),
         pw.SizedBox(height: 2),
-        _buildLabelValueRow('Name:', data.customer!.name),
+        _buildLabelValueRow('Name:', data.customer!.name, data),
         if (data.customer!.phone != null)
-          _buildLabelValueRow('Phone:', data.customer!.phone!),
+          _buildLabelValueRow('Phone:', data.customer!.phone!, data),
         if (data.customer!.vatNumber != null)
-          _buildLabelValueRow('VAT:', data.customer!.vatNumber!),
+          _buildLabelValueRow('VAT:', data.customer!.vatNumber!, data),
       ],
     );
   }
 
-  pw.Widget _buildLabelValueRow(String label, String value) {
+  pw.Widget _buildLabelValueRow(String label, String value, InvoiceData data) {
     return pw.Padding(
       padding: const pw.EdgeInsets.symmetric(vertical: 1),
       child: pw.Row(
@@ -208,7 +211,7 @@ class Thermal80mmTemplate extends InvoiceTemplate {
           pw.Expanded(
             child: pw.Text(
               value,
-              style: const pw.TextStyle(fontSize: 8),
+              style: pw.TextStyle(fontSize: 8, font: data.arabicFont),
               textAlign: pw.TextAlign.right,
             ),
           ),
@@ -441,8 +444,9 @@ class Thermal80mmTemplate extends InvoiceTemplate {
         ),
         pw.Text(
           'شكراً لتعاملكم معنا',
-          style: const pw.TextStyle(fontSize: 8),
+          style: pw.TextStyle(fontSize: 8, font: data.arabicFont),
           textAlign: pw.TextAlign.center,
+          textDirection: pw.TextDirection.rtl,
         ),
         pw.SizedBox(height: 5),
         // ZATCA QR Code (centered)
