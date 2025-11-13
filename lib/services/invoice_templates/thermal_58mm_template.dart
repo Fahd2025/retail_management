@@ -56,6 +56,15 @@ class Thermal58mmTemplate extends InvoiceTemplate {
         // Items (simplified)
         buildItemsTable(data),
 
+        pw.SizedBox(height: 2),
+
+        // VAT Note
+        pw.Text(
+          'Prices excl. VAT / لا تشمل الضريبة',
+          style: pw.TextStyle(fontSize: 5, fontStyle: pw.FontStyle.italic, font: data.arabicFont),
+          textAlign: pw.TextAlign.center,
+        ),
+
         buildDivider(),
 
         // Totals
@@ -263,7 +272,7 @@ class Thermal58mmTemplate extends InvoiceTemplate {
                 pw.Padding(
                   padding: const pw.EdgeInsets.only(top: 1),
                   child: pw.Text(
-                    '${item.quantity} x ${currencyFormat.format(item.unitPrice)} (VAT ${item.vatRate.toStringAsFixed(0)}%)',
+                    '${item.quantity} x ${currencyFormat.format(item.unitPrice)} (VAT: ${currencyFormat.format(item.vatAmount)})',
                     style: const pw.TextStyle(
                         fontSize: 6, color: PdfColors.grey600),
                   ),
