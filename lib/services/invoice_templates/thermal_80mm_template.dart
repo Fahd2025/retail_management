@@ -79,6 +79,18 @@ class Thermal80mmTemplate extends InvoiceTemplate {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.center,
       children: [
+        // Company Logo
+        if (data.logoBytes != null) ...[
+          pw.Container(
+            width: 60,
+            height: 60,
+            child: pw.Image(
+              pw.MemoryImage(data.logoBytes!),
+              fit: pw.BoxFit.contain,
+            ),
+          ),
+          pw.SizedBox(height: 5),
+        ],
         pw.Text(
           data.companyInfo.name,
           style: pw.TextStyle(

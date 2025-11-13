@@ -3,11 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../database/drift_database.dart';
 import '../models/company_info.dart';
 import '../services/sync_service.dart';
+import '../services/image_service.dart';
 import '../blocs/app_config/app_config_bloc.dart';
 import '../blocs/app_config/app_config_event.dart';
 import '../blocs/app_config/app_config_state.dart';
 import '../widgets/print_format_selector.dart';
 import '../widgets/settings_section.dart';
+import '../widgets/company_logo_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:retail_management/generated/l10n/app_localizations.dart';
 
@@ -41,6 +43,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late TextEditingController _vatNumberController;
   late TextEditingController _crnNumberController;
 
+  // Company logo path
+  String? _logoPath;
+  String? _oldLogoPath;
+
   @override
   void initState() {
     super.initState();
@@ -71,6 +77,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         _emailController.text = info.email ?? '';
         _vatNumberController.text = info.vatNumber;
         _crnNumberController.text = info.crnNumber;
+        _logoPath = info.logoPath;
+        _oldLogoPath = info.logoPath;
       }
     } catch (e) {
       if (mounted) {
@@ -101,11 +109,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
         email: _emailController.text.isEmpty ? null : _emailController.text,
         vatNumber: _vatNumberController.text,
         crnNumber: _crnNumberController.text,
+        logoPath: _logoPath,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
 
       await db.createOrUpdateCompanyInfo(companyInfo);
+
+      // Clean up old logo if it was changed
+      if (_oldLogoPath != null && _oldLogoPath != _logoPath) {
+        await ImageService.cleanupOldLogo(_oldLogoPath);
+      }
+
+      // Update old logo path reference
+      _oldLogoPath = _logoPath;
 
       if (mounted) {
         final l10n = AppLocalizations.of(context)!;
@@ -365,6 +382,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // Desktop: Two-column layout
           return Column(
             children: [
+              // Company Logo
+              Center(
+                child: CompanyLogoPicker(
+                  currentLogoPath: _logoPath,
+                  onLogoSelected: (logoPath) {
+                    setState(() {
+                      _logoPath = logoPath;
+                    });
+                  },
+                  onLogoRemoved: () {
+                    setState(() {
+                      _logoPath = null;
+                    });
+                  },
+                  size: 150,
+                ),
+              ),
+              const SizedBox(height: 24),
               _buildFormRow([
                 _buildTextField(
                   controller: _nameController,
@@ -426,6 +461,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // Mobile: Single column layout
           return Column(
             children: [
+              // Company Logo
+              Center(
+                child: CompanyLogoPicker(
+                  currentLogoPath: _logoPath,
+                  onLogoSelected: (logoPath) {
+                    setState(() {
+                      _logoPath = logoPath;
+                    });
+                  },
+                  onLogoRemoved: () {
+                    setState(() {
+                      _logoPath = null;
+                    });
+                  },
+                  size: 150,
+                ),
+              ),
+              const SizedBox(height: 24),
               _buildTextField(
                 controller: _nameController,
                 label: '${l10n.companyNameEnglish} *',

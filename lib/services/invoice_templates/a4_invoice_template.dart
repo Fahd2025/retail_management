@@ -83,22 +83,29 @@ class A4InvoiceTemplate extends InvoiceTemplate {
       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
-        // Company Logo placeholder
+        // Company Logo
         pw.Container(
           width: 80,
           height: 80,
           decoration: pw.BoxDecoration(
-            border: pw.Border.all(color: PdfColors.grey),
+            border: data.logoBytes == null
+                ? pw.Border.all(color: PdfColors.grey)
+                : null,
           ),
-          child: pw.Center(
-            child: pw.Text(
-              'LOGO',
-              style: pw.TextStyle(
-                fontSize: 12,
-                color: PdfColors.grey600,
-              ),
-            ),
-          ),
+          child: data.logoBytes != null
+              ? pw.Image(
+                  pw.MemoryImage(data.logoBytes!),
+                  fit: pw.BoxFit.contain,
+                )
+              : pw.Center(
+                  child: pw.Text(
+                    'LOGO',
+                    style: pw.TextStyle(
+                      fontSize: 12,
+                      color: PdfColors.grey600,
+                    ),
+                  ),
+                ),
         ),
         // Company Info - Right-aligned for bilingual support
         pw.Column(

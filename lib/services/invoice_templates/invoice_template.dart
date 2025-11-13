@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:intl/intl.dart';
@@ -12,12 +13,14 @@ class InvoiceData {
   final CompanyInfo companyInfo;
   final Customer? customer;
   final String zatcaQrData;
+  final Uint8List? logoBytes;
 
   const InvoiceData({
     required this.sale,
     required this.companyInfo,
     required this.customer,
     required this.zatcaQrData,
+    this.logoBytes,
   });
 }
 
