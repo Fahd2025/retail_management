@@ -49,8 +49,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   void showCategoryDialog([models.Category? category]) {
     final l10n = AppLocalizations.of(context)!;
     final nameController = TextEditingController(text: category?.name ?? '');
+    final nameArController = TextEditingController(text: category?.nameAr ?? '');
     final descriptionController =
         TextEditingController(text: category?.description ?? '');
+    final descriptionArController =
+        TextEditingController(text: category?.descriptionAr ?? '');
     final formKey = GlobalKey<FormState>();
 
     showModalBottomSheet(
@@ -85,6 +88,18 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               ),
               const SizedBox(height: 16),
 
+              // Category Name (Arabic) Field
+              TextFormField(
+                controller: nameArController,
+                decoration: InputDecoration(
+                  labelText: '${l10n.name} (عربي)',
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.translate),
+                ),
+                textInputAction: TextInputAction.next,
+              ),
+              const SizedBox(height: 16),
+
               // Description Field
               TextFormField(
                 controller: descriptionController,
@@ -92,6 +107,20 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   labelText: l10n.descriptionOptional,
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.description_outlined),
+                  alignLabelWithHint: true,
+                ),
+                maxLines: 3,
+                textInputAction: TextInputAction.next,
+              ),
+              const SizedBox(height: 16),
+
+              // Description (Arabic) Field
+              TextFormField(
+                controller: descriptionArController,
+                decoration: InputDecoration(
+                  labelText: '${l10n.description} (عربي)',
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.translate),
                   alignLabelWithHint: true,
                 ),
                 maxLines: 3,
@@ -112,7 +141,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               await _saveCategory(
                 category,
                 nameController.text.trim(),
+                nameArController.text.trim(),
                 descriptionController.text.trim(),
+                descriptionArController.text.trim(),
               );
             }
           },
@@ -125,7 +156,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Future<void> _saveCategory(
     models.Category? existingCategory,
     String name,
+    String nameAr,
     String description,
+    String descriptionAr,
   ) async {
     try {
       if (existingCategory == null) {
@@ -133,7 +166,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         final newCategory = models.Category(
           id: const Uuid().v4(),
           name: name,
+          nameAr: nameAr.isEmpty ? null : nameAr,
           description: description.isEmpty ? null : description,
+          descriptionAr: descriptionAr.isEmpty ? null : descriptionAr,
           isActive: true,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
@@ -149,7 +184,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         // Update existing category
         final updatedCategory = existingCategory.copyWith(
           name: name,
+          nameAr: nameAr.isEmpty ? null : nameAr,
           description: description.isEmpty ? null : description,
+          descriptionAr: descriptionAr.isEmpty ? null : descriptionAr,
           updatedAt: DateTime.now(),
         );
         await _database.updateCategory(updatedCategory);
@@ -292,10 +329,16 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 final productCount = data['productCount'] as int;
 
                                 return DataRow(cells: [
-                                  DataCell(Text(category.name)),
+                                  DataCell(Text(
+                                    Localizations.localeOf(context).languageCode == 'ar'
+                                        ? (category.nameAr ?? category.name)
+                                        : category.name,
+                                  )),
                                   DataCell(
                                     Text(
-                                      category.description ?? '-',
+                                      Localizations.localeOf(context).languageCode == 'ar'
+                                          ? (category.descriptionAr ?? category.description ?? '-')
+                                          : (category.description ?? '-'),
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -354,7 +397,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 ),
                               ),
                               title: Text(
-                                category.name,
+                                Localizations.localeOf(context).languageCode == 'ar'
+                                    ? (category.nameAr ?? category.name)
+                                    : category.name,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -387,8 +432,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 ],
                               ),
                               children: [
-                                if (category.description != null &&
-                                    category.description!.isNotEmpty)
+                                if ((Localizations.localeOf(context).languageCode == 'ar'
+                                        ? (category.descriptionAr ?? category.description)
+                                        : category.description) != null &&
+                                    (Localizations.localeOf(context).languageCode == 'ar'
+                                        ? (category.descriptionAr ?? category.description)!
+                                        : category.description!).isNotEmpty)
                                   Padding(
                                     padding: const EdgeInsets.all(16),
                                     child: Column(
@@ -404,7 +453,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          category.description!,
+                                          Localizations.localeOf(context).languageCode == 'ar'
+                                              ? (category.descriptionAr ?? category.description!)
+                                              : category.description!,
                                           style: TextStyle(
                                             fontSize: 14,
                                             color: Colors.grey.shade600,
