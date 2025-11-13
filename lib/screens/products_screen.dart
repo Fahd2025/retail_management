@@ -174,53 +174,47 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
               if (isDesktop) {
                 // Desktop/Tablet: DataTable layout that fills width
-                return SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: constraints.maxWidth,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                return Column(
+                  children: [
+                    // VAT Information Note
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      color: vatIncludedInPrice
+                        ? Colors.green.shade50
+                        : Colors.blue.shade50,
+                      child: Row(
                         children: [
-                          // VAT Information Note
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          Icon(
+                            Icons.info_outline,
+                            size: 18,
                             color: vatIncludedInPrice
-                              ? Colors.green.shade50
-                              : Colors.blue.shade50,
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.info_outline,
-                                  size: 18,
-                                  color: vatIncludedInPrice
-                                    ? Colors.green.shade700
-                                    : Colors.blue.shade700,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  vatIncludedInPrice
-                                    ? 'Prices shown include VAT - VAT will be extracted from the listed price'
-                                    : 'Prices shown exclude VAT - VAT will be added on top of the listed price',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                    color: vatIncludedInPrice
-                                      ? Colors.green.shade900
-                                      : Colors.blue.shade900,
-                                  ),
-                                ),
-                              ],
+                              ? Colors.green.shade700
+                              : Colors.blue.shade700,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            vatIncludedInPrice
+                              ? 'Prices shown include VAT - VAT will be extracted from the listed price'
+                              : 'Prices shown exclude VAT - VAT will be added on top of the listed price',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: vatIncludedInPrice
+                                ? Colors.green.shade900
+                                : Colors.blue.shade900,
                             ),
                           ),
-                          // DataTable
-                          Expanded(
-                            child: SingleChildScrollView(
-                              child: DataTable(
+                        ],
+                      ),
+                    ),
+                    // DataTable
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: DataTable(
                                 columnSpacing: 20,
                                 horizontalMargin: 16,
                                 columns: [
@@ -280,11 +274,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               ),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
+                        ),
+                      ],
+                    );
               } else {
                 // Mobile: Card with ExpansionTile layout
                 return Column(
