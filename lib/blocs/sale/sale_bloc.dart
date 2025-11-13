@@ -119,6 +119,8 @@ class SaleBloc extends Bloc<SaleEvent, SaleState> {
     final product = event.product;
     final quantity = event.quantity;
     final vatIncludedInPrice = event.vatIncludedInPrice;
+    // Use provided product name or fall back to product.name
+    final productName = event.productName ?? product.name;
 
     final existingIndex = cartItems.indexWhere(
       (item) => item.productId == product.id,
@@ -147,7 +149,7 @@ class SaleBloc extends Bloc<SaleEvent, SaleState> {
         id: existingItem.id,
         saleId: existingItem.saleId,
         productId: product.id,
-        productName: product.name,
+        productName: productName,
         unitPrice: product.price,
         quantity: newQuantity,
         vatRate: product.vatRate,
@@ -175,7 +177,7 @@ class SaleBloc extends Bloc<SaleEvent, SaleState> {
         id: _uuid.v4(),
         saleId: '', // Will be set when sale is created
         productId: product.id,
-        productName: product.name,
+        productName: productName,
         unitPrice: product.price,
         quantity: quantity,
         vatRate: product.vatRate,
