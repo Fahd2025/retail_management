@@ -31,7 +31,9 @@ class CategoriesTable extends Table {
 
   TextColumn get id => text()();
   TextColumn get name => text()();
+  TextColumn get nameAr => text().nullable()();
   TextColumn get description => text().nullable()();
+  TextColumn get descriptionAr => text().nullable()();
   TextColumn get imageUrl => text().nullable()();
   BoolColumn get isActive => boolean()();
   TextColumn get createdAt => text()();
@@ -46,7 +48,9 @@ class CategoriesTable extends Table {
 class Products extends Table {
   TextColumn get id => text()();
   TextColumn get name => text()();
+  TextColumn get nameAr => text().nullable()();
   TextColumn get description => text().nullable()();
+  TextColumn get descriptionAr => text().nullable()();
   TextColumn get barcode => text()();
   RealColumn get price => real()();
   RealColumn get cost => real()();
@@ -166,7 +170,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -212,6 +216,16 @@ class AppDatabase extends _$AppDatabase {
             // Update index
             await customStatement(
                 'CREATE INDEX idx_products_category_id ON products(category_id)');
+          }
+
+          if (from <= 2 && to >= 3) {
+            // Add Arabic fields to products table
+            await m.addColumn(products, products.nameAr);
+            await m.addColumn(products, products.descriptionAr);
+
+            // Add Arabic fields to categories table
+            await m.addColumn(categoriesTable, categoriesTable.nameAr);
+            await m.addColumn(categoriesTable, categoriesTable.descriptionAr);
           }
         },
       );
@@ -289,7 +303,9 @@ class AppDatabase extends _$AppDatabase {
     await into(products).insert(ProductsCompanion(
       id: Value(product.id),
       name: Value(product.name),
+      nameAr: Value(product.nameAr),
       description: Value(product.description),
+      descriptionAr: Value(product.descriptionAr),
       barcode: Value(product.barcode),
       price: Value(product.price),
       cost: Value(product.cost),
@@ -351,7 +367,9 @@ class AppDatabase extends _$AppDatabase {
     return (update(products)..where((tbl) => tbl.id.equals(product.id))).write(
       ProductsCompanion(
         name: Value(product.name),
+        nameAr: Value(product.nameAr),
         description: Value(product.description),
+        descriptionAr: Value(product.descriptionAr),
         barcode: Value(product.barcode),
         price: Value(product.price),
         cost: Value(product.cost),
@@ -855,7 +873,9 @@ class AppDatabase extends _$AppDatabase {
     return models.Product(
       id: row.id,
       name: row.name,
+      nameAr: row.nameAr,
       description: row.description,
+      descriptionAr: row.descriptionAr,
       barcode: row.barcode,
       price: row.price,
       cost: row.cost,
@@ -955,7 +975,9 @@ class AppDatabase extends _$AppDatabase {
     return models.Category(
       id: row.id,
       name: row.name,
+      nameAr: row.nameAr,
       description: row.description,
+      descriptionAr: row.descriptionAr,
       imageUrl: row.imageUrl,
       isActive: row.isActive,
       createdAt: DateTime.parse(row.createdAt),
@@ -969,7 +991,9 @@ class AppDatabase extends _$AppDatabase {
     await into(categoriesTable).insert(CategoriesTableCompanion(
       id: Value(category.id),
       name: Value(category.name),
+      nameAr: Value(category.nameAr),
       description: Value(category.description),
+      descriptionAr: Value(category.descriptionAr),
       imageUrl: Value(category.imageUrl),
       isActive: Value(category.isActive),
       createdAt: Value(category.createdAt.toIso8601String()),
@@ -1002,7 +1026,9 @@ class AppDatabase extends _$AppDatabase {
         .write(
       CategoriesTableCompanion(
         name: Value(category.name),
+        nameAr: Value(category.nameAr),
         description: Value(category.description),
+        descriptionAr: Value(category.descriptionAr),
         imageUrl: Value(category.imageUrl),
         isActive: Value(category.isActive),
         updatedAt: Value(DateTime.now().toIso8601String()),
