@@ -35,6 +35,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
+  int _previousIndex = 0;
   CompanyInfo? _companyInfo;
 
   // GlobalKeys for screen access
@@ -456,6 +457,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           },
           child: Scaffold(
           appBar: _buildAppBar(navItems, context),
+          onDrawerChanged: (isOpened) {
+            // Reload company info when drawer is opened (to show latest changes from settings)
+            if (isOpened) {
+              _loadCompanyInfo();
+            }
+          },
           drawer: Drawer(
             child: Column(
               children: [
@@ -489,7 +496,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         selected: isSelected,
                         selectedTileColor: Colors.blue.shade50,
                         onTap: () {
-                          setState(() => _selectedIndex = index);
+                          // Check if we're navigating away from settings (index 6 for admin)
+                          final isLeavingSettings = (_previousIndex == 6 && user.role == UserRole.admin);
+
+                          setState(() {
+                            _previousIndex = _selectedIndex;
+                            _selectedIndex = index;
+                          });
+
+                          // Reload company info if leaving settings
+                          if (isLeavingSettings) {
+                            _loadCompanyInfo();
+                          }
+
                           Navigator.pop(context); // Close drawer
                         },
                       );
