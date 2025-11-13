@@ -174,93 +174,47 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
               if (isDesktop) {
                 // Desktop/Tablet: DataTable layout that fills width
-                return SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: constraints.maxWidth,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                return Column(
+                  children: [
+                    // VAT Information Note
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      color: vatIncludedInPrice
+                        ? Colors.green.shade50
+                        : Colors.blue.shade50,
+                      child: Row(
                         children: [
-                          // VAT Information Note
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          Icon(
+                            Icons.info_outline,
+                            size: 18,
                             color: vatIncludedInPrice
-                              ? Colors.green.shade50
-                              : Colors.blue.shade50,
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.info_outline,
-                                  size: 18,
-                                  color: vatIncludedInPrice
-                                    ? Colors.green.shade700
-                                    : Colors.blue.shade700,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  vatIncludedInPrice
-                                    ? 'Prices shown include VAT - VAT will be extracted from the listed price'
-                                    : 'Prices shown exclude VAT - VAT will be added on top of the listed price',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                    color: vatIncludedInPrice
-                                      ? Colors.green.shade900
-                                      : Colors.blue.shade900,
-                      child: DataTable(
-                        columnSpacing: 24,
-                        horizontalMargin: 16,
-                        columns: [
-                          DataColumn(label: Text(l10n.name)),
-                          DataColumn(label: Text(l10n.barcode)),
-                          DataColumn(label: Text(l10n.category)),
-                          DataColumn(label: Text(l10n.price)),
-                          DataColumn(label: Text(l10n.cost)),
-                          DataColumn(label: Text(l10n.stock)),
-                          DataColumn(label: Text('${l10n.vat} Amount')),
-                          DataColumn(label: Text(l10n.actions)),
-                        ],
-                        rows: products.map((product) {
-                          final vatAmount =
-                              product.price * (product.vatRate / 100);
-                          return DataRow(cells: [
-                            DataCell(Text(product.name)),
-                            DataCell(Text(product.barcode)),
-                            DataCell(Text(_getCategoryName(product.category))),
-                            DataCell(Text(
-                                'SAR ${product.price.toStringAsFixed(2)}')),
-                            DataCell(
-                                Text('SAR ${product.cost.toStringAsFixed(2)}')),
-                            DataCell(Text(product.quantity.toString())),
-                            DataCell(
-                                Text('SAR ${vatAmount.toStringAsFixed(2)}')),
-                            DataCell(
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.edit, size: 20),
-                                    onPressed: () => showProductDialog(product),
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.delete,
-                                        size: 20, color: Colors.red),
-                                    onPressed: () =>
-                                        _deleteProduct(context, product),
-                                  ),
-                                ),
-                              ],
+                              ? Colors.green.shade700
+                              : Colors.blue.shade700,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            vatIncludedInPrice
+                              ? 'Prices shown include VAT - VAT will be extracted from the listed price'
+                              : 'Prices shown exclude VAT - VAT will be added on top of the listed price',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: vatIncludedInPrice
+                                ? Colors.green.shade900
+                                : Colors.blue.shade900,
                             ),
                           ),
-                          // DataTable
-                          Expanded(
-                            child: SingleChildScrollView(
-                              child: DataTable(
+                        ],
+                      ),
+                    ),
+                    // DataTable
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: DataTable(
                                 columnSpacing: 20,
                                 horizontalMargin: 16,
                                 columns: [
@@ -320,11 +274,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               ),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
+                        ),
+                      ],
+                    );
               } else {
                 // Mobile: Card with ExpansionTile layout
                 return Column(
@@ -409,16 +361,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              l10n.category +
-                                  ': ' +
-                                  _getCategoryName(product.category),
+                              l10n.category + ': ' + _getCategoryName(product.category),
                               style: const TextStyle(fontSize: 13),
                             ),
                             Text(
                               (vatIncludedInPrice ? 'Price (Incl. ${l10n.vat})' : 'Price (Excl. ${l10n.vat})') +
                                 ': SAR ${product.price.toStringAsFixed(2)}',
-                              l10n.price +
-                                  ': SAR ${product.price.toStringAsFixed(2)}',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -584,32 +532,32 @@ class _ProductDialogState extends State<_ProductDialog> {
 
     if (widget.product == null) {
       context.read<ProductBloc>().add(AddProductEvent(
-            name: _nameController.text,
-            barcode: _barcodeController.text,
-            category: _selectedCategoryId!,
-            price: double.parse(_priceController.text),
-            cost: double.parse(_costController.text),
-            quantity: int.parse(_quantityController.text),
-            vatRate: vatRate,
-            description: _descriptionController.text.isEmpty
-                ? null
-                : _descriptionController.text,
-          ));
+        name: _nameController.text,
+        barcode: _barcodeController.text,
+        category: _selectedCategoryId!,
+        price: double.parse(_priceController.text),
+        cost: double.parse(_costController.text),
+        quantity: int.parse(_quantityController.text),
+        vatRate: vatRate,
+        description: _descriptionController.text.isEmpty
+            ? null
+            : _descriptionController.text,
+      ));
     } else {
       context.read<ProductBloc>().add(UpdateProductEvent(
-            widget.product!.copyWith(
-              name: _nameController.text,
-              barcode: _barcodeController.text,
-              category: _selectedCategoryId!,
-              price: double.parse(_priceController.text),
-              cost: double.parse(_costController.text),
-              quantity: int.parse(_quantityController.text),
-              vatRate: vatRate,
-              description: _descriptionController.text.isEmpty
-                  ? null
-                  : _descriptionController.text,
-            ),
-          ));
+        widget.product!.copyWith(
+          name: _nameController.text,
+          barcode: _barcodeController.text,
+          category: _selectedCategoryId!,
+          price: double.parse(_priceController.text),
+          cost: double.parse(_costController.text),
+          quantity: int.parse(_quantityController.text),
+          vatRate: vatRate,
+          description: _descriptionController.text.isEmpty
+              ? null
+              : _descriptionController.text,
+        ),
+      ));
     }
 
     // Wait for operation to complete
@@ -664,7 +612,7 @@ class _ProductDialogState extends State<_ProductDialog> {
                   ),
                 )
               : DropdownButtonFormField<String>(
-                  initialValue: _selectedCategoryId,
+                  value: _selectedCategoryId,
                   decoration: InputDecoration(
                     labelText: l10n.categoryRequired,
                     border: const OutlineInputBorder(),
@@ -760,10 +708,8 @@ class _ProductDialogState extends State<_ProductDialog> {
                         filled: true,
                         fillColor: Colors.grey.shade100,
                         suffixIcon: Tooltip(
-                          message:
-                              'VAT amount calculated automatically (${appConfig.vatRate.toStringAsFixed(1)}%)',
-                          child: Icon(Icons.info_outline,
-                              size: 18, color: Colors.blue.shade600),
+                          message: 'VAT amount calculated automatically (${appConfig.vatRate.toStringAsFixed(1)}%)',
+                          child: Icon(Icons.info_outline, size: 18, color: Colors.blue.shade600),
                         ),
                       ),
                       readOnly: true,
