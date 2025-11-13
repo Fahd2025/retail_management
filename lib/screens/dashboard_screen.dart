@@ -17,6 +17,7 @@ import '../blocs/user/user_event.dart';
 import '../models/user.dart';
 import '../models/company_info.dart';
 import '../database/drift_database.dart';
+import '../services/image_service.dart';
 import 'cashier_screen.dart';
 import 'products_screen.dart';
 import 'categories_screen.dart';
@@ -305,15 +306,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.file(
-                  File(_companyInfo!.logoPath!),
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Icon(
-                      Icons.store,
-                      size: 40,
-                      color: Colors.blue.shade700,
-                    );
+                child: FutureBuilder(
+                  future: ImageService.getImageBytes(_companyInfo!.logoPath),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done &&
+                        snapshot.hasData &&
+                        snapshot.data != null) {
+                      return Image.memory(
+                        snapshot.data!,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(
+                            Icons.store,
+                            size: 40,
+                            color: Colors.blue.shade700,
+                          );
+                        },
+                      );
+                    } else if (snapshot.hasError) {
+                      return Icon(
+                        Icons.store,
+                        size: 40,
+                        color: Colors.blue.shade700,
+                      );
+                    } else {
+                      return Center(
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.blue.shade700,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
                   },
                 ),
               ),
