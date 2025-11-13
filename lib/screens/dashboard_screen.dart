@@ -307,6 +307,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: FutureBuilder(
+                  key: ValueKey(_companyInfo!.logoPath),
                   future: ImageService.getImageBytes(_companyInfo!.logoPath),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done &&
@@ -458,7 +459,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
           },
           child: Scaffold(
             appBar: _buildAppBar(navItems, context),
+            onDrawerChanged: (isOpened) {
+              // Reload company info when drawer is opened (to show latest changes from settings)
+              if (isOpened) {
+                _loadCompanyInfo();
+              }
+            },
             drawer: Drawer(
+              key: ValueKey(_companyInfo?.updatedAt.toString() ?? ''),
               child: Column(
                 children: [
                   _buildDrawerHeader(),
@@ -490,9 +498,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                           selected: isSelected,
                           selectedTileColor: Colors.blue.shade50,
-                          onTap: () {
-                            setState(() => _selectedIndex = index);
-                            Navigator.pop(context); // Close drawer
+                          onTap: () async {
+                            // Check if we're navigating away from settings (index 6 for admin)
+                            final isLeavingSettings = (_previousIndex == 6 && user.role == UserRole.admin);
+
+                            setState(() {
+                              _previousIndex = _selectedIndex;
+                              _selectedIndex = index;
+                            });
+
+                            // Reload company info if leaving settings
+                            if (isLeavingSettings) {
+                              await _loadCompanyInfo();
+                            }
+
+                            if (context.mounted) {
+                              Navigator.pop(context); // Close drawer
+                            }
                           },
                         );
                       },
