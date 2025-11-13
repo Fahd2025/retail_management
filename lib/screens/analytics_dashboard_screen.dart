@@ -6,7 +6,7 @@ import '../blocs/dashboard/dashboard_event.dart';
 import '../blocs/dashboard/dashboard_state.dart';
 import '../models/dashboard_statistics.dart';
 import '../models/sale.dart';
-import '../database/drift_database.dart';
+import '../database/drift_database.dart' hide Sale;
 import '../widgets/dashboard/metric_card.dart';
 import '../widgets/dashboard/best_selling_products_widget.dart';
 import '../widgets/dashboard/low_stock_widget.dart';
@@ -41,75 +41,75 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
     final theme = Theme.of(context);
 
     return BlocBuilder<DashboardBloc, DashboardState>(
-        builder: (context, state) {
-          if (state is DashboardInitial || state is DashboardLoading) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const CircularProgressIndicator(),
-                  SizedBox(height: 16.h),
-                  Text(
-                    'Loading dashboard data...',
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.6),
-                    ),
+      builder: (context, state) {
+        if (state is DashboardInitial || state is DashboardLoading) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const CircularProgressIndicator(),
+                SizedBox(height: 16.h),
+                Text(
+                  'Loading dashboard data...',
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: theme.colorScheme.onSurface.withOpacity(0.6),
                   ),
-                ],
-              ),
-            );
-          }
+                ),
+              ],
+            ),
+          );
+        }
 
-          if (state is DashboardError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64.sp,
+        if (state is DashboardError) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  size: 64.sp,
+                  color: theme.colorScheme.error,
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  'Error loading dashboard',
+                  style: theme.textTheme.titleLarge?.copyWith(
                     color: theme.colorScheme.error,
                   ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    'Error loading dashboard',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: theme.colorScheme.error,
+                ),
+                SizedBox(height: 8.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 32.w),
+                  child: Text(
+                    state.message,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurface.withOpacity(0.6),
                     ),
+                    textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 8.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 32.w),
-                    child: Text(
-                      state.message,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.6),
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  SizedBox(height: 24.h),
-                  FilledButton.icon(
-                    onPressed: () {
-                      context
-                          .read<DashboardBloc>()
-                          .add(const RefreshDashboardEvent());
-                    },
-                    icon: const Icon(Icons.refresh),
-                    label: const Text('Retry'),
-                  ),
-                ],
-              ),
-            );
-          }
+                ),
+                SizedBox(height: 24.h),
+                FilledButton.icon(
+                  onPressed: () {
+                    context
+                        .read<DashboardBloc>()
+                        .add(const RefreshDashboardEvent());
+                  },
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Retry'),
+                ),
+              ],
+            ),
+          );
+        }
 
-          if (state is DashboardLoaded) {
-            return _buildDashboardContent(context, state);
-          }
+        if (state is DashboardLoaded) {
+          return _buildDashboardContent(context, state);
+        }
 
-          return const SizedBox.shrink();
-        },
-      );
+        return const SizedBox.shrink();
+      },
+    );
   }
 
   Widget _buildDashboardContent(BuildContext context, DashboardLoaded state) {
@@ -164,7 +164,8 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                   amount: statistics.totalSales,
                   icon: Icons.attach_money,
                   color: Colors.green,
-                  subtitle: '${statistics.completedInvoices} completed invoices',
+                  subtitle:
+                      '${statistics.completedInvoices} completed invoices',
                 ),
                 MetricCard.currency(
                   title: 'Total VAT',
@@ -374,7 +375,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
 
       // Get customer if sale has a customerId
       final customer = sale.customerId != null
-          ? await db.getCustomerById(sale.customerId!)
+          ? await db.getCustomer(sale.customerId!)
           : null;
 
       // Close loading indicator
@@ -394,7 +395,8 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
         // Show error if company info not found
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Company information not found. Please configure in Settings.'),
+            content: Text(
+                'Company information not found. Please configure in Settings.'),
             backgroundColor: Colors.red,
           ),
         );
