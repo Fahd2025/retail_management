@@ -57,7 +57,14 @@ class A4InvoiceTemplate extends InvoiceTemplate {
 
         // Items Table
         buildItemsTable(data),
-        pw.SizedBox(height: 20),
+        pw.SizedBox(height: 5),
+
+        // VAT Note
+        pw.Text(
+          'Note: Prices are exclusive of VAT / ملاحظة: الأسعار غير شاملة لضريبة القيمة المضافة',
+          style: pw.TextStyle(fontSize: 8, fontStyle: pw.FontStyle.italic, font: data.arabicFont),
+        ),
+        pw.SizedBox(height: 15),
 
         // Totals
         buildTotals(data),
@@ -279,7 +286,7 @@ class A4InvoiceTemplate extends InvoiceTemplate {
             _buildTableCell('Item / المنتج', isHeader: true, font: data.arabicFont),
             _buildTableCell('Qty\nالكمية', isHeader: true, align: pw.TextAlign.center, font: data.arabicFont),
             _buildTableCell('Price\nالسعر', isHeader: true, align: pw.TextAlign.right, font: data.arabicFont),
-            _buildTableCell('VAT %\nضريبة', isHeader: true, align: pw.TextAlign.center, font: data.arabicFont),
+            _buildTableCell('VAT\nضريبة', isHeader: true, align: pw.TextAlign.right, font: data.arabicFont),
             _buildTableCell('Total\nالإجمالي', isHeader: true, align: pw.TextAlign.right, font: data.arabicFont),
           ],
         ),
@@ -297,8 +304,8 @@ class A4InvoiceTemplate extends InvoiceTemplate {
                 align: pw.TextAlign.right,
               ),
               _buildTableCell(
-                '${item.vatRate.toStringAsFixed(0)}%',
-                align: pw.TextAlign.center,
+                currencyFormat.format(item.vatAmount),
+                align: pw.TextAlign.right,
               ),
               _buildTableCell(
                 currencyFormat.format(item.total),
