@@ -16,7 +16,7 @@ class AppConfigState extends Equatable {
     required this.isLoading,
     this.printFormatConfig = PrintFormatConfig.defaultConfig,
     this.vatRate = 15.0, // Default Saudi VAT rate
-    this.vatIncludedInPrice = false, // Default: VAT not included in price
+    this.vatIncludedInPrice = true, // Default: VAT included in price
   });
 
   bool get isDarkMode => themeMode == ThemeMode.dark;

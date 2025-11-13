@@ -170,6 +170,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
               final isDesktop = constraints.maxWidth >= 800;
               final l10n = AppLocalizations.of(context)!;
 
+              final vatIncludedInPrice = context.read<AppConfigBloc>().state.vatIncludedInPrice;
+
               if (isDesktop) {
                 // Desktop/Tablet: DataTable layout that fills width
                 return SingleChildScrollView(
@@ -180,6 +182,36 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       constraints: BoxConstraints(
                         minWidth: constraints.maxWidth,
                       ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // VAT Information Note
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            color: vatIncludedInPrice
+                              ? Colors.green.shade50
+                              : Colors.blue.shade50,
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.info_outline,
+                                  size: 18,
+                                  color: vatIncludedInPrice
+                                    ? Colors.green.shade700
+                                    : Colors.blue.shade700,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  vatIncludedInPrice
+                                    ? 'Prices shown include VAT - VAT will be extracted from the listed price'
+                                    : 'Prices shown exclude VAT - VAT will be added on top of the listed price',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                    color: vatIncludedInPrice
+                                      ? Colors.green.shade900
+                                      : Colors.blue.shade900,
                       child: DataTable(
                         columnSpacing: 24,
                         horizontalMargin: 16,
@@ -221,24 +253,139 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     onPressed: () =>
                                         _deleteProduct(context, product),
                                   ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // DataTable
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: DataTable(
+                                columnSpacing: 20,
+                                horizontalMargin: 16,
+                                columns: [
+                                  DataColumn(label: Text(l10n.name)),
+                                  DataColumn(label: Text(l10n.barcode)),
+                                  DataColumn(label: Text(l10n.category)),
+                                  DataColumn(label: Text(vatIncludedInPrice ? 'Price (Incl.)' : 'Price (Excl.)')),
+                                  DataColumn(label: Text('Before ${l10n.vat}')),
+                                  DataColumn(label: Text('${l10n.vat} Amount')),
+                                  DataColumn(label: Text('After ${l10n.vat}')),
+                                  DataColumn(label: Text(l10n.cost)),
+                                  DataColumn(label: Text(l10n.stock)),
+                                  DataColumn(label: Text(l10n.actions)),
                                 ],
+                                rows: products.map((product) {
+                                  // Calculate VAT breakdown based on inclusion mode
+                                  final double priceBeforeVat, vatAmount, priceAfterVat;
+                                  if (vatIncludedInPrice) {
+                                    // VAT is included in the price
+                                    priceAfterVat = product.price;
+                                    vatAmount = priceAfterVat - (priceAfterVat / (1 + product.vatRate / 100));
+                                    priceBeforeVat = priceAfterVat - vatAmount;
+                                  } else {
+                                    // VAT is excluded from the price
+                                    priceBeforeVat = product.price;
+                                    vatAmount = product.price * (product.vatRate / 100);
+                                    priceAfterVat = priceBeforeVat + vatAmount;
+                                  }
+
+                                  return DataRow(cells: [
+                                    DataCell(Text(product.name)),
+                                    DataCell(Text(product.barcode)),
+                                    DataCell(Text(_getCategoryName(product.category))),
+                                    DataCell(Text('SAR ${product.price.toStringAsFixed(2)}')),
+                                    DataCell(Text('SAR ${priceBeforeVat.toStringAsFixed(2)}')),
+                                    DataCell(Text('SAR ${vatAmount.toStringAsFixed(2)}')),
+                                    DataCell(Text('SAR ${priceAfterVat.toStringAsFixed(2)}')),
+                                    DataCell(Text('SAR ${product.cost.toStringAsFixed(2)}')),
+                                    DataCell(Text(product.quantity.toString())),
+                                    DataCell(
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(Icons.edit, size: 20),
+                                            onPressed: () => showProductDialog(product),
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(Icons.delete, size: 20, color: Colors.red),
+                                            onPressed: () => _deleteProduct(context, product),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ]);
+                                }).toList(),
                               ),
                             ),
-                          ]);
-                        }).toList(),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 );
               } else {
                 // Mobile: Card with ExpansionTile layout
-                return ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    final product = products[index];
-                    final vatAmount = product.price * (product.vatRate / 100);
-                    return Card(
+                return Column(
+                  children: [
+                    // VAT Information Note
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      color: vatIncludedInPrice
+                        ? Colors.green.shade50
+                        : Colors.blue.shade50,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.info_outline,
+                            size: 18,
+                            color: vatIncludedInPrice
+                              ? Colors.green.shade700
+                              : Colors.blue.shade700,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              vatIncludedInPrice
+                                ? 'Prices shown include VAT - VAT will be extracted from the listed price'
+                                : 'Prices shown exclude VAT - VAT will be added on top of the listed price',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: vatIncludedInPrice
+                                  ? Colors.green.shade900
+                                  : Colors.blue.shade900,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Product List
+                    Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(16),
+                        itemCount: products.length,
+                        itemBuilder: (context, index) {
+                          final product = products[index];
+
+                          // Calculate VAT breakdown based on inclusion mode
+                          final double priceBeforeVat, vatAmount, priceAfterVat;
+                          if (vatIncludedInPrice) {
+                            // VAT is included in the price
+                            priceAfterVat = product.price;
+                            vatAmount = priceAfterVat - (priceAfterVat / (1 + product.vatRate / 100));
+                            priceBeforeVat = priceAfterVat - vatAmount;
+                          } else {
+                            // VAT is excluded from the price
+                            priceBeforeVat = product.price;
+                            vatAmount = product.price * (product.vatRate / 100);
+                            priceAfterVat = priceBeforeVat + vatAmount;
+                          }
+
+                          return Card(
                       margin: const EdgeInsets.only(bottom: 12),
                       elevation: 2,
                       child: ExpansionTile(
@@ -268,6 +415,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               style: const TextStyle(fontSize: 13),
                             ),
                             Text(
+                              (vatIncludedInPrice ? 'Price (Incl. ${l10n.vat})' : 'Price (Excl. ${l10n.vat})') +
+                                ': SAR ${product.price.toStringAsFixed(2)}',
                               l10n.price +
                                   ': SAR ${product.price.toStringAsFixed(2)}',
                               style: TextStyle(
@@ -302,8 +451,23 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     'SAR ${product.cost.toStringAsFixed(2)}'),
                                 _buildInfoRow(l10n.stock,
                                     '${product.quantity} ${l10n.units}'),
+                                const SizedBox(height: 8),
+                                const Divider(),
+                                const SizedBox(height: 8),
+                                Text(
+                                  '${l10n.vat} Breakdown',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                _buildInfoRow('Before ${l10n.vat}',
+                                    'SAR ${priceBeforeVat.toStringAsFixed(2)}'),
                                 _buildInfoRow('${l10n.vat} Amount',
                                     'SAR ${vatAmount.toStringAsFixed(2)}'),
+                                _buildInfoRow('After ${l10n.vat}',
+                                    'SAR ${priceAfterVat.toStringAsFixed(2)}'),
                                 if (product.description != null &&
                                     product.description!.isNotEmpty) ...[
                                   const SizedBox(height: 8),
@@ -331,7 +495,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         ],
                       ),
                     );
-                  },
+                        },
+                      ),
+                    ),
+                  ],
                 );
               }
             },

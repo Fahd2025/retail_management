@@ -23,7 +23,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
           isLoading: true,
           printFormatConfig: PrintFormatConfig.defaultConfig,
           vatRate: 15.0,
-          vatIncludedInPrice: false,
+          vatIncludedInPrice: true,
         )) {
     on<InitializeAppConfigEvent>(_onInitialize);
     on<UpdateThemeEvent>(_onUpdateTheme);
@@ -53,7 +53,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
       final themeMode = savedTheme == 'dark' ? ThemeMode.dark : ThemeMode.light;
       final locale = savedLocale == 'ar' ? arabicLocale : englishLocale;
       final vatRate = savedVatRate ?? 15.0; // Default Saudi VAT rate
-      final vatIncludedInPrice = savedVatIncludedInPrice ?? false; // Default: VAT not included
+      final vatIncludedInPrice = savedVatIncludedInPrice ?? true; // Default: VAT included in price
 
       PrintFormatConfig printFormatConfig = PrintFormatConfig.defaultConfig;
       if (savedPrintFormat != null) {
@@ -80,7 +80,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
         locale: englishLocale,
         printFormatConfig: PrintFormatConfig.defaultConfig,
         vatRate: 15.0,
-        vatIncludedInPrice: false,
+        vatIncludedInPrice: true,
         isLoading: false,
       ));
     }
