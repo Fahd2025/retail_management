@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../../models/dashboard_statistics.dart';
+import '../../utils/currency_helper.dart';
 
 /// Widget to display best-selling products
 class BestSellingProductsWidget extends StatelessWidget {
@@ -19,8 +20,7 @@ class BestSellingProductsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormatter =
-        NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
+    final currencyFormatter = CurrencyHelper.getCurrencyFormatterSync();
     final numberFormatter = NumberFormat('#,##0.##');
 
     return Card(

@@ -9,6 +9,7 @@ class CompanyInfo {
   final String vatNumber;
   final String crnNumber;
   final String? logoPath;
+  final String currency;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -23,6 +24,7 @@ class CompanyInfo {
     required this.vatNumber,
     required this.crnNumber,
     this.logoPath,
+    this.currency = 'SAR',
     required this.createdAt,
     required this.updatedAt,
   });
@@ -39,6 +41,7 @@ class CompanyInfo {
       'vatNumber': vatNumber,
       'crnNumber': crnNumber,
       'logoPath': logoPath,
+      'currency': currency,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };
@@ -56,6 +59,7 @@ class CompanyInfo {
       vatNumber: map['vatNumber'],
       crnNumber: map['crnNumber'],
       logoPath: map['logoPath'],
+      currency: map['currency'] ?? 'SAR',
       createdAt: DateTime.parse(map['createdAt']),
       updatedAt: DateTime.parse(map['updatedAt']),
     );
@@ -72,6 +76,7 @@ class CompanyInfo {
     String? vatNumber,
     String? crnNumber,
     String? logoPath,
+    String? currency,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -86,6 +91,7 @@ class CompanyInfo {
       vatNumber: vatNumber ?? this.vatNumber,
       crnNumber: crnNumber ?? this.crnNumber,
       logoPath: logoPath ?? this.logoPath,
+      currency: currency ?? this.currency,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

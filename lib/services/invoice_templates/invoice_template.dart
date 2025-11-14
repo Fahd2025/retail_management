@@ -6,6 +6,7 @@ import '../../models/sale.dart';
 import '../../models/company_info.dart';
 import '../../models/customer.dart';
 import '../../models/print_format.dart';
+import '../../utils/currency_helper.dart';
 
 /// Invoice data container passed to templates
 class InvoiceData {
@@ -43,13 +44,17 @@ abstract class InvoiceTemplate {
 
   // Common formatters used across templates
   final DateFormat dateFormat = DateFormat('dd/MM/yyyy HH:mm');
-  final NumberFormat currencyFormat =
-      NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
 
   InvoiceTemplate({
     required this.format,
     required this.config,
   });
+
+  /// Get currency formatter based on company's currency setting
+  NumberFormat getCurrencyFormat(InvoiceData data) {
+    final currencySymbol = CurrencyHelper.getCurrencySymbol(data.companyInfo.currency);
+    return NumberFormat.currency(symbol: '$currencySymbol ', decimalDigits: 2);
+  }
 
   /// Main build method - must be implemented by each template
   /// This is where you define the overall structure of the invoice

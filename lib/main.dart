@@ -17,12 +17,16 @@ import 'blocs/dashboard/dashboard_bloc.dart';
 import 'config/app_theme.dart';
 import 'screens/login_screen.dart';
 import 'screens/dashboard_screen.dart';
+import 'utils/currency_helper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize combined app config bloc
   final appConfigBloc = AppConfigBloc()..add(const InitializeAppConfigEvent());
+
+  // Initialize currency helper with company info
+  await CurrencyHelper.loadCompanyInfo();
 
   // Wait for initialization
   await Future.delayed(const Duration(milliseconds: 100));

@@ -142,6 +142,7 @@ class CompanyInfoTable extends Table {
   TextColumn get vatNumber => text()();
   TextColumn get crnNumber => text()();
   TextColumn get logoPath => text().nullable()();
+  TextColumn get currency => text().withDefault(const Constant('SAR'))();
   TextColumn get createdAt => text()();
   TextColumn get updatedAt => text()();
 
@@ -170,7 +171,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -226,6 +227,11 @@ class AppDatabase extends _$AppDatabase {
             // Add Arabic fields to categories table
             await m.addColumn(categoriesTable, categoriesTable.nameAr);
             await m.addColumn(categoriesTable, categoriesTable.descriptionAr);
+          }
+
+          if (from <= 3 && to >= 4) {
+            // Add currency field to company_info table
+            await m.addColumn(companyInfoTable, companyInfoTable.currency);
           }
         },
       );
@@ -795,6 +801,7 @@ class AppDatabase extends _$AppDatabase {
         vatNumber: Value(info.vatNumber),
         crnNumber: Value(info.crnNumber),
         logoPath: Value(info.logoPath),
+        currency: Value(info.currency),
         createdAt: Value(info.createdAt.toIso8601String()),
         updatedAt: Value(info.updatedAt.toIso8601String()),
       ));
@@ -812,6 +819,7 @@ class AppDatabase extends _$AppDatabase {
           vatNumber: Value(info.vatNumber),
           crnNumber: Value(info.crnNumber),
           logoPath: Value(info.logoPath),
+          currency: Value(info.currency),
           updatedAt: Value(DateTime.now().toIso8601String()),
         ),
       );
@@ -966,6 +974,7 @@ class AppDatabase extends _$AppDatabase {
       vatNumber: row.vatNumber,
       crnNumber: row.crnNumber,
       logoPath: row.logoPath,
+      currency: row.currency,
       createdAt: DateTime.parse(row.createdAt),
       updatedAt: DateTime.parse(row.updatedAt),
     );
@@ -1630,6 +1639,7 @@ class AppDatabase extends _$AppDatabase {
       vatNumber: '300123456789003',
       crnNumber: '1010987654',
       logoPath: 'assets/images/sample_company_logo.png',
+      currency: 'SAR',
       createdAt: now,
       updatedAt: now,
     );

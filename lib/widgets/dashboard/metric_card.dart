@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import '../../utils/currency_helper.dart';
 
 /// A reusable card widget to display a single metric/statistic
 class MetricCard extends StatelessWidget {
@@ -123,7 +124,7 @@ class MetricCard extends StatelessWidget {
     VoidCallback? onTap,
     bool isLoading = false,
   }) {
-    final formatter = NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
+    final formatter = CurrencyHelper.getCurrencyFormatterSync();
     return MetricCard(
       title: title,
       value: formatter.format(amount),

@@ -6,12 +6,13 @@ import 'package:printing/printing.dart';
 import '../models/sale.dart';
 import '../models/customer.dart';
 import '../models/company_info.dart';
+import '../utils/currency_helper.dart';
 
 class CustomerInvoiceExportService {
   final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
   final shortDateFormat = DateFormat('dd/MM/yyyy');
   final currencyFormat =
-      NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
+      CurrencyHelper.getCurrencyFormatterSync();
 
   Future<Uint8List> generateCustomerInvoicesPdf({
     required Customer customer,
