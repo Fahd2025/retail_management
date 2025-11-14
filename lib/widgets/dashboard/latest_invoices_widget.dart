@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../../models/sale.dart';
+import '../../utils/currency_helper.dart';
 
 /// Widget to display latest sales invoices
 class LatestInvoicesWidget extends StatelessWidget {
@@ -22,7 +23,7 @@ class LatestInvoicesWidget extends StatelessWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     final currencyFormatter =
-        NumberFormat.currency(symbol: 'SAR ', decimalDigits: 2);
+        CurrencyHelper.getCurrencyFormatterSync();
     final dateFormatter = DateFormat('dd/MM/yyyy HH:mm');
 
     return Card(

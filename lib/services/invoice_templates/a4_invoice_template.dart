@@ -333,16 +333,16 @@ class A4InvoiceTemplate extends InvoiceTemplate {
                 align: pw.TextAlign.center,
               ),
               _buildTableCell(
-                currencyFormat.format(item.unitPrice),
+                getCurrencyFormat(data).format(item.unitPrice),
                 align: pw.TextAlign.right,
               ),
               if (data.vatEnabled)
                 _buildTableCell(
-                  currencyFormat.format(item.vatAmount),
+                  getCurrencyFormat(data).format(item.vatAmount),
                   align: pw.TextAlign.right,
                 ),
               _buildTableCell(
-                currencyFormat.format(item.total),
+                getCurrencyFormat(data).format(item.total),
                 align: pw.TextAlign.right,
               ),
             ],
@@ -390,24 +390,24 @@ class A4InvoiceTemplate extends InvoiceTemplate {
           children: [
             if (data.vatEnabled)
               _buildTotalRow(
-                  'Subtotal:', currencyFormat.format(data.sale.subtotal)),
+                  'Subtotal:', getCurrencyFormat(data).format(data.sale.subtotal)),
             if (data.vatEnabled)
               _buildTotalRow(
-                  'VAT Amount:', currencyFormat.format(data.sale.vatAmount)),
+                  'VAT Amount:', getCurrencyFormat(data).format(data.sale.vatAmount)),
             if (data.vatEnabled) pw.Divider(color: PdfColors.grey),
             _buildTotalRow(
               'Total Amount:',
-              currencyFormat.format(data.sale.totalAmount),
+              getCurrencyFormat(data).format(data.sale.totalAmount),
               isBold: true,
               fontSize: 12,
             ),
             if (data.sale.paidAmount > 0) ...[
               pw.SizedBox(height: 5),
               _buildTotalRow(
-                  'Paid:', currencyFormat.format(data.sale.paidAmount)),
+                  'Paid:', getCurrencyFormat(data).format(data.sale.paidAmount)),
               if (data.sale.changeAmount > 0)
                 _buildTotalRow(
-                    'Change:', currencyFormat.format(data.sale.changeAmount)),
+                    'Change:', getCurrencyFormat(data).format(data.sale.changeAmount)),
             ],
           ],
         ),

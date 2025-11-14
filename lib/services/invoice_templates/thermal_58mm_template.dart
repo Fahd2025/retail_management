@@ -268,7 +268,7 @@ class Thermal58mmTemplate extends InvoiceTemplate {
                     pw.Container(
                       width: 35,
                       child: pw.Text(
-                        currencyFormat.format(item.total),
+                        getCurrencyFormat(data).format(item.total),
                         style: const pw.TextStyle(fontSize: 7),
                         textAlign: pw.TextAlign.right,
                       ),
@@ -280,8 +280,8 @@ class Thermal58mmTemplate extends InvoiceTemplate {
                   padding: const pw.EdgeInsets.only(top: 1),
                   child: pw.Text(
                     data.vatEnabled
-                        ? '${item.quantity} x ${currencyFormat.format(item.unitPrice)} (VAT: ${currencyFormat.format(item.vatAmount)})'
-                        : '${item.quantity} x ${currencyFormat.format(item.unitPrice)}',
+                        ? '${item.quantity} x ${getCurrencyFormat(data).format(item.unitPrice)} (VAT: ${getCurrencyFormat(data).format(item.vatAmount)})'
+                        : '${item.quantity} x ${getCurrencyFormat(data).format(item.unitPrice)}',
                     style: const pw.TextStyle(
                         fontSize: 6, color: PdfColors.grey600),
                   ),
@@ -300,9 +300,9 @@ class Thermal58mmTemplate extends InvoiceTemplate {
       crossAxisAlignment: pw.CrossAxisAlignment.stretch,
       children: [
         if (data.vatEnabled)
-          _buildTotalRow('Subtotal:', currencyFormat.format(data.sale.subtotal)),
+          _buildTotalRow('Subtotal:', getCurrencyFormat(data).format(data.sale.subtotal)),
         if (data.vatEnabled)
-          _buildTotalRow('VAT:', currencyFormat.format(data.sale.vatAmount)),
+          _buildTotalRow('VAT:', getCurrencyFormat(data).format(data.sale.vatAmount)),
         if (data.vatEnabled)
           pw.Container(
             margin: const pw.EdgeInsets.symmetric(vertical: 2),
@@ -311,17 +311,17 @@ class Thermal58mmTemplate extends InvoiceTemplate {
           ),
         _buildTotalRow(
           'TOTAL:',
-          currencyFormat.format(data.sale.totalAmount),
+          getCurrencyFormat(data).format(data.sale.totalAmount),
           isBold: true,
           fontSize: 9,
         ),
         if (data.sale.paidAmount > 0) ...[
           pw.SizedBox(height: 2),
-          _buildTotalRow('Paid:', currencyFormat.format(data.sale.paidAmount),
+          _buildTotalRow('Paid:', getCurrencyFormat(data).format(data.sale.paidAmount),
               fontSize: 7),
           if (data.sale.changeAmount > 0)
             _buildTotalRow(
-                'Change:', currencyFormat.format(data.sale.changeAmount),
+                'Change:', getCurrencyFormat(data).format(data.sale.changeAmount),
                 fontSize: 7),
         ],
       ],

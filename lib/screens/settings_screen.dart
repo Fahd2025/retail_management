@@ -12,6 +12,7 @@ import '../widgets/settings_section.dart';
 import '../widgets/company_logo_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
+import '../utils/currency_helper.dart';
 
 /// Improved Settings Screen with responsive design and reusable components
 ///
@@ -47,6 +48,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String? _logoPath;
   String? _oldLogoPath;
 
+  // Currency selection
+  String _selectedCurrency = 'SAR';
+
   @override
   void initState() {
     super.initState();
@@ -79,6 +83,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         _crnNumberController.text = info.crnNumber;
         _logoPath = info.logoPath;
         _oldLogoPath = info.logoPath;
+        _selectedCurrency = info.currency;
       }
     } catch (e) {
       if (mounted) {
@@ -110,11 +115,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
         vatNumber: _vatNumberController.text,
         crnNumber: _crnNumberController.text,
         logoPath: _logoPath,
+        currency: _selectedCurrency,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
 
       await db.createOrUpdateCompanyInfo(companyInfo);
+
+      // Refresh currency helper cache with updated company info
+      await CurrencyHelper.refreshCache();
 
       // Clean up old logo if it was changed
       if (_oldLogoPath != null && _oldLogoPath != _logoPath) {
@@ -210,6 +219,52 @@ class _SettingsScreenState extends State<SettingsScreen> {
         return l10n.arabic;
       default:
         return l10n.english;
+    }
+  }
+
+  Map<String, String> _getCurrencyOptions() {
+    final l10n = AppLocalizations.of(context)!;
+    return {
+      'SAR': l10n.currencySAR,
+      'USD': l10n.currencyUSD,
+      'EUR': l10n.currencyEUR,
+      'GBP': l10n.currencyGBP,
+      'AED': l10n.currencyAED,
+      'KWD': l10n.currencyKWD,
+      'BHD': l10n.currencyBHD,
+      'QAR': l10n.currencyQAR,
+      'OMR': l10n.currencyOMR,
+      'JOD': l10n.currencyJOD,
+      'EGP': l10n.currencyEGP,
+    };
+  }
+
+  String _getCurrencySymbol(String currencyCode) {
+    switch (currencyCode) {
+      case 'SAR':
+        return 'ر.س';
+      case 'USD':
+        return '\$';
+      case 'EUR':
+        return '€';
+      case 'GBP':
+        return '£';
+      case 'AED':
+        return 'د.إ';
+      case 'KWD':
+        return 'د.ك';
+      case 'BHD':
+        return 'د.ب';
+      case 'QAR':
+        return 'ر.ق';
+      case 'OMR':
+        return 'ر.ع';
+      case 'JOD':
+        return 'د.أ';
+      case 'EGP':
+        return 'ج.م';
+      default:
+        return currencyCode;
     }
   }
 
@@ -457,6 +512,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
                 ),
               ]),
+              const SizedBox(height: 16),
+              _buildFormRow([
+                _buildCurrencyDropdown(),
+                const SizedBox(), // Empty space for alignment
+              ]),
               const SizedBox(height: 24),
               _buildSaveButton(),
             ],
@@ -532,6 +592,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 label: '${l10n.crnNumber} *',
                 validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
               ),
+              const SizedBox(height: 16),
+              _buildCurrencyDropdown(),
               const SizedBox(height: 24),
               _buildSaveButton(),
             ],
@@ -608,6 +670,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
               )
             : Text(l10n.saveCompanyInformation),
       ),
+    );
+  }
+
+  /// Build currency dropdown selector
+  Widget _buildCurrencyDropdown() {
+    final l10n = AppLocalizations.of(context)!;
+    final currencyOptions = _getCurrencyOptions();
+
+    return DropdownButtonFormField<String>(
+      value: _selectedCurrency,
+      decoration: InputDecoration(
+        labelText: '${l10n.currency} *',
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
+        prefixIcon: const Icon(Icons.attach_money),
+      ),
+      items: currencyOptions.entries.map((entry) {
+        return DropdownMenuItem<String>(
+          value: entry.key,
+          child: Text(entry.value),
+        );
+      }).toList(),
+      onChanged: (String? newValue) {
+        if (newValue != null) {
+          setState(() {
+            _selectedCurrency = newValue;
+          });
+        }
+      },
+      validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
     );
   }
 
