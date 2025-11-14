@@ -272,6 +272,8 @@ class A4InvoiceTemplate extends InvoiceTemplate {
             child: pw.Text(
               value,
               style: pw.TextStyle(fontSize: 10, font: data.arabicFont),
+              textDirection: pw.TextDirection.rtl,
+              textAlign: pw.TextAlign.right,
             ),
           ),
         ],

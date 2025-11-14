@@ -8,7 +8,6 @@ import '../blocs/sale/sale_state.dart';
 import '../blocs/auth/auth_bloc.dart';
 import '../blocs/auth/auth_state.dart';
 import '../blocs/app_config/app_config_bloc.dart';
-import '../blocs/app_config/app_config_state.dart';
 import '../models/sale.dart';
 import '../widgets/invoice_preview_dialog.dart';
 import '../database/drift_database.dart' hide Sale;
@@ -311,7 +310,8 @@ class _SalesScreenState extends State<SalesScreen> {
             builder: (context, constraints) {
               final isDesktop = constraints.maxWidth >= 900;
               final l10n = AppLocalizations.of(context)!;
-              final vatEnabled = context.watch<AppConfigBloc>().state.vatEnabled;
+              final vatEnabled =
+                  context.watch<AppConfigBloc>().state.vatEnabled;
 
               if (isDesktop) {
                 // Desktop: DataTable layout that fills width

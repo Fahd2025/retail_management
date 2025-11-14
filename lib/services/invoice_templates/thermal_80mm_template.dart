@@ -228,6 +228,7 @@ class Thermal80mmTemplate extends InvoiceTemplate {
             child: pw.Text(
               value,
               style: pw.TextStyle(fontSize: 8, font: data.arabicFont),
+              textDirection: pw.TextDirection.rtl,
               textAlign: pw.TextAlign.right,
             ),
           ),
@@ -374,7 +375,8 @@ class Thermal80mmTemplate extends InvoiceTemplate {
       crossAxisAlignment: pw.CrossAxisAlignment.stretch,
       children: [
         if (data.vatEnabled)
-          _buildTotalRow('Subtotal:', currencyFormat.format(data.sale.subtotal)),
+          _buildTotalRow(
+              'Subtotal:', currencyFormat.format(data.sale.subtotal)),
         if (data.vatEnabled)
           _buildTotalRow(
               'VAT Amount:', currencyFormat.format(data.sale.vatAmount)),

@@ -618,8 +618,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return SettingsSection(
       title: l10n.defaultVatRate,
       icon: Icons.sync,
-      subtitle:
-          l10n.setDefaultVatRateDescription,
+      subtitle: l10n.setDefaultVatRateDescription,
       children: [
         const Divider(),
         BlocBuilder<AppConfigBloc, AppConfigState>(
@@ -663,7 +662,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           .read<AppConfigBloc>()
                           .add(UpdateVatEnabledEvent(value));
                     },
-                    activeColor: Colors.green.shade700,
+                    activeThumbColor: Colors.green.shade700,
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -849,7 +848,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             .read<AppConfigBloc>()
                             .add(UpdateVatInclusionEvent(value));
                       },
-                      activeColor: Colors.green.shade700,
+                      activeThumbColor: Colors.green.shade700,
                     ),
                   ),
                   const SizedBox(height: 12),
