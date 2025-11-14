@@ -227,6 +227,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildAppearanceSection(),
             _buildPrintSettingsSection(),
             _buildCompanyInfoSection(),
+            _builVATSection(),
             _buildSyncSection(),
             _buildAboutSection(),
           ];
@@ -606,6 +607,234 @@ class _SettingsScreenState extends State<SettingsScreen> {
               )
             : Text(l10n.saveCompanyInformation),
       ),
+    );
+  }
+
+  /// Build VAT Rate Configuration Section (Low Priority)
+  Widget _builVATSection() {
+    final l10n = AppLocalizations.of(context)!;
+
+    return SettingsSection(
+      title: '${l10n.vat} ${l10n.settings}',
+      icon: Icons.sync,
+      subtitle:
+          'Set the default VAT rate to be applied automatically to all products',
+      children: [
+        const Divider(),
+        BlocBuilder<AppConfigBloc, AppConfigState>(
+          builder: (context, configState) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isWide = constraints.maxWidth >= 600;
+                    if (isWide) {
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              key: ValueKey(configState.vatRate),
+                              initialValue: configState.vatRate.toString(),
+                              decoration: InputDecoration(
+                                labelText: 'VAT Rate (%)',
+                                border: const OutlineInputBorder(),
+                                prefixIcon: const Icon(Icons.percent),
+                                hintText: '15.0',
+                              ),
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
+                              onChanged: (value) {
+                                final vatRate = double.tryParse(value);
+                                if (vatRate != null &&
+                                    vatRate >= 0 &&
+                                    vatRate <= 100) {
+                                  context
+                                      .read<AppConfigBloc>()
+                                      .add(UpdateVatRateEvent(vatRate));
+                                }
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: Colors.blue.shade50,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.blue.shade200),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Current VAT Rate',
+                                    style:
+                                        Theme.of(context).textTheme.labelMedium,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '${configState.vatRate.toStringAsFixed(1)}%',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium
+                                        ?.copyWith(
+                                          color: Colors.blue.shade700,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return Column(
+                        children: [
+                          TextFormField(
+                            key: ValueKey(configState.vatRate),
+                            initialValue: configState.vatRate.toString(),
+                            decoration: InputDecoration(
+                              labelText: 'VAT Rate (%)',
+                              border: const OutlineInputBorder(),
+                              prefixIcon: const Icon(Icons.percent),
+                              hintText: '15.0',
+                            ),
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
+                            onChanged: (value) {
+                              final vatRate = double.tryParse(value);
+                              if (vatRate != null &&
+                                  vatRate >= 0 &&
+                                  vatRate <= 100) {
+                                context
+                                    .read<AppConfigBloc>()
+                                    .add(UpdateVatRateEvent(vatRate));
+                              }
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.blue.shade50,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.blue.shade200),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Current VAT Rate',
+                                  style:
+                                      Theme.of(context).textTheme.labelMedium,
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  '${configState.vatRate.toStringAsFixed(1)}%',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium
+                                      ?.copyWith(
+                                        color: Colors.blue.shade700,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                  },
+                ),
+                const SizedBox(height: 24),
+                const Divider(),
+                const SizedBox(height: 8),
+                Text(
+                  'VAT Calculation Method',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Choose whether VAT is included in the product price or added on top',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.grey[600],
+                      ),
+                ),
+                const SizedBox(height: 12),
+                Card(
+                  elevation: 0,
+                  color: configState.vatIncludedInPrice
+                      ? Colors.green.shade50
+                      : Colors.blue.shade50,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    side: BorderSide(
+                      color: configState.vatIncludedInPrice
+                          ? Colors.green.shade200
+                          : Colors.blue.shade200,
+                    ),
+                  ),
+                  child: SwitchListTile(
+                    title: Text(
+                      configState.vatIncludedInPrice
+                          ? 'VAT Included in Price'
+                          : 'VAT Excluded from Price',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    subtitle: Text(
+                      configState.vatIncludedInPrice
+                          ? 'Product prices include VAT (VAT will be extracted from the total)'
+                          : 'Product prices exclude VAT (VAT will be added to the total)',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    value: configState.vatIncludedInPrice,
+                    onChanged: (value) {
+                      context
+                          .read<AppConfigBloc>()
+                          .add(UpdateVatInclusionEvent(value));
+                    },
+                    activeColor: Colors.green.shade700,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.amber.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.amber.shade200),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.info_outline,
+                          color: Colors.amber.shade700, size: 20),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'This VAT rate will be automatically applied to all new products. Changes apply immediately.',
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Colors.amber.shade900,
+                                  ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ],
     );
   }
 

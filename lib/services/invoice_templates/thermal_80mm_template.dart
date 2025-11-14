@@ -59,11 +59,12 @@ class Thermal80mmTemplate extends InvoiceTemplate {
 
         // VAT Note
         pw.Text(
-          'Prices exclusive of VAT /  الأسعار لا تشمل الضريبة ',
+          'Prices excl. VAT /  الأسعار لا تشمل الضريبة',
           style: pw.TextStyle(
-              fontSize: 6,
+              fontSize: 5,
               fontStyle: pw.FontStyle.italic,
               font: data.arabicFont),
+          textDirection: pw.TextDirection.rtl,
           textAlign: pw.TextAlign.center,
         ),
 
@@ -319,6 +320,7 @@ class Thermal80mmTemplate extends InvoiceTemplate {
                         item.productName,
                         style: pw.TextStyle(fontSize: 8, font: data.arabicFont),
                         textDirection: pw.TextDirection.rtl,
+                        textAlign: pw.TextAlign.left,
                       ),
                     ),
                     pw.Container(
