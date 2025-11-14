@@ -21,6 +21,7 @@ import '../models/customer.dart';
 import '../services/invoice_service.dart';
 import '../database/drift_database.dart' hide Product, Customer, Sale, SaleItem;
 import '../models/company_info.dart';
+import '../utils/currency_helper.dart';
 import 'package:uuid/uuid.dart';
 
 class CashierScreen extends StatefulWidget {
@@ -856,7 +857,7 @@ class _ProductCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
-                      'SAR ${product.price.toStringAsFixed(2)}',
+                      CurrencyHelper.formatCurrencySync(product.price),
                       style: TextStyle(
                         color: Colors.green.shade700,
                         fontSize: 18,
@@ -896,7 +897,7 @@ class _CartItem extends StatelessWidget {
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    'SAR ${item.unitPrice.toStringAsFixed(2)}',
+                    CurrencyHelper.formatCurrencySync(item.unitPrice),
                     style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
                   ),
                 ],
@@ -939,7 +940,7 @@ class _CartItem extends StatelessWidget {
             SizedBox(
               width: 80,
               child: Text(
-                'SAR ${item.total.toStringAsFixed(2)}',
+                CurrencyHelper.formatCurrencySync(item.total),
                 textAlign: TextAlign.right,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
@@ -983,7 +984,7 @@ class _SummaryRow extends StatelessWidget {
           ),
         ),
         Text(
-          'SAR ${amount.toStringAsFixed(2)}',
+          CurrencyHelper.formatCurrencySync(amount),
           style: TextStyle(
             fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
             fontSize: fontSize,
@@ -1112,7 +1113,7 @@ class _PaymentDialogState extends State<_PaymentDialog> {
               ),
               const SizedBox(height: 8),
               Text(
-                'SAR ${widget.total.toStringAsFixed(2)}',
+                CurrencyHelper.formatCurrencySync(widget.total),
                 style: theme.textTheme.headlineLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onPrimaryContainer,
@@ -1163,7 +1164,7 @@ class _PaymentDialogState extends State<_PaymentDialog> {
           controller: _paidController,
           decoration: InputDecoration(
             labelText: l10n.amountPaid,
-            prefixText: 'SAR ',
+            prefixText: '${CurrencyHelper.getCurrencySymbolSync()} ',
             border: const OutlineInputBorder(),
             prefixIcon: const Icon(Icons.payments_outlined),
           ),
@@ -1201,7 +1202,7 @@ class _PaymentDialogState extends State<_PaymentDialog> {
               ),
               if (_change >= 0)
                 Text(
-                  'SAR ${_change.toStringAsFixed(2)}',
+                  CurrencyHelper.formatCurrencySync(_change),
                   style: theme.textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSecondaryContainer,

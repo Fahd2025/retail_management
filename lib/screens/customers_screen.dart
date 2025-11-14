@@ -9,6 +9,7 @@ import '../models/customer.dart' as models;
 import '../database/drift_database.dart';
 import '../services/customer_invoice_export_service.dart';
 import '../widgets/form_bottom_sheet.dart';
+import '../utils/currency_helper.dart';
 
 class CustomersScreen extends StatefulWidget {
   const CustomersScreen({super.key});
@@ -149,7 +150,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                     final totalAmount =
                                         stats['totalAmount'] as double;
                                     return Text(
-                                        'SAR ${totalAmount.toStringAsFixed(2)}');
+                                        CurrencyHelper.formatCurrencySync(totalAmount));
                                   }
                                   return const Text('...');
                                 },
@@ -259,10 +260,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                       stats['invoiceCount'] as int;
                                   final totalAmount =
                                       stats['totalAmount'] as double;
-                                  final currencyFormat = NumberFormat.currency(
-                                    symbol: 'SAR ',
-                                    decimalDigits: 2,
-                                  );
+                                  final currencyFormat = CurrencyHelper.getCurrencyFormatterSync();
                                   return Text(
                                     l10n.invoicesTotal(
                                       invoiceCount,
@@ -986,10 +984,7 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
               final sales = snapshot.data![0] as List;
               final stats = snapshot.data![1] as Map<String, dynamic>;
               final totalAmount = stats['totalAmount'] as double;
-              final currencyFormat = NumberFormat.currency(
-                symbol: 'SAR ',
-                decimalDigits: 2,
-              );
+              final currencyFormat = CurrencyHelper.getCurrencyFormatterSync();
 
               return Container(
                 padding: const EdgeInsets.all(16),

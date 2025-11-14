@@ -11,6 +11,7 @@ import '../blocs/app_config/app_config_bloc.dart';
 import '../models/sale.dart';
 import '../widgets/invoice_preview_dialog.dart';
 import '../database/drift_database.dart' hide Sale;
+import '../utils/currency_helper.dart';
 
 class SalesScreen extends StatefulWidget {
   const SalesScreen({super.key});
@@ -154,7 +155,7 @@ class _SalesScreenState extends State<SalesScreen> {
                           ),
                         ),
                         Text(
-                          'SAR ${item.total.toStringAsFixed(2)}',
+                          CurrencyHelper.formatCurrencySync(item.total),
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -167,14 +168,14 @@ class _SalesScreenState extends State<SalesScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(l10n.subtotalLabel),
-                      Text('SAR ${sale.subtotal.toStringAsFixed(2)}'),
+                      Text(CurrencyHelper.formatCurrencySync(sale.subtotal)),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(l10n.vatLabel),
-                      Text('SAR ${sale.vatAmount.toStringAsFixed(2)}'),
+                      Text(CurrencyHelper.formatCurrencySync(sale.vatAmount)),
                     ],
                   ),
                   const Divider(),
@@ -190,7 +191,7 @@ class _SalesScreenState extends State<SalesScreen> {
                       ),
                     ),
                     Text(
-                      'SAR ${sale.totalAmount.toStringAsFixed(2)}',
+                      CurrencyHelper.formatCurrencySync(sale.totalAmount),
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -204,7 +205,7 @@ class _SalesScreenState extends State<SalesScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(l10n.paidLabel),
-                      Text('SAR ${sale.paidAmount.toStringAsFixed(2)}'),
+                      Text(CurrencyHelper.formatCurrencySync(sale.paidAmount)),
                     ],
                   ),
                   if (sale.changeAmount > 0)
@@ -212,7 +213,7 @@ class _SalesScreenState extends State<SalesScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(l10n.changeLabel),
-                        Text('SAR ${sale.changeAmount.toStringAsFixed(2)}'),
+                        Text(CurrencyHelper.formatCurrencySync(sale.changeAmount)),
                       ],
                     ),
                 ],
@@ -359,9 +360,9 @@ class _SalesScreenState extends State<SalesScreen> {
                             DataCell(Text(dateFormat.format(sale.saleDate))),
                             if (vatEnabled)
                               DataCell(Text(
-                                  'SAR ${sale.vatAmount.toStringAsFixed(2)}')),
+                                  CurrencyHelper.formatCurrencySync(sale.vatAmount))),
                             DataCell(Text(
-                                'SAR ${sale.totalAmount.toStringAsFixed(2)}')),
+                                CurrencyHelper.formatCurrencySync(sale.totalAmount))),
                             DataCell(
                               Chip(
                                 label: Text(

@@ -10,6 +10,7 @@ import '../models/product.dart' as models;
 import '../models/category.dart';
 import '../database/drift_database.dart';
 import '../widgets/form_bottom_sheet.dart';
+import '../utils/currency_helper.dart';
 
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({super.key});
@@ -282,17 +283,17 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   DataCell(
                                       Text(_getCategoryName(product.category))),
                                   DataCell(Text(
-                                      'SAR ${product.price.toStringAsFixed(2)}')),
+                                      CurrencyHelper.formatCurrencySync(product.price))),
                                   if (vatEnabled) ...[
                                     DataCell(Text(
-                                        'SAR ${priceBeforeVat.toStringAsFixed(2)}')),
+                                        CurrencyHelper.formatCurrencySync(priceBeforeVat))),
                                     DataCell(Text(
-                                        'SAR ${vatAmount.toStringAsFixed(2)}')),
+                                        CurrencyHelper.formatCurrencySync(vatAmount))),
                                     DataCell(Text(
-                                        'SAR ${priceAfterVat.toStringAsFixed(2)}')),
+                                        CurrencyHelper.formatCurrencySync(priceAfterVat))),
                                   ],
                                   DataCell(Text(
-                                      'SAR ${product.cost.toStringAsFixed(2)}')),
+                                      CurrencyHelper.formatCurrencySync(product.cost))),
                                   DataCell(Text(product.quantity.toString())),
                                   DataCell(
                                     Row(
@@ -421,7 +422,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                                 ? l10n.priceVatIncluded
                                                 : l10n.priceVatExcluded)
                                             : l10n.price) +
-                                        ': SAR ${product.price.toStringAsFixed(2)}',
+                                        ': ${CurrencyHelper.formatCurrencySync(product.price)}',
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
@@ -456,7 +457,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                       _buildInfoRow(l10n.barcodeRequired,
                                           product.barcode),
                                       _buildInfoRow(l10n.costRequired,
-                                          'SAR ${product.cost.toStringAsFixed(2)}'),
+                                          CurrencyHelper.formatCurrencySync(product.cost)),
                                       _buildInfoRow(l10n.stock,
                                           '${product.quantity} ${l10n.units}'),
                                       if (vatEnabled) ...[
@@ -472,12 +473,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                         ),
                                         const SizedBox(height: 8),
                                         _buildInfoRow(l10n.beforeVat,
-                                            'SAR ${priceBeforeVat.toStringAsFixed(2)}'),
+                                            CurrencyHelper.formatCurrencySync(priceBeforeVat)),
                                         _buildInfoRow(
                                             '${l10n.vat} ${l10n.amount}',
-                                            'SAR ${vatAmount.toStringAsFixed(2)}'),
+                                            CurrencyHelper.formatCurrencySync(vatAmount)),
                                         _buildInfoRow(l10n.afterVat,
-                                            'SAR ${priceAfterVat.toStringAsFixed(2)}'),
+                                            CurrencyHelper.formatCurrencySync(priceAfterVat)),
                                       ],
                                       if (product.description != null &&
                                           product.description!.isNotEmpty) ...[
@@ -798,7 +799,7 @@ class _ProductDialogState extends State<_ProductDialog> {
                       key: ValueKey('${price}_${appConfig.vatRate}'),
                       initialValue: vatAmount.toStringAsFixed(2),
                       decoration: InputDecoration(
-                        labelText: '${l10n.vat} Amount (SAR)',
+                        labelText: '${l10n.vat} Amount (${CurrencyHelper.getCurrencySymbolSync()})',
                         border: const OutlineInputBorder(),
                         prefixIcon: const Icon(Icons.account_balance_wallet),
                         filled: true,
