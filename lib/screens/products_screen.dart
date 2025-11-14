@@ -222,90 +222,98 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         scrollDirection: Axis.vertical,
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
-                          child: DataTable(
-                            columnSpacing: 20,
-                            horizontalMargin: 16,
-                            columns: [
-                              DataColumn(label: Text(l10n.name)),
-                              DataColumn(label: Text(l10n.barcodeRequired)),
-                              DataColumn(label: Text(l10n.category)),
-                              DataColumn(
-                                  label: Text(vatEnabled
-                                      ? (vatIncludedInPrice
-                                          ? 'Price (Incl.)'
-                                          : 'Price (Excl.)')
-                                      : l10n.price)),
-                              if (vatEnabled) ...[
-                                DataColumn(label: Text('Before ${l10n.vat}')),
-                                DataColumn(label: Text('${l10n.vat} Amount')),
-                                DataColumn(label: Text('After ${l10n.vat}')),
-                              ],
-                              DataColumn(label: Text(l10n.costRequired)),
-                              DataColumn(label: Text(l10n.stock)),
-                              DataColumn(label: Text(l10n.actions)),
-                            ],
-                            rows: products.map((product) {
-                              // Calculate VAT breakdown based on inclusion mode
-                              final double priceBeforeVat,
-                                  vatAmount,
-                                  priceAfterVat;
-                              if (vatIncludedInPrice) {
-                                // VAT is included in the price
-                                priceAfterVat = product.price;
-                                vatAmount = priceAfterVat -
-                                    (priceAfterVat /
-                                        (1 + product.vatRate / 100));
-                                priceBeforeVat = priceAfterVat - vatAmount;
-                              } else {
-                                // VAT is excluded from the price
-                                priceBeforeVat = product.price;
-                                vatAmount =
-                                    product.price * (product.vatRate / 100);
-                                priceAfterVat = priceBeforeVat + vatAmount;
-                              }
-
-                              return DataRow(cells: [
-                                DataCell(Text(
-                                  Localizations.localeOf(context).languageCode == 'ar'
-                                      ? (product.nameAr ?? product.name)
-                                      : product.name,
-                                )),
-                                DataCell(Text(product.barcode)),
-                                DataCell(
-                                    Text(_getCategoryName(product.category))),
-                                DataCell(Text(
-                                    'SAR ${product.price.toStringAsFixed(2)}')),
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minWidth: constraints.maxWidth,
+                            ),
+                            child: DataTable(
+                              columnSpacing: 20,
+                              horizontalMargin: 16,
+                              columns: [
+                                DataColumn(label: Text(l10n.name)),
+                                DataColumn(label: Text(l10n.barcodeRequired)),
+                                DataColumn(label: Text(l10n.category)),
+                                DataColumn(
+                                    label: Text(vatEnabled
+                                        ? (vatIncludedInPrice
+                                            ? 'Price (Incl.)'
+                                            : 'Price (Excl.)')
+                                        : l10n.price)),
                                 if (vatEnabled) ...[
-                                  DataCell(Text(
-                                      'SAR ${priceBeforeVat.toStringAsFixed(2)}')),
-                                  DataCell(Text(
-                                      'SAR ${vatAmount.toStringAsFixed(2)}')),
-                                  DataCell(Text(
-                                      'SAR ${priceAfterVat.toStringAsFixed(2)}')),
+                                  DataColumn(label: Text('Before ${l10n.vat}')),
+                                  DataColumn(label: Text('${l10n.vat} Amount')),
+                                  DataColumn(label: Text('After ${l10n.vat}')),
                                 ],
-                                DataCell(Text(
-                                    'SAR ${product.cost.toStringAsFixed(2)}')),
-                                DataCell(Text(product.quantity.toString())),
-                                DataCell(
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(Icons.edit, size: 20),
-                                        onPressed: () =>
-                                            showProductDialog(product),
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.delete,
-                                            size: 20, color: Colors.red),
-                                        onPressed: () =>
-                                            _deleteProduct(context, product),
-                                      ),
-                                    ],
+                                DataColumn(label: Text(l10n.costRequired)),
+                                DataColumn(label: Text(l10n.stock)),
+                                DataColumn(label: Text(l10n.actions)),
+                              ],
+                              rows: products.map((product) {
+                                // Calculate VAT breakdown based on inclusion mode
+                                final double priceBeforeVat,
+                                    vatAmount,
+                                    priceAfterVat;
+                                if (vatIncludedInPrice) {
+                                  // VAT is included in the price
+                                  priceAfterVat = product.price;
+                                  vatAmount = priceAfterVat -
+                                      (priceAfterVat /
+                                          (1 + product.vatRate / 100));
+                                  priceBeforeVat = priceAfterVat - vatAmount;
+                                } else {
+                                  // VAT is excluded from the price
+                                  priceBeforeVat = product.price;
+                                  vatAmount =
+                                      product.price * (product.vatRate / 100);
+                                  priceAfterVat = priceBeforeVat + vatAmount;
+                                }
+
+                                return DataRow(cells: [
+                                  DataCell(Text(
+                                    Localizations.localeOf(context)
+                                                .languageCode ==
+                                            'ar'
+                                        ? (product.nameAr ?? product.name)
+                                        : product.name,
+                                  )),
+                                  DataCell(Text(product.barcode)),
+                                  DataCell(
+                                      Text(_getCategoryName(product.category))),
+                                  DataCell(Text(
+                                      'SAR ${product.price.toStringAsFixed(2)}')),
+                                  if (vatEnabled) ...[
+                                    DataCell(Text(
+                                        'SAR ${priceBeforeVat.toStringAsFixed(2)}')),
+                                    DataCell(Text(
+                                        'SAR ${vatAmount.toStringAsFixed(2)}')),
+                                    DataCell(Text(
+                                        'SAR ${priceAfterVat.toStringAsFixed(2)}')),
+                                  ],
+                                  DataCell(Text(
+                                      'SAR ${product.cost.toStringAsFixed(2)}')),
+                                  DataCell(Text(product.quantity.toString())),
+                                  DataCell(
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                          icon:
+                                              const Icon(Icons.edit, size: 20),
+                                          onPressed: () =>
+                                              showProductDialog(product),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.delete,
+                                              size: 20, color: Colors.red),
+                                          onPressed: () =>
+                                              _deleteProduct(context, product),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ]);
-                            }).toList(),
+                                ]);
+                              }).toList(),
+                            ),
                           ),
                         ),
                       ),
@@ -389,7 +397,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 ),
                               ),
                               title: Text(
-                                Localizations.localeOf(context).languageCode == 'ar'
+                                Localizations.localeOf(context).languageCode ==
+                                        'ar'
                                     ? (product.nameAr ?? product.name)
                                     : product.name,
                                 style: const TextStyle(
@@ -592,9 +601,8 @@ class _ProductDialogState extends State<_ProductDialog> {
     if (widget.product == null) {
       context.read<ProductBloc>().add(AddProductEvent(
             name: _nameController.text,
-            nameAr: _nameArController.text.isEmpty
-                ? null
-                : _nameArController.text,
+            nameAr:
+                _nameArController.text.isEmpty ? null : _nameArController.text,
             barcode: _barcodeController.text,
             category: _selectedCategoryId!,
             price: double.parse(_priceController.text),
