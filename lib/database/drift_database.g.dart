@@ -3662,6 +3662,14 @@ class $CompanyInfoTableTable extends CompanyInfoTable
   late final GeneratedColumn<String> logoPath = GeneratedColumn<String>(
       'logo_path', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _currencyMeta =
+      const VerificationMeta('currency');
+  @override
+  late final GeneratedColumn<String> currency = GeneratedColumn<String>(
+      'currency', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('SAR'));
   static const VerificationMeta _createdAtMeta =
       const VerificationMeta('createdAt');
   @override
@@ -3686,6 +3694,7 @@ class $CompanyInfoTableTable extends CompanyInfoTable
         vatNumber,
         crnNumber,
         logoPath,
+        currency,
         createdAt,
         updatedAt
       ];
@@ -3759,6 +3768,10 @@ class $CompanyInfoTableTable extends CompanyInfoTable
       context.handle(_logoPathMeta,
           logoPath.isAcceptableOrUnknown(data['logo_path']!, _logoPathMeta));
     }
+    if (data.containsKey('currency')) {
+      context.handle(_currencyMeta,
+          currency.isAcceptableOrUnknown(data['currency']!, _currencyMeta));
+    }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
@@ -3800,6 +3813,8 @@ class $CompanyInfoTableTable extends CompanyInfoTable
           .read(DriftSqlType.string, data['${effectivePrefix}crn_number'])!,
       logoPath: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}logo_path']),
+      currency: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}currency'])!,
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}created_at'])!,
       updatedAt: attachedDatabase.typeMapping
@@ -3825,6 +3840,7 @@ class CompanyInfoTableData extends DataClass
   final String vatNumber;
   final String crnNumber;
   final String? logoPath;
+  final String currency;
   final String createdAt;
   final String updatedAt;
   const CompanyInfoTableData(
@@ -3838,6 +3854,7 @@ class CompanyInfoTableData extends DataClass
       required this.vatNumber,
       required this.crnNumber,
       this.logoPath,
+      required this.currency,
       required this.createdAt,
       required this.updatedAt});
   @override
@@ -3857,6 +3874,7 @@ class CompanyInfoTableData extends DataClass
     if (!nullToAbsent || logoPath != null) {
       map['logo_path'] = Variable<String>(logoPath);
     }
+    map['currency'] = Variable<String>(currency);
     map['created_at'] = Variable<String>(createdAt);
     map['updated_at'] = Variable<String>(updatedAt);
     return map;
@@ -3877,6 +3895,7 @@ class CompanyInfoTableData extends DataClass
       logoPath: logoPath == null && nullToAbsent
           ? const Value.absent()
           : Value(logoPath),
+      currency: Value(currency),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -3896,6 +3915,7 @@ class CompanyInfoTableData extends DataClass
       vatNumber: serializer.fromJson<String>(json['vatNumber']),
       crnNumber: serializer.fromJson<String>(json['crnNumber']),
       logoPath: serializer.fromJson<String?>(json['logoPath']),
+      currency: serializer.fromJson<String>(json['currency']),
       createdAt: serializer.fromJson<String>(json['createdAt']),
       updatedAt: serializer.fromJson<String>(json['updatedAt']),
     );
@@ -3914,6 +3934,7 @@ class CompanyInfoTableData extends DataClass
       'vatNumber': serializer.toJson<String>(vatNumber),
       'crnNumber': serializer.toJson<String>(crnNumber),
       'logoPath': serializer.toJson<String?>(logoPath),
+      'currency': serializer.toJson<String>(currency),
       'createdAt': serializer.toJson<String>(createdAt),
       'updatedAt': serializer.toJson<String>(updatedAt),
     };
@@ -3930,6 +3951,7 @@ class CompanyInfoTableData extends DataClass
           String? vatNumber,
           String? crnNumber,
           Value<String?> logoPath = const Value.absent(),
+          String? currency,
           String? createdAt,
           String? updatedAt}) =>
       CompanyInfoTableData(
@@ -3943,6 +3965,7 @@ class CompanyInfoTableData extends DataClass
         vatNumber: vatNumber ?? this.vatNumber,
         crnNumber: crnNumber ?? this.crnNumber,
         logoPath: logoPath.present ? logoPath.value : this.logoPath,
+        currency: currency ?? this.currency,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
       );
@@ -3961,6 +3984,7 @@ class CompanyInfoTableData extends DataClass
       vatNumber: data.vatNumber.present ? data.vatNumber.value : this.vatNumber,
       crnNumber: data.crnNumber.present ? data.crnNumber.value : this.crnNumber,
       logoPath: data.logoPath.present ? data.logoPath.value : this.logoPath,
+      currency: data.currency.present ? data.currency.value : this.currency,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -3979,6 +4003,7 @@ class CompanyInfoTableData extends DataClass
           ..write('vatNumber: $vatNumber, ')
           ..write('crnNumber: $crnNumber, ')
           ..write('logoPath: $logoPath, ')
+          ..write('currency: $currency, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -3986,8 +4011,20 @@ class CompanyInfoTableData extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(id, name, nameArabic, address, addressArabic,
-      phone, email, vatNumber, crnNumber, logoPath, createdAt, updatedAt);
+  int get hashCode => Object.hash(
+      id,
+      name,
+      nameArabic,
+      address,
+      addressArabic,
+      phone,
+      email,
+      vatNumber,
+      crnNumber,
+      logoPath,
+      currency,
+      createdAt,
+      updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -4002,6 +4039,7 @@ class CompanyInfoTableData extends DataClass
           other.vatNumber == this.vatNumber &&
           other.crnNumber == this.crnNumber &&
           other.logoPath == this.logoPath &&
+          other.currency == this.currency &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -4017,6 +4055,7 @@ class CompanyInfoTableCompanion extends UpdateCompanion<CompanyInfoTableData> {
   final Value<String> vatNumber;
   final Value<String> crnNumber;
   final Value<String?> logoPath;
+  final Value<String> currency;
   final Value<String> createdAt;
   final Value<String> updatedAt;
   final Value<int> rowid;
@@ -4031,6 +4070,7 @@ class CompanyInfoTableCompanion extends UpdateCompanion<CompanyInfoTableData> {
     this.vatNumber = const Value.absent(),
     this.crnNumber = const Value.absent(),
     this.logoPath = const Value.absent(),
+    this.currency = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -4046,6 +4086,7 @@ class CompanyInfoTableCompanion extends UpdateCompanion<CompanyInfoTableData> {
     required String vatNumber,
     required String crnNumber,
     this.logoPath = const Value.absent(),
+    this.currency = const Value.absent(),
     required String createdAt,
     required String updatedAt,
     this.rowid = const Value.absent(),
@@ -4070,6 +4111,7 @@ class CompanyInfoTableCompanion extends UpdateCompanion<CompanyInfoTableData> {
     Expression<String>? vatNumber,
     Expression<String>? crnNumber,
     Expression<String>? logoPath,
+    Expression<String>? currency,
     Expression<String>? createdAt,
     Expression<String>? updatedAt,
     Expression<int>? rowid,
@@ -4085,6 +4127,7 @@ class CompanyInfoTableCompanion extends UpdateCompanion<CompanyInfoTableData> {
       if (vatNumber != null) 'vat_number': vatNumber,
       if (crnNumber != null) 'crn_number': crnNumber,
       if (logoPath != null) 'logo_path': logoPath,
+      if (currency != null) 'currency': currency,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -4102,6 +4145,7 @@ class CompanyInfoTableCompanion extends UpdateCompanion<CompanyInfoTableData> {
       Value<String>? vatNumber,
       Value<String>? crnNumber,
       Value<String?>? logoPath,
+      Value<String>? currency,
       Value<String>? createdAt,
       Value<String>? updatedAt,
       Value<int>? rowid}) {
@@ -4116,6 +4160,7 @@ class CompanyInfoTableCompanion extends UpdateCompanion<CompanyInfoTableData> {
       vatNumber: vatNumber ?? this.vatNumber,
       crnNumber: crnNumber ?? this.crnNumber,
       logoPath: logoPath ?? this.logoPath,
+      currency: currency ?? this.currency,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -4155,6 +4200,9 @@ class CompanyInfoTableCompanion extends UpdateCompanion<CompanyInfoTableData> {
     if (logoPath.present) {
       map['logo_path'] = Variable<String>(logoPath.value);
     }
+    if (currency.present) {
+      map['currency'] = Variable<String>(currency.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<String>(createdAt.value);
     }
@@ -4180,6 +4228,7 @@ class CompanyInfoTableCompanion extends UpdateCompanion<CompanyInfoTableData> {
           ..write('vatNumber: $vatNumber, ')
           ..write('crnNumber: $crnNumber, ')
           ..write('logoPath: $logoPath, ')
+          ..write('currency: $currency, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -6252,6 +6301,7 @@ typedef $$CompanyInfoTableTableCreateCompanionBuilder
   required String vatNumber,
   required String crnNumber,
   Value<String?> logoPath,
+  Value<String> currency,
   required String createdAt,
   required String updatedAt,
   Value<int> rowid,
@@ -6268,6 +6318,7 @@ typedef $$CompanyInfoTableTableUpdateCompanionBuilder
   Value<String> vatNumber,
   Value<String> crnNumber,
   Value<String?> logoPath,
+  Value<String> currency,
   Value<String> createdAt,
   Value<String> updatedAt,
   Value<int> rowid,
@@ -6311,6 +6362,9 @@ class $$CompanyInfoTableTableFilterComposer
 
   ColumnFilters<String> get logoPath => $composableBuilder(
       column: $table.logoPath, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get currency => $composableBuilder(
+      column: $table.currency, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnFilters(column));
@@ -6359,6 +6413,9 @@ class $$CompanyInfoTableTableOrderingComposer
   ColumnOrderings<String> get logoPath => $composableBuilder(
       column: $table.logoPath, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<String> get currency => $composableBuilder(
+      column: $table.currency, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<String> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnOrderings(column));
 
@@ -6405,6 +6462,9 @@ class $$CompanyInfoTableTableAnnotationComposer
   GeneratedColumn<String> get logoPath =>
       $composableBuilder(column: $table.logoPath, builder: (column) => column);
 
+  GeneratedColumn<String> get currency =>
+      $composableBuilder(column: $table.currency, builder: (column) => column);
+
   GeneratedColumn<String> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -6450,6 +6510,7 @@ class $$CompanyInfoTableTableTableManager extends RootTableManager<
             Value<String> vatNumber = const Value.absent(),
             Value<String> crnNumber = const Value.absent(),
             Value<String?> logoPath = const Value.absent(),
+            Value<String> currency = const Value.absent(),
             Value<String> createdAt = const Value.absent(),
             Value<String> updatedAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
@@ -6465,6 +6526,7 @@ class $$CompanyInfoTableTableTableManager extends RootTableManager<
             vatNumber: vatNumber,
             crnNumber: crnNumber,
             logoPath: logoPath,
+            currency: currency,
             createdAt: createdAt,
             updatedAt: updatedAt,
             rowid: rowid,
@@ -6480,6 +6542,7 @@ class $$CompanyInfoTableTableTableManager extends RootTableManager<
             required String vatNumber,
             required String crnNumber,
             Value<String?> logoPath = const Value.absent(),
+            Value<String> currency = const Value.absent(),
             required String createdAt,
             required String updatedAt,
             Value<int> rowid = const Value.absent(),
@@ -6495,6 +6558,7 @@ class $$CompanyInfoTableTableTableManager extends RootTableManager<
             vatNumber: vatNumber,
             crnNumber: crnNumber,
             logoPath: logoPath,
+            currency: currency,
             createdAt: createdAt,
             updatedAt: updatedAt,
             rowid: rowid,

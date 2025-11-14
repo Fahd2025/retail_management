@@ -1220,6 +1220,84 @@ abstract class AppLocalizations {
   /// **'CRN Number'**
   String get crnNumber;
 
+  /// No description provided for @currency.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency'**
+  String get currency;
+
+  /// No description provided for @selectCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Currency'**
+  String get selectCurrency;
+
+  /// No description provided for @currencySAR.
+  ///
+  /// In en, this message translates to:
+  /// **'Saudi Riyal (SAR - ر.س)'**
+  String get currencySAR;
+
+  /// No description provided for @currencyUSD.
+  ///
+  /// In en, this message translates to:
+  /// **'US Dollar (USD - \$)'**
+  String get currencyUSD;
+
+  /// No description provided for @currencyEUR.
+  ///
+  /// In en, this message translates to:
+  /// **'Euro (EUR - €)'**
+  String get currencyEUR;
+
+  /// No description provided for @currencyGBP.
+  ///
+  /// In en, this message translates to:
+  /// **'British Pound (GBP - £)'**
+  String get currencyGBP;
+
+  /// No description provided for @currencyAED.
+  ///
+  /// In en, this message translates to:
+  /// **'UAE Dirham (AED - د.إ)'**
+  String get currencyAED;
+
+  /// No description provided for @currencyKWD.
+  ///
+  /// In en, this message translates to:
+  /// **'Kuwaiti Dinar (KWD - د.ك)'**
+  String get currencyKWD;
+
+  /// No description provided for @currencyBHD.
+  ///
+  /// In en, this message translates to:
+  /// **'Bahraini Dinar (BHD - د.ب)'**
+  String get currencyBHD;
+
+  /// No description provided for @currencyQAR.
+  ///
+  /// In en, this message translates to:
+  /// **'Qatari Riyal (QAR - ر.ق)'**
+  String get currencyQAR;
+
+  /// No description provided for @currencyOMR.
+  ///
+  /// In en, this message translates to:
+  /// **'Omani Rial (OMR - ر.ع)'**
+  String get currencyOMR;
+
+  /// No description provided for @currencyJOD.
+  ///
+  /// In en, this message translates to:
+  /// **'Jordanian Dinar (JOD - د.أ)'**
+  String get currencyJOD;
+
+  /// No description provided for @currencyEGP.
+  ///
+  /// In en, this message translates to:
+  /// **'Egyptian Pound (EGP - ج.م)'**
+  String get currencyEGP;
+
   /// No description provided for @saveCompanyInformation.
   ///
   /// In en, this message translates to:

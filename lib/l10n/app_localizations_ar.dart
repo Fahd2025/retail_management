@@ -572,6 +572,45 @@ class AppLocalizationsAr extends AppLocalizations {
   String get crnNumber => 'رقم السجل التجاري';
 
   @override
+  String get currency => 'العملة';
+
+  @override
+  String get selectCurrency => 'اختر العملة';
+
+  @override
+  String get currencySAR => 'الريال السعودي (SAR - ر.س)';
+
+  @override
+  String get currencyUSD => 'الدولار الأمريكي (USD - \$)';
+
+  @override
+  String get currencyEUR => 'اليورو (EUR - €)';
+
+  @override
+  String get currencyGBP => 'الجنيه الإسترليني (GBP - £)';
+
+  @override
+  String get currencyAED => 'الدرهم الإماراتي (AED - د.إ)';
+
+  @override
+  String get currencyKWD => 'الدينار الكويتي (KWD - د.ك)';
+
+  @override
+  String get currencyBHD => 'الدينار البحريني (BHD - د.ب)';
+
+  @override
+  String get currencyQAR => 'الريال القطري (QAR - ر.ق)';
+
+  @override
+  String get currencyOMR => 'الريال العماني (OMR - ر.ع)';
+
+  @override
+  String get currencyJOD => 'الدينار الأردني (JOD - د.أ)';
+
+  @override
+  String get currencyEGP => 'الجنيه المصري (EGP - ج.م)';
+
+  @override
   String get saveCompanyInformation => 'حفظ معلومات الشركة';
 
   @override

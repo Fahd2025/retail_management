@@ -572,6 +572,45 @@ class AppLocalizationsEn extends AppLocalizations {
   String get crnNumber => 'CRN Number';
 
   @override
+  String get currency => 'Currency';
+
+  @override
+  String get selectCurrency => 'Select Currency';
+
+  @override
+  String get currencySAR => 'Saudi Riyal (SAR - ر.س)';
+
+  @override
+  String get currencyUSD => 'US Dollar (USD - \$)';
+
+  @override
+  String get currencyEUR => 'Euro (EUR - €)';
+
+  @override
+  String get currencyGBP => 'British Pound (GBP - £)';
+
+  @override
+  String get currencyAED => 'UAE Dirham (AED - د.إ)';
+
+  @override
+  String get currencyKWD => 'Kuwaiti Dinar (KWD - د.ك)';
+
+  @override
+  String get currencyBHD => 'Bahraini Dinar (BHD - د.ب)';
+
+  @override
+  String get currencyQAR => 'Qatari Riyal (QAR - ر.ق)';
+
+  @override
+  String get currencyOMR => 'Omani Rial (OMR - ر.ع)';
+
+  @override
+  String get currencyJOD => 'Jordanian Dinar (JOD - د.أ)';
+
+  @override
+  String get currencyEGP => 'Egyptian Pound (EGP - ج.م)';
+
+  @override
   String get saveCompanyInformation => 'Save Company Information';
 
   @override
