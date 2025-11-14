@@ -1279,16 +1279,104 @@ class AppLocalizationsAr extends AppLocalizations {
   String get transfer => 'تحويل';
 
   @override
-  String get vatEnabled => 'تفعيل ضريبة القيمة المضافة';
+  String get vatEnabled => 'الضريبة مفعلة';
 
   @override
-  String get vatDisabled => 'تعطيل ضريبة القيمة المضافة';
+  String get vatDisabled => 'الضريبة غير مفعلة';
 
   @override
   String get vatEnabledDescription =>
-      'حسابات ضريبة القيمة المضافة نشطة. سيتم عرض الضريبة في الفواتير وفي جميع أنحاء التطبيق.';
+      'سيتم حساب الضريبة وإضافتها إلى أسعار المنتجات';
 
   @override
-  String get vatDisabledDescription =>
-      'حسابات ضريبة القيمة المضافة معطلة. سيتم إخفاء معلومات الضريبة من جميع الشاشات والفواتير.';
+  String get vatDisabledDescription => 'حساب الضريبة معطل';
+
+  @override
+  String get businessDetailsAndContactInformation =>
+      'تفاصيل العمل ومعلومات الاتصال';
+
+  @override
+  String get configureInvoicePrintingOptions => 'تهيئة خيارات طباعة الفاتورة';
+
+  @override
+  String get defaultVatRate => 'معدل الضريبة الافتراضي';
+
+  @override
+  String get setDefaultVatRateDescription =>
+      'حدد معدل الضريبة الافتراضي ليتم تطبيقه تلقائيًا على جميع المنتجات';
+
+  @override
+  String get vatRateLabel => 'معدل الضريبة (%)';
+
+  @override
+  String get vatRateHint => '15.0';
+
+  @override
+  String get currentVatRate => 'معدل الضريبة الحالي';
+
+  @override
+  String get vatCalculationMethod => 'طريقة حساب الضريبة';
+
+  @override
+  String get chooseVatCalculationMethod =>
+      'اختر ما إذا كانت الضريبة مدرجة في سعر المنتج أو تضاف لاحقًا';
+
+  @override
+  String get vatIncludedInPrice => 'السعر شامل الضريبة';
+
+  @override
+  String get vatExcludedFromPrice => 'السعر غير شامل الضريبة';
+
+  @override
+  String get vatIncludedInPriceDescription =>
+      'أسعار المنتجات تشمل الضريبة (سيتم استخراج الضريبة من الإجمالي)';
+
+  @override
+  String get vatExcludedFromPriceDescription =>
+      'أسعار المنتجات لا تشمل الضريبة (سيتم إضافة الضريبة إلى الإجمالي)';
+
+  @override
+  String get vatRateAppliedToNewProducts =>
+      'سيتم تطبيق معدل الضريبة هذا تلقائيًا على جميع المنتجات الجديدة. التغييرات تُطبّق فورًا.';
+
+  @override
+  String vatIncludedInPriceNote(String rate) {
+    return 'ضريبة القيمة المضافة $rate% - مدرجة في السعر';
+  }
+
+  @override
+  String vatExcludedFromPriceNote(String rate) {
+    return 'ضريبة القيمة المضافة $rate% - مستبعدة من السعر';
+  }
+
+  @override
+  String get pricesIncludeVatNote =>
+      'الأسعار الموضحة تشمل الضريبة - سيتم استخراج الضريبة من السعر المذكور';
+
+  @override
+  String get pricesExcludeVatNote =>
+      'الأسعار الموضحة لا تشمل الضريبة - سيتم إضافة الضريبة على السعر المذكور';
+
+  @override
+  String get priceVatIncluded => 'السعر (شامل الضريبة)';
+
+  @override
+  String get priceVatExcluded => 'السعر (غير شامل الضريبة)';
+
+  @override
+  String get beforeVat => 'قبل الضريبة';
+
+  @override
+  String get afterVat => 'بعد الضريبة';
+
+  @override
+  String get vatBreakdown => 'تفصيل الضريبة';
+
+  @override
+  String get amount => 'المبلغ';
+
+  @override
+  String vatAmountCalculatedAutomatically(String rate) {
+    return 'مبلغ الضريبة محسوب تلقائيًا ($rate%)';
+  }
 }

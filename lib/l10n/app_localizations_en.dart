@@ -1288,9 +1288,98 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get vatEnabledDescription =>
-      'VAT calculations are active. VAT will be displayed in invoices and throughout the application.';
+      'VAT will be calculated and added to product prices';
 
   @override
-  String get vatDisabledDescription =>
-      'VAT calculations are disabled. VAT information will be hidden from all screens and invoices.';
+  String get vatDisabledDescription => 'VAT calculation is turned off';
+
+  @override
+  String get businessDetailsAndContactInformation =>
+      'Business details and contact information';
+
+  @override
+  String get configureInvoicePrintingOptions =>
+      'Configure invoice printing options';
+
+  @override
+  String get defaultVatRate => 'Default VAT rate';
+
+  @override
+  String get setDefaultVatRateDescription =>
+      'Set the default VAT rate to be applied automatically to all products';
+
+  @override
+  String get vatRateLabel => 'VAT Rate (%)';
+
+  @override
+  String get vatRateHint => '15.0';
+
+  @override
+  String get currentVatRate => 'Current VAT Rate';
+
+  @override
+  String get vatCalculationMethod => 'VAT Calculation Method';
+
+  @override
+  String get chooseVatCalculationMethod =>
+      'Choose whether VAT is included in the product price or added on top';
+
+  @override
+  String get vatIncludedInPrice => 'VAT Included in Price';
+
+  @override
+  String get vatExcludedFromPrice => 'VAT Excluded from Price';
+
+  @override
+  String get vatIncludedInPriceDescription =>
+      'Product prices include VAT (VAT will be extracted from the total)';
+
+  @override
+  String get vatExcludedFromPriceDescription =>
+      'Product prices exclude VAT (VAT will be added to the total)';
+
+  @override
+  String get vatRateAppliedToNewProducts =>
+      'This VAT rate will be automatically applied to all new products. Changes apply immediately.';
+
+  @override
+  String vatIncludedInPriceNote(String rate) {
+    return 'VAT $rate% - Included in price';
+  }
+
+  @override
+  String vatExcludedFromPriceNote(String rate) {
+    return 'VAT $rate% - Excluded from price';
+  }
+
+  @override
+  String get pricesIncludeVatNote =>
+      'Prices shown include VAT - VAT will be extracted from the listed price';
+
+  @override
+  String get pricesExcludeVatNote =>
+      'Prices shown exclude VAT - VAT will be added on top of the listed price';
+
+  @override
+  String get priceVatIncluded => 'Price (Incl. VAT)';
+
+  @override
+  String get priceVatExcluded => 'Price (Excl. VAT)';
+
+  @override
+  String get beforeVat => 'Before VAT';
+
+  @override
+  String get afterVat => 'After VAT';
+
+  @override
+  String get vatBreakdown => 'VAT Breakdown';
+
+  @override
+  String get amount => 'Amount';
+
+  @override
+  String vatAmountCalculatedAutomatically(String rate) {
+    return 'VAT amount calculated automatically ($rate%)';
+  }
 }

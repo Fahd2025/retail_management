@@ -677,5 +677,55 @@
             }
         }
     },
-    "transfer": "Transfer"
+    "transfer": "Transfer",
+    "vatEnabled": "VAT Enabled",
+    "vatDisabled": "VAT Disabled",
+    "vatEnabledDescription": "VAT will be calculated and added to product prices",
+    "vatDisabledDescription": "VAT calculation is turned off",
+    "businessDetailsAndContactInformation": "Business details and contact information",
+    "configureInvoicePrintingOptions": "Configure invoice printing options",
+    "defaultVatRate": "Default VAT rate",
+    "setDefaultVatRateDescription": "Set the default VAT rate to be applied automatically to all products",
+    "vatRateLabel": "VAT Rate (%)",
+    "vatRateHint": "15.0",
+    "currentVatRate": "Current VAT Rate",
+    "vatCalculationMethod": "VAT Calculation Method",
+    "chooseVatCalculationMethod": "Choose whether VAT is included in the product price or added on top",
+    "vatIncludedInPrice": "VAT Included in Price",
+    "vatExcludedFromPrice": "VAT Excluded from Price",
+    "vatIncludedInPriceDescription": "Product prices include VAT (VAT will be extracted from the total)",
+    "vatExcludedFromPriceDescription": "Product prices exclude VAT (VAT will be added to the total)",
+    "vatRateAppliedToNewProducts": "This VAT rate will be automatically applied to all new products. Changes apply immediately.",
+  "vatIncludedInPriceNote": "VAT {rate}% - Included in price",
+  "@vatIncludedInPriceNote": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "vatExcludedFromPriceNote": "VAT {rate}% - Excluded from price",
+  "@vatExcludedFromPriceNote": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "pricesIncludeVatNote": "Prices shown include VAT - VAT will be extracted from the listed price",
+  "pricesExcludeVatNote": "Prices shown exclude VAT - VAT will be added on top of the listed price",
+  "priceVatIncluded": "Price (Incl. VAT)",
+  "priceVatExcluded": "Price (Excl. VAT)",
+  "beforeVat": "Before VAT",
+  "afterVat": "After VAT",
+  "vatBreakdown": "VAT Breakdown",
+  "amount": "Amount",
+  "vatAmountCalculatedAutomatically": "VAT amount calculated automatically ({rate}%)",
+  "@vatAmountCalculatedAutomatically": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  }
 }

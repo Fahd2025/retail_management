@@ -2483,14 +2483,164 @@ abstract class AppLocalizations {
   /// No description provided for @vatEnabledDescription.
   ///
   /// In en, this message translates to:
-  /// **'VAT calculations are active. VAT will be displayed in invoices and throughout the application.'**
+  /// **'VAT will be calculated and added to product prices'**
   String get vatEnabledDescription;
 
   /// No description provided for @vatDisabledDescription.
   ///
   /// In en, this message translates to:
-  /// **'VAT calculations are disabled. VAT information will be hidden from all screens and invoices.'**
+  /// **'VAT calculation is turned off'**
   String get vatDisabledDescription;
+
+  /// No description provided for @businessDetailsAndContactInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Business details and contact information'**
+  String get businessDetailsAndContactInformation;
+
+  /// No description provided for @configureInvoicePrintingOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Configure invoice printing options'**
+  String get configureInvoicePrintingOptions;
+
+  /// No description provided for @defaultVatRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Default VAT rate'**
+  String get defaultVatRate;
+
+  /// No description provided for @setDefaultVatRateDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Set the default VAT rate to be applied automatically to all products'**
+  String get setDefaultVatRateDescription;
+
+  /// No description provided for @vatRateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT Rate (%)'**
+  String get vatRateLabel;
+
+  /// No description provided for @vatRateHint.
+  ///
+  /// In en, this message translates to:
+  /// **'15.0'**
+  String get vatRateHint;
+
+  /// No description provided for @currentVatRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Current VAT Rate'**
+  String get currentVatRate;
+
+  /// No description provided for @vatCalculationMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT Calculation Method'**
+  String get vatCalculationMethod;
+
+  /// No description provided for @chooseVatCalculationMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose whether VAT is included in the product price or added on top'**
+  String get chooseVatCalculationMethod;
+
+  /// No description provided for @vatIncludedInPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT Included in Price'**
+  String get vatIncludedInPrice;
+
+  /// No description provided for @vatExcludedFromPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT Excluded from Price'**
+  String get vatExcludedFromPrice;
+
+  /// No description provided for @vatIncludedInPriceDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Product prices include VAT (VAT will be extracted from the total)'**
+  String get vatIncludedInPriceDescription;
+
+  /// No description provided for @vatExcludedFromPriceDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Product prices exclude VAT (VAT will be added to the total)'**
+  String get vatExcludedFromPriceDescription;
+
+  /// No description provided for @vatRateAppliedToNewProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'This VAT rate will be automatically applied to all new products. Changes apply immediately.'**
+  String get vatRateAppliedToNewProducts;
+
+  /// No description provided for @vatIncludedInPriceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT {rate}% - Included in price'**
+  String vatIncludedInPriceNote(String rate);
+
+  /// No description provided for @vatExcludedFromPriceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT {rate}% - Excluded from price'**
+  String vatExcludedFromPriceNote(String rate);
+
+  /// No description provided for @pricesIncludeVatNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Prices shown include VAT - VAT will be extracted from the listed price'**
+  String get pricesIncludeVatNote;
+
+  /// No description provided for @pricesExcludeVatNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Prices shown exclude VAT - VAT will be added on top of the listed price'**
+  String get pricesExcludeVatNote;
+
+  /// No description provided for @priceVatIncluded.
+  ///
+  /// In en, this message translates to:
+  /// **'Price (Incl. VAT)'**
+  String get priceVatIncluded;
+
+  /// No description provided for @priceVatExcluded.
+  ///
+  /// In en, this message translates to:
+  /// **'Price (Excl. VAT)'**
+  String get priceVatExcluded;
+
+  /// No description provided for @beforeVat.
+  ///
+  /// In en, this message translates to:
+  /// **'Before VAT'**
+  String get beforeVat;
+
+  /// No description provided for @afterVat.
+  ///
+  /// In en, this message translates to:
+  /// **'After VAT'**
+  String get afterVat;
+
+  /// No description provided for @vatBreakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT Breakdown'**
+  String get vatBreakdown;
+
+  /// No description provided for @amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// No description provided for @vatAmountCalculatedAutomatically.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT amount calculated automatically ({rate}%)'**
+  String vatAmountCalculatedAutomatically(String rate);
 }
 
 class _AppLocalizationsDelegate

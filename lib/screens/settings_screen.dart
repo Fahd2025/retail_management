@@ -202,13 +202,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   String _getLocaleName(Locale locale) {
+    final l10n = AppLocalizations.of(context)!;
     switch (locale.languageCode) {
       case 'en':
-        return 'English';
+        return l10n.english;
       case 'ar':
-        return 'العربية';
+        return l10n.arabic;
       default:
-        return 'English';
+        return l10n.english;
     }
   }
 
@@ -343,7 +344,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return SettingsSection(
       title: l10n.printSettings,
       icon: Icons.print,
-      subtitle: 'Configure invoice printing options',
+      subtitle: l10n.configureInvoicePrintingOptions,
       children: const [
         PrintFormatSelector(),
       ],
@@ -357,7 +358,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return SettingsSection(
       title: l10n.companyNameEnglish,
       icon: Icons.business,
-      subtitle: 'Business details and contact information',
+      subtitle: l10n.businessDetailsAndContactInformation,
       children: [
         if (_isLoading)
           const Padding(
@@ -615,10 +616,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return SettingsSection(
-      title: 'Default VAT rate',
+      title: l10n.defaultVatRate,
       icon: Icons.sync,
       subtitle:
-          'Set the default VAT rate to be applied automatically to all products',
+          l10n.setDefaultVatRateDescription,
       children: [
         const Divider(),
         BlocBuilder<AppConfigBloc, AppConfigState>(
@@ -715,7 +716,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Current VAT Rate',
+                                      l10n.currentVatRate,
                                       style: Theme.of(context)
                                           .textTheme
                                           .labelMedium,
@@ -744,10 +745,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               key: ValueKey(configState.vatRate),
                               initialValue: configState.vatRate.toString(),
                               decoration: InputDecoration(
-                                labelText: 'VAT Rate (%)',
+                                labelText: l10n.vatRateLabel,
                                 border: const OutlineInputBorder(),
                                 prefixIcon: const Icon(Icons.percent),
-                                hintText: '15.0',
+                                hintText: l10n.vatRateHint,
                               ),
                               keyboardType:
                                   const TextInputType.numberWithOptions(
@@ -776,7 +777,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'Current VAT Rate',
+                                    l10n.currentVatRate,
                                     style:
                                         Theme.of(context).textTheme.labelMedium,
                                   ),
@@ -803,12 +804,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const Divider(),
                   const SizedBox(height: 8),
                   Text(
-                    'VAT Calculation Method',
+                    l10n.vatCalculationMethod,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Choose whether VAT is included in the product price or added on top',
+                    l10n.chooseVatCalculationMethod,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Colors.grey[600],
                         ),
@@ -830,16 +831,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: SwitchListTile(
                       title: Text(
                         configState.vatIncludedInPrice
-                            ? 'VAT Included in Price'
-                            : 'VAT Excluded from Price',
+                            ? l10n.vatIncludedInPrice
+                            : l10n.vatExcludedFromPrice,
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                       ),
                       subtitle: Text(
                         configState.vatIncludedInPrice
-                            ? 'Product prices include VAT (VAT will be extracted from the total)'
-                            : 'Product prices exclude VAT (VAT will be added to the total)',
+                            ? l10n.vatIncludedInPriceDescription
+                            : l10n.vatExcludedFromPriceDescription,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       value: configState.vatIncludedInPrice,
@@ -866,7 +867,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            'This VAT rate will be automatically applied to all new products. Changes apply immediately.',
+                            l10n.vatRateAppliedToNewProducts,
                             style:
                                 Theme.of(context).textTheme.bodySmall?.copyWith(
                                       color: Colors.amber.shade900,

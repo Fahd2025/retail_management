@@ -452,5 +452,55 @@
   "salesCount": "{count} عملية بيع",
   "cash": "نقدي",
   "card": "بطاقة",
-  "transfer": "تحويل"
+  "transfer": "تحويل",
+  "vatEnabled": "الضريبة مفعلة",
+  "vatDisabled": "الضريبة غير مفعلة",
+  "vatEnabledDescription": "سيتم حساب الضريبة وإضافتها إلى أسعار المنتجات",
+  "vatDisabledDescription": "حساب الضريبة معطل",
+  "businessDetailsAndContactInformation": "تفاصيل العمل ومعلومات الاتصال",
+  "configureInvoicePrintingOptions": "تهيئة خيارات طباعة الفاتورة",
+  "defaultVatRate": "معدل الضريبة الافتراضي",
+  "setDefaultVatRateDescription": "حدد معدل الضريبة الافتراضي ليتم تطبيقه تلقائيًا على جميع المنتجات",
+  "vatRateLabel": "معدل الضريبة (%)",
+  "vatRateHint": "15.0",
+  "currentVatRate": "معدل الضريبة الحالي",
+  "vatCalculationMethod": "طريقة حساب الضريبة",
+  "chooseVatCalculationMethod": "اختر ما إذا كانت الضريبة مدرجة في سعر المنتج أو تضاف لاحقًا",
+  "vatIncludedInPrice": "السعر شامل الضريبة",
+  "vatExcludedFromPrice": "السعر غير شامل الضريبة",
+  "vatIncludedInPriceDescription": "أسعار المنتجات تشمل الضريبة (سيتم استخراج الضريبة من الإجمالي)",
+  "vatExcludedFromPriceDescription": "أسعار المنتجات لا تشمل الضريبة (سيتم إضافة الضريبة إلى الإجمالي)",
+  "vatRateAppliedToNewProducts": "سيتم تطبيق معدل الضريبة هذا تلقائيًا على جميع المنتجات الجديدة. التغييرات تُطبّق فورًا.",
+  "vatIncludedInPriceNote": "ضريبة القيمة المضافة {rate}% - مدرجة في السعر",
+  "@vatIncludedInPriceNote": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "vatExcludedFromPriceNote": "ضريبة القيمة المضافة {rate}% - مستبعدة من السعر",
+  "@vatExcludedFromPriceNote": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "pricesIncludeVatNote": "الأسعار الموضحة تشمل الضريبة - سيتم استخراج الضريبة من السعر المذكور",
+  "pricesExcludeVatNote": "الأسعار الموضحة لا تشمل الضريبة - سيتم إضافة الضريبة على السعر المذكور",
+  "priceVatIncluded": "السعر (شامل الضريبة)",
+  "priceVatExcluded": "السعر (غير شامل الضريبة)",
+  "beforeVat": "قبل الضريبة",
+  "afterVat": "بعد الضريبة",
+  "vatBreakdown": "تفصيل الضريبة",
+  "amount": "المبلغ",
+  "vatAmountCalculatedAutomatically": "مبلغ الضريبة محسوب تلقائيًا ({rate}%)",
+  "@vatAmountCalculatedAutomatically": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  }
 }

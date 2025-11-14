@@ -203,8 +203,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             const SizedBox(width: 8),
                             Text(
                               vatIncludedInPrice
-                                  ? 'Prices shown include VAT - VAT will be extracted from the listed price'
-                                  : 'Prices shown exclude VAT - VAT will be added on top of the listed price',
+                                  ? l10n.pricesIncludeVatNote
+                                  : l10n.pricesExcludeVatNote,
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
@@ -236,13 +236,15 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 DataColumn(
                                     label: Text(vatEnabled
                                         ? (vatIncludedInPrice
-                                            ? 'Price (Incl.)'
-                                            : 'Price (Excl.)')
+                                            ? l10n.priceVatIncluded
+                                            : l10n.priceVatExcluded)
                                         : l10n.price)),
                                 if (vatEnabled) ...[
-                                  DataColumn(label: Text('Before ${l10n.vat}')),
-                                  DataColumn(label: Text('${l10n.vat} Amount')),
-                                  DataColumn(label: Text('After ${l10n.vat}')),
+                                  DataColumn(label: Text(l10n.beforeVat)),
+                                  DataColumn(
+                                      label:
+                                          Text('${l10n.vat} ${l10n.amount}')),
+                                  DataColumn(label: Text(l10n.afterVat)),
                                 ],
                                 DataColumn(label: Text(l10n.costRequired)),
                                 DataColumn(label: Text(l10n.stock)),
@@ -346,8 +348,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             Expanded(
                               child: Text(
                                 vatIncludedInPrice
-                                    ? 'Prices shown include VAT - VAT will be extracted from the listed price'
-                                    : 'Prices shown exclude VAT - VAT will be added on top of the listed price',
+                                    ? l10n.pricesIncludeVatNote
+                                    : l10n.pricesExcludeVatNote,
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
@@ -410,16 +412,14 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    l10n.category +
-                                        ': ' +
-                                        _getCategoryName(product.category),
+                                    '${l10n.category}: ${_getCategoryName(product.category)}',
                                     style: const TextStyle(fontSize: 13),
                                   ),
                                   Text(
                                     (vatEnabled
                                             ? (vatIncludedInPrice
-                                                ? 'Price (Incl. ${l10n.vat})'
-                                                : 'Price (Excl. ${l10n.vat})')
+                                                ? l10n.priceVatIncluded
+                                                : l10n.priceVatExcluded)
                                             : l10n.price) +
                                         ': SAR ${product.price.toStringAsFixed(2)}',
                                     style: TextStyle(
@@ -464,18 +464,19 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                         const Divider(),
                                         const SizedBox(height: 8),
                                         Text(
-                                          '${l10n.vat} Breakdown',
+                                          l10n.vatBreakdown,
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14,
                                           ),
                                         ),
                                         const SizedBox(height: 8),
-                                        _buildInfoRow('Before ${l10n.vat}',
+                                        _buildInfoRow(l10n.beforeVat,
                                             'SAR ${priceBeforeVat.toStringAsFixed(2)}'),
-                                        _buildInfoRow('${l10n.vat} Amount',
+                                        _buildInfoRow(
+                                            '${l10n.vat} ${l10n.amount}',
                                             'SAR ${vatAmount.toStringAsFixed(2)}'),
-                                        _buildInfoRow('After ${l10n.vat}',
+                                        _buildInfoRow(l10n.afterVat,
                                             'SAR ${priceAfterVat.toStringAsFixed(2)}'),
                                       ],
                                       if (product.description != null &&
@@ -712,12 +713,16 @@ class _ProductDialogState extends State<_ProductDialog> {
                   hint: Text(l10n.selectACategory),
                   isExpanded: true,
                   validator: (v) => v == null ? l10n.required : null,
-                  items: _categories.map((category) {
-                    return DropdownMenuItem<String>(
-                      value: category.id,
-                      child: Text(category.name),
-                    );
-                  }).toList(),
+                      items: _categories.map((category) {
+                        final isArabic =
+                            Localizations.localeOf(context).languageCode == 'ar';
+                        return DropdownMenuItem<String>(
+                          value: category.id,
+                          child: Text(isArabic
+                              ? (category.nameAr ?? category.name)
+                              : category.name),
+                        );
+                      }).toList(),
                   onChanged: (value) {
                     setState(() {
                       _selectedCategoryId = value;
@@ -799,8 +804,8 @@ class _ProductDialogState extends State<_ProductDialog> {
                         filled: true,
                         fillColor: Colors.grey.shade100,
                         suffixIcon: Tooltip(
-                          message:
-                              'VAT amount calculated automatically (${appConfig.vatRate.toStringAsFixed(1)}%)',
+                          message: l10n.vatAmountCalculatedAutomatically(
+                              appConfig.vatRate.toStringAsFixed(1)),
                           child: Icon(Icons.info_outline,
                               size: 18, color: Colors.blue.shade600),
                         ),

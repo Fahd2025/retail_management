@@ -145,13 +145,14 @@ class _CashierScreenState extends State<CashierScreen>
 
     // Determine product name based on locale
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
-    final productName = isArabic ? (product.nameAr ?? product.name) : product.name;
+    final productName =
+        isArabic ? (product.nameAr ?? product.name) : product.name;
 
     context.read<SaleBloc>().add(AddToCartEvent(
-      product,
-      vatIncludedInPrice: vatIncludedInPrice,
-      productName: productName,
-    ));
+          product,
+          vatIncludedInPrice: vatIncludedInPrice,
+          productName: productName,
+        ));
 
     final l10n = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(
@@ -342,6 +343,7 @@ class _CashierScreenState extends State<CashierScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocBuilder<ProductBloc, ProductState>(
         builder: (context, productState) {
       List<String> categories = [];
@@ -441,8 +443,12 @@ class _CashierScreenState extends State<CashierScreen>
                                     Expanded(
                                       child: Text(
                                         configState.vatIncludedInPrice
-                                            ? 'VAT ${configState.vatRate.toStringAsFixed(1)}% - Included in price'
-                                            : 'VAT ${configState.vatRate.toStringAsFixed(1)}% - Excluded from price',
+                                            ? l10n.vatIncludedInPriceNote(
+                                                configState.vatRate
+                                                    .toStringAsFixed(1))
+                                            : l10n.vatExcludedFromPriceNote(
+                                                configState.vatRate
+                                                    .toStringAsFixed(1)),
                                         style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
@@ -665,43 +671,44 @@ class _CashierScreenState extends State<CashierScreen>
                                         isBold: true,
                                         fontSize: 20,
                                       ),
-                                  const SizedBox(height: 16),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: OutlinedButton(
-                                          onPressed: cartItems.isEmpty
-                                              ? null
-                                              : () => context
-                                                  .read<SaleBloc>()
-                                                  .add(const ClearCartEvent()),
-                                          child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .clear),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        flex: 2,
-                                        child: ElevatedButton(
-                                          onPressed: cartItems.isEmpty
-                                              ? null
-                                              : _checkout,
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.green,
-                                            foregroundColor: Colors.white,
+                                      const SizedBox(height: 16),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: OutlinedButton(
+                                              onPressed: cartItems.isEmpty
+                                                  ? null
+                                                  : () => context
+                                                      .read<SaleBloc>()
+                                                      .add(
+                                                          const ClearCartEvent()),
+                                              child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .clear),
+                                            ),
                                           ),
-                                          child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .checkout),
-                                        ),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            flex: 2,
+                                            child: ElevatedButton(
+                                              onPressed: cartItems.isEmpty
+                                                  ? null
+                                                  : _checkout,
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.green,
+                                                foregroundColor: Colors.white,
+                                              ),
+                                              child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .checkout),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      ],
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
+                                    ],
+                                  );
+                                },
+                              ),
                             ),
                           ],
                         ),
