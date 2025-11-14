@@ -57,16 +57,17 @@ class Thermal80mmTemplate extends InvoiceTemplate {
 
         pw.SizedBox(height: 3),
 
-        // VAT Note
-        pw.Text(
-          getVatNote(data.vatIncludedInPrice),
-          style: pw.TextStyle(
-              fontSize: 5,
-              fontStyle: pw.FontStyle.italic,
-              font: data.arabicFont),
-          textDirection: pw.TextDirection.rtl,
-          textAlign: pw.TextAlign.center,
-        ),
+        // VAT Note (only shown when VAT is enabled)
+        if (data.vatEnabled)
+          pw.Text(
+            getVatNote(data.vatIncludedInPrice),
+            style: pw.TextStyle(
+                fontSize: 5,
+                fontStyle: pw.FontStyle.italic,
+                font: data.arabicFont),
+            textDirection: pw.TextDirection.rtl,
+            textAlign: pw.TextAlign.center,
+          ),
 
         buildDivider(),
 
@@ -349,15 +350,16 @@ class Thermal80mmTemplate extends InvoiceTemplate {
                     ),
                   ],
                 ),
-                // VAT info on second line
-                pw.Padding(
-                  padding: const pw.EdgeInsets.only(left: 5, top: 1),
-                  child: pw.Text(
-                    'VAT: ${currencyFormat.format(item.vatAmount)}',
-                    style: const pw.TextStyle(
-                        fontSize: 6, color: PdfColors.grey600),
+                // VAT info on second line (only shown when VAT is enabled)
+                if (data.vatEnabled)
+                  pw.Padding(
+                    padding: const pw.EdgeInsets.only(left: 5, top: 1),
+                    child: pw.Text(
+                      'VAT: ${currencyFormat.format(item.vatAmount)}',
+                      style: const pw.TextStyle(
+                          fontSize: 6, color: PdfColors.grey600),
+                    ),
                   ),
-                ),
               ],
             ),
           );
@@ -371,14 +373,17 @@ class Thermal80mmTemplate extends InvoiceTemplate {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.stretch,
       children: [
-        _buildTotalRow('Subtotal:', currencyFormat.format(data.sale.subtotal)),
-        _buildTotalRow(
-            'VAT Amount:', currencyFormat.format(data.sale.vatAmount)),
-        pw.Container(
-          margin: const pw.EdgeInsets.symmetric(vertical: 3),
-          height: 1,
-          color: PdfColors.grey,
-        ),
+        if (data.vatEnabled)
+          _buildTotalRow('Subtotal:', currencyFormat.format(data.sale.subtotal)),
+        if (data.vatEnabled)
+          _buildTotalRow(
+              'VAT Amount:', currencyFormat.format(data.sale.vatAmount)),
+        if (data.vatEnabled)
+          pw.Container(
+            margin: const pw.EdgeInsets.symmetric(vertical: 3),
+            height: 1,
+            color: PdfColors.grey,
+          ),
         _buildTotalRow(
           'TOTAL:',
           currencyFormat.format(data.sale.totalAmount),

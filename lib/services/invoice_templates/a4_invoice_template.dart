@@ -59,16 +59,17 @@ class A4InvoiceTemplate extends InvoiceTemplate {
         buildItemsTable(data),
         pw.SizedBox(height: 5),
 
-        // VAT Note
-        pw.Text(
-          getVatNote(data.vatIncludedInPrice),
-          style: pw.TextStyle(
-              fontSize: 5,
-              fontStyle: pw.FontStyle.italic,
-              font: data.arabicFont),
-          textDirection: pw.TextDirection.rtl,
-          textAlign: pw.TextAlign.center,
-        ),
+        // VAT Note (only shown when VAT is enabled)
+        if (data.vatEnabled)
+          pw.Text(
+            getVatNote(data.vatIncludedInPrice),
+            style: pw.TextStyle(
+                fontSize: 5,
+                fontStyle: pw.FontStyle.italic,
+                font: data.arabicFont),
+            textDirection: pw.TextDirection.rtl,
+            textAlign: pw.TextAlign.center,
+          ),
         pw.SizedBox(height: 15),
 
         // Totals
@@ -303,11 +304,12 @@ class A4InvoiceTemplate extends InvoiceTemplate {
                 align: pw.TextAlign.right,
                 font: data.arabicFont,
                 textDirection: pw.TextDirection.rtl),
-            _buildTableCell('VAT / الضريبة ',
-                isHeader: true,
-                align: pw.TextAlign.right,
-                font: data.arabicFont,
-                textDirection: pw.TextDirection.rtl),
+            if (data.vatEnabled)
+              _buildTableCell('VAT / الضريبة ',
+                  isHeader: true,
+                  align: pw.TextAlign.right,
+                  font: data.arabicFont,
+                  textDirection: pw.TextDirection.rtl),
             _buildTableCell('Total / الإجمالي ',
                 isHeader: true,
                 align: pw.TextAlign.right,
@@ -332,10 +334,11 @@ class A4InvoiceTemplate extends InvoiceTemplate {
                 currencyFormat.format(item.unitPrice),
                 align: pw.TextAlign.right,
               ),
-              _buildTableCell(
-                currencyFormat.format(item.vatAmount),
-                align: pw.TextAlign.right,
-              ),
+              if (data.vatEnabled)
+                _buildTableCell(
+                  currencyFormat.format(item.vatAmount),
+                  align: pw.TextAlign.right,
+                ),
               _buildTableCell(
                 currencyFormat.format(item.total),
                 align: pw.TextAlign.right,
@@ -383,11 +386,13 @@ class A4InvoiceTemplate extends InvoiceTemplate {
         child: pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.stretch,
           children: [
-            _buildTotalRow(
-                'Subtotal:', currencyFormat.format(data.sale.subtotal)),
-            _buildTotalRow(
-                'VAT Amount:', currencyFormat.format(data.sale.vatAmount)),
-            pw.Divider(color: PdfColors.grey),
+            if (data.vatEnabled)
+              _buildTotalRow(
+                  'Subtotal:', currencyFormat.format(data.sale.subtotal)),
+            if (data.vatEnabled)
+              _buildTotalRow(
+                  'VAT Amount:', currencyFormat.format(data.sale.vatAmount)),
+            if (data.vatEnabled) pw.Divider(color: PdfColors.grey),
             _buildTotalRow(
               'Total Amount:',
               currencyFormat.format(data.sale.totalAmount),

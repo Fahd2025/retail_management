@@ -9,6 +9,7 @@ class AppConfigState extends Equatable {
   final PrintFormatConfig printFormatConfig;
   final double vatRate;
   final bool vatIncludedInPrice;
+  final bool vatEnabled;
 
   const AppConfigState({
     required this.themeMode,
@@ -17,6 +18,7 @@ class AppConfigState extends Equatable {
     this.printFormatConfig = PrintFormatConfig.defaultConfig,
     this.vatRate = 15.0, // Default Saudi VAT rate
     this.vatIncludedInPrice = true, // Default: VAT included in price
+    this.vatEnabled = true, // Default: VAT enabled
   });
 
   bool get isDarkMode => themeMode == ThemeMode.dark;
@@ -33,6 +35,7 @@ class AppConfigState extends Equatable {
     PrintFormatConfig? printFormatConfig,
     double? vatRate,
     bool? vatIncludedInPrice,
+    bool? vatEnabled,
   }) {
     return AppConfigState(
       themeMode: themeMode ?? this.themeMode,
@@ -41,6 +44,7 @@ class AppConfigState extends Equatable {
       printFormatConfig: printFormatConfig ?? this.printFormatConfig,
       vatRate: vatRate ?? this.vatRate,
       vatIncludedInPrice: vatIncludedInPrice ?? this.vatIncludedInPrice,
+      vatEnabled: vatEnabled ?? this.vatEnabled,
     );
   }
 
@@ -51,6 +55,7 @@ class AppConfigState extends Equatable {
         isLoading,
         printFormatConfig,
         vatRate,
-        vatIncludedInPrice
+        vatIncludedInPrice,
+        vatEnabled,
       ];
 }

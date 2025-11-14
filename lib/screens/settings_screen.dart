@@ -626,6 +626,49 @@ class _SettingsScreenState extends State<SettingsScreen> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // VAT Enable/Disable Toggle
+                const SizedBox(height: 16),
+                Card(
+                  elevation: 0,
+                  color: configState.vatEnabled
+                      ? Colors.green.shade50
+                      : Colors.red.shade50,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    side: BorderSide(
+                      color: configState.vatEnabled
+                          ? Colors.green.shade200
+                          : Colors.red.shade200,
+                    ),
+                  ),
+                  child: SwitchListTile(
+                    title: Text(
+                      configState.vatEnabled
+                          ? 'VAT Enabled'
+                          : 'VAT Disabled',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    subtitle: Text(
+                      configState.vatEnabled
+                          ? 'VAT calculations are active. VAT will be displayed in invoices and throughout the application.'
+                          : 'VAT calculations are disabled. VAT information will be hidden from all screens and invoices.',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    value: configState.vatEnabled,
+                    onChanged: (value) {
+                      context
+                          .read<AppConfigBloc>()
+                          .add(UpdateVatEnabledEvent(value));
+                    },
+                    activeColor: Colors.green.shade700,
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Show VAT Rate and Inclusion settings only if VAT is enabled
+                if (configState.vatEnabled) ...[
                 const SizedBox(height: 16),
                 LayoutBuilder(
                   builder: (context, constraints) {
@@ -830,6 +873,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ],
                   ),
                 ),
+                ], // End of if (configState.vatEnabled)
               ],
             );
           },

@@ -81,3 +81,12 @@ class UpdateVatInclusionEvent extends AppConfigEvent {
   @override
   List<Object?> get props => [vatIncludedInPrice];
 }
+
+class UpdateVatEnabledEvent extends AppConfigEvent {
+  final bool vatEnabled;
+
+  const UpdateVatEnabledEvent(this.vatEnabled);
+
+  @override
+  List<Object?> get props => [vatEnabled];
+}
