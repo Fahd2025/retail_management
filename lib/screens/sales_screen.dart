@@ -8,6 +8,7 @@ import '../blocs/sale/sale_state.dart';
 import '../blocs/auth/auth_bloc.dart';
 import '../blocs/auth/auth_state.dart';
 import '../blocs/app_config/app_config_bloc.dart';
+import '../blocs/app_config/app_config_state.dart';
 import '../models/sale.dart';
 import '../widgets/invoice_preview_dialog.dart';
 import '../database/drift_database.dart' hide Sale;
@@ -74,6 +75,7 @@ class _SalesScreenState extends State<SalesScreen> {
   Widget _buildSaleCard(
       Sale sale, DateFormat dateFormat, BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final vatEnabled = context.watch<AppConfigBloc>().state.vatEnabled;
     final statusColor = sale.status == SaleStatus.completed
         ? Colors.green
         : sale.status == SaleStatus.returned
@@ -161,21 +163,23 @@ class _SalesScreenState extends State<SalesScreen> {
                   );
                 }).toList(),
                 const Divider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(l10n.subtotalLabel),
-                    Text('SAR ${sale.subtotal.toStringAsFixed(2)}'),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(l10n.vatLabel),
-                    Text('SAR ${sale.vatAmount.toStringAsFixed(2)}'),
-                  ],
-                ),
-                const Divider(),
+                if (vatEnabled) ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(l10n.subtotalLabel),
+                      Text('SAR ${sale.subtotal.toStringAsFixed(2)}'),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(l10n.vatLabel),
+                      Text('SAR ${sale.vatAmount.toStringAsFixed(2)}'),
+                    ],
+                  ),
+                  const Divider(),
+                ],
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -307,6 +311,7 @@ class _SalesScreenState extends State<SalesScreen> {
             builder: (context, constraints) {
               final isDesktop = constraints.maxWidth >= 900;
               final l10n = AppLocalizations.of(context)!;
+              final vatEnabled = context.watch<AppConfigBloc>().state.vatEnabled;
 
               if (isDesktop) {
                 // Desktop: DataTable layout that fills width
@@ -324,7 +329,8 @@ class _SalesScreenState extends State<SalesScreen> {
                         columns: [
                           DataColumn(label: Text(l10n.invoiceLabel(''))),
                           DataColumn(label: Text(l10n.dateLabel(''))),
-                          DataColumn(label: Text('${l10n.vat} Amount')),
+                          if (vatEnabled)
+                            DataColumn(label: Text('${l10n.vat} Amount')),
                           DataColumn(label: Text(l10n.totalLabel(''))),
                           DataColumn(label: Text(l10n.statusLabelText(''))),
                           DataColumn(label: Text(l10n.itemsLabel)),
@@ -351,8 +357,9 @@ class _SalesScreenState extends State<SalesScreen> {
                           return DataRow(cells: [
                             DataCell(Text(sale.invoiceNumber)),
                             DataCell(Text(dateFormat.format(sale.saleDate))),
-                            DataCell(Text(
-                                'SAR ${sale.vatAmount.toStringAsFixed(2)}')),
+                            if (vatEnabled)
+                              DataCell(Text(
+                                  'SAR ${sale.vatAmount.toStringAsFixed(2)}')),
                             DataCell(Text(
                                 'SAR ${sale.totalAmount.toStringAsFixed(2)}')),
                             DataCell(

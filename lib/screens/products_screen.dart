@@ -174,46 +174,48 @@ class _ProductsScreenState extends State<ProductsScreen> {
               final isDesktop = constraints.maxWidth >= 800;
               final l10n = AppLocalizations.of(context)!;
 
-              final vatIncludedInPrice =
-                  context.read<AppConfigBloc>().state.vatIncludedInPrice;
+              final configState = context.watch<AppConfigBloc>().state;
+              final vatIncludedInPrice = configState.vatIncludedInPrice;
+              final vatEnabled = configState.vatEnabled;
 
               if (isDesktop) {
                 // Desktop/Tablet: DataTable layout that fills width
                 return Column(
                   children: [
-                    // VAT Information Note
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      color: vatIncludedInPrice
-                          ? Colors.green.shade50
-                          : Colors.blue.shade50,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.info_outline,
-                            size: 18,
-                            color: vatIncludedInPrice
-                                ? Colors.green.shade700
-                                : Colors.blue.shade700,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            vatIncludedInPrice
-                                ? 'Prices shown include VAT - VAT will be extracted from the listed price'
-                                : 'Prices shown exclude VAT - VAT will be added on top of the listed price',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
+                    // VAT Information Note (only shown when VAT is enabled)
+                    if (vatEnabled)
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        color: vatIncludedInPrice
+                            ? Colors.green.shade50
+                            : Colors.blue.shade50,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.info_outline,
+                              size: 18,
                               color: vatIncludedInPrice
-                                  ? Colors.green.shade900
-                                  : Colors.blue.shade900,
+                                  ? Colors.green.shade700
+                                  : Colors.blue.shade700,
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 8),
+                            Text(
+                              vatIncludedInPrice
+                                  ? 'Prices shown include VAT - VAT will be extracted from the listed price'
+                                  : 'Prices shown exclude VAT - VAT will be added on top of the listed price',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: vatIncludedInPrice
+                                    ? Colors.green.shade900
+                                    : Colors.blue.shade900,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
                     // DataTable
                     Expanded(
                       child: SingleChildScrollView(
@@ -228,12 +230,16 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               DataColumn(label: Text(l10n.barcodeRequired)),
                               DataColumn(label: Text(l10n.category)),
                               DataColumn(
-                                  label: Text(vatIncludedInPrice
-                                      ? 'Price (Incl.)'
-                                      : 'Price (Excl.)')),
-                              DataColumn(label: Text('Before ${l10n.vat}')),
-                              DataColumn(label: Text('${l10n.vat} Amount')),
-                              DataColumn(label: Text('After ${l10n.vat}')),
+                                  label: Text(vatEnabled
+                                      ? (vatIncludedInPrice
+                                          ? 'Price (Incl.)'
+                                          : 'Price (Excl.)')
+                                      : l10n.price)),
+                              if (vatEnabled) ...[
+                                DataColumn(label: Text('Before ${l10n.vat}')),
+                                DataColumn(label: Text('${l10n.vat} Amount')),
+                                DataColumn(label: Text('After ${l10n.vat}')),
+                              ],
                               DataColumn(label: Text(l10n.costRequired)),
                               DataColumn(label: Text(l10n.stock)),
                               DataColumn(label: Text(l10n.actions)),
@@ -269,12 +275,14 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     Text(_getCategoryName(product.category))),
                                 DataCell(Text(
                                     'SAR ${product.price.toStringAsFixed(2)}')),
-                                DataCell(Text(
-                                    'SAR ${priceBeforeVat.toStringAsFixed(2)}')),
-                                DataCell(Text(
-                                    'SAR ${vatAmount.toStringAsFixed(2)}')),
-                                DataCell(Text(
-                                    'SAR ${priceAfterVat.toStringAsFixed(2)}')),
+                                if (vatEnabled) ...[
+                                  DataCell(Text(
+                                      'SAR ${priceBeforeVat.toStringAsFixed(2)}')),
+                                  DataCell(Text(
+                                      'SAR ${vatAmount.toStringAsFixed(2)}')),
+                                  DataCell(Text(
+                                      'SAR ${priceAfterVat.toStringAsFixed(2)}')),
+                                ],
                                 DataCell(Text(
                                     'SAR ${product.cost.toStringAsFixed(2)}')),
                                 DataCell(Text(product.quantity.toString())),
@@ -308,41 +316,42 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 // Mobile: Card with ExpansionTile layout
                 return Column(
                   children: [
-                    // VAT Information Note
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      color: vatIncludedInPrice
-                          ? Colors.green.shade50
-                          : Colors.blue.shade50,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.info_outline,
-                            size: 18,
-                            color: vatIncludedInPrice
-                                ? Colors.green.shade700
-                                : Colors.blue.shade700,
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              vatIncludedInPrice
-                                  ? 'Prices shown include VAT - VAT will be extracted from the listed price'
-                                  : 'Prices shown exclude VAT - VAT will be added on top of the listed price',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: vatIncludedInPrice
-                                    ? Colors.green.shade900
-                                    : Colors.blue.shade900,
+                    // VAT Information Note (only shown when VAT is enabled)
+                    if (vatEnabled)
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        color: vatIncludedInPrice
+                            ? Colors.green.shade50
+                            : Colors.blue.shade50,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.info_outline,
+                              size: 18,
+                              color: vatIncludedInPrice
+                                  ? Colors.green.shade700
+                                  : Colors.blue.shade700,
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                vatIncludedInPrice
+                                    ? 'Prices shown include VAT - VAT will be extracted from the listed price'
+                                    : 'Prices shown exclude VAT - VAT will be added on top of the listed price',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: vatIncludedInPrice
+                                      ? Colors.green.shade900
+                                      : Colors.blue.shade900,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
                     // Product List
                     Expanded(
                       child: ListView.builder(
@@ -398,9 +407,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     style: const TextStyle(fontSize: 13),
                                   ),
                                   Text(
-                                    (vatIncludedInPrice
-                                            ? 'Price (Incl. ${l10n.vat})'
-                                            : 'Price (Excl. ${l10n.vat})') +
+                                    (vatEnabled
+                                            ? (vatIncludedInPrice
+                                                ? 'Price (Incl. ${l10n.vat})'
+                                                : 'Price (Excl. ${l10n.vat})')
+                                            : l10n.price) +
                                         ': SAR ${product.price.toStringAsFixed(2)}',
                                     style: TextStyle(
                                       fontSize: 14,
@@ -439,23 +450,25 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                           'SAR ${product.cost.toStringAsFixed(2)}'),
                                       _buildInfoRow(l10n.stock,
                                           '${product.quantity} ${l10n.units}'),
-                                      const SizedBox(height: 8),
-                                      const Divider(),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        '${l10n.vat} Breakdown',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
+                                      if (vatEnabled) ...[
+                                        const SizedBox(height: 8),
+                                        const Divider(),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          '${l10n.vat} Breakdown',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      _buildInfoRow('Before ${l10n.vat}',
-                                          'SAR ${priceBeforeVat.toStringAsFixed(2)}'),
-                                      _buildInfoRow('${l10n.vat} Amount',
-                                          'SAR ${vatAmount.toStringAsFixed(2)}'),
-                                      _buildInfoRow('After ${l10n.vat}',
-                                          'SAR ${priceAfterVat.toStringAsFixed(2)}'),
+                                        const SizedBox(height: 8),
+                                        _buildInfoRow('Before ${l10n.vat}',
+                                            'SAR ${priceBeforeVat.toStringAsFixed(2)}'),
+                                        _buildInfoRow('${l10n.vat} Amount',
+                                            'SAR ${vatAmount.toStringAsFixed(2)}'),
+                                        _buildInfoRow('After ${l10n.vat}',
+                                            'SAR ${priceAfterVat.toStringAsFixed(2)}'),
+                                      ],
                                       if (product.description != null &&
                                           product.description!.isNotEmpty) ...[
                                         const SizedBox(height: 8),
