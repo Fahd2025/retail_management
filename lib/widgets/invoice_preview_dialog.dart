@@ -150,6 +150,7 @@ class _InvoicePreviewDialogState extends State<InvoicePreviewDialog> {
                       customer: widget.customer,
                       config: _selectedConfig,
                       vatIncludedInPrice: configState.vatIncludedInPrice,
+                      vatEnabled: configState.vatEnabled,
                     ),
                     canChangeOrientation: false,
                     canChangePageFormat: false,
@@ -166,6 +167,7 @@ class _InvoicePreviewDialogState extends State<InvoicePreviewDialog> {
                             customer: widget.customer,
                             config: _selectedConfig,
                             vatIncludedInPrice: configState.vatIncludedInPrice,
+                            vatEnabled: configState.vatEnabled,
                           );
                         },
                       ),
@@ -349,6 +351,7 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                                       customer: widget.customer,
                                       config: config,
                                       vatIncludedInPrice: configState.vatIncludedInPrice,
+                                      vatEnabled: configState.vatEnabled,
                                     );
                                     if (context.mounted) {
                                       Navigator.of(context).pop();

@@ -23,6 +23,7 @@ class InvoiceService {
   /// - [customer]: Optional customer information
   /// - [config]: Print format configuration (format, display options)
   /// - [vatIncludedInPrice]: Whether prices include or exclude VAT
+  /// - [vatEnabled]: Whether VAT is enabled or disabled
   ///
   /// Returns: PDF as Uint8List bytes
   Future<Uint8List> generateInvoicePdf({
@@ -31,6 +32,7 @@ class InvoiceService {
     Customer? customer,
     PrintFormatConfig config = PrintFormatConfig.defaultConfig,
     bool vatIncludedInPrice = true,
+    bool vatEnabled = true,
   }) async {
     // Load Arabic font for proper Arabic text rendering
     final arabicFont =
@@ -75,6 +77,7 @@ class InvoiceService {
       logoBytes: logoBytes,
       arabicFont: arabicTtf,
       vatIncludedInPrice: vatIncludedInPrice,
+      vatEnabled: vatEnabled,
     );
 
     // Get the appropriate template for the format
@@ -120,12 +123,14 @@ class InvoiceService {
   /// - [customer]: Optional customer information
   /// - [config]: Print format configuration
   /// - [vatIncludedInPrice]: Whether prices include or exclude VAT
+  /// - [vatEnabled]: Whether VAT is enabled or disabled
   Future<void> printInvoice({
     required Sale sale,
     required CompanyInfo companyInfo,
     Customer? customer,
     PrintFormatConfig config = PrintFormatConfig.defaultConfig,
     bool vatIncludedInPrice = true,
+    bool vatEnabled = true,
   }) async {
     final pdfBytes = await generateInvoicePdf(
       sale: sale,
@@ -133,6 +138,7 @@ class InvoiceService {
       customer: customer,
       config: config,
       vatIncludedInPrice: vatIncludedInPrice,
+      vatEnabled: vatEnabled,
     );
 
     await Printing.layoutPdf(
@@ -151,6 +157,7 @@ class InvoiceService {
     Customer? customer,
     PrintFormatConfig config = PrintFormatConfig.defaultConfig,
     bool vatIncludedInPrice = true,
+    bool vatEnabled = true,
   }) async {
     return generateInvoicePdf(
       sale: sale,
@@ -158,6 +165,7 @@ class InvoiceService {
       customer: customer,
       config: config,
       vatIncludedInPrice: vatIncludedInPrice,
+      vatEnabled: vatEnabled,
     );
   }
 }

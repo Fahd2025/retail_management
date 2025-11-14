@@ -16,6 +16,7 @@ class InvoiceData {
   final Uint8List? logoBytes;
   final pw.Font? arabicFont;
   final bool vatIncludedInPrice;
+  final bool vatEnabled;
 
   const InvoiceData({
     required this.sale,
@@ -25,6 +26,7 @@ class InvoiceData {
     this.logoBytes,
     this.arabicFont,
     this.vatIncludedInPrice = true, // Default: VAT included
+    this.vatEnabled = true, // Default: VAT enabled
   });
 }
 
