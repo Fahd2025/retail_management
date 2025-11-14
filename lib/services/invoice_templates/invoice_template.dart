@@ -15,6 +15,7 @@ class InvoiceData {
   final String zatcaQrData;
   final Uint8List? logoBytes;
   final pw.Font? arabicFont;
+  final bool vatIncludedInPrice;
 
   const InvoiceData({
     required this.sale,
@@ -23,6 +24,7 @@ class InvoiceData {
     required this.zatcaQrData,
     this.logoBytes,
     this.arabicFont,
+    this.vatIncludedInPrice = true, // Default: VAT included
   });
 }
 
@@ -113,6 +115,15 @@ abstract class InvoiceTemplate {
         return ' Card / بطاقة';
       case PaymentMethod.transfer:
         return 'Transfer / تحويل';
+    }
+  }
+
+  /// Get the VAT note based on the VAT inclusion setting
+  String getVatNote(bool vatIncludedInPrice) {
+    if (vatIncludedInPrice) {
+      return 'Prices incl. VAT / الأسعار تشمل الضريبة';
+    } else {
+      return 'Prices excl. VAT / الأسعار لا تشمل الضريبة';
     }
   }
 

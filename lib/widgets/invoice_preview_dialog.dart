@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:printing/printing.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../models/sale.dart';
@@ -6,6 +7,8 @@ import '../models/company_info.dart';
 import '../models/customer.dart';
 import '../models/print_format.dart';
 import '../services/invoice_service.dart';
+import '../blocs/app_config/app_config_bloc.dart';
+import '../blocs/app_config/app_config_state.dart';
 
 /// Dialog for previewing and printing invoices
 ///
@@ -138,31 +141,37 @@ class _InvoicePreviewDialogState extends State<InvoicePreviewDialog> {
 
             // PDF Preview
             Expanded(
-              child: PdfPreview(
-                build: (format) => _invoiceService.previewInvoice(
-                  sale: widget.sale,
-                  companyInfo: widget.companyInfo,
-                  customer: widget.customer,
-                  config: _selectedConfig,
-                ),
-                canChangeOrientation: false,
-                canChangePageFormat: false,
-                canDebug: false,
-                pdfFileName:
-                    'Invoice_${widget.sale.invoiceNumber}_${_selectedConfig.format.id}.pdf',
-                actions: [
-                  PdfPreviewAction(
-                    icon: const Icon(Icons.print),
-                    onPressed: (context, build, pageFormat) async {
-                      await _invoiceService.printInvoice(
-                        sale: widget.sale,
-                        companyInfo: widget.companyInfo,
-                        customer: widget.customer,
-                        config: _selectedConfig,
-                      );
-                    },
-                  ),
-                ],
+              child: BlocBuilder<AppConfigBloc, AppConfigState>(
+                builder: (context, configState) {
+                  return PdfPreview(
+                    build: (format) => _invoiceService.previewInvoice(
+                      sale: widget.sale,
+                      companyInfo: widget.companyInfo,
+                      customer: widget.customer,
+                      config: _selectedConfig,
+                      vatIncludedInPrice: configState.vatIncludedInPrice,
+                    ),
+                    canChangeOrientation: false,
+                    canChangePageFormat: false,
+                    canDebug: false,
+                    pdfFileName:
+                        'Invoice_${widget.sale.invoiceNumber}_${_selectedConfig.format.id}.pdf',
+                    actions: [
+                      PdfPreviewAction(
+                        icon: const Icon(Icons.print),
+                        onPressed: (context, build, pageFormat) async {
+                          await _invoiceService.printInvoice(
+                            sale: widget.sale,
+                            companyInfo: widget.companyInfo,
+                            customer: widget.customer,
+                            config: _selectedConfig,
+                            vatIncludedInPrice: configState.vatIncludedInPrice,
+                          );
+                        },
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ],
@@ -323,46 +332,51 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                       // Action buttons
                       Padding(
                         padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ElevatedButton.icon(
-                              onPressed: () async {
-                                final config = PrintFormatConfig(
-                                  format: _selectedFormat,
-                                );
-                                await _invoiceService.printInvoice(
-                                  sale: widget.sale,
-                                  companyInfo: widget.companyInfo,
-                                  customer: widget.customer,
-                                  config: config,
-                                );
-                                if (context.mounted) {
-                                  Navigator.of(context).pop();
-                                }
-                              },
-                              icon: const Icon(Icons.print),
-                              label: Text(l10n.printNow),
-                            ),
-                            const SizedBox(height: 8),
-                            OutlinedButton.icon(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                InvoicePreviewDialog.show(
-                                  context: context,
-                                  sale: widget.sale,
-                                  companyInfo: widget.companyInfo,
-                                  customer: widget.customer,
-                                  initialConfig: PrintFormatConfig(
-                                    format: _selectedFormat,
-                                  ),
-                                );
-                              },
-                              icon: const Icon(Icons.preview),
-                              label: Text(l10n.preview),
-                            ),
-                          ],
+                        child: BlocBuilder<AppConfigBloc, AppConfigState>(
+                          builder: (context, configState) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ElevatedButton.icon(
+                                  onPressed: () async {
+                                    final config = PrintFormatConfig(
+                                      format: _selectedFormat,
+                                    );
+                                    await _invoiceService.printInvoice(
+                                      sale: widget.sale,
+                                      companyInfo: widget.companyInfo,
+                                      customer: widget.customer,
+                                      config: config,
+                                      vatIncludedInPrice: configState.vatIncludedInPrice,
+                                    );
+                                    if (context.mounted) {
+                                      Navigator.of(context).pop();
+                                    }
+                                  },
+                                  icon: const Icon(Icons.print),
+                                  label: Text(l10n.printNow),
+                                ),
+                                const SizedBox(height: 8),
+                                OutlinedButton.icon(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    InvoicePreviewDialog.show(
+                                      context: context,
+                                      sale: widget.sale,
+                                      companyInfo: widget.companyInfo,
+                                      customer: widget.customer,
+                                      initialConfig: PrintFormatConfig(
+                                        format: _selectedFormat,
+                                      ),
+                                    );
+                                  },
+                                  icon: const Icon(Icons.preview),
+                                  label: Text(l10n.preview),
+                                ),
+                              ],
+                            );
+                          },
                         ),
                       ),
                     ],

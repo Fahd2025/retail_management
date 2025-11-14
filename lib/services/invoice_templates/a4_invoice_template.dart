@@ -61,7 +61,7 @@ class A4InvoiceTemplate extends InvoiceTemplate {
 
         // VAT Note
         pw.Text(
-          'Prices excl. VAT /  الأسعار لا تشمل الضريبة',
+          getVatNote(data.vatIncludedInPrice),
           style: pw.TextStyle(
               fontSize: 5,
               fontStyle: pw.FontStyle.italic,
