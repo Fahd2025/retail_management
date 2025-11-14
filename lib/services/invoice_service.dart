@@ -22,6 +22,7 @@ class InvoiceService {
   /// - [companyInfo]: Company information for the header
   /// - [customer]: Optional customer information
   /// - [config]: Print format configuration (format, display options)
+  /// - [vatIncludedInPrice]: Whether prices include or exclude VAT
   ///
   /// Returns: PDF as Uint8List bytes
   Future<Uint8List> generateInvoicePdf({
@@ -29,6 +30,7 @@ class InvoiceService {
     required CompanyInfo companyInfo,
     Customer? customer,
     PrintFormatConfig config = PrintFormatConfig.defaultConfig,
+    bool vatIncludedInPrice = true,
   }) async {
     // Load Arabic font for proper Arabic text rendering
     final arabicFont =
@@ -72,6 +74,7 @@ class InvoiceService {
       zatcaQrData: qrData,
       logoBytes: logoBytes,
       arabicFont: arabicTtf,
+      vatIncludedInPrice: vatIncludedInPrice,
     );
 
     // Get the appropriate template for the format
@@ -116,17 +119,20 @@ class InvoiceService {
   /// - [companyInfo]: Company information for the header
   /// - [customer]: Optional customer information
   /// - [config]: Print format configuration
+  /// - [vatIncludedInPrice]: Whether prices include or exclude VAT
   Future<void> printInvoice({
     required Sale sale,
     required CompanyInfo companyInfo,
     Customer? customer,
     PrintFormatConfig config = PrintFormatConfig.defaultConfig,
+    bool vatIncludedInPrice = true,
   }) async {
     final pdfBytes = await generateInvoicePdf(
       sale: sale,
       companyInfo: companyInfo,
       customer: customer,
       config: config,
+      vatIncludedInPrice: vatIncludedInPrice,
     );
 
     await Printing.layoutPdf(
@@ -144,12 +150,14 @@ class InvoiceService {
     required CompanyInfo companyInfo,
     Customer? customer,
     PrintFormatConfig config = PrintFormatConfig.defaultConfig,
+    bool vatIncludedInPrice = true,
   }) async {
     return generateInvoicePdf(
       sale: sale,
       companyInfo: companyInfo,
       customer: customer,
       config: config,
+      vatIncludedInPrice: vatIncludedInPrice,
     );
   }
 }
