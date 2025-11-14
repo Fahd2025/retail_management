@@ -414,9 +414,13 @@ class _CashierScreenState extends State<CashierScreen>
                               onSubmitted: (_) => _scanBarcode(),
                             ),
                           ),
-                          // VAT Information Note
+                          // VAT Information Note (only shown when VAT is enabled)
                           BlocBuilder<AppConfigBloc, AppConfigState>(
                             builder: (context, configState) {
+                              if (!configState.vatEnabled) {
+                                return const SizedBox.shrink();
+                              }
+
                               return Container(
                                 width: double.infinity,
                                 padding: const EdgeInsets.symmetric(
@@ -638,24 +642,29 @@ class _CashierScreenState extends State<CashierScreen>
                                   top: BorderSide(color: Colors.grey.shade300),
                                 ),
                               ),
-                              child: Column(
-                                children: [
-                                  _SummaryRow(
-                                      AppLocalizations.of(context)!
-                                          .subtotalLabel,
-                                      cartSubtotal),
-                                  const SizedBox(height: 8),
-                                  _SummaryRow(
-                                      AppLocalizations.of(context)!.vatLabel,
-                                      cartVatAmount),
-                                  const Divider(),
-                                  _SummaryRow(
-                                    AppLocalizations.of(context)!
-                                        .totalLabelColon,
-                                    cartTotal,
-                                    isBold: true,
-                                    fontSize: 20,
-                                  ),
+                              child: BlocBuilder<AppConfigBloc, AppConfigState>(
+                                builder: (context, configState) {
+                                  return Column(
+                                    children: [
+                                      if (configState.vatEnabled) ...[
+                                        _SummaryRow(
+                                            AppLocalizations.of(context)!
+                                                .subtotalLabel,
+                                            cartSubtotal),
+                                        const SizedBox(height: 8),
+                                        _SummaryRow(
+                                            AppLocalizations.of(context)!
+                                                .vatLabel,
+                                            cartVatAmount),
+                                        const Divider(),
+                                      ],
+                                      _SummaryRow(
+                                        AppLocalizations.of(context)!
+                                            .totalLabelColon,
+                                        cartTotal,
+                                        isBold: true,
+                                        fontSize: 20,
+                                      ),
                                   const SizedBox(height: 16),
                                   Row(
                                     children: [
@@ -687,10 +696,12 @@ class _CashierScreenState extends State<CashierScreen>
                                                   .checkout),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
                             ),
                           ],
                         ),

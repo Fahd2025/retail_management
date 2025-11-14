@@ -5,6 +5,8 @@ import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/dashboard/dashboard_bloc.dart';
 import '../blocs/dashboard/dashboard_event.dart';
 import '../blocs/dashboard/dashboard_state.dart';
+import '../blocs/app_config/app_config_bloc.dart';
+import '../blocs/app_config/app_config_state.dart';
 import '../models/dashboard_statistics.dart';
 import '../models/sale.dart';
 import '../database/drift_database.dart' hide Sale;
@@ -161,46 +163,53 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
               ),
             ),
             SizedBox(height: 12.h),
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 12.h,
-              crossAxisSpacing: 12.w,
-              childAspectRatio: 1.5,
-              children: [
-                MetricCard.currency(
-                  title: l10n.sales,
-                  amount: statistics.totalSales,
-                  icon: Icons.attach_money,
-                  color: Colors.green,
-                  subtitle:
-                      '${statistics.completedInvoices} ${l10n.completedInvoices}',
-                ),
-                MetricCard.currency(
-                  title: l10n.totalVat,
-                  amount: statistics.totalVat,
-                  icon: Icons.receipt,
-                  color: Colors.orange,
-                  subtitle: l10n.vatCollected,
-                ),
-                MetricCard.count(
-                  title: l10n.totalProducts,
-                  count: statistics.totalProducts,
-                  icon: Icons.inventory_2,
-                  color: Colors.blue,
-                  subtitle:
-                      '${statistics.activeProducts} ${l10n.activeProducts}',
-                ),
-                MetricCard.count(
-                  title: l10n.totalCustomers,
-                  count: statistics.totalCustomers,
-                  icon: Icons.people,
-                  color: Colors.purple,
-                  subtitle:
-                      '${statistics.activeCustomers} ${l10n.activeCustomers}',
-                ),
-              ],
+            BlocBuilder<AppConfigBloc, AppConfigState>(
+              builder: (context, configState) {
+                final metricCards = <Widget>[
+                  MetricCard.currency(
+                    title: l10n.sales,
+                    amount: statistics.totalSales,
+                    icon: Icons.attach_money,
+                    color: Colors.green,
+                    subtitle:
+                        '${statistics.completedInvoices} ${l10n.completedInvoices}',
+                  ),
+                  if (configState.vatEnabled)
+                    MetricCard.currency(
+                      title: l10n.totalVat,
+                      amount: statistics.totalVat,
+                      icon: Icons.receipt,
+                      color: Colors.orange,
+                      subtitle: l10n.vatCollected,
+                    ),
+                  MetricCard.count(
+                    title: l10n.totalProducts,
+                    count: statistics.totalProducts,
+                    icon: Icons.inventory_2,
+                    color: Colors.blue,
+                    subtitle:
+                        '${statistics.activeProducts} ${l10n.activeProducts}',
+                  ),
+                  MetricCard.count(
+                    title: l10n.totalCustomers,
+                    count: statistics.totalCustomers,
+                    icon: Icons.people,
+                    color: Colors.purple,
+                    subtitle:
+                        '${statistics.activeCustomers} ${l10n.activeCustomers}',
+                  ),
+                ];
+
+                return GridView.count(
+                  crossAxisCount: 2,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  mainAxisSpacing: 12.h,
+                  crossAxisSpacing: 12.w,
+                  childAspectRatio: 1.5,
+                  children: metricCards,
+                );
+              },
             ),
             SizedBox(height: 24.h),
 
