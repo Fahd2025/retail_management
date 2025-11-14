@@ -8,6 +8,7 @@ import '../blocs/auth/auth_bloc.dart';
 import '../blocs/auth/auth_state.dart';
 import '../models/user.dart';
 import '../widgets/form_bottom_sheet.dart';
+import '../utils/currency_helper.dart';
 
 class UsersScreen extends StatefulWidget {
   const UsersScreen({super.key});
@@ -226,7 +227,7 @@ class _UsersScreenState extends State<UsersScreen> {
                             ),
                             DataCell(Text(invoiceCount.toString())),
                             DataCell(
-                              Text('SAR ${totalSales.toStringAsFixed(2)}'),
+                              Text(CurrencyHelper.formatCurrencySync(totalSales)),
                             ),
                             DataCell(
                               Row(
@@ -342,7 +343,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                     l10n.invoiceCount, invoiceCount.toString()),
                                 _buildInfoRow(
                                   l10n.total,
-                                  'SAR ${totalSales.toStringAsFixed(2)}',
+                                  CurrencyHelper.formatCurrencySync(totalSales),
                                 ),
                               ],
                             ),
