@@ -311,7 +311,7 @@ class A4InvoiceTemplate extends InvoiceTemplate {
         ...data.sale.items.map((item) {
           return pw.TableRow(
             children: [
-              _buildTableCell(item.productName),
+              _buildTableCell(item.productName, font: data.arabicFont),
               _buildTableCell(
                 item.quantity.toString(),
                 align: pw.TextAlign.center,
