@@ -1277,4 +1277,18 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get transfer => 'تحويل';
+
+  @override
+  String get vatEnabled => 'تفعيل ضريبة القيمة المضافة';
+
+  @override
+  String get vatDisabled => 'تعطيل ضريبة القيمة المضافة';
+
+  @override
+  String get vatEnabledDescription =>
+      'حسابات ضريبة القيمة المضافة نشطة. سيتم عرض الضريبة في الفواتير وفي جميع أنحاء التطبيق.';
+
+  @override
+  String get vatDisabledDescription =>
+      'حسابات ضريبة القيمة المضافة معطلة. سيتم إخفاء معلومات الضريبة من جميع الشاشات والفواتير.';
 }

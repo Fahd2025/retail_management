@@ -1279,4 +1279,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get transfer => 'Transfer';
+
+  @override
+  String get vatEnabled => 'VAT Enabled';
+
+  @override
+  String get vatDisabled => 'VAT Disabled';
+
+  @override
+  String get vatEnabledDescription =>
+      'VAT calculations are active. VAT will be displayed in invoices and throughout the application.';
+
+  @override
+  String get vatDisabledDescription =>
+      'VAT calculations are disabled. VAT information will be hidden from all screens and invoices.';
 }
