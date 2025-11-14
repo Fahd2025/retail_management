@@ -2467,6 +2467,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Transfer'**
   String get transfer;
+
+  /// No description provided for @vatEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT Enabled'**
+  String get vatEnabled;
+
+  /// No description provided for @vatDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT Disabled'**
+  String get vatDisabled;
+
+  /// No description provided for @vatEnabledDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT calculations are active. VAT will be displayed in invoices and throughout the application.'**
+  String get vatEnabledDescription;
+
+  /// No description provided for @vatDisabledDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT calculations are disabled. VAT information will be hidden from all screens and invoices.'**
+  String get vatDisabledDescription;
 }
 
 class _AppLocalizationsDelegate

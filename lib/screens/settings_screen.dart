@@ -643,15 +643,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   child: SwitchListTile(
                     title: Text(
-                      configState.vatEnabled ? 'VAT Enabled' : 'VAT Disabled',
+                      configState.vatEnabled
+                          ? l10n.vatEnabled
+                          : l10n.vatDisabled,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                     ),
                     subtitle: Text(
                       configState.vatEnabled
-                          ? 'VAT calculations are active. VAT will be displayed in invoices and throughout the application.'
-                          : 'VAT calculations are disabled. VAT information will be hidden from all screens and invoices.',
+                          ? l10n.vatEnabledDescription
+                          : l10n.vatDisabledDescription,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     value: configState.vatEnabled,
