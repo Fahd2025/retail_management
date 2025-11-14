@@ -318,6 +318,7 @@ class Thermal80mmTemplate extends InvoiceTemplate {
                       child: pw.Text(
                         item.productName,
                         style: pw.TextStyle(fontSize: 8, font: data.arabicFont),
+                        textDirection: pw.TextDirection.rtl,
                       ),
                     ),
                     pw.Container(

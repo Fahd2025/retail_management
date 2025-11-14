@@ -311,7 +311,11 @@ class A4InvoiceTemplate extends InvoiceTemplate {
         ...data.sale.items.map((item) {
           return pw.TableRow(
             children: [
-              _buildTableCell(item.productName, font: data.arabicFont),
+              _buildTableCell(
+                item.productName,
+                font: data.arabicFont,
+                textDirection: pw.TextDirection.rtl,
+              ),
               _buildTableCell(
                 item.quantity.toString(),
                 align: pw.TextAlign.center,
@@ -340,6 +344,7 @@ class A4InvoiceTemplate extends InvoiceTemplate {
     bool isHeader = false,
     pw.TextAlign align = pw.TextAlign.left,
     pw.Font? font,
+    pw.TextDirection? textDirection,
   }) {
     return pw.Padding(
       padding: const pw.EdgeInsets.all(5),
@@ -351,6 +356,7 @@ class A4InvoiceTemplate extends InvoiceTemplate {
           font: font,
         ),
         textAlign: align,
+        textDirection: textDirection,
       ),
     );
   }
