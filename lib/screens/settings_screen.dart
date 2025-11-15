@@ -1164,6 +1164,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             // This ensures theme, locale, VAT settings, etc. are updated immediately
             context.read<AppConfigBloc>().add(const InitializeAppConfigEvent());
 
+            // Clear and refresh currency cache so all screens get the new currency
+            CurrencyHelper.refreshCache();
+
             // Reload company information to update the form fields
             _loadCompanyInfo();
 
