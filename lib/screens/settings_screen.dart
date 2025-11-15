@@ -1,6 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:open_file/open_file.dart';
 import '../database/drift_database.dart';
 import '../models/company_info.dart';
 import '../services/sync_service.dart';
@@ -206,6 +209,135 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: Colors.red[600],
         behavior: SnackBarBehavior.floating,
         margin: const EdgeInsets.all(16),
+      ),
+    );
+  }
+
+  /// Show export success dialog with options to share or open file
+  void _showExportSuccessDialog(BuildContext context, String filePath) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDirectory = FileSystemEntity.isDirectorySync(filePath);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Row(
+          children: [
+            Icon(Icons.check_circle, color: Colors.green[600], size: 28),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                l10n.exportSuccess,
+                style: theme.textTheme.titleLarge,
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.exportSuccessMessage(filePath),
+              style: theme.textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: theme.colorScheme.primary.withOpacity(0.3),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    color: theme.colorScheme.primary,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      isDirectory
+                          ? 'Multiple files exported to folder'
+                          : 'File saved successfully',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onPrimaryContainer,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          // Open File button
+          TextButton.icon(
+            onPressed: () async {
+              try {
+                if (isDirectory) {
+                  // For directories, try to open the first file or the directory itself
+                  final dir = Directory(filePath);
+                  final files = await dir.list().toList();
+                  if (files.isNotEmpty && files.first is File) {
+                    await OpenFile.open(files.first.path);
+                  } else {
+                    // Try to open the directory
+                    await OpenFile.open(filePath);
+                  }
+                } else {
+                  await OpenFile.open(filePath);
+                }
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  _showErrorSnackBar('Could not open file: $e');
+                }
+              }
+            },
+            icon: const Icon(Icons.open_in_new),
+            label: Text(l10n.openFile ?? 'Open File'),
+          ),
+
+          // Share button
+          if (!isDirectory) // Only show share for single files
+            TextButton.icon(
+              onPressed: () async {
+                try {
+                  final file = XFile(filePath);
+                  await Share.shareXFiles(
+                    [file],
+                    subject: 'Data Export - ${DateTime.now().toString()}',
+                  );
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    _showErrorSnackBar('Could not share file: $e');
+                  }
+                }
+              },
+              icon: const Icon(Icons.share),
+              label: Text(l10n.share ?? 'Share'),
+            ),
+
+          // Close button
+          FilledButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.close),
+          ),
+        ],
       ),
     );
   }
@@ -1008,7 +1140,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: BlocConsumer<DataImportExportBloc, DataImportExportState>(
         listener: (context, state) {
           if (state is DataExported) {
-            _showSuccessSnackBar(l10n.exportSuccessMessage(state.filePath));
+            _showExportSuccessDialog(context, state.filePath);
           } else if (state is DataImported) {
             _showSuccessSnackBar(
                 l10n.importSuccessMessage(state.itemsImported));

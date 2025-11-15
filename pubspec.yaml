@@ -71,6 +71,12 @@ dependencies:
   # CSV Parsing and Generation
   csv: ^6.0.0
 
+  # File Sharing
+  share_plus: ^10.0.2
+
+  # Open Files
+  open_file: ^3.5.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

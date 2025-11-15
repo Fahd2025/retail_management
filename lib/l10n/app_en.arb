@@ -795,5 +795,7 @@
   "invalidFileContent": "Invalid file content. Please check the file format.",
   "importInProgress": "Import in progress...",
   "exportInProgress": "Export in progress...",
-  "users": "Users"
+  "users": "Users",
+  "openFile": "Open File",
+  "share": "Share"
 }
