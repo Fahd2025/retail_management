@@ -190,10 +190,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       return Center(
                         child: ConstrainedBox(
                           constraints: const BoxConstraints(maxWidth: 520),
-                          child: GlassmorphicContainer(
-                            width: double.infinity,
-                            height: null,
-                            borderRadius: 32,
+                          child: LayoutBuilder(
+                            builder: (context, constraints) {
+                              return IntrinsicHeight(
+                                child: GlassmorphicContainer(
+                                  width: constraints.maxWidth,
+                                  height: constraints.maxHeight > 0 ? constraints.maxHeight : 650,
+                                  borderRadius: 32,
                             blur: 20,
                             alignment: Alignment.center,
                             border: 2,
@@ -348,10 +351,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   const SizedBox(height: 32),
 
                                   // Default Credentials Display with glass effect
-                                  GlassmorphicContainer(
-                                    width: double.infinity,
-                                    height: null,
-                                    borderRadius: 16,
+                                  IntrinsicHeight(
+                                    child: GlassmorphicContainer(
+                                      width: double.infinity,
+                                      height: 200,
+                                      borderRadius: 16,
                                     blur: 15,
                                     alignment: Alignment.center,
                                     border: 2,
@@ -416,6 +420,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ],
                                       ),
                                     ),
+                                  ),
                                   ),
                                   const SizedBox(height: 32),
 
@@ -550,6 +555,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       );
+                            },
+                          ),
+                        ),
+                      );
                     },
                   ),
                 ),
@@ -567,7 +576,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: const EdgeInsets.all(16),
                     child: GlassmorphicContainer(
                       width: double.infinity,
-                      height: null,
+                      height: 70,
                       borderRadius: 12,
                       blur: 20,
                       alignment: Alignment.center,

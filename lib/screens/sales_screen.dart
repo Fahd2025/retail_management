@@ -91,10 +91,11 @@ class _SalesScreenState extends State<SalesScreen> {
             ? l10n.return_sale
             : sale.status.toString().split('.').last.toUpperCase();
 
-    return GlassmorphicContainer(
-      width: double.infinity,
-      height: null,
-      borderRadius: 16,
+    return IntrinsicHeight(
+      child: GlassmorphicContainer(
+        width: double.infinity,
+        height: 200,
+        borderRadius: 16,
       blur: 18,
       alignment: Alignment.centerLeft,
       border: 2,
@@ -474,10 +475,13 @@ class _SalesScreenState extends State<SalesScreen> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(16),
-                        child: GlassmorphicContainer(
-                          width: double.infinity,
-                          height: null,
-                          borderRadius: 16,
+                        child: LayoutBuilder(
+                          builder: (context, innerConstraints) {
+                            return IntrinsicHeight(
+                              child: GlassmorphicContainer(
+                                width: double.infinity,
+                                height: innerConstraints.maxHeight > 0 ? innerConstraints.maxHeight : 600,
+                                borderRadius: 16,
                           blur: 20,
                           alignment: Alignment.topLeft,
                           border: 2,
@@ -625,6 +629,7 @@ class _SalesScreenState extends State<SalesScreen> {
           );
         },
       ),
+    ),
     );
   }
 }

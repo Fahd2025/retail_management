@@ -272,13 +272,16 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(16),
-                            child: GlassmorphicContainer(
-                              width: constraints.maxWidth - 32,
-                              height: null,
-                              borderRadius: 16,
-                              blur: 20,
-                              alignment: Alignment.center,
-                              border: 2,
+                            child: LayoutBuilder(
+                              builder: (context, innerConstraints) {
+                                return IntrinsicHeight(
+                                  child: GlassmorphicContainer(
+                                    width: constraints.maxWidth - 32,
+                                    height: innerConstraints.maxHeight > 0 ? innerConstraints.maxHeight : 600,
+                                    borderRadius: 16,
+                                    blur: 20,
+                                    alignment: Alignment.center,
+                                    border: 2,
                               linearGradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
@@ -406,6 +409,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 ),
                               ),
                             ),
+                          );
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -475,13 +481,14 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           priceAfterVat = priceBeforeVat + vatAmount;
                         }
 
-                        return GlassmorphicContainer(
-                          width: double.infinity,
-                          height: null,
-                          borderRadius: 16,
-                          blur: 18,
-                          alignment: Alignment.center,
-                          border: 2,
+                        return IntrinsicHeight(
+                          child: GlassmorphicContainer(
+                            width: double.infinity,
+                            height: 200,
+                            borderRadius: 16,
+                            blur: 18,
+                            alignment: Alignment.center,
+                            border: 2,
                           linearGradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -649,6 +656,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               ),
                             ],
                           ),
+                        ),
                         );
                       },
                     ),

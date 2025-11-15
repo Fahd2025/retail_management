@@ -372,10 +372,13 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(16),
-                              child: GlassmorphicContainer(
-                                width: constraints.maxWidth - 32,
-                                height: null,
-                                borderRadius: 16,
+                              child: LayoutBuilder(
+                                builder: (context, innerConstraints) {
+                                  return IntrinsicHeight(
+                                    child: GlassmorphicContainer(
+                                      width: constraints.maxWidth - 32,
+                                      height: innerConstraints.maxHeight > 0 ? innerConstraints.maxHeight : 600,
+                                      borderRadius: 16,
                                 blur: 20,
                                 alignment: Alignment.center,
                                 border: 2,
@@ -495,7 +498,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             padding: const EdgeInsets.only(bottom: 12),
                             child: GlassmorphicContainer(
                               width: double.infinity,
-                              height: null,
+                              height: 80,
                               borderRadius: 16,
                               blur: 18,
                               alignment: Alignment.center,

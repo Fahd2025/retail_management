@@ -278,10 +278,11 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
             SizedBox(height: 16.h),
 
             // Footer with statistics summary
-            GlassmorphicContainer(
-              width: double.infinity,
-              height: null,
-              borderRadius: 12.r,
+            IntrinsicHeight(
+              child: GlassmorphicContainer(
+                width: double.infinity,
+                height: 150,
+                borderRadius: 12.r,
               blur: 20,
               alignment: Alignment.topLeft,
               border: 2,
@@ -347,6 +348,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                   ),
                 ],
               ),
+            ),
             ),
             SizedBox(height: 32.h),
           ],

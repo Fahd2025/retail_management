@@ -241,7 +241,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: Colors.transparent,
         child: GlassmorphicContainer(
           width: 500,
-          height: null,
+          height: 400,
           borderRadius: 24,
           blur: 25,
           alignment: Alignment.center,
@@ -881,7 +881,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return GlassmorphicContainer(
       width: double.infinity,
-      height: null,
+      height: 150,
       borderRadius: 12,
       blur: 15,
       alignment: Alignment.centerLeft,
@@ -967,7 +967,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return GlassmorphicContainer(
       width: double.infinity,
-      height: null,
+      height: 150,
       borderRadius: 12,
       blur: 15,
       alignment: Alignment.centerLeft,
@@ -1031,7 +1031,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               // VAT Enable/Disable Toggle
               GlassmorphicContainer(
                 width: double.infinity,
-                height: null,
+                height: 80,
                 borderRadius: 16,
                 blur: 20,
                 alignment: Alignment.centerLeft,
@@ -1107,7 +1107,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           Expanded(
                             child: GlassmorphicContainer(
                               width: double.infinity,
-                              height: null,
+                              height: 70,
                               borderRadius: 12,
                               blur: 15,
                               alignment: Alignment.center,
@@ -1157,7 +1157,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           const SizedBox(height: 16),
                           GlassmorphicContainer(
                             width: double.infinity,
-                            height: null,
+                            height: 70,
                             borderRadius: 12,
                             blur: 15,
                             alignment: Alignment.center,
@@ -1215,7 +1215,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 16),
                 GlassmorphicContainer(
                   width: double.infinity,
-                  height: null,
+                  height: 150,
                   borderRadius: 16,
                   blur: 20,
                   alignment: Alignment.centerLeft,
@@ -1639,7 +1639,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return GlassmorphicContainer(
       width: double.infinity,
-      height: null,
+      height: 150,
       borderRadius: 24,
       blur: 25,
       alignment: Alignment.topLeft,
@@ -1736,7 +1736,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return GlassmorphicContainer(
       width: double.infinity,
-      height: null,
+      height: 150,
       borderRadius: 12,
       blur: 15,
       alignment: Alignment.centerLeft,
