@@ -346,36 +346,39 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
     IconData icon,
   ) {
     final theme = Theme.of(context);
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.all(12.w),
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12.r),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.all(12.w),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Icon(
+              icon,
+              color: color,
+              size: 24.sp,
+            ),
           ),
-          child: Icon(
-            icon,
-            color: color,
-            size: 24.sp,
+          SizedBox(height: 8.h),
+          Text(
+            value,
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
           ),
-        ),
-        SizedBox(height: 8.h),
-        Text(
-          value,
-          style: theme.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: color,
+          SizedBox(height: 4.h),
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+            ),
           ),
-        ),
-        SizedBox(height: 4.h),
-        Text(
-          label,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

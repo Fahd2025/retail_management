@@ -193,7 +193,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             horizontal: 16, vertical: 12),
                         color: vatIncludedInPrice
                             ? Colors.green.shade50
-                            : theme.colorScheme.primaryContainer.withOpacity(0.3),
+                            : theme.colorScheme.primaryContainer
+                                .withValues(alpha: 0.3),
                         child: Row(
                           children: [
                             Icon(
@@ -343,7 +344,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             horizontal: 16, vertical: 12),
                         color: vatIncludedInPrice
                             ? Colors.green.shade50
-                            : theme.colorScheme.primaryContainer.withOpacity(0.3),
+                            : theme.colorScheme.primaryContainer
+                                .withValues(alpha: 0.3),
                         child: Row(
                           children: [
                             Icon(

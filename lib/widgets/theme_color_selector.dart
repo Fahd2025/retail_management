@@ -45,7 +45,7 @@ class ThemeColorSelector extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             SizedBox(
-              height: 72,
+              height: 80,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: ThemeColorScheme.predefinedSchemes.length,

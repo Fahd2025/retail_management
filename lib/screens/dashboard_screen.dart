@@ -122,13 +122,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // Check if it's the Analytics Dashboard
     if (label == l10n.dashboard) {
       return AppBar(
-        title: Row(
-          children: [
-            const Icon(Icons.dashboard),
-            const SizedBox(width: 8),
-            Text(l10n.analyticsDashboard),
-          ],
-        ),
+        title: Text(l10n.appTitle),
         backgroundColor: theme.colorScheme.primary,
         foregroundColor: Colors.white,
         actions: [
@@ -304,120 +298,123 @@ class _DashboardScreenState extends State<DashboardScreen> {
       decoration: BoxDecoration(
         color: theme.colorScheme.primary,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Logo
-          if (_companyInfo?.logoPath != null &&
-              _companyInfo!.logoPath!.isNotEmpty)
-            Container(
-              height: 60,
-              width: 60,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: FutureBuilder(
-                  key: ValueKey(_companyInfo!.logoPath),
-                  future: ImageService.getImageBytes(_companyInfo!.logoPath),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done &&
-                        snapshot.hasData &&
-                        snapshot.data != null) {
-                      return Image.memory(
-                        snapshot.data!,
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Icon(
-                            Icons.store,
-                            size: 40,
-                            color: theme.colorScheme.primary,
-                          );
-                        },
-                      );
-                    } else if (snapshot.hasError) {
-                      return Icon(
-                        Icons.store,
-                        size: 40,
-                        color: theme.colorScheme.primary,
-                      );
-                    } else {
-                      return Center(
-                        child: SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              theme.colorScheme.primary,
+      child: Container(
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Logo
+            if (_companyInfo?.logoPath != null &&
+                _companyInfo!.logoPath!.isNotEmpty)
+              Container(
+                height: 60,
+                width: 60,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: FutureBuilder(
+                    key: ValueKey(_companyInfo!.logoPath),
+                    future: ImageService.getImageBytes(_companyInfo!.logoPath),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done &&
+                          snapshot.hasData &&
+                          snapshot.data != null) {
+                        return Image.memory(
+                          snapshot.data!,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Icon(
+                              Icons.store,
+                              size: 40,
+                              color: theme.colorScheme.primary,
+                            );
+                          },
+                        );
+                      } else if (snapshot.hasError) {
+                        return Icon(
+                          Icons.store,
+                          size: 40,
+                          color: theme.colorScheme.primary,
+                        );
+                      } else {
+                        return Center(
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                theme.colorScheme.primary,
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    }
-                  },
+                        );
+                      }
+                    },
+                  ),
                 ),
-              ),
-            )
-          else
-            Container(
-              height: 60,
-              width: 60,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(
-                Icons.store,
-                size: 40,
-                color: theme.colorScheme.primary,
-              ),
-            ),
-          const SizedBox(height: 12),
-          // Company Name (localized - English or Arabic based on app language)
-          Builder(
-            builder: (context) {
-              final locale = Localizations.localeOf(context);
-              final isArabic = locale.languageCode == 'ar';
-              final companyName = isArabic
-                  ? (_companyInfo?.nameArabic ??
-                      _companyInfo?.name ??
-                      'إدارة التجزئة')
-                  : (_companyInfo?.name ?? 'Retail Management');
-
-              return Text(
-                companyName,
-                style: const TextStyle(
+              )
+            else
+              Container(
+                height: 60,
+                width: 60,
+                decoration: BoxDecoration(
                   color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              );
-            },
-          ),
-          const SizedBox(height: 8),
-          // VAT Number
-          if (_companyInfo?.vatNumber != null)
+                child: Icon(
+                  Icons.store,
+                  size: 40,
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+            const SizedBox(height: 12),
+            // Company Name (localized - English or Arabic based on app language)
             Builder(
               builder: (context) {
-                final l10n = AppLocalizations.of(context)!;
+                final locale = Localizations.localeOf(context);
+                final isArabic = locale.languageCode == 'ar';
+                final companyName = isArabic
+                    ? (_companyInfo?.nameArabic ??
+                        _companyInfo?.name ??
+                        'إدارة التجزئة')
+                    : (_companyInfo?.name ?? 'Retail Management');
+
                 return Text(
-                  '${l10n.vatNumber}: ${_companyInfo!.vatNumber}',
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.9),
-                    fontSize: 13,
+                  companyName,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 );
               },
             ),
-        ],
+            const SizedBox(height: 8),
+            // VAT Number
+            if (_companyInfo?.vatNumber != null)
+              Builder(
+                builder: (context) {
+                  final l10n = AppLocalizations.of(context)!;
+                  return Text(
+                    '${l10n.vatNumber}: ${_companyInfo!.vatNumber}',
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.9),
+                      fontSize: 13,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  );
+                },
+              ),
+          ],
+        ),
       ),
     );
   }

@@ -1192,7 +1192,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get keyMetrics => 'المؤشرات الرئيسية';
 
   @override
-  String get totalVat => 'إجمالي ضريبة القيمة المضافة';
+  String get totalVat => ' ضريبة القيمة المضافة';
 
   @override
   String get vatCollected => 'ضريبة القيمة المضافة المحصلة';

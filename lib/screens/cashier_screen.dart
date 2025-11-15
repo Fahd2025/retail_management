@@ -384,6 +384,7 @@ class _CashierScreenState extends State<CashierScreen>
             cartItemCount = saleState.cartItemCount;
           }
 
+          final theme = Theme.of(context);
           return Scaffold(body: LayoutBuilder(
             builder: (context, constraints) {
               final isTablet = constraints.maxWidth >= 600;
@@ -488,7 +489,7 @@ class _CashierScreenState extends State<CashierScreen>
                                           () => _selectedCategory = category);
                                       _loadProductsByCategory();
                                     },
-                                    selectedColor: Colors.blue,
+                                    selectedColor: theme.colorScheme.primary,
                                     labelStyle: TextStyle(
                                       color: isSelected
                                           ? Colors.white
@@ -572,7 +573,8 @@ class _CashierScreenState extends State<CashierScreen>
                             // Cart header
                             Container(
                               padding: const EdgeInsets.all(16),
-                              color: Colors.blue.shade50,
+                              color: theme.colorScheme.primary
+                                  .withValues(alpha: 0.1),
                               child: Row(
                                 children: [
                                   const Icon(Icons.shopping_cart),
@@ -696,7 +698,8 @@ class _CashierScreenState extends State<CashierScreen>
                                                   ? null
                                                   : _checkout,
                                               style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.green,
+                                                backgroundColor:
+                                                    theme.colorScheme.primary,
                                                 foregroundColor: Colors.white,
                                               ),
                                               child: Text(
@@ -745,6 +748,7 @@ class _ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
       elevation: 2,
       clipBehavior: Clip.antiAlias,
@@ -764,11 +768,13 @@ class _ProductCard extends StatelessWidget {
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             return Container(
-                              color: Colors.blue.shade50,
+                              color: theme.colorScheme.primary
+                                  .withValues(alpha: .05),
                               child: Icon(
                                 Icons.inventory_2,
                                 size: 64,
-                                color: Colors.blue.shade200,
+                                color: theme.colorScheme.primary
+                                    .withValues(alpha: .2),
                               ),
                             );
                           },
@@ -789,11 +795,13 @@ class _ProductCard extends StatelessWidget {
                           },
                         )
                       : Container(
-                          color: Colors.blue.shade50,
+                          color:
+                              theme.colorScheme.primary.withValues(alpha: .1),
                           child: Icon(
                             Icons.inventory_2,
                             size: 64,
-                            color: Colors.blue.shade200,
+                            color:
+                                theme.colorScheme.primary.withValues(alpha: .4),
                           ),
                         ),
                   // Stock badge
@@ -853,13 +861,13 @@ class _ProductCard extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.green.shade50,
+                      color: theme.colorScheme.primary.withValues(alpha: .1),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
                       CurrencyHelper.formatCurrencySync(product.price),
                       style: TextStyle(
-                        color: Colors.green.shade700,
+                        color: theme.colorScheme.primary,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),

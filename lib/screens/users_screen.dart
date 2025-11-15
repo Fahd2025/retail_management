@@ -171,6 +171,7 @@ class _UsersScreenState extends State<UsersScreen> {
           return LayoutBuilder(
             builder: (context, constraints) {
               final isDesktop = constraints.maxWidth >= 800;
+              final theme = Theme.of(context);
               final l10n = AppLocalizations.of(context)!;
 
               if (isDesktop) {
@@ -241,7 +242,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                     onPressed: () => showUserDialog(user),
                                   ),
                                   IconButton(
-                                    icon: const Icon(Icons.delete,
+                                    icon: Icon(Icons.delete,
                                         size: 20,
                                         color: theme.colorScheme.error),
                                     onPressed: () => _deleteUser(context, user),
