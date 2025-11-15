@@ -877,11 +877,45 @@ class DataImportExportService {
             );
         count++;
 
-        // NOTE: App configuration (theme, color scheme, language, etc.) from
-        // the imported data is NOT automatically applied. This prevents
-        // unwanted changes to the user's current app appearance settings.
-        // The appConfig data is available in settingData['appConfig'] if
-        // needed for manual restoration in the future.
+        // Apply app configuration if present in the imported data
+        if (settingData.containsKey('appConfig') && settingData['appConfig'] != null) {
+          final appConfig = settingData['appConfig'] as Map<String, dynamic>;
+          final prefs = await SharedPreferences.getInstance();
+
+          // Apply VAT settings
+          if (appConfig.containsKey('vatRate')) {
+            await prefs.setDouble('vat_rate', (appConfig['vatRate'] as num).toDouble());
+          }
+          if (appConfig.containsKey('vatIncludedInPrice')) {
+            await prefs.setBool('vat_included_in_price', appConfig['vatIncludedInPrice'] as bool);
+          }
+          if (appConfig.containsKey('vatEnabled')) {
+            await prefs.setBool('vat_enabled', appConfig['vatEnabled'] as bool);
+          }
+
+          // Apply theme settings
+          if (appConfig.containsKey('themeMode')) {
+            await prefs.setString('theme_mode', appConfig['themeMode'] as String);
+          }
+          if (appConfig.containsKey('colorScheme') && appConfig['colorScheme'] != null) {
+            await prefs.setString('color_scheme', json.encode(appConfig['colorScheme']));
+          }
+
+          // Apply language settings
+          if (appConfig.containsKey('locale')) {
+            await prefs.setString('app_locale', appConfig['locale'] as String);
+          }
+
+          // Apply print format
+          if (appConfig.containsKey('printFormat') && appConfig['printFormat'] != null) {
+            await prefs.setString('print_format_config', json.encode(appConfig['printFormat']));
+          }
+
+          // Apply sync URL
+          if (appConfig.containsKey('syncUrl')) {
+            await prefs.setString('sync_url', appConfig['syncUrl'] as String);
+          }
+        }
 
       } catch (e) {
         continue;

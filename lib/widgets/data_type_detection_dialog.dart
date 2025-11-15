@@ -84,24 +84,24 @@ class _DataTypeDetectionDialogState extends State<DataTypeDetectionDialog> {
               ),
             ),
 
-            // Warning banner if app configuration is detected
+            // Info banner if app configuration is detected
             if (widget.detectionResult.hasAppConfig) ...[
               SizedBox(height: 16.h),
               Container(
                 padding: EdgeInsets.all(12.r),
                 decoration: BoxDecoration(
-                  color: colorScheme.secondaryContainer.withOpacity(0.5),
+                  color: colorScheme.primaryContainer.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(8.r),
                   border: Border.all(
-                    color: colorScheme.secondary.withOpacity(0.3),
+                    color: colorScheme.primary.withOpacity(0.3),
                   ),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(
-                      Icons.info_outline,
-                      color: colorScheme.onSecondaryContainer,
+                      Icons.settings_suggest,
+                      color: colorScheme.onPrimaryContainer,
                       size: 20.sp,
                     ),
                     SizedBox(width: 12.w),
@@ -109,7 +109,7 @@ class _DataTypeDetectionDialogState extends State<DataTypeDetectionDialog> {
                       child: Text(
                         l10n.appConfigNotAppliedNote,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSecondaryContainer,
+                          color: colorScheme.onPrimaryContainer,
                         ),
                       ),
                     ),
