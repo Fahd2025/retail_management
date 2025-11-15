@@ -1067,7 +1067,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get exporting => 'جاري التصدير...';
+  String get exporting => 'جارٍ التصدير...';
 
   @override
   String get exportToPdf => 'تصدير إلى PDF';
@@ -1424,4 +1424,128 @@ class AppLocalizationsAr extends AppLocalizations {
   String vatAmountCalculatedAutomatically(String rate) {
     return 'مبلغ الضريبة محسوب تلقائيًا ($rate%)';
   }
+
+  @override
+  String get dataImportExport => 'استيراد وتصدير البيانات';
+
+  @override
+  String get dataImportExportDescription => 'استيراد أو تصدير بيانات عملك';
+
+  @override
+  String get importData => 'استيراد البيانات';
+
+  @override
+  String get exportData => 'تصدير البيانات';
+
+  @override
+  String get selectDataToImport => 'اختر البيانات للاستيراد';
+
+  @override
+  String get selectDataToExport => 'اختر البيانات للتصدير';
+
+  @override
+  String get selectMultipleDataTypes =>
+      'اختر نوعًا واحدًا أو أكثر من البيانات للمتابعة';
+
+  @override
+  String get selectSingleDataType => 'اختر نوع البيانات للمتابعة';
+
+  @override
+  String get allData => 'جميع البيانات';
+
+  @override
+  String get allDataDescription => 'تصدير أو استيراد جميع أنواع البيانات';
+
+  @override
+  String get productsDataDescription => 'معلومات المخزون والأسعار';
+
+  @override
+  String get categoriesDataDescription => 'فئات المنتجات والتصنيفات';
+
+  @override
+  String get customersDataDescription => 'معلومات الاتصال والأعمال للعملاء';
+
+  @override
+  String get salesDataDescription => 'معاملات المبيعات والفواتير';
+
+  @override
+  String get usersDataDescription => 'حسابات المستخدمين والصلاحيات';
+
+  @override
+  String get settingsDataDescription => 'معلومات الشركة وإعدادات النظام';
+
+  @override
+  String get exportFormat => 'تنسيق التصدير';
+
+  @override
+  String get importFile => 'استيراد ملف';
+
+  @override
+  String get selectFile => 'اختر ملف';
+
+  @override
+  String get fileSelected => 'تم اختيار الملف';
+
+  @override
+  String get noFileSelected => 'لم يتم اختيار ملف';
+
+  @override
+  String get importing => 'جارٍ الاستيراد...';
+
+  @override
+  String get importSuccess => 'تم استيراد البيانات بنجاح';
+
+  @override
+  String get exportSuccess => 'تم تصدير البيانات بنجاح';
+
+  @override
+  String get importError => 'فشل الاستيراد';
+
+  @override
+  String get exportError => 'فشل التصدير';
+
+  @override
+  String importSuccessMessage(int count) {
+    return 'تم استيراد $count عنصر بنجاح';
+  }
+
+  @override
+  String exportSuccessMessage(String path) {
+    return 'تم تصدير البيانات إلى: $path';
+  }
+
+  @override
+  String get importWarning =>
+      'تحذير: استيراد البيانات سيدمجها مع البيانات الموجودة. سيتم استبدال الإدخالات المكررة.';
+
+  @override
+  String get exportWarning =>
+      'تحذير: لن يتم تصدير البيانات الحساسة مثل كلمات مرور المستخدمين لأسباب أمنية.';
+
+  @override
+  String get selectFileToImport => 'يرجى اختيار ملف للاستيراد';
+
+  @override
+  String get selectDataTypesToProceed =>
+      'يرجى اختيار نوع واحد على الأقل من البيانات للمتابعة';
+
+  @override
+  String get unsupportedFileFormat =>
+      'تنسيق الملف غير مدعوم. يرجى اختيار ملف JSON أو CSV.';
+
+  @override
+  String get fileNotFound => 'الملف غير موجود. يرجى اختيار ملف صالح.';
+
+  @override
+  String get invalidFileContent =>
+      'محتوى الملف غير صالح. يرجى التحقق من تنسيق الملف.';
+
+  @override
+  String get importInProgress => 'جارٍ الاستيراد...';
+
+  @override
+  String get exportInProgress => 'جارٍ التصدير...';
+
+  @override
+  String get openFile => 'فتح الملف';
 }

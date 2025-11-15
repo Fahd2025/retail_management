@@ -45,7 +45,7 @@ class ThemeColorSelector extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             SizedBox(
-              height: 80,
+              height: 92,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: ThemeColorScheme.predefinedSchemes.length,
@@ -96,7 +96,7 @@ class _CompactColorChip extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
-        width: 90,
+        width: 92,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           border: Border.all(

@@ -1427,4 +1427,133 @@ class AppLocalizationsEn extends AppLocalizations {
   String vatAmountCalculatedAutomatically(String rate) {
     return 'VAT amount calculated automatically ($rate%)';
   }
+
+  @override
+  String get dataImportExport => 'Data Import & Export';
+
+  @override
+  String get dataImportExportDescription =>
+      'Import or export your business data';
+
+  @override
+  String get importData => 'Import Data';
+
+  @override
+  String get exportData => 'Export Data';
+
+  @override
+  String get selectDataToImport => 'Select Data to Import';
+
+  @override
+  String get selectDataToExport => 'Select Data to Export';
+
+  @override
+  String get selectMultipleDataTypes =>
+      'Select one or more data types to proceed';
+
+  @override
+  String get selectSingleDataType => 'Select a data type to proceed';
+
+  @override
+  String get allData => 'All Data';
+
+  @override
+  String get allDataDescription => 'Export or import all data types';
+
+  @override
+  String get productsDataDescription =>
+      'Product inventory and pricing information';
+
+  @override
+  String get categoriesDataDescription =>
+      'Product categories and classifications';
+
+  @override
+  String get customersDataDescription =>
+      'Customer contact and business information';
+
+  @override
+  String get salesDataDescription => 'Sales transactions and invoices';
+
+  @override
+  String get usersDataDescription => 'User accounts and permissions';
+
+  @override
+  String get settingsDataDescription =>
+      'Company information and system settings';
+
+  @override
+  String get exportFormat => 'Export Format';
+
+  @override
+  String get importFile => 'Import File';
+
+  @override
+  String get selectFile => 'Select File';
+
+  @override
+  String get fileSelected => 'File Selected';
+
+  @override
+  String get noFileSelected => 'No file selected';
+
+  @override
+  String get importing => 'Importing...';
+
+  @override
+  String get importSuccess => 'Data imported successfully';
+
+  @override
+  String get exportSuccess => 'Data exported successfully';
+
+  @override
+  String get importError => 'Import failed';
+
+  @override
+  String get exportError => 'Export failed';
+
+  @override
+  String importSuccessMessage(int count) {
+    return 'Successfully imported $count items';
+  }
+
+  @override
+  String exportSuccessMessage(String path) {
+    return 'Data exported to: $path';
+  }
+
+  @override
+  String get importWarning =>
+      'Warning: Importing data will merge with existing data. Duplicate entries will be replaced.';
+
+  @override
+  String get exportWarning =>
+      'Warning: Sensitive data like user passwords will not be exported for security reasons.';
+
+  @override
+  String get selectFileToImport => 'Please select a file to import';
+
+  @override
+  String get selectDataTypesToProceed =>
+      'Please select at least one data type to proceed';
+
+  @override
+  String get unsupportedFileFormat =>
+      'Unsupported file format. Please select a JSON or CSV file.';
+
+  @override
+  String get fileNotFound => 'File not found. Please select a valid file.';
+
+  @override
+  String get invalidFileContent =>
+      'Invalid file content. Please check the file format.';
+
+  @override
+  String get importInProgress => 'Import in progress...';
+
+  @override
+  String get exportInProgress => 'Export in progress...';
+
+  @override
+  String get openFile => 'Open File';
 }

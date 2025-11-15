@@ -40,7 +40,7 @@ class ThemeColorScheme extends Equatable {
   static const ThemeColorScheme deepPurple = ThemeColorScheme(
     id: 'deep_purple',
     name: 'Deep Purple',
-    nameAr: 'الأرجواني الداكن',
+    nameAr: 'أرجواني داكن',
     lightPrimary: Color(0xFF673AB7),
     lightSecondary: Color(0xFF512DA8),
     darkPrimary: Color(0xFF9575CD),

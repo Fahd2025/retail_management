@@ -2731,6 +2731,234 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'VAT amount calculated automatically ({rate}%)'**
   String vatAmountCalculatedAutomatically(String rate);
+
+  /// No description provided for @dataImportExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Import & Export'**
+  String get dataImportExport;
+
+  /// No description provided for @dataImportExportDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Import or export your business data'**
+  String get dataImportExportDescription;
+
+  /// No description provided for @importData.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Data'**
+  String get importData;
+
+  /// No description provided for @exportData.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Data'**
+  String get exportData;
+
+  /// No description provided for @selectDataToImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Data to Import'**
+  String get selectDataToImport;
+
+  /// No description provided for @selectDataToExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Data to Export'**
+  String get selectDataToExport;
+
+  /// No description provided for @selectMultipleDataTypes.
+  ///
+  /// In en, this message translates to:
+  /// **'Select one or more data types to proceed'**
+  String get selectMultipleDataTypes;
+
+  /// No description provided for @selectSingleDataType.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a data type to proceed'**
+  String get selectSingleDataType;
+
+  /// No description provided for @allData.
+  ///
+  /// In en, this message translates to:
+  /// **'All Data'**
+  String get allData;
+
+  /// No description provided for @allDataDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Export or import all data types'**
+  String get allDataDescription;
+
+  /// No description provided for @productsDataDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Product inventory and pricing information'**
+  String get productsDataDescription;
+
+  /// No description provided for @categoriesDataDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Product categories and classifications'**
+  String get categoriesDataDescription;
+
+  /// No description provided for @customersDataDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer contact and business information'**
+  String get customersDataDescription;
+
+  /// No description provided for @salesDataDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Sales transactions and invoices'**
+  String get salesDataDescription;
+
+  /// No description provided for @usersDataDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'User accounts and permissions'**
+  String get usersDataDescription;
+
+  /// No description provided for @settingsDataDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Company information and system settings'**
+  String get settingsDataDescription;
+
+  /// No description provided for @exportFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Format'**
+  String get exportFormat;
+
+  /// No description provided for @importFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Import File'**
+  String get importFile;
+
+  /// No description provided for @selectFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Select File'**
+  String get selectFile;
+
+  /// No description provided for @fileSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'File Selected'**
+  String get fileSelected;
+
+  /// No description provided for @noFileSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'No file selected'**
+  String get noFileSelected;
+
+  /// No description provided for @importing.
+  ///
+  /// In en, this message translates to:
+  /// **'Importing...'**
+  String get importing;
+
+  /// No description provided for @importSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Data imported successfully'**
+  String get importSuccess;
+
+  /// No description provided for @exportSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Data exported successfully'**
+  String get exportSuccess;
+
+  /// No description provided for @importError.
+  ///
+  /// In en, this message translates to:
+  /// **'Import failed'**
+  String get importError;
+
+  /// No description provided for @exportError.
+  ///
+  /// In en, this message translates to:
+  /// **'Export failed'**
+  String get exportError;
+
+  /// No description provided for @importSuccessMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Successfully imported {count} items'**
+  String importSuccessMessage(int count);
+
+  /// No description provided for @exportSuccessMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Data exported to: {path}'**
+  String exportSuccessMessage(String path);
+
+  /// No description provided for @importWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning: Importing data will merge with existing data. Duplicate entries will be replaced.'**
+  String get importWarning;
+
+  /// No description provided for @exportWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning: Sensitive data like user passwords will not be exported for security reasons.'**
+  String get exportWarning;
+
+  /// No description provided for @selectFileToImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a file to import'**
+  String get selectFileToImport;
+
+  /// No description provided for @selectDataTypesToProceed.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select at least one data type to proceed'**
+  String get selectDataTypesToProceed;
+
+  /// No description provided for @unsupportedFileFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported file format. Please select a JSON or CSV file.'**
+  String get unsupportedFileFormat;
+
+  /// No description provided for @fileNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'File not found. Please select a valid file.'**
+  String get fileNotFound;
+
+  /// No description provided for @invalidFileContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid file content. Please check the file format.'**
+  String get invalidFileContent;
+
+  /// No description provided for @importInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Import in progress...'**
+  String get importInProgress;
+
+  /// No description provided for @exportInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Export in progress...'**
+  String get exportInProgress;
+
+  /// No description provided for @openFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Open File'**
+  String get openFile;
 }
 
 class _AppLocalizationsDelegate
