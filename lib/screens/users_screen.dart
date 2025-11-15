@@ -351,16 +351,15 @@ class _UsersScreenState extends State<UsersScreen> {
                               ]);
                             }).toList(),
                           ),
-                        );
-                          },
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ),
               ),
-            );
-              } else {
+            ),
+          );
+        } else {
                 // Mobile: Card with ExpansionTile layout
                 return ListView.builder(
                   padding: const EdgeInsets.all(16),
@@ -511,10 +510,10 @@ class _UsersScreenState extends State<UsersScreen> {
                           ),
                         ],
                       ),
-                    );
-                  },
-                );
-              }
+                    ),
+                  );
+                },
+              );
             },
           );
         },
