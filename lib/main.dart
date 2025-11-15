@@ -59,6 +59,7 @@ class MyApp extends StatelessWidget {
           return BlocBuilder<AppConfigBloc, AppConfigState>(
             builder: (context, configState) {
               return MaterialApp(
+                key: ValueKey('${configState.themeMode}-${configState.colorScheme.id}'),
                 title: 'Retail Management System',
                 debugShowCheckedModeBanner: false,
 
