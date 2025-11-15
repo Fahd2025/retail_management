@@ -31,6 +31,21 @@ class ImportExportResult {
   });
 }
 
+/// Result model for data type detection
+class DataTypeDetectionResult {
+  final List<DataType> detectedTypes;
+  final Map<DataType, int> itemCounts;
+  final bool isValid;
+  final String? errorMessage;
+
+  DataTypeDetectionResult({
+    required this.detectedTypes,
+    required this.itemCounts,
+    required this.isValid,
+    this.errorMessage,
+  });
+}
+
 /// Service for handling data import and export operations
 class DataImportExportService {
   final AppDatabase _database;
@@ -263,6 +278,172 @@ class DataImportExportService {
         success: false,
         message: 'Import failed',
         errorDetails: e.toString(),
+      );
+    }
+  }
+
+  /// Detect data types present in a file
+  Future<DataTypeDetectionResult> detectDataTypes({
+    String? filePath,
+    String? fileContent,
+    String? fileName,
+  }) async {
+    try {
+      String content;
+      String effectiveFileName;
+
+      // Handle both file path (mobile) and file content (web)
+      if (fileContent != null) {
+        content = fileContent;
+        effectiveFileName = fileName ?? 'import';
+      } else if (filePath != null) {
+        final file = File(filePath);
+        if (!await file.exists()) {
+          return DataTypeDetectionResult(
+            detectedTypes: [],
+            itemCounts: {},
+            isValid: false,
+            errorMessage: 'File not found',
+          );
+        }
+        content = await file.readAsString();
+        effectiveFileName = filePath;
+      } else {
+        return DataTypeDetectionResult(
+          detectedTypes: [],
+          itemCounts: {},
+          isValid: false,
+          errorMessage: 'No file provided',
+        );
+      }
+
+      Map<String, dynamic> data;
+
+      // Parse based on file format
+      if (effectiveFileName.endsWith('.json')) {
+        try {
+          data = json.decode(content) as Map<String, dynamic>;
+        } catch (e) {
+          return DataTypeDetectionResult(
+            detectedTypes: [],
+            itemCounts: {},
+            isValid: false,
+            errorMessage: 'Invalid JSON format',
+          );
+        }
+      } else if (effectiveFileName.endsWith('.csv')) {
+        // For CSV, try to detect from content structure
+        try {
+          final csvData = const CsvToListConverter().convert(content);
+          if (csvData.isEmpty || csvData.length < 2) {
+            return DataTypeDetectionResult(
+              detectedTypes: [],
+              itemCounts: {},
+              isValid: false,
+              errorMessage: 'CSV file is empty or invalid',
+            );
+          }
+
+          // Analyze CSV headers to determine data type
+          final headers = csvData.first.map((h) => h.toString().toLowerCase()).toList();
+
+          // Detect data type based on column names
+          DataType? detectedType;
+          if (headers.contains('barcode') || headers.contains('price') || headers.contains('quantity')) {
+            detectedType = DataType.products;
+          } else if (headers.contains('vatNumber') || headers.contains('crnNumber') || headers.contains('phone')) {
+            detectedType = DataType.customers;
+          } else if (headers.contains('invoiceNumber') || headers.contains('totalAmount')) {
+            detectedType = DataType.sales;
+          } else if (headers.contains('username') || headers.contains('role')) {
+            detectedType = DataType.users;
+          }
+
+          if (detectedType != null) {
+            return DataTypeDetectionResult(
+              detectedTypes: [detectedType],
+              itemCounts: {detectedType: csvData.length - 1}, // Exclude header row
+              isValid: true,
+            );
+          } else {
+            return DataTypeDetectionResult(
+              detectedTypes: [],
+              itemCounts: {},
+              isValid: false,
+              errorMessage: 'Could not determine data type from CSV structure',
+            );
+          }
+        } catch (e) {
+          return DataTypeDetectionResult(
+            detectedTypes: [],
+            itemCounts: {},
+            isValid: false,
+            errorMessage: 'Invalid CSV format',
+          );
+        }
+      } else {
+        return DataTypeDetectionResult(
+          detectedTypes: [],
+          itemCounts: {},
+          isValid: false,
+          errorMessage: 'Unsupported file format',
+        );
+      }
+
+      // Detect data types from JSON keys
+      final List<DataType> detectedTypes = [];
+      final Map<DataType, int> itemCounts = {};
+
+      if (data.containsKey('products') && data['products'] is List) {
+        detectedTypes.add(DataType.products);
+        itemCounts[DataType.products] = (data['products'] as List).length;
+      }
+
+      if (data.containsKey('categories') && data['categories'] is List) {
+        detectedTypes.add(DataType.categories);
+        itemCounts[DataType.categories] = (data['categories'] as List).length;
+      }
+
+      if (data.containsKey('customers') && data['customers'] is List) {
+        detectedTypes.add(DataType.customers);
+        itemCounts[DataType.customers] = (data['customers'] as List).length;
+      }
+
+      if (data.containsKey('sales') && data['sales'] is List) {
+        detectedTypes.add(DataType.sales);
+        itemCounts[DataType.sales] = (data['sales'] as List).length;
+      }
+
+      if (data.containsKey('users') && data['users'] is List) {
+        detectedTypes.add(DataType.users);
+        itemCounts[DataType.users] = (data['users'] as List).length;
+      }
+
+      if (data.containsKey('settings') && data['settings'] is List) {
+        detectedTypes.add(DataType.settings);
+        itemCounts[DataType.settings] = (data['settings'] as List).length;
+      }
+
+      if (detectedTypes.isEmpty) {
+        return DataTypeDetectionResult(
+          detectedTypes: [],
+          itemCounts: {},
+          isValid: false,
+          errorMessage: 'No valid data types found in file',
+        );
+      }
+
+      return DataTypeDetectionResult(
+        detectedTypes: detectedTypes,
+        itemCounts: itemCounts,
+        isValid: true,
+      );
+    } catch (e) {
+      return DataTypeDetectionResult(
+        detectedTypes: [],
+        itemCounts: {},
+        isValid: false,
+        errorMessage: 'Error detecting data types: ${e.toString()}',
       );
     }
   }

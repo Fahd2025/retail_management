@@ -572,5 +572,8 @@
   "exportInProgress": "جارٍ التصدير...",
   "users": "المستخدمون",
   "openFile": "فتح الملف",
-  "share": "مشاركة"
+  "share": "مشاركة",
+  "detectedDataTypes": "أنواع البيانات المكتشفة",
+  "detectedDataTypesDescription": "لقد وجدنا البيانات التالية في ملفك. يمكنك تعديل التحديد قبل الاستيراد.",
+  "itemsCount": "{count} عنصر"
 }
