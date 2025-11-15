@@ -807,5 +807,6 @@
         "type": "int"
       }
     }
-  }
+  },
+  "appConfigNotAppliedNote": "Note: Appearance settings (theme, colors, language) found in the file will NOT be automatically applied. Your current app settings will remain unchanged."
 }
