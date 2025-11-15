@@ -417,7 +417,7 @@ class _CashierScreenState extends State<CashierScreen>
                             // Barcode scanner
                             GlassmorphicContainer(
                               width: double.infinity,
-                              height: null,
+                              height: 80,
                               borderRadius: 0,
                               blur: 15,
                               alignment: Alignment.center,
@@ -656,7 +656,7 @@ class _CashierScreenState extends State<CashierScreen>
                               // Cart header
                               GlassmorphicContainer(
                                 width: double.infinity,
-                                height: null,
+                                height: 70,
                                 borderRadius: 0,
                                 blur: 15,
                                 alignment: Alignment.center,
@@ -775,7 +775,7 @@ class _CashierScreenState extends State<CashierScreen>
                               // Cart summary
                               GlassmorphicContainer(
                                 width: double.infinity,
-                                height: null,
+                                height: 70,
                                 borderRadius: 0,
                                 blur: 15,
                                 alignment: Alignment.center,
@@ -896,7 +896,7 @@ class _ProductCard extends StatelessWidget {
 
     return GlassmorphicContainer(
       width: double.infinity,
-      height: null,
+      height: 150,
       borderRadius: 16,
       blur: 15,
       alignment: Alignment.center,
@@ -1065,7 +1065,7 @@ class _CartItem extends StatelessWidget {
 
     return GlassmorphicContainer(
       width: double.infinity,
-      height: null,
+      height: 150,
       borderRadius: 12,
       blur: 12,
       alignment: Alignment.center,
@@ -1259,7 +1259,7 @@ class _CustomerSelector extends StatelessWidget {
 
         return GlassmorphicContainer(
           width: double.infinity,
-          height: null,
+          height: 150,
           borderRadius: 12,
           blur: 12,
           alignment: Alignment.center,
@@ -1375,7 +1375,7 @@ class _PaymentDialogState extends State<_PaymentDialog> {
         // Total Amount Display - Prominent
         GlassmorphicContainer(
           width: double.infinity,
-          height: null,
+          height: 100,
           borderRadius: 12,
           blur: 15,
           alignment: Alignment.center,

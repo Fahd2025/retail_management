@@ -159,10 +159,13 @@ class _CustomersScreenState extends State<CustomersScreen> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(16),
-                        child: GlassmorphicContainer(
-                          width: constraints.maxWidth - 32,
-                          height: null,
-                          borderRadius: 16,
+                        child: LayoutBuilder(
+                          builder: (context, innerConstraints) {
+                            return IntrinsicHeight(
+                              child: GlassmorphicContainer(
+                                width: constraints.maxWidth - 32,
+                                height: innerConstraints.maxHeight > 0 ? innerConstraints.maxHeight : 600,
+                                borderRadius: 16,
                           blur: 20,
                           alignment: Alignment.center,
                           border: 2,
@@ -344,10 +347,11 @@ class _CustomersScreenState extends State<CustomersScreen> {
                   itemCount: customers.length,
                   itemBuilder: (context, index) {
                     final customer = customers[index];
-                    return GlassmorphicContainer(
-                      width: double.infinity,
-                      height: null,
-                      borderRadius: 16,
+                    return IntrinsicHeight(
+                      child: GlassmorphicContainer(
+                        width: double.infinity,
+                        height: 200,
+                        borderRadius: 16,
                       blur: 18,
                       alignment: Alignment.center,
                       border: 2,
@@ -1083,10 +1087,11 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Customer Information
-        GlassmorphicContainer(
-          width: double.infinity,
-          height: null,
-          borderRadius: 12,
+        IntrinsicHeight(
+          child: GlassmorphicContainer(
+            width: double.infinity,
+            height: 150,
+            borderRadius: 12,
           blur: 15,
           alignment: Alignment.center,
           border: 2,
@@ -1152,10 +1157,11 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
         const SizedBox(height: 12),
 
         // Period Dropdown wrapped in GlassmorphicContainer
-        GlassmorphicContainer(
-          width: double.infinity,
-          height: null,
-          borderRadius: 12,
+        IntrinsicHeight(
+          child: GlassmorphicContainer(
+            width: double.infinity,
+            height: 150,
+            borderRadius: 12,
           blur: 15,
           alignment: Alignment.center,
           border: 2,
@@ -1271,7 +1277,7 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
 
               return GlassmorphicContainer(
                 width: double.infinity,
-                height: null,
+                height: 90,
                 borderRadius: 12,
                 blur: 18,
                 alignment: Alignment.center,

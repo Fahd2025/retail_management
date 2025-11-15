@@ -36,118 +36,121 @@ class MetricCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: GlassmorphicContainer(
-        width: double.infinity,
-        height: null,
-        borderRadius: 12,
-        blur: 18,
-        alignment: Alignment.center,
-        border: 2,
-        linearGradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            theme.colorScheme.surface.withValues(alpha: 0.15),
-            theme.colorScheme.surface.withValues(alpha: 0.05),
-          ],
-        ),
-        borderGradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            theme.colorScheme.surface.withValues(alpha: 0.5),
-            theme.colorScheme.surface.withValues(alpha: 0.2),
-          ],
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(16.w),
-          child: isLoading
-              ? Center(
-                  child: SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: CircularProgressIndicator(
-                      color: effectiveColor,
-                      strokeWidth: 3,
-                    ),
-                  ),
-                )
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return GlassmorphicContainer(
+            width: constraints.maxWidth,
+            height: 140,
+            borderRadius: 12,
+            blur: 18,
+            alignment: Alignment.center,
+            border: 2,
+            linearGradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                theme.colorScheme.surface.withValues(alpha: 0.15),
+                theme.colorScheme.surface.withValues(alpha: 0.05),
+              ],
+            ),
+            borderGradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                theme.colorScheme.surface.withValues(alpha: 0.5),
+                theme.colorScheme.surface.withValues(alpha: 0.2),
+              ],
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(16.w),
+              child: isLoading
+                  ? Center(
+                      child: SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: CircularProgressIndicator(
+                          color: effectiveColor,
+                          strokeWidth: 3,
+                        ),
+                      ),
+                    )
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: Text(
-                            title,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.7),
-                              fontWeight: FontWeight.w500,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                title,
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  color: theme.colorScheme.onSurface
+                                      .withValues(alpha: 0.7),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                            maxLines: 2,
+                            SizedBox(width: 8.w),
+                            GlassmorphicContainer(
+                              width: 50.w,
+                              height: 50.w,
+                              borderRadius: 10,
+                              blur: 10,
+                              alignment: Alignment.center,
+                              border: 2,
+                              linearGradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  effectiveColor.withValues(alpha: 0.15),
+                                  effectiveColor.withValues(alpha: 0.05),
+                                ],
+                              ),
+                              borderGradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  effectiveColor.withValues(alpha: 0.5),
+                                  effectiveColor.withValues(alpha: 0.2),
+                                ],
+                              ),
+                              child: Icon(
+                                icon,
+                                color: effectiveColor,
+                                size: 24.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 12.h),
+                        Text(
+                          value,
+                          style: theme.textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.onSurface,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        if (subtitle != null) ...[ SizedBox(height: 4.h),
+                          Text(
+                            subtitle!,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurface
+                                  .withValues(alpha: 0.6),
+                            ),
+                            maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                        SizedBox(width: 8.w),
-                        GlassmorphicContainer(
-                          width: 50.w,
-                          height: 50.w,
-                          borderRadius: 10,
-                          blur: 10,
-                          alignment: Alignment.center,
-                          border: 2,
-                          linearGradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              effectiveColor.withValues(alpha: 0.15),
-                              effectiveColor.withValues(alpha: 0.05),
-                            ],
-                          ),
-                          borderGradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              effectiveColor.withValues(alpha: 0.5),
-                              effectiveColor.withValues(alpha: 0.2),
-                            ],
-                          ),
-                          child: Icon(
-                            icon,
-                            color: effectiveColor,
-                            size: 24.sp,
-                          ),
-                        ),
+                        ],
                       ],
                     ),
-                    SizedBox(height: 12.h),
-                    Text(
-                      value,
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.onSurface,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    if (subtitle != null) ...[
-                      SizedBox(height: 4.h),
-                      Text(
-                        subtitle!,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface
-                              .withValues(alpha: 0.6),
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ],
-                ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

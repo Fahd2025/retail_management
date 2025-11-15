@@ -172,37 +172,38 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
-        return GlassmorphicContainer(
-          width: double.infinity,
-          height: null,
-          borderRadius: 20,
-          blur: 25,
-          alignment: Alignment.center,
-          border: 2,
-          linearGradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              isDark
-                  ? Colors.white.withOpacity(0.1)
-                  : Colors.white.withOpacity(0.2),
-              isDark
-                  ? Colors.white.withOpacity(0.05)
-                  : Colors.white.withOpacity(0.1),
-            ],
-          ),
-          borderGradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.white.withOpacity(0.2),
-              Colors.white.withOpacity(0.1),
-            ],
-          ),
-          child: SafeArea(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
+        return IntrinsicHeight(
+          child: GlassmorphicContainer(
+            width: double.infinity,
+            height: double.infinity,
+            borderRadius: 20,
+            blur: 25,
+            alignment: Alignment.center,
+            border: 2,
+            linearGradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                isDark
+                    ? Colors.white.withOpacity(0.1)
+                    : Colors.white.withOpacity(0.2),
+                isDark
+                    ? Colors.white.withOpacity(0.05)
+                    : Colors.white.withOpacity(0.1),
+              ],
+            ),
+            borderGradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.white.withOpacity(0.2),
+                Colors.white.withOpacity(0.1),
+              ],
+            ),
+            child: SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
                 // Drag handle
                 Container(
                   margin: const EdgeInsets.only(top: 12, bottom: 8),
@@ -327,6 +328,7 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
               ],
             ),
           ),
+        ),
         );
       },
     );

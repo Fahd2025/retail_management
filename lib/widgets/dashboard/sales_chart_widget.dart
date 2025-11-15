@@ -29,125 +29,129 @@ class _SalesChartWidgetState extends State<SalesChartWidget> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
-    return GlassmorphicContainer(
-      width: double.infinity,
-      height: null,
-      borderRadius: 12,
-      blur: 18,
-      alignment: Alignment.center,
-      border: 2,
-      linearGradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          theme.colorScheme.surface.withValues(alpha: 0.15),
-          theme.colorScheme.surface.withValues(alpha: 0.05),
-        ],
-      ),
-      borderGradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          theme.colorScheme.surface.withValues(alpha: 0.5),
-          theme.colorScheme.surface.withValues(alpha: 0.2),
-        ],
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(16.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GlassmorphicContainer(
+          width: constraints.maxWidth,
+          height: 500,
+          borderRadius: 12,
+          blur: 18,
+          alignment: Alignment.center,
+          border: 2,
+          linearGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              theme.colorScheme.surface.withValues(alpha: 0.15),
+              theme.colorScheme.surface.withValues(alpha: 0.05),
+            ],
+          ),
+          borderGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              theme.colorScheme.surface.withValues(alpha: 0.5),
+              theme.colorScheme.surface.withValues(alpha: 0.2),
+            ],
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(16.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(
-                      Icons.show_chart,
-                      color: theme.colorScheme.primary,
-                      size: 24.sp,
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.show_chart,
+                          color: theme.colorScheme.primary,
+                          size: 24.sp,
+                        ),
+                        SizedBox(width: 8.w),
+                        Text(
+                          l10n.salesTrend,
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 8.w),
-                    Text(
-                      l10n.salesTrend,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    SegmentedButton<bool>(
+                      segments: [
+                        ButtonSegment(
+                          value: false,
+                          label: Text(l10n.salesLabel),
+                          icon: const Icon(Icons.attach_money, size: 16),
+                        ),
+                        ButtonSegment(
+                          value: true,
+                          label: Text(l10n.vatLabel),
+                          icon: const Icon(Icons.receipt, size: 16),
+                        ),
+                      ],
+                      selected: {showVat},
+                      onSelectionChanged: (Set<bool> selection) {
+                        setState(() {
+                          showVat = selection.first;
+                        });
+                      },
                     ),
                   ],
                 ),
-                SegmentedButton<bool>(
-                  segments: [
-                    ButtonSegment(
-                      value: false,
-                      label: Text(l10n.salesLabel),
-                      icon: const Icon(Icons.attach_money, size: 16),
-                    ),
-                    ButtonSegment(
-                      value: true,
-                      label: Text(l10n.vatLabel),
-                      icon: const Icon(Icons.receipt, size: 16),
-                    ),
-                  ],
-                  selected: {showVat},
-                  onSelectionChanged: (Set<bool> selection) {
-                    setState(() {
-                      showVat = selection.first;
-                    });
-                  },
-                ),
-              ],
-            ),
-            SizedBox(height: 24.h),
-            if (widget.isLoading)
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.all(32.h),
-                  child: SizedBox(
-                    width: 60,
-                    height: 60,
-                    child: CircularProgressIndicator(
-                      color: theme.colorScheme.primary,
-                      strokeWidth: 4,
-                    ),
-                  ),
-                ),
-              )
-            else if (widget.dailySalesData.isEmpty)
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.all(32.h),
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.bar_chart_outlined,
-                        size: 48.sp,
-                        color:
-                            theme.colorScheme.onSurface.withValues(alpha: 0.3),
-                      ),
-                      SizedBox(height: 8.h),
-                      Text(
-                        l10n.noSalesDataAvailable,
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.onSurface
-                              .withValues(alpha: 0.6),
+                SizedBox(height: 24.h),
+                if (widget.isLoading)
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(32.h),
+                      child: SizedBox(
+                        width: 60,
+                        height: 60,
+                        child: CircularProgressIndicator(
+                          color: theme.colorScheme.primary,
+                          strokeWidth: 4,
                         ),
                       ),
-                    ],
+                    ),
+                  )
+                else if (widget.dailySalesData.isEmpty)
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(32.h),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.bar_chart_outlined,
+                            size: 48.sp,
+                            color:
+                                theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                          ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            l10n.noSalesDataAvailable,
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              color: theme.colorScheme.onSurface
+                                  .withValues(alpha: 0.6),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                else
+                  SizedBox(
+                    height: 300.h,
+                    child: LineChart(
+                      _buildLineChartData(theme),
+                      duration: const Duration(milliseconds: 250),
+                    ),
                   ),
-                ),
-              )
-            else
-              SizedBox(
-                height: 300.h,
-                child: LineChart(
-                  _buildLineChartData(theme),
-                  duration: const Duration(milliseconds: 250),
-                ),
-              ),
-          ],
-        ),
-      ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -314,143 +318,147 @@ class _CategorySalesChartWidgetState extends State<CategorySalesChartWidget> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
-    return GlassmorphicContainer(
-      width: double.infinity,
-      height: null,
-      borderRadius: 12,
-      blur: 18,
-      alignment: Alignment.center,
-      border: 2,
-      linearGradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          theme.colorScheme.surface.withValues(alpha: 0.15),
-          theme.colorScheme.surface.withValues(alpha: 0.05),
-        ],
-      ),
-      borderGradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          theme.colorScheme.surface.withValues(alpha: 0.5),
-          theme.colorScheme.surface.withValues(alpha: 0.2),
-        ],
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(16.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GlassmorphicContainer(
+          width: constraints.maxWidth,
+          height: 450,
+          borderRadius: 12,
+          blur: 18,
+          alignment: Alignment.center,
+          border: 2,
+          linearGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              theme.colorScheme.surface.withValues(alpha: 0.15),
+              theme.colorScheme.surface.withValues(alpha: 0.05),
+            ],
+          ),
+          borderGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              theme.colorScheme.surface.withValues(alpha: 0.5),
+              theme.colorScheme.surface.withValues(alpha: 0.2),
+            ],
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(16.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.pie_chart,
-                  color: theme.colorScheme.primary,
-                  size: 24.sp,
-                ),
-                SizedBox(width: 8.w),
-                Text(
-                  l10n.salesByCategory,
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 24.h),
-            if (widget.isLoading)
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.all(32.h),
-                  child: SizedBox(
-                    width: 60,
-                    height: 60,
-                    child: CircularProgressIndicator(
+                Row(
+                  children: [
+                    Icon(
+                      Icons.pie_chart,
                       color: theme.colorScheme.primary,
-                      strokeWidth: 4,
+                      size: 24.sp,
                     ),
-                  ),
-                ),
-              )
-            else if (widget.categorySalesData.isEmpty)
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.all(32.h),
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.pie_chart_outline,
-                        size: 48.sp,
-                        color:
-                            theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                    SizedBox(width: 8.w),
+                    Text(
+                      l10n.salesByCategory,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
                       ),
-                      SizedBox(height: 8.h),
-                      Text(
-                        l10n.noCategoryDataAvailable,
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.onSurface
-                              .withValues(alpha: 0.6),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 24.h),
+                if (widget.isLoading)
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(32.h),
+                      child: SizedBox(
+                        width: 60,
+                        height: 60,
+                        child: CircularProgressIndicator(
+                          color: theme.colorScheme.primary,
+                          strokeWidth: 4,
+                        ),
+                      ),
+                    ),
+                  )
+                else if (widget.categorySalesData.isEmpty)
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(32.h),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.pie_chart_outline,
+                            size: 48.sp,
+                            color:
+                                theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                          ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            l10n.noCategoryDataAvailable,
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              color: theme.colorScheme.onSurface
+                                  .withValues(alpha: 0.6),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                else
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: SizedBox(
+                          height: 250.h,
+                          child: PieChart(
+                            _buildPieChartData(theme),
+                            duration: const Duration(milliseconds: 250),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 16.w),
+                      Expanded(
+                        flex: 1,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children:
+                              widget.categorySalesData.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final category = entry.value;
+                            return Padding(
+                              padding: EdgeInsets.symmetric(vertical: 4.h),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 12.w,
+                                    height: 12.w,
+                                    decoration: BoxDecoration(
+                                      color: _getCategoryColor(index),
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8.w),
+                                  Expanded(
+                                    child: Text(
+                                      category.categoryName,
+                                      style: theme.textTheme.bodySmall,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
                         ),
                       ),
                     ],
                   ),
-                ),
-              )
-            else
-              Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: SizedBox(
-                      height: 250.h,
-                      child: PieChart(
-                        _buildPieChartData(theme),
-                        duration: const Duration(milliseconds: 250),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 16.w),
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children:
-                          widget.categorySalesData.asMap().entries.map((entry) {
-                        final index = entry.key;
-                        final category = entry.value;
-                        return Padding(
-                          padding: EdgeInsets.symmetric(vertical: 4.h),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 12.w,
-                                height: 12.w,
-                                decoration: BoxDecoration(
-                                  color: _getCategoryColor(index),
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              SizedBox(width: 8.w),
-                              Expanded(
-                                child: Text(
-                                  category.categoryName,
-                                  style: theme.textTheme.bodySmall,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ],
-              ),
-          ],
-        ),
-      ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
