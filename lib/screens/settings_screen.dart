@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:open_file/open_file.dart';
 import 'package:glassmorphism/glassmorphism.dart';
@@ -527,7 +528,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 1400),
                 child: _buildSettingsGrid(
-                  spacing: 24,
+                  spacing: 8,
                   children: sections,
                 ),
               ),
@@ -560,6 +561,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
     required double spacing,
     required List<Widget> children,
   }) {
+    // return MasonryGridView.count(
+    //   crossAxisCount: 3, // Number of columns
+    //   mainAxisSpacing: spacing,
+    //   crossAxisSpacing: spacing,
+    //   itemCount: children.length, // Number of items
+    //   itemBuilder: (context, index) {
+    //     return SizedBox(
+    //       //width: (1400 - spacing) / 2,
+    //       child: children[index],
+    //     );
+    //   },
+    // );
     return Wrap(
       spacing: spacing,
       runSpacing: spacing,
@@ -581,6 +594,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return _buildGlassSection(
       title: l10n.appearance,
       icon: Icons.palette,
+      height: 500,
       subtitle: l10n.changesAppliedImmediately,
       child: Column(
         children: [
@@ -588,6 +602,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           BlocBuilder<AppConfigBloc, AppConfigState>(
             builder: (context, configState) {
               return _buildGlassTile(
+                height: 75,
                 leading: Icon(
                   configState.isDarkMode ? Icons.dark_mode : Icons.light_mode,
                   color: textColor,
@@ -611,6 +626,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           BlocBuilder<AppConfigBloc, AppConfigState>(
             builder: (context, configState) {
               return _buildGlassTile(
+                height: 75,
                 leading: Icon(
                   Icons.language,
                   color: textColor,
@@ -657,7 +673,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 24),
 
           // Theme Color Selection
-          const ThemeColorSelector(),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: const ThemeColorSelector(),
+          ),
         ],
       ),
     );
@@ -670,6 +689,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return _buildGlassSection(
       title: l10n.printSettings,
       icon: Icons.print,
+      height: 800,
       subtitle: l10n.configureInvoicePrintingOptions,
       child: const PrintFormatSelector(),
     );
@@ -680,8 +700,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return _buildGlassSection(
-      title: l10n.companyNameEnglish,
+      title: l10n.saveCompanyInformation,
       icon: Icons.business,
+      height: 1100,
       subtitle: l10n.businessDetailsAndContactInformation,
       child: _isLoading
           ? const Padding(
@@ -882,7 +903,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return GlassmorphicContainer(
       width: double.infinity,
-      height: 150,
+      height: 60,
       borderRadius: 12,
       blur: 15,
       alignment: Alignment.centerLeft,
@@ -899,18 +920,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
           theme.colorScheme.primary.withValues(alpha: 0.1),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          border: InputBorder.none,
-          labelStyle: TextStyle(color: textColor),
+      // padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextFormField(
+          controller: controller,
+          decoration: InputDecoration(
+            labelText: label,
+            border: InputBorder.none,
+            labelStyle: TextStyle(color: textColor),
+          ),
+          style: TextStyle(color: textColor),
+          maxLines: maxLines,
+          keyboardType: keyboardType,
+          validator: validator,
         ),
-        style: TextStyle(color: textColor),
-        maxLines: maxLines,
-        keyboardType: keyboardType,
-        validator: validator,
       ),
     );
   }
@@ -968,7 +992,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return GlassmorphicContainer(
       width: double.infinity,
-      height: 150,
+      height: 75,
       borderRadius: 12,
       blur: 15,
       alignment: Alignment.centerLeft,
@@ -986,30 +1010,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: DropdownButtonFormField<String>(
-        initialValue: _selectedCurrency,
-        decoration: InputDecoration(
-          labelText: '${l10n.currency} *',
-          border: InputBorder.none,
-          prefixIcon: Icon(Icons.attach_money, color: textColor),
-          labelStyle: TextStyle(color: textColor),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: DropdownButtonFormField<String>(
+          initialValue: _selectedCurrency,
+          decoration: InputDecoration(
+            labelText: '${l10n.currency} *',
+            border: InputBorder.none,
+            prefixIcon: Icon(Icons.attach_money, color: textColor),
+            labelStyle: TextStyle(color: textColor),
+          ),
+          style: TextStyle(color: textColor),
+          dropdownColor: theme.colorScheme.surface,
+          items: currencyOptions.entries.map((entry) {
+            return DropdownMenuItem<String>(
+              value: entry.key,
+              child: Text(entry.value),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            if (newValue != null) {
+              setState(() {
+                _selectedCurrency = newValue;
+              });
+            }
+          },
+          validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
         ),
-        style: TextStyle(color: textColor),
-        dropdownColor: theme.colorScheme.surface,
-        items: currencyOptions.entries.map((entry) {
-          return DropdownMenuItem<String>(
-            value: entry.key,
-            child: Text(entry.value),
-          );
-        }).toList(),
-        onChanged: (String? newValue) {
-          if (newValue != null) {
-            setState(() {
-              _selectedCurrency = newValue;
-            });
-          }
-        },
-        validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
       ),
     );
   }
@@ -1020,36 +1047,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final theme = Theme.of(context);
     final textColor = theme.colorScheme.onSurface;
 
-    return _buildGlassSection(
-      title: l10n.defaultVatRate,
-      icon: Icons.receipt_long,
-      subtitle: l10n.setDefaultVatRateDescription,
-      child: BlocBuilder<AppConfigBloc, AppConfigState>(
+    return BlocBuilder<AppConfigBloc, AppConfigState>(
         builder: (context, configState) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // VAT Enable/Disable Toggle
-              GlassmorphicContainer(
-                width: double.infinity,
-                height: 80,
-                borderRadius: 16,
-                blur: 20,
-                alignment: Alignment.centerLeft,
-                border: 2,
-                linearGradient: LinearGradient(
-                  colors: [
-                    theme.colorScheme.surface.withValues(alpha: 0.15),
-                    theme.colorScheme.surface.withValues(alpha: 0.05),
-                  ],
-                ),
-                borderGradient: LinearGradient(
-                  colors: [
-                    theme.colorScheme.primary.withValues(alpha: 0.2),
-                    theme.colorScheme.primary.withValues(alpha: 0.1),
-                  ],
-                ),
-                padding: const EdgeInsets.all(16),
+      return _buildGlassSection(
+        title: l10n.defaultVatRate,
+        icon: Icons.receipt_long,
+        height: configState.vatEnabled ? 700 : 200,
+        subtitle: l10n.setDefaultVatRateDescription,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // VAT Enable/Disable Toggle
+            GlassmorphicContainer(
+              width: double.infinity,
+              height: 80,
+              borderRadius: 16,
+              blur: 20,
+              alignment: Alignment.centerLeft,
+              border: 2,
+              linearGradient: LinearGradient(
+                colors: [
+                  theme.colorScheme.surface.withValues(alpha: 0.15),
+                  theme.colorScheme.surface.withValues(alpha: 0.05),
+                ],
+              ),
+              borderGradient: LinearGradient(
+                colors: [
+                  theme.colorScheme.primary.withValues(alpha: 0.2),
+                  theme.colorScheme.primary.withValues(alpha: 0.1),
+                ],
+              ),
+              padding: const EdgeInsets.all(16),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
                     Expanded(
@@ -1087,85 +1117,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ],
                 ),
               ),
+            ),
 
-              // Show VAT Rate and Inclusion settings only if VAT is enabled
-              if (configState.vatEnabled) ...[
-                const SizedBox(height: 24),
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    final isWide = constraints.maxWidth >= 600;
-                    if (isWide) {
-                      return Row(
-                        children: [
-                          Expanded(
-                            child: _buildTextField(
-                              controller: TextEditingController(
-                                  text: configState.vatRate.toString()),
-                              label: l10n.vatRateLabel,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: GlassmorphicContainer(
-                              width: double.infinity,
-                              height: 70,
-                              borderRadius: 12,
-                              blur: 15,
-                              alignment: Alignment.center,
-                              border: 2,
-                              linearGradient: LinearGradient(
-                                colors: [
-                                  theme.colorScheme.surface
-                                      .withValues(alpha: 0.15),
-                                  theme.colorScheme.surface
-                                      .withValues(alpha: 0.05),
-                                ],
-                              ),
-                              borderGradient: LinearGradient(
-                                colors: [
-                                  theme.colorScheme.primary
-                                      .withValues(alpha: 0.2),
-                                  theme.colorScheme.primary
-                                      .withValues(alpha: 0.1),
-                                ],
-                              ),
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    l10n.currentVatRate,
-                                    style: theme.textTheme.labelMedium,
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    '${configState.vatRate.toStringAsFixed(1)}%',
-                                    style: theme.textTheme.headlineMedium
-                                        ?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    } else {
-                      return Column(
-                        children: [
-                          _buildTextField(
+            // Show VAT Rate and Inclusion settings only if VAT is enabled
+            if (configState.vatEnabled) ...[
+              const SizedBox(height: 24),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final isWide = constraints.maxWidth >= 600;
+                  if (isWide) {
+                    return Row(
+                      children: [
+                        Expanded(
+                          child: _buildTextField(
                             controller: TextEditingController(
                                 text: configState.vatRate.toString()),
                             label: l10n.vatRateLabel,
                             keyboardType: const TextInputType.numberWithOptions(
                                 decimal: true),
                           ),
-                          const SizedBox(height: 16),
-                          GlassmorphicContainer(
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: GlassmorphicContainer(
                             width: double.infinity,
                             height: 70,
                             borderRadius: 12,
@@ -1190,7 +1164,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                             padding: const EdgeInsets.all(16),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   l10n.currentVatRate,
@@ -1207,113 +1181,163 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ],
                             ),
                           ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Column(
+                      children: [
+                        _buildTextField(
+                          controller: TextEditingController(
+                              text: configState.vatRate.toString()),
+                          label: l10n.vatRateLabel,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
+                        ),
+                        const SizedBox(height: 16),
+                        GlassmorphicContainer(
+                          width: double.infinity,
+                          height: 70,
+                          borderRadius: 12,
+                          blur: 15,
+                          alignment: Alignment.center,
+                          border: 2,
+                          linearGradient: LinearGradient(
+                            colors: [
+                              theme.colorScheme.surface.withValues(alpha: 0.15),
+                              theme.colorScheme.surface.withValues(alpha: 0.05),
+                            ],
+                          ),
+                          borderGradient: LinearGradient(
+                            colors: [
+                              theme.colorScheme.primary.withValues(alpha: 0.2),
+                              theme.colorScheme.primary.withValues(alpha: 0.1),
+                            ],
+                          ),
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                l10n.currentVatRate,
+                                style: theme.textTheme.labelMedium,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${configState.vatRate.toStringAsFixed(1)}%',
+                                style: theme.textTheme.headlineMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                },
+              ),
+              const SizedBox(height: 24),
+              Divider(color: textColor.withValues(alpha: 0.1)),
+              const SizedBox(height: 16),
+              Text(
+                l10n.vatCalculationMethod,
+                style: theme.textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                l10n.chooseVatCalculationMethod,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: textColor.withValues(alpha: 0.7),
+                ),
+              ),
+              const SizedBox(height: 16),
+              GlassmorphicContainer(
+                width: double.infinity,
+                height: 150,
+                borderRadius: 16,
+                blur: 20,
+                alignment: Alignment.centerLeft,
+                border: 2,
+                linearGradient: LinearGradient(
+                  colors: [
+                    theme.colorScheme.surface.withValues(alpha: 0.15),
+                    theme.colorScheme.surface.withValues(alpha: 0.05),
+                  ],
+                ),
+                borderGradient: LinearGradient(
+                  colors: [
+                    theme.colorScheme.primary.withValues(alpha: 0.2),
+                    theme.colorScheme.primary.withValues(alpha: 0.1),
+                  ],
+                ),
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            configState.vatIncludedInPrice
+                                ? l10n.vatIncludedInPrice
+                                : l10n.vatExcludedFromPrice,
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            configState.vatIncludedInPrice
+                                ? l10n.vatIncludedInPriceDescription
+                                : l10n.vatExcludedFromPriceDescription,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: textColor.withValues(alpha: 0.7),
+                            ),
+                          ),
                         ],
-                      );
-                    }
-                  },
-                ),
-                const SizedBox(height: 24),
-                Divider(color: textColor.withValues(alpha: 0.1)),
-                const SizedBox(height: 16),
-                Text(
-                  l10n.vatCalculationMethod,
-                  style: theme.textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  l10n.chooseVatCalculationMethod,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: textColor.withValues(alpha: 0.7),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                GlassmorphicContainer(
-                  width: double.infinity,
-                  height: 150,
-                  borderRadius: 16,
-                  blur: 20,
-                  alignment: Alignment.centerLeft,
-                  border: 2,
-                  linearGradient: LinearGradient(
-                    colors: [
-                      theme.colorScheme.surface.withValues(alpha: 0.15),
-                      theme.colorScheme.surface.withValues(alpha: 0.05),
-                    ],
-                  ),
-                  borderGradient: LinearGradient(
-                    colors: [
-                      theme.colorScheme.primary.withValues(alpha: 0.2),
-                      theme.colorScheme.primary.withValues(alpha: 0.1),
-                    ],
-                  ),
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              configState.vatIncludedInPrice
-                                  ? l10n.vatIncludedInPrice
-                                  : l10n.vatExcludedFromPrice,
-                              style: theme.textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              configState.vatIncludedInPrice
-                                  ? l10n.vatIncludedInPriceDescription
-                                  : l10n.vatExcludedFromPriceDescription,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: textColor.withValues(alpha: 0.7),
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
-                      _buildGlassSwitch(
-                        value: configState.vatIncludedInPrice,
-                        onChanged: (value) {
-                          context
-                              .read<AppConfigBloc>()
-                              .add(UpdateVatInclusionEvent(value));
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: Colors.orange.withValues(alpha: 0.3),
-                      width: 1,
                     ),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.info_outline, color: Colors.orange, size: 20),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          l10n.vatRateAppliedToNewProducts,
-                          style: theme.textTheme.bodySmall,
-                        ),
-                      ),
-                    ],
+                    _buildGlassSwitch(
+                      value: configState.vatIncludedInPrice,
+                      onChanged: (value) {
+                        context
+                            .read<AppConfigBloc>()
+                            .add(UpdateVatInclusionEvent(value));
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.orange.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: Colors.orange.withValues(alpha: 0.3),
+                    width: 1,
                   ),
                 ),
-              ],
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline, color: Colors.orange, size: 20),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        l10n.vatRateAppliedToNewProducts,
+                        style: theme.textTheme.bodySmall,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
-          );
-        },
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 
   /// Build Data Import/Export Section
@@ -1347,6 +1371,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: l10n.dataImportExport,
             icon: Icons.import_export,
             subtitle: l10n.dataImportExportDescription,
+            height: 300,
             child: Column(
               children: [
                 // Warning banner
@@ -1623,6 +1648,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return _buildGlassSection(
       title: l10n.about,
       icon: Icons.info_outline,
+      height: 350,
       child: Column(
         children: [
           _buildGlassTile(
@@ -1645,6 +1671,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildGlassSection({
     required String title,
     required IconData icon,
+    double height = 200,
     String? subtitle,
     required Widget child,
   }) {
@@ -1653,7 +1680,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return GlassmorphicContainer(
       width: double.infinity,
-      height: 150,
+      height: height,
       borderRadius: 24,
       blur: 25,
       alignment: Alignment.topLeft,
@@ -1675,46 +1702,121 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       ),
       padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Section header
-          Row(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Section header
+            Row(
+              children: [
+                GlassmorphicContainer(
+                  width: 48,
+                  height: 48,
+                  borderRadius: 24,
+                  blur: 15,
+                  alignment: Alignment.center,
+                  border: 2,
+                  linearGradient: LinearGradient(
+                    colors: [
+                      theme.colorScheme.primary.withValues(alpha: 0.2),
+                      theme.colorScheme.primary.withValues(alpha: 0.1),
+                    ],
+                  ),
+                  borderGradient: LinearGradient(
+                    colors: [
+                      theme.colorScheme.primary.withValues(alpha: 0.3),
+                      theme.colorScheme.primary.withValues(alpha: 0.2),
+                    ],
+                  ),
+                  child: Icon(
+                    icon,
+                    color: theme.colorScheme.primary,
+                    size: 24,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      if (subtitle != null) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          subtitle,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: textColor.withValues(alpha: 0.7),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            child,
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Build a glass morphism tile (similar to ListTile)
+  Widget _buildGlassTile({
+    Widget? leading,
+    required String title,
+    double height = 75,
+    String? subtitle,
+    Widget? trailing,
+  }) {
+    final theme = Theme.of(context);
+    final textColor = theme.colorScheme.onSurface;
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GlassmorphicContainer(
+        width: double.infinity,
+        height: height,
+        borderRadius: 12,
+        blur: 15,
+        alignment: Alignment.centerLeft,
+        border: 2,
+        linearGradient: LinearGradient(
+          colors: [
+            theme.colorScheme.surface.withValues(alpha: 0.15),
+            theme.colorScheme.surface.withValues(alpha: 0.05),
+          ],
+        ),
+        borderGradient: LinearGradient(
+          colors: [
+            theme.colorScheme.primary.withValues(alpha: 0.2),
+            theme.colorScheme.primary.withValues(alpha: 0.1),
+          ],
+        ),
+        padding: const EdgeInsets.all(16),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
             children: [
-              GlassmorphicContainer(
-                width: 48,
-                height: 48,
-                borderRadius: 24,
-                blur: 15,
-                alignment: Alignment.center,
-                border: 2,
-                linearGradient: LinearGradient(
-                  colors: [
-                    theme.colorScheme.primary.withValues(alpha: 0.2),
-                    theme.colorScheme.primary.withValues(alpha: 0.1),
-                  ],
-                ),
-                borderGradient: LinearGradient(
-                  colors: [
-                    theme.colorScheme.primary.withValues(alpha: 0.3),
-                    theme.colorScheme.primary.withValues(alpha: 0.2),
-                  ],
-                ),
-                child: Icon(
-                  icon,
-                  color: theme.colorScheme.primary,
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: 16),
+              if (leading != null) ...[
+                leading,
+                const SizedBox(width: 16),
+              ],
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     if (subtitle != null) ...[
@@ -1729,78 +1831,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ],
                 ),
               ),
+              if (trailing != null) ...[
+                const SizedBox(width: 16),
+                trailing,
+              ],
             ],
           ),
-          const SizedBox(height: 24),
-          child,
-        ],
-      ),
-    );
-  }
-
-  /// Build a glass morphism tile (similar to ListTile)
-  Widget _buildGlassTile({
-    Widget? leading,
-    required String title,
-    String? subtitle,
-    Widget? trailing,
-  }) {
-    final theme = Theme.of(context);
-    final textColor = theme.colorScheme.onSurface;
-
-    return GlassmorphicContainer(
-      width: double.infinity,
-      height: 150,
-      borderRadius: 12,
-      blur: 15,
-      alignment: Alignment.centerLeft,
-      border: 2,
-      linearGradient: LinearGradient(
-        colors: [
-          theme.colorScheme.surface.withValues(alpha: 0.15),
-          theme.colorScheme.surface.withValues(alpha: 0.05),
-        ],
-      ),
-      borderGradient: LinearGradient(
-        colors: [
-          theme.colorScheme.primary.withValues(alpha: 0.2),
-          theme.colorScheme.primary.withValues(alpha: 0.1),
-        ],
-      ),
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          if (leading != null) ...[
-            leading,
-            const SizedBox(width: 16),
-          ],
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                if (subtitle != null) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: textColor.withValues(alpha: 0.7),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-          if (trailing != null) ...[
-            const SizedBox(width: 16),
-            trailing,
-          ],
-        ],
+        ),
       ),
     );
   }
@@ -1812,44 +1849,47 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }) {
     final theme = Theme.of(context);
 
-    return GestureDetector(
-      onTap: () => onChanged(!value),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: 56,
-        height: 32,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: value
-              ? theme.colorScheme.primary.withValues(alpha: 0.3)
-              : theme.colorScheme.surfaceContainerHighest
-                  .withValues(alpha: 0.3),
-          border: Border.all(
-            color: value
-                ? theme.colorScheme.primary
-                : theme.colorScheme.outline.withValues(alpha: 0.3),
-            width: 2,
-          ),
-        ),
-        child: AnimatedAlign(
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GestureDetector(
+        onTap: () => onChanged(!value),
+        child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          alignment: value ? Alignment.centerRight : Alignment.centerLeft,
-          child: Container(
-            width: 24,
-            height: 24,
-            margin: const EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
+          width: 56,
+          height: 32,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            color: value
+                ? theme.colorScheme.primary.withValues(alpha: 0.3)
+                : theme.colorScheme.surfaceContainerHighest
+                    .withValues(alpha: 0.3),
+            border: Border.all(
               color: value
                   ? theme.colorScheme.primary
-                  : theme.colorScheme.onSurfaceVariant,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+                  : theme.colorScheme.outline.withValues(alpha: 0.3),
+              width: 2,
+            ),
+          ),
+          child: AnimatedAlign(
+            duration: const Duration(milliseconds: 200),
+            alignment: value ? Alignment.centerRight : Alignment.centerLeft,
+            child: Container(
+              width: 24,
+              height: 24,
+              margin: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: value
+                    ? theme.colorScheme.primary
+                    : theme.colorScheme.onSurfaceVariant,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.2),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

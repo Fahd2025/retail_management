@@ -394,7 +394,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         IntrinsicHeight(
                                           child: GlassmorphicContainer(
                                             width: double.infinity,
-                                            height: 200,
+                                            height: 125,
                                             borderRadius: 16,
                                             blur: 15,
                                             alignment: Alignment.center,
@@ -446,31 +446,41 @@ class _LoginScreenState extends State<LoginScreen> {
                                                     ],
                                                   ),
                                                   const SizedBox(height: 12),
-                                                  Text(
-                                                    l10n.adminCredentials,
-                                                    style: TextStyle(
-                                                      fontSize: 13,
-                                                      color: isDark
-                                                          ? Colors.white
-                                                              .withValues(
-                                                                  alpha: 0.8)
-                                                          : Colors.black87
-                                                              .withValues(
-                                                                  alpha: 0.8),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: Text(
+                                                      l10n.adminCredentials,
+                                                      style: TextStyle(
+                                                        fontSize: 13,
+                                                        color: isDark
+                                                            ? Colors.white
+                                                                .withValues(
+                                                                    alpha: 0.8)
+                                                            : Colors.black87
+                                                                .withValues(
+                                                                    alpha: 0.8),
+                                                      ),
                                                     ),
                                                   ),
                                                   const SizedBox(height: 4),
-                                                  Text(
-                                                    l10n.cashierCredentials,
-                                                    style: TextStyle(
-                                                      fontSize: 13,
-                                                      color: isDark
-                                                          ? Colors.white
-                                                              .withValues(
-                                                                  alpha: 0.8)
-                                                          : Colors.black87
-                                                              .withValues(
-                                                                  alpha: 0.8),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: Text(
+                                                      l10n.cashierCredentials,
+                                                      style: TextStyle(
+                                                        fontSize: 13,
+                                                        color: isDark
+                                                            ? Colors.white
+                                                                .withValues(
+                                                                    alpha: 0.8)
+                                                            : Colors.black87
+                                                                .withValues(
+                                                                    alpha: 0.8),
+                                                      ),
                                                     ),
                                                   ),
                                                 ],
