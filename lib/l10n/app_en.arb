@@ -742,5 +742,58 @@
         "type": "String"
       }
     }
-  }
+  },
+  "dataImportExport": "Data Import & Export",
+  "dataImportExportDescription": "Import or export your business data",
+  "importData": "Import Data",
+  "exportData": "Export Data",
+  "selectDataToImport": "Select Data to Import",
+  "selectDataToExport": "Select Data to Export",
+  "selectMultipleDataTypes": "Select one or more data types to proceed",
+  "selectSingleDataType": "Select a data type to proceed",
+  "allData": "All Data",
+  "allDataDescription": "Export or import all data types",
+  "productsDataDescription": "Product inventory and pricing information",
+  "categoriesDataDescription": "Product categories and classifications",
+  "customersDataDescription": "Customer contact and business information",
+  "salesDataDescription": "Sales transactions and invoices",
+  "usersDataDescription": "User accounts and permissions",
+  "settingsDataDescription": "Company information and system settings",
+  "exportFormat": "Export Format",
+  "importFile": "Import File",
+  "selectFile": "Select File",
+  "fileSelected": "File Selected",
+  "noFileSelected": "No file selected",
+  "importing": "Importing...",
+  "exporting": "Exporting...",
+  "importSuccess": "Data imported successfully",
+  "exportSuccess": "Data exported successfully",
+  "importError": "Import failed",
+  "exportError": "Export failed",
+  "importSuccessMessage": "Successfully imported {count} items",
+  "@importSuccessMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exportSuccessMessage": "Data exported to: {path}",
+  "@exportSuccessMessage": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "importWarning": "Warning: Importing data will merge with existing data. Duplicate entries will be replaced.",
+  "exportWarning": "Warning: Sensitive data like user passwords will not be exported for security reasons.",
+  "selectFileToImport": "Please select a file to import",
+  "selectDataTypesToProceed": "Please select at least one data type to proceed",
+  "unsupportedFileFormat": "Unsupported file format. Please select a JSON or CSV file.",
+  "fileNotFound": "File not found. Please select a valid file.",
+  "invalidFileContent": "Invalid file content. Please check the file format.",
+  "importInProgress": "Import in progress...",
+  "exportInProgress": "Export in progress...",
+  "users": "Users"
 }
