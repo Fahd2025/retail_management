@@ -351,11 +351,15 @@ class _UsersScreenState extends State<UsersScreen> {
                               ]);
                             }).toList(),
                           ),
+                        );
+                          },
                         ),
                       ),
                     ),
                   ),
-                );
+                ),
+              ),
+            );
               } else {
                 // Mobile: Card with ExpansionTile layout
                 return ListView.builder(

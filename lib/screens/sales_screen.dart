@@ -610,11 +610,15 @@ class _SalesScreenState extends State<SalesScreen> {
                               ]);
                             }).toList(),
                           ),
+                        );
+                          },
                         ),
                       ),
                     ),
                   ),
-                );
+                ),
+              ),
+            );
               } else {
                 // Mobile: Card with ExpansionTile layout
                 return ListView.builder(
@@ -629,7 +633,6 @@ class _SalesScreenState extends State<SalesScreen> {
           );
         },
       ),
-    ),
     );
   }
 }

@@ -335,11 +335,17 @@ class _CustomersScreenState extends State<CustomersScreen> {
                               ]);
                             }).toList(),
                           ),
+                        );
+                          },
                         ),
                       ),
                     ),
                   ),
-                );
+                ),
+              ),
+            ),
+          ),
+        );
               } else {
                 // Mobile: Card with ExpansionTile layout
                 return ListView.builder(
