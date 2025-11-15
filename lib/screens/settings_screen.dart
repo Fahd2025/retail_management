@@ -1344,8 +1344,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
       try {
         // Detect data types in the file
+        final db = AppDatabase();
         final service = DataImportExportService(
-          database: context.read<AppDatabase>(),
+          database: db,
         );
 
         final detectionResult = await service.detectDataTypes(
