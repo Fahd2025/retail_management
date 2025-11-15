@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../database/drift_database.dart';
 import '../models/category.dart' as models;
@@ -48,6 +49,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   // Public method that can be called from dashboard
   void showCategoryDialog([models.Category? category]) {
     final l10n = AppLocalizations.of(context)!;
+    final liquidTheme = LiquidTheme.of(context);
     final nameController = TextEditingController(text: category?.name ?? '');
     final nameArController =
         TextEditingController(text: category?.nameAr ?? '');
@@ -64,20 +66,17 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       isDismissible: true,
       backgroundColor: Colors.transparent,
       builder: (context) {
-        // Build the form content
+        // Build the form content with Liquid Glass UI components
         final formContent = Form(
           key: formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               // Category Name Field
-              TextFormField(
+              LiquidTextField(
                 controller: nameController,
-                decoration: InputDecoration(
-                  labelText: l10n.name,
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.category_outlined),
-                ),
+                label: l10n.name,
+                prefixIcon: const Icon(Icons.category_outlined),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return l10n.pleaseEnterCategoryName;
@@ -90,40 +89,29 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               const SizedBox(height: 16),
 
               // Category Name (Arabic) Field
-              TextFormField(
+              LiquidTextField(
                 controller: nameArController,
-                decoration: InputDecoration(
-                  labelText: '${l10n.name} (عربي)',
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.translate),
-                ),
+                label: '${l10n.name} (عربي)',
+                prefixIcon: const Icon(Icons.translate),
                 textInputAction: TextInputAction.next,
               ),
               const SizedBox(height: 16),
 
               // Description Field
-              TextFormField(
+              LiquidTextField(
                 controller: descriptionController,
-                decoration: InputDecoration(
-                  labelText: l10n.descriptionOptional,
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.description_outlined),
-                  alignLabelWithHint: true,
-                ),
+                label: l10n.descriptionOptional,
+                prefixIcon: const Icon(Icons.description_outlined),
                 maxLines: 3,
                 textInputAction: TextInputAction.next,
               ),
               const SizedBox(height: 16),
 
               // Description (Arabic) Field
-              TextFormField(
+              LiquidTextField(
                 controller: descriptionArController,
-                decoration: InputDecoration(
-                  labelText: '${l10n.description} (عربي)',
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.translate),
-                  alignLabelWithHint: true,
-                ),
+                label: '${l10n.description} (عربي)',
+                prefixIcon: const Icon(Icons.translate),
                 maxLines: 3,
                 textInputAction: TextInputAction.done,
               ),
@@ -212,19 +200,66 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Future<void> _deleteCategory(
       models.Category category, int productCount) async {
     if (productCount > 0) {
-      // Show warning if category has products
+      // Show warning if category has products using Liquid Glass UI
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: Text(AppLocalizations.of(context)!.cannotDeleteCategory),
-          content: Text(AppLocalizations.of(context)!.categoryHasProducts),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(AppLocalizations.of(context)!.ok),
+        builder: (context) {
+          final liquidTheme = LiquidTheme.of(context);
+          final theme = Theme.of(context);
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            child: LiquidCard(
+              elevation: 8,
+              blur: 25,
+              opacity: 0.2,
+              borderRadius: 24,
+              padding: const EdgeInsets.all(24),
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.warning_amber_rounded,
+                    color: theme.colorScheme.error,
+                    size: 48,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    AppLocalizations.of(context)!.cannotDeleteCategory,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: liquidTheme.textColor,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    AppLocalizations.of(context)!.categoryHasProducts,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: liquidTheme.textColor.withValues(alpha: 0.7),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                  LiquidButton(
+                    onPressed: () => Navigator.pop(context),
+                    type: LiquidButtonType.filled,
+                    width: double.infinity,
+                    child: Text(
+                      AppLocalizations.of(context)!.ok,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          );
+        },
       );
       return;
     }
@@ -232,25 +267,83 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     final theme = Theme.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.deleteCategory),
-        content: Text(
-            AppLocalizations.of(context)!.deleteCategoryConfirm(category.name)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(AppLocalizations.of(context)!.cancel),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: theme.colorScheme.error,
-              foregroundColor: Colors.white,
+      builder: (context) {
+        final liquidTheme = LiquidTheme.of(context);
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: LiquidCard(
+            elevation: 8,
+            blur: 25,
+            opacity: 0.2,
+            borderRadius: 24,
+            padding: const EdgeInsets.all(24),
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.delete_outline,
+                  color: theme.colorScheme.error,
+                  size: 48,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  AppLocalizations.of(context)!.deleteCategory,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: liquidTheme.textColor,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  AppLocalizations.of(context)!
+                      .deleteCategoryConfirm(category.name),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: liquidTheme.textColor.withValues(alpha: 0.7),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(
+                      child: LiquidButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        type: LiquidButtonType.outlined,
+                        child: Text(
+                          AppLocalizations.of(context)!.cancel,
+                          style: TextStyle(
+                            color: liquidTheme.textColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: LiquidButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        type: LiquidButtonType.filled,
+                        backgroundColor: theme.colorScheme.error,
+                        child: const Text(
+                          'Delete',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            child: Text(AppLocalizations.of(context)!.delete),
           ),
-        ],
-      ),
+        );
+      },
     );
 
     if (confirmed == true) {
@@ -277,25 +370,37 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final liquidTheme = LiquidTheme.of(context);
     final l10n = AppLocalizations.of(context)!;
+
     return _isLoading
-        ? const Center(child: CircularProgressIndicator())
+        ? Center(child: LiquidLoader(size: 48))
         : _categoriesWithCount.isEmpty
             ? Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
-                      Icons.category_outlined,
-                      size: 64,
-                      color: Colors.grey,
+                    LiquidContainer(
+                      width: 120,
+                      height: 120,
+                      borderRadius: 60,
+                      blur: 15,
+                      opacity: 0.15,
+                      child: Center(
+                        child: Icon(
+                          Icons.category_outlined,
+                          size: 64,
+                          color: liquidTheme.textColor.withValues(alpha: 0.4),
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 24),
                     Text(
                       l10n.noCategoriesFound,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
-                        color: Colors.grey,
+                        color: liquidTheme.textColor.withValues(alpha: 0.5),
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
@@ -306,7 +411,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   final isDesktop = constraints.maxWidth >= 800;
 
                   if (isDesktop) {
-                    // Desktop/Tablet: DataTable layout that fills width
+                    // Desktop/Tablet: DataTable layout with Liquid Glass styling
                     return RefreshIndicator(
                       onRefresh: loadCategories,
                       child: SingleChildScrollView(
@@ -318,76 +423,109 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             constraints: BoxConstraints(
                               minWidth: constraints.maxWidth,
                             ),
-                            child: DataTable(
-                              columnSpacing: 24,
-                              horizontalMargin: 16,
-                              columns: [
-                                DataColumn(label: Text(l10n.name)),
-                                DataColumn(label: Text(l10n.description)),
-                                DataColumn(
-                                    label: Text(
-                                        l10n.productCount(0).split(' ')[0])),
-                                DataColumn(label: Text(l10n.actions)),
-                              ],
-                              rows: _categoriesWithCount.map((data) {
-                                final category =
-                                    data['category'] as models.Category;
-                                final productCount =
-                                    data['productCount'] as int;
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: LiquidCard(
+                                elevation: 4,
+                                blur: 20,
+                                opacity: 0.15,
+                                borderRadius: 16,
+                                padding: EdgeInsets.zero,
+                                child: DataTable(
+                                  columnSpacing: 24,
+                                  horizontalMargin: 16,
+                                  headingTextStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    color: liquidTheme.textColor,
+                                  ),
+                                  dataTextStyle: TextStyle(
+                                    fontSize: 13,
+                                    color: liquidTheme.textColor.withValues(alpha: 0.8),
+                                  ),
+                                  columns: [
+                                    DataColumn(label: Text(l10n.name)),
+                                    DataColumn(label: Text(l10n.description)),
+                                    DataColumn(
+                                        label: Text(
+                                            l10n.productCount(0).split(' ')[0])),
+                                    DataColumn(label: Text(l10n.actions)),
+                                  ],
+                                  rows: _categoriesWithCount.map((data) {
+                                    final category =
+                                        data['category'] as models.Category;
+                                    final productCount =
+                                        data['productCount'] as int;
 
-                                return DataRow(cells: [
-                                  DataCell(Text(
-                                    Localizations.localeOf(context)
-                                                .languageCode ==
-                                            'ar'
-                                        ? (category.nameAr ?? category.name)
-                                        : category.name,
-                                  )),
-                                  DataCell(
-                                    Text(
-                                      Localizations.localeOf(context)
-                                                  .languageCode ==
-                                              'ar'
-                                          ? (category.descriptionAr ??
-                                              category.description ??
-                                              '-')
-                                          : (category.description ?? '-'),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  DataCell(Text(productCount.toString())),
-                                  DataCell(
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        IconButton(
-                                          icon:
-                                              const Icon(Icons.edit, size: 20),
-                                          onPressed: () =>
-                                              showCategoryDialog(category),
-                                          tooltip: l10n.tooltipEdit,
+                                    return DataRow(cells: [
+                                      DataCell(Text(
+                                        Localizations.localeOf(context)
+                                                    .languageCode ==
+                                                'ar'
+                                            ? (category.nameAr ?? category.name)
+                                            : category.name,
+                                      )),
+                                      DataCell(
+                                        Text(
+                                          Localizations.localeOf(context)
+                                                      .languageCode ==
+                                                  'ar'
+                                              ? (category.descriptionAr ??
+                                                  category.description ??
+                                                  '-')
+                                              : (category.description ?? '-'),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        IconButton(
-                                          icon: Icon(Icons.delete,
-                                              size: 20,
-                                              color: theme.colorScheme.error),
-                                          onPressed: () => _deleteCategory(
-                                              category, productCount),
-                                          tooltip: l10n.tooltipDelete,
+                                      ),
+                                      DataCell(Text(productCount.toString())),
+                                      DataCell(
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            LiquidTooltip(
+                                              message: l10n.tooltipEdit,
+                                              child: LiquidButton(
+                                                onPressed: () =>
+                                                    showCategoryDialog(category),
+                                                type: LiquidButtonType.icon,
+                                                size: LiquidButtonSize.small,
+                                                child: Icon(
+                                                  Icons.edit,
+                                                  size: 20,
+                                                  color: theme.colorScheme.primary,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            LiquidTooltip(
+                                              message: l10n.tooltipDelete,
+                                              child: LiquidButton(
+                                                onPressed: () => _deleteCategory(
+                                                    category, productCount),
+                                                type: LiquidButtonType.icon,
+                                                size: LiquidButtonSize.small,
+                                                child: Icon(
+                                                  Icons.delete,
+                                                  size: 20,
+                                                  color: theme.colorScheme.error,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                ]);
-                              }).toList(),
+                                      ),
+                                    ]);
+                                  }).toList(),
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
                     );
                   } else {
-                    // Mobile: Card with ExpansionTile layout
+                    // Mobile: Card with ExpansionTile layout using Liquid Glass
                     return RefreshIndicator(
                       onRefresh: loadCategories,
                       child: ListView.builder(
@@ -398,100 +536,134 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           final category = data['category'] as models.Category;
                           final productCount = data['productCount'] as int;
 
-                          return Card(
-                            margin: const EdgeInsets.only(bottom: 12),
-                            elevation: 2,
-                            child: ExpansionTile(
-                              leading: CircleAvatar(
-                                backgroundColor: Theme.of(context)
-                                    .primaryColor
-                                    .withValues(alpha: 0.1),
-                                child: Icon(
-                                  Icons.category,
-                                  color: Theme.of(context).primaryColor,
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: LiquidCard(
+                              elevation: 3,
+                              blur: 18,
+                              opacity: 0.15,
+                              borderRadius: 16,
+                              padding: EdgeInsets.zero,
+                              child: Theme(
+                                data: Theme.of(context).copyWith(
+                                  dividerColor: Colors.transparent,
                                 ),
-                              ),
-                              title: Text(
-                                Localizations.localeOf(context).languageCode ==
-                                        'ar'
-                                    ? (category.nameAr ?? category.name)
-                                    : category.name,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              subtitle: Text(
-                                l10n.productCount(productCount),
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.grey.shade600,
-                                ),
-                              ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: Icon(Icons.edit,
-                                        color: theme.colorScheme.primary),
-                                    onPressed: () =>
-                                        showCategoryDialog(category),
-                                    tooltip: l10n.tooltipEdit,
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.delete,
-                                        color: theme.colorScheme.error),
-                                    onPressed: () =>
-                                        _deleteCategory(category, productCount),
-                                    tooltip: l10n.tooltipDelete,
-                                  ),
-                                ],
-                              ),
-                              children: [
-                                if ((Localizations.localeOf(context)
-                                                    .languageCode ==
-                                                'ar'
-                                            ? (category.descriptionAr ??
-                                                category.description)
-                                            : category.description) !=
-                                        null &&
-                                    (Localizations.localeOf(context)
-                                                    .languageCode ==
-                                                'ar'
-                                            ? (category.descriptionAr ??
-                                                category.description)!
-                                            : category.description!)
-                                        .isNotEmpty)
-                                  Padding(
-                                    padding: const EdgeInsets.all(16),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          l10n.description,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          Localizations.localeOf(context)
-                                                      .languageCode ==
-                                                  'ar'
-                                              ? (category.descriptionAr ??
-                                                  category.description!)
-                                              : category.description!,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey.shade600,
-                                          ),
-                                        ),
-                                      ],
+                                child: ExpansionTile(
+                                  leading: LiquidContainer(
+                                    width: 48,
+                                    height: 48,
+                                    borderRadius: 24,
+                                    blur: 12,
+                                    opacity: 0.2,
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.category,
+                                        color: theme.colorScheme.primary,
+                                        size: 24,
+                                      ),
                                     ),
                                   ),
-                              ],
+                                  title: Text(
+                                    Localizations.localeOf(context).languageCode ==
+                                            'ar'
+                                        ? (category.nameAr ?? category.name)
+                                        : category.name,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      color: liquidTheme.textColor,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    l10n.productCount(productCount),
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: liquidTheme.textColor.withValues(alpha: 0.6),
+                                    ),
+                                  ),
+                                  trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      LiquidTooltip(
+                                        message: l10n.tooltipEdit,
+                                        child: LiquidButton(
+                                          onPressed: () =>
+                                              showCategoryDialog(category),
+                                          type: LiquidButtonType.icon,
+                                          size: LiquidButtonSize.small,
+                                          child: Icon(
+                                            Icons.edit,
+                                            color: theme.colorScheme.primary,
+                                            size: 20,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 4),
+                                      LiquidTooltip(
+                                        message: l10n.tooltipDelete,
+                                        child: LiquidButton(
+                                          onPressed: () =>
+                                              _deleteCategory(category, productCount),
+                                          type: LiquidButtonType.icon,
+                                          size: LiquidButtonSize.small,
+                                          child: Icon(
+                                            Icons.delete,
+                                            color: theme.colorScheme.error,
+                                            size: 20,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  children: [
+                                    if ((Localizations.localeOf(context)
+                                                        .languageCode ==
+                                                    'ar'
+                                                ? (category.descriptionAr ??
+                                                    category.description)
+                                                : category.description) !=
+                                            null &&
+                                        (Localizations.localeOf(context)
+                                                        .languageCode ==
+                                                    'ar'
+                                                ? (category.descriptionAr ??
+                                                    category.description)!
+                                                : category.description!)
+                                            .isNotEmpty)
+                                      Padding(
+                                        padding: const EdgeInsets.all(16),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              l10n.description,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                                color: liquidTheme.textColor,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              Localizations.localeOf(context)
+                                                          .languageCode ==
+                                                      'ar'
+                                                  ? (category.descriptionAr ??
+                                                      category.description!)
+                                                  : category.description!,
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: liquidTheme.textColor
+                                                    .withValues(alpha: 0.7),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
                             ),
                           );
                         },

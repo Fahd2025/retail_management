@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/user/user_bloc.dart';
 import '../blocs/user/user_event.dart';
@@ -61,23 +62,31 @@ class _UsersScreenState extends State<UsersScreen> {
     }
 
     final theme = Theme.of(context);
+    final liquidTheme = LiquidTheme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.deleteUser),
+      builder: (context) => LiquidDialog(
+        title: l10n.deleteUser,
         content: Text(
-            AppLocalizations.of(context)!.deleteUserConfirm(user.username)),
+          l10n.deleteUserConfirm(user.username),
+          style: TextStyle(color: liquidTheme.textColor),
+        ),
         actions: [
-          TextButton(
+          LiquidButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text(AppLocalizations.of(context)!.cancel),
+            type: LiquidButtonType.text,
+            child: Text(l10n.cancel),
           ),
-          ElevatedButton(
+          LiquidButton(
             onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: theme.colorScheme.error,
+            type: LiquidButtonType.filled,
+            backgroundColor: theme.colorScheme.error,
+            child: Text(
+              l10n.delete,
+              style: const TextStyle(color: Colors.white),
             ),
-            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),
@@ -88,7 +97,7 @@ class _UsersScreenState extends State<UsersScreen> {
     }
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _buildInfoRow(String label, String value, LiquidThemeData liquidTheme) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(
@@ -97,16 +106,20 @@ class _UsersScreenState extends State<UsersScreen> {
             width: 120,
             child: Text(
               '$label:',
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 14,
+                color: liquidTheme.textColor,
               ),
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(fontSize: 14),
+              style: TextStyle(
+                fontSize: 14,
+                color: liquidTheme.textColor.withValues(alpha: 0.8),
+              ),
             ),
           ),
         ],
@@ -117,7 +130,9 @@ class _UsersScreenState extends State<UsersScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Scaffold(
+    final liquidTheme = LiquidTheme.of(context);
+
+    return LiquidScaffold(
       body: BlocConsumer<UserBloc, UserState>(
         listener: (context, state) {
           if (state is UserOperationSuccess) {
@@ -140,7 +155,9 @@ class _UsersScreenState extends State<UsersScreen> {
         },
         builder: (context, state) {
           if (state is UserLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: LiquidLoader(size: 60),
+            );
           }
 
           final users = state is UserLoaded ? state.users : <User>[];
@@ -154,14 +171,32 @@ class _UsersScreenState extends State<UsersScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.people, size: 64, color: Colors.grey.shade300),
+                  LiquidContainer(
+                    width: 120,
+                    height: 120,
+                    borderRadius: 60,
+                    blur: 15,
+                    opacity: 0.2,
+                    child: Icon(
+                      Icons.people,
+                      size: 64,
+                      color: liquidTheme.textColor.withValues(alpha: 0.3),
+                    ),
+                  ),
                   const SizedBox(height: 16),
-                  Text(l10n.noUsersFound),
+                  Text(
+                    l10n.noUsersFound,
+                    style: TextStyle(color: liquidTheme.textColor),
+                  ),
                   const SizedBox(height: 16),
-                  ElevatedButton.icon(
+                  LiquidButton(
                     onPressed: () => showUserDialog(),
-                    icon: const Icon(Icons.add),
-                    label: Text(l10n.addUser),
+                    type: LiquidButtonType.filled,
+                    icon: const Icon(Icons.add, color: Colors.white),
+                    child: Text(
+                      l10n.addUser,
+                      style: const TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
@@ -171,7 +206,6 @@ class _UsersScreenState extends State<UsersScreen> {
           return LayoutBuilder(
             builder: (context, constraints) {
               final isDesktop = constraints.maxWidth >= 800;
-              final theme = Theme.of(context);
               final l10n = AppLocalizations.of(context)!;
 
               if (isDesktop) {
@@ -184,74 +218,107 @@ class _UsersScreenState extends State<UsersScreen> {
                       constraints: BoxConstraints(
                         minWidth: constraints.maxWidth,
                       ),
-                      child: DataTable(
-                        columnSpacing: 24,
-                        horizontalMargin: 16,
-                        columns: [
-                          DataColumn(label: Text(l10n.username)),
-                          DataColumn(label: Text(l10n.fullName)),
-                          DataColumn(label: Text(l10n.role)),
-                          DataColumn(label: Text(l10n.status)),
-                          DataColumn(label: Text(l10n.invoiceCount)),
-                          DataColumn(label: Text(l10n.total)),
-                          DataColumn(label: Text(l10n.actions)),
-                        ],
-                        rows: users.map((user) {
-                          final stats = userSalesStats[user.id] ?? {};
-                          final invoiceCount = stats['invoiceCount'] ?? 0;
-                          final totalSales = stats['totalSales'] ?? 0.0;
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: LiquidCard(
+                          elevation: 4,
+                          blur: 20,
+                          opacity: 0.15,
+                          padding: EdgeInsets.zero,
+                          child: DataTable(
+                            columnSpacing: 24,
+                            horizontalMargin: 16,
+                            headingTextStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: liquidTheme.textColor,
+                            ),
+                            dataTextStyle: TextStyle(
+                              color: liquidTheme.textColor,
+                            ),
+                            columns: [
+                              DataColumn(label: Text(l10n.username)),
+                              DataColumn(label: Text(l10n.fullName)),
+                              DataColumn(label: Text(l10n.role)),
+                              DataColumn(label: Text(l10n.status)),
+                              DataColumn(label: Text(l10n.invoiceCount)),
+                              DataColumn(label: Text(l10n.total)),
+                              DataColumn(label: Text(l10n.actions)),
+                            ],
+                            rows: users.map((user) {
+                              final stats = userSalesStats[user.id] ?? {};
+                              final invoiceCount = stats['invoiceCount'] ?? 0;
+                              final totalSales = stats['totalSales'] ?? 0.0;
 
-                          return DataRow(cells: [
-                            DataCell(Text(user.username)),
-                            DataCell(Text(user.fullName)),
-                            DataCell(
-                              Chip(
-                                label: Text(
-                                  user.role == UserRole.admin
-                                      ? l10n.admin
-                                      : l10n.cashier,
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                                backgroundColor: user.role == UserRole.admin
-                                    ? theme.colorScheme.primaryContainer
-                                    : Colors.green.shade100,
-                              ),
-                            ),
-                            DataCell(
-                              Chip(
-                                label: Text(
-                                  user.isActive ? l10n.active : l10n.inactive,
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                                backgroundColor: user.isActive
-                                    ? Colors.green.shade100
-                                    : theme.colorScheme.errorContainer,
-                              ),
-                            ),
-                            DataCell(Text(invoiceCount.toString())),
-                            DataCell(
-                              Text(CurrencyHelper.formatCurrencySync(
-                                  totalSales)),
-                            ),
-                            DataCell(
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.edit, size: 20),
-                                    onPressed: () => showUserDialog(user),
+                              return DataRow(cells: [
+                                DataCell(Text(
+                                  user.username,
+                                  style: TextStyle(color: liquidTheme.textColor),
+                                )),
+                                DataCell(Text(
+                                  user.fullName,
+                                  style: TextStyle(color: liquidTheme.textColor),
+                                )),
+                                DataCell(
+                                  Chip(
+                                    label: Text(
+                                      user.role == UserRole.admin
+                                          ? l10n.admin
+                                          : l10n.cashier,
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                    backgroundColor: user.role == UserRole.admin
+                                        ? theme.colorScheme.primaryContainer
+                                        : Colors.green.shade100,
                                   ),
-                                  IconButton(
-                                    icon: Icon(Icons.delete,
-                                        size: 20,
-                                        color: theme.colorScheme.error),
-                                    onPressed: () => _deleteUser(context, user),
+                                ),
+                                DataCell(
+                                  Chip(
+                                    label: Text(
+                                      user.isActive ? l10n.active : l10n.inactive,
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                    backgroundColor: user.isActive
+                                        ? Colors.green.shade100
+                                        : theme.colorScheme.errorContainer,
                                   ),
-                                ],
-                              ),
-                            ),
-                          ]);
-                        }).toList(),
+                                ),
+                                DataCell(Text(
+                                  invoiceCount.toString(),
+                                  style: TextStyle(color: liquidTheme.textColor),
+                                )),
+                                DataCell(
+                                  Text(
+                                    CurrencyHelper.formatCurrencySync(totalSales),
+                                    style: TextStyle(color: liquidTheme.textColor),
+                                  ),
+                                ),
+                                DataCell(
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.edit,
+                                          size: 20,
+                                          color: theme.colorScheme.primary,
+                                        ),
+                                        onPressed: () => showUserDialog(user),
+                                      ),
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.delete,
+                                          size: 20,
+                                          color: theme.colorScheme.error,
+                                        ),
+                                        onPressed: () => _deleteUser(context, user),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ]);
+                            }).toList(),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -267,26 +334,35 @@ class _UsersScreenState extends State<UsersScreen> {
                     final invoiceCount = stats['invoiceCount'] ?? 0;
                     final totalSales = stats['totalSales'] ?? 0.0;
 
-                    return Card(
+                    return LiquidCard(
                       margin: const EdgeInsets.only(bottom: 12),
-                      elevation: 2,
+                      elevation: 3,
+                      blur: 18,
+                      opacity: 0.15,
+                      borderRadius: 16,
+                      padding: EdgeInsets.zero,
                       child: ExpansionTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Theme.of(context)
-                              .primaryColor
-                              .withValues(alpha: 0.1),
-                          child: Icon(
-                            user.role == UserRole.admin
-                                ? Icons.admin_panel_settings
-                                : Icons.person,
-                            color: Theme.of(context).primaryColor,
+                        leading: LiquidContainer(
+                          width: 40,
+                          height: 40,
+                          borderRadius: 20,
+                          blur: 10,
+                          opacity: 0.15,
+                          child: Center(
+                            child: Icon(
+                              user.role == UserRole.admin
+                                  ? Icons.admin_panel_settings
+                                  : Icons.person,
+                              color: theme.colorScheme.primary,
+                            ),
                           ),
                         ),
                         title: Text(
                           user.fullName,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: liquidTheme.textColor,
                           ),
                         ),
                         subtitle: Column(
@@ -294,7 +370,10 @@ class _UsersScreenState extends State<UsersScreen> {
                           children: [
                             Text(
                               l10n.username + ': ' + user.username,
-                              style: const TextStyle(fontSize: 13),
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: liquidTheme.textColor.withValues(alpha: 0.7),
+                              ),
                             ),
                             Row(
                               children: [
@@ -329,13 +408,17 @@ class _UsersScreenState extends State<UsersScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: Icon(Icons.edit,
-                                  color: theme.colorScheme.primary),
+                              icon: Icon(
+                                Icons.edit,
+                                color: theme.colorScheme.primary,
+                              ),
                               onPressed: () => showUserDialog(user),
                             ),
                             IconButton(
-                              icon: Icon(Icons.delete,
-                                  color: theme.colorScheme.error),
+                              icon: Icon(
+                                Icons.delete,
+                                color: theme.colorScheme.error,
+                              ),
                               onPressed: () => _deleteUser(context, user),
                             ),
                           ],
@@ -347,10 +430,14 @@ class _UsersScreenState extends State<UsersScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 _buildInfoRow(
-                                    l10n.invoiceCount, invoiceCount.toString()),
+                                  l10n.invoiceCount,
+                                  invoiceCount.toString(),
+                                  liquidTheme,
+                                ),
                                 _buildInfoRow(
                                   l10n.total,
                                   CurrencyHelper.formatCurrencySync(totalSales),
+                                  liquidTheme,
                                 ),
                               ],
                             ),
@@ -440,9 +527,69 @@ class _UserDialogState extends State<_UserDialog> {
     }
   }
 
+  Widget _buildGlassSwitch({
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) {
+    final theme = Theme.of(context);
+
+    return GestureDetector(
+      onTap: () => onChanged(!value),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: 56,
+        height: 32,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          color: value
+              ? theme.colorScheme.primary.withValues(alpha: 0.3)
+              : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+          border: Border.all(
+            color: value
+                ? theme.colorScheme.primary
+                : theme.colorScheme.outline.withValues(alpha: 0.5),
+            width: 1.5,
+          ),
+          boxShadow: value
+              ? [
+                  BoxShadow(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    spreadRadius: 0,
+                  ),
+                ]
+              : null,
+        ),
+        child: AnimatedAlign(
+          duration: const Duration(milliseconds: 200),
+          alignment: value ? Alignment.centerRight : Alignment.centerLeft,
+          child: Container(
+            width: 26,
+            height: 26,
+            margin: const EdgeInsets.symmetric(horizontal: 3),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: value
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.outline,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final liquidTheme = LiquidTheme.of(context);
 
     // Build the form content
     final formContent = Form(
@@ -451,13 +598,10 @@ class _UserDialogState extends State<_UserDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Username Field
-          TextFormField(
+          LiquidTextField(
             controller: _usernameController,
-            decoration: InputDecoration(
-              labelText: l10n.usernameFieldLabel,
-              border: const OutlineInputBorder(),
-              prefixIcon: const Icon(Icons.person_outlined),
-            ),
+            label: l10n.usernameFieldLabel,
+            prefixIcon: const Icon(Icons.person_outlined),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return l10n.usernameRequired;
@@ -467,18 +611,16 @@ class _UserDialogState extends State<_UserDialog> {
               }
               return null;
             },
+            autofocus: true,
             textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: 16),
 
           // Full Name Field
-          TextFormField(
+          LiquidTextField(
             controller: _fullNameController,
-            decoration: InputDecoration(
-              labelText: l10n.fullNameFieldLabel,
-              border: const OutlineInputBorder(),
-              prefixIcon: const Icon(Icons.badge_outlined),
-            ),
+            label: l10n.fullNameFieldLabel,
+            prefixIcon: const Icon(Icons.badge_outlined),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return l10n.fullNameRequired;
@@ -490,15 +632,12 @@ class _UserDialogState extends State<_UserDialog> {
           const SizedBox(height: 16),
 
           // Password Field
-          TextFormField(
+          LiquidTextField(
             controller: _passwordController,
-            decoration: InputDecoration(
-              labelText: widget.user == null
-                  ? l10n.passwordFieldLabel
-                  : l10n.passwordLeaveEmpty,
-              border: const OutlineInputBorder(),
-              prefixIcon: const Icon(Icons.lock_outlined),
-            ),
+            label: widget.user == null
+                ? l10n.passwordFieldLabel
+                : l10n.passwordLeaveEmpty,
+            prefixIcon: const Icon(Icons.lock_outlined),
             obscureText: true,
             validator: (value) {
               if (widget.user == null && (value == null || value.isEmpty)) {
@@ -518,17 +657,44 @@ class _UserDialogState extends State<_UserDialog> {
             initialValue: _selectedRole,
             decoration: InputDecoration(
               labelText: l10n.roleFieldLabel,
-              border: const OutlineInputBorder(),
-              prefixIcon: const Icon(Icons.admin_panel_settings_outlined),
+              labelStyle: TextStyle(color: liquidTheme.textColor),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: liquidTheme.textColor.withValues(alpha: 0.3),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.primary,
+                  width: 2,
+                ),
+              ),
+              prefixIcon: Icon(
+                Icons.admin_panel_settings_outlined,
+                color: liquidTheme.textColor.withValues(alpha: 0.7),
+              ),
             ),
+            dropdownColor: Theme.of(context).colorScheme.surface,
+            style: TextStyle(color: liquidTheme.textColor),
             items: [
               DropdownMenuItem(
                 value: UserRole.admin,
-                child: Text(l10n.admin),
+                child: Text(
+                  l10n.admin,
+                  style: TextStyle(color: liquidTheme.textColor),
+                ),
               ),
               DropdownMenuItem(
                 value: UserRole.cashier,
-                child: Text(l10n.cashier),
+                child: Text(
+                  l10n.cashier,
+                  style: TextStyle(color: liquidTheme.textColor),
+                ),
               ),
             ],
             onChanged: (value) {
@@ -540,18 +706,42 @@ class _UserDialogState extends State<_UserDialog> {
           const SizedBox(height: 16),
 
           // Active Status Switch
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Theme.of(context).dividerColor),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: SwitchListTile(
-              title: Text(l10n.active),
-              subtitle: Text(_isActive ? l10n.active : l10n.inactive),
-              value: _isActive,
-              onChanged: (value) {
-                setState(() => _isActive = value);
-              },
+          LiquidCard(
+            elevation: 2,
+            blur: 10,
+            opacity: 0.1,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.active,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: liquidTheme.textColor,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      _isActive ? l10n.active : l10n.inactive,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: liquidTheme.textColor.withValues(alpha: 0.6),
+                      ),
+                    ),
+                  ],
+                ),
+                _buildGlassSwitch(
+                  value: _isActive,
+                  onChanged: (value) {
+                    setState(() => _isActive = value);
+                  },
+                ),
+              ],
             ),
           ),
         ],

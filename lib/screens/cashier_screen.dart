@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
 import 'package:retail_management/blocs/app_config/app_config_state.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/product/product_bloc.dart';
@@ -263,20 +264,31 @@ class _CashierScreenState extends State<CashierScreen>
           // Show print dialog
           final shouldPrint = await showDialog<bool>(
             context: context,
-            builder: (context) => AlertDialog(
-              title: Text(AppLocalizations.of(context)!.saleCompleted),
-              content: Text(AppLocalizations.of(context)!.printInvoiceQuestion),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context, false),
-                  child: Text(AppLocalizations.of(context)!.no),
+            builder: (context) {
+              final liquidTheme = LiquidTheme.of(context);
+              return LiquidDialog(
+                title: AppLocalizations.of(context)!.saleCompleted,
+                content: Text(
+                  AppLocalizations.of(context)!.printInvoiceQuestion,
+                  style: TextStyle(color: liquidTheme.textColor),
                 ),
-                ElevatedButton(
-                  onPressed: () => Navigator.pop(context, true),
-                  child: Text(AppLocalizations.of(context)!.printInvoice),
-                ),
-              ],
-            ),
+                actions: [
+                  LiquidButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    type: LiquidButtonType.text,
+                    child: Text(AppLocalizations.of(context)!.no),
+                  ),
+                  LiquidButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    type: LiquidButtonType.filled,
+                    child: Text(
+                      AppLocalizations.of(context)!.printInvoice,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              );
+            },
           );
 
           if (shouldPrint == true && mounted) {
@@ -345,6 +357,8 @@ class _CashierScreenState extends State<CashierScreen>
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final liquidTheme = LiquidTheme.of(context);
+
     return BlocBuilder<ProductBloc, ProductState>(
         builder: (context, productState) {
       List<String> categories = [];
@@ -385,331 +399,135 @@ class _CashierScreenState extends State<CashierScreen>
           }
 
           final theme = Theme.of(context);
-          return Scaffold(body: LayoutBuilder(
-            builder: (context, constraints) {
-              final isTablet = constraints.maxWidth >= 600;
+          return LiquidScaffold(
+            body: LayoutBuilder(
+              builder: (context, constraints) {
+                final isTablet = constraints.maxWidth >= 600;
 
-              return Row(
-                children: [
-                  // Products section - always visible on tablet, conditional on mobile
-                  if (isTablet || !_isCartVisible)
-                    Expanded(
-                      flex: isTablet && _isCartVisible ? 2 : 1,
-                      child: Column(
-                        children: [
-                          // Barcode scanner
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            color: Colors.white,
-                            child: TextField(
-                              controller: _barcodeController,
-                              decoration: InputDecoration(
-                                hintText: AppLocalizations.of(context)!
-                                    .scanOrEnterBarcode,
-                                prefixIcon: const Icon(Icons.qr_code_scanner),
-                                fillColor: Colors.grey.shade50,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                contentPadding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
-                              ),
-                              onSubmitted: (_) => _scanBarcode(),
-                            ),
-                          ),
-                          // VAT Information Note (only shown when VAT is enabled)
-                          BlocBuilder<AppConfigBloc, AppConfigState>(
-                            builder: (context, configState) {
-                              if (!configState.vatEnabled) {
-                                return const SizedBox.shrink();
-                              }
-
-                              return Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 8),
-                                color: configState.vatIncludedInPrice
-                                    ? Colors.green.shade50
-                                    : Colors.blue.shade50,
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.info_outline,
-                                      size: 16,
-                                      color: configState.vatIncludedInPrice
-                                          ? Colors.green.shade700
-                                          : Colors.blue.shade700,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        configState.vatIncludedInPrice
-                                            ? l10n.vatIncludedInPriceNote(
-                                                configState.vatRate
-                                                    .toStringAsFixed(1))
-                                            : l10n.vatExcludedFromPriceNote(
-                                                configState.vatRate
-                                                    .toStringAsFixed(1)),
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                          color: configState.vatIncludedInPrice
-                                              ? Colors.green.shade900
-                                              : Colors.blue.shade900,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                          // Category tabs
-                          Container(
-                            height: 60,
-                            color: Colors.white,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.all(8),
-                              itemCount: categories.length,
-                              itemBuilder: (context, index) {
-                                final category = categories[index];
-                                final isSelected =
-                                    category == _selectedCategory;
-
-                                return Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 4),
-                                  child: FilterChip(
-                                    label: Text(_getCategoryName(category)),
-                                    selected: isSelected,
-                                    onSelected: (_) {
-                                      setState(
-                                          () => _selectedCategory = category);
-                                      _loadProductsByCategory();
-                                    },
-                                    selectedColor: theme.colorScheme.primary,
-                                    labelStyle: TextStyle(
-                                      color: isSelected
-                                          ? Colors.white
-                                          : Colors.black,
-                                      fontWeight: isSelected
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-
-                          // Products grid
-                          Expanded(
-                            child: AnimatedBuilder(
-                              animation: _animationController,
-                              builder: (context, child) {
-                                return GridView.builder(
-                                  padding: const EdgeInsets.all(16),
-                                  gridDelegate:
-                                      const SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 200,
-                                    childAspectRatio: 0.85,
-                                    crossAxisSpacing: 16,
-                                    mainAxisSpacing: 16,
-                                  ),
-                                  itemCount: _displayedProducts.length,
-                                  itemBuilder: (context, index) {
-                                    final product = _displayedProducts[index];
-
-                                    return FadeTransition(
-                                      opacity: _animationController,
-                                      child: ScaleTransition(
-                                        scale:
-                                            Tween<double>(begin: 0.8, end: 1.0)
-                                                .animate(
-                                          CurvedAnimation(
-                                            parent: _animationController,
-                                            curve: Interval(
-                                              index * 0.1,
-                                              1.0,
-                                              curve: Curves.easeOut,
-                                            ),
-                                          ),
-                                        ),
-                                        child: _ProductCard(
-                                          product: product,
-                                          onTap: () =>
-                                              _addProductToCart(product),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                  // Cart section - conditionally visible based on _isCartVisible with slide animation
-                  if (_isCartVisible)
-                    SlideTransition(
-                      position: _cartSlideAnimation,
-                      child: Container(
-                        width: isTablet ? 400 : constraints.maxWidth,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.1),
-                              blurRadius: 10,
-                            ),
-                          ],
-                        ),
+                return Row(
+                  children: [
+                    // Products section - always visible on tablet, conditional on mobile
+                    if (isTablet || !_isCartVisible)
+                      Expanded(
+                        flex: isTablet && _isCartVisible ? 2 : 1,
                         child: Column(
                           children: [
-                            // Cart header
-                            Container(
+                            // Barcode scanner
+                            LiquidContainer(
                               padding: const EdgeInsets.all(16),
-                              color: theme.colorScheme.primary
-                                  .withValues(alpha: 0.1),
-                              child: Row(
-                                children: [
-                                  const Icon(Icons.shopping_cart),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    AppLocalizations.of(context)!.cart,
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    AppLocalizations.of(context)!
-                                        .cartItems(cartItemCount),
-                                    style:
-                                        TextStyle(color: Colors.grey.shade600),
-                                  ),
-                                ],
+                              blur: 15,
+                              opacity: 0.1,
+                              child: LiquidTextField(
+                                controller: _barcodeController,
+                                hintText: l10n.scanOrEnterBarcode,
+                                prefixIcon: const Icon(Icons.qr_code_scanner),
+                                onSubmitted: (_) => _scanBarcode(),
                               ),
                             ),
 
-                            // Customer selection
-                            Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: _CustomerSelector(
-                                selectedCustomer: _selectedCustomer,
-                                onCustomerSelected: (customer) {
-                                  setState(() => _selectedCustomer = customer);
+                            // VAT Information Note (only shown when VAT is enabled)
+                            BlocBuilder<AppConfigBloc, AppConfigState>(
+                              builder: (context, configState) {
+                                if (!configState.vatEnabled) {
+                                  return const SizedBox.shrink();
+                                }
+
+                                return LiquidBanner(
+                                  type: configState.vatIncludedInPrice
+                                      ? LiquidBannerType.success
+                                      : LiquidBannerType.info,
+                                  icon: Icons.info_outline,
+                                  title: configState.vatIncludedInPrice
+                                      ? l10n.vatIncludedInPriceNote(
+                                          configState.vatRate.toStringAsFixed(1))
+                                      : l10n.vatExcludedFromPriceNote(
+                                          configState.vatRate.toStringAsFixed(1)),
+                                );
+                              },
+                            ),
+
+                            // Category tabs
+                            LiquidContainer(
+                              height: 60,
+                              blur: 10,
+                              opacity: 0.08,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                padding: const EdgeInsets.all(8),
+                                itemCount: categories.length,
+                                itemBuilder: (context, index) {
+                                  final category = categories[index];
+                                  final isSelected = category == _selectedCategory;
+
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                                    child: LiquidButton(
+                                      onPressed: () {
+                                        setState(() => _selectedCategory = category);
+                                        _loadProductsByCategory();
+                                      },
+                                      type: isSelected
+                                          ? LiquidButtonType.filled
+                                          : LiquidButtonType.outlined,
+                                      backgroundColor: isSelected
+                                          ? theme.colorScheme.primary
+                                          : null,
+                                      child: Text(
+                                        _getCategoryName(category),
+                                        style: TextStyle(
+                                          color: isSelected
+                                              ? Colors.white
+                                              : liquidTheme.textColor,
+                                          fontWeight: isSelected
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                        ),
+                                      ),
+                                    ),
+                                  );
                                 },
                               ),
                             ),
 
-                            // Cart items
+                            // Products grid
                             Expanded(
-                              child: cartItems.isEmpty
-                                  ? Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.shopping_cart_outlined,
-                                            size: 64,
-                                            color: Colors.grey.shade300,
-                                          ),
-                                          const SizedBox(height: 16),
-                                          Text(
-                                            AppLocalizations.of(context)!
-                                                .cartIsEmpty,
-                                            style: TextStyle(
-                                              color: Colors.grey.shade600,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : ListView.builder(
-                                      itemCount: cartItems.length,
-                                      itemBuilder: (context, index) {
-                                        final item = cartItems[index];
-                                        return _CartItem(item: item);
-                                      },
+                              child: AnimatedBuilder(
+                                animation: _animationController,
+                                builder: (context, child) {
+                                  return GridView.builder(
+                                    padding: const EdgeInsets.all(16),
+                                    gridDelegate:
+                                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                                      maxCrossAxisExtent: 200,
+                                      childAspectRatio: 0.85,
+                                      crossAxisSpacing: 16,
+                                      mainAxisSpacing: 16,
                                     ),
-                            ),
+                                    itemCount: _displayedProducts.length,
+                                    itemBuilder: (context, index) {
+                                      final product = _displayedProducts[index];
 
-                            // Cart summary
-                            Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
-                                border: Border(
-                                  top: BorderSide(color: Colors.grey.shade300),
-                                ),
-                              ),
-                              child: BlocBuilder<AppConfigBloc, AppConfigState>(
-                                builder: (context, configState) {
-                                  return Column(
-                                    children: [
-                                      if (configState.vatEnabled) ...[
-                                        _SummaryRow(
-                                            AppLocalizations.of(context)!
-                                                .subtotalLabel,
-                                            cartSubtotal),
-                                        const SizedBox(height: 8),
-                                        _SummaryRow(
-                                            AppLocalizations.of(context)!
-                                                .vatLabel,
-                                            cartVatAmount),
-                                        const Divider(),
-                                      ],
-                                      _SummaryRow(
-                                        AppLocalizations.of(context)!
-                                            .totalLabelColon,
-                                        cartTotal,
-                                        isBold: true,
-                                        fontSize: 20,
-                                      ),
-                                      const SizedBox(height: 16),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: OutlinedButton(
-                                              onPressed: cartItems.isEmpty
-                                                  ? null
-                                                  : () => context
-                                                      .read<SaleBloc>()
-                                                      .add(
-                                                          const ClearCartEvent()),
-                                              child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .clear),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Expanded(
-                                            flex: 2,
-                                            child: ElevatedButton(
-                                              onPressed: cartItems.isEmpty
-                                                  ? null
-                                                  : _checkout,
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor:
-                                                    theme.colorScheme.primary,
-                                                foregroundColor: Colors.white,
+                                      return FadeTransition(
+                                        opacity: _animationController,
+                                        child: ScaleTransition(
+                                          scale: Tween<double>(begin: 0.8, end: 1.0)
+                                              .animate(
+                                            CurvedAnimation(
+                                              parent: _animationController,
+                                              curve: Interval(
+                                                index * 0.1,
+                                                1.0,
+                                                curve: Curves.easeOut,
                                               ),
-                                              child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .checkout),
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ],
+                                          child: _ProductCard(
+                                            product: product,
+                                            onTap: () => _addProductToCart(product),
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   );
                                 },
                               ),
@@ -717,11 +535,162 @@ class _CashierScreenState extends State<CashierScreen>
                           ],
                         ),
                       ),
-                    ),
-                ],
-              );
-            },
-          ));
+
+                    // Cart section - conditionally visible based on _isCartVisible with slide animation
+                    if (_isCartVisible)
+                      SlideTransition(
+                        position: _cartSlideAnimation,
+                        child: LiquidContainer(
+                          width: isTablet ? 400 : constraints.maxWidth,
+                          blur: 20,
+                          opacity: 0.15,
+                          borderRadius: 0,
+                          child: Column(
+                            children: [
+                              // Cart header
+                              LiquidContainer(
+                                padding: const EdgeInsets.all(16),
+                                blur: 15,
+                                opacity: 0.2,
+                                borderRadius: 0,
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.shopping_cart, color: liquidTheme.textColor),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      l10n.cart,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: liquidTheme.textColor,
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    Text(
+                                      l10n.cartItems(cartItemCount),
+                                      style: TextStyle(
+                                        color: liquidTheme.textColor.withValues(alpha: 0.6),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              // Customer selection
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: _CustomerSelector(
+                                  selectedCustomer: _selectedCustomer,
+                                  onCustomerSelected: (customer) {
+                                    setState(() => _selectedCustomer = customer);
+                                  },
+                                ),
+                              ),
+
+                              // Cart items
+                              Expanded(
+                                child: cartItems.isEmpty
+                                    ? Center(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            LiquidContainer(
+                                              width: 100,
+                                              height: 100,
+                                              borderRadius: 50,
+                                              blur: 15,
+                                              opacity: 0.15,
+                                              child: Icon(
+                                                Icons.shopping_cart_outlined,
+                                                size: 64,
+                                                color: liquidTheme.textColor.withValues(alpha: 0.3),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 16),
+                                            Text(
+                                              l10n.cartIsEmpty,
+                                              style: TextStyle(
+                                                color: liquidTheme.textColor.withValues(alpha: 0.6),
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : ListView.builder(
+                                        itemCount: cartItems.length,
+                                        itemBuilder: (context, index) {
+                                          final item = cartItems[index];
+                                          return _CartItem(item: item);
+                                        },
+                                      ),
+                              ),
+
+                              // Cart summary
+                              LiquidContainer(
+                                padding: const EdgeInsets.all(16),
+                                blur: 15,
+                                opacity: 0.2,
+                                borderRadius: 0,
+                                child: BlocBuilder<AppConfigBloc, AppConfigState>(
+                                  builder: (context, configState) {
+                                    return Column(
+                                      children: [
+                                        if (configState.vatEnabled) ...[
+                                          _SummaryRow(l10n.subtotalLabel, cartSubtotal),
+                                          const SizedBox(height: 8),
+                                          _SummaryRow(l10n.vatLabel, cartVatAmount),
+                                          Divider(color: liquidTheme.textColor.withValues(alpha: 0.3)),
+                                        ],
+                                        _SummaryRow(
+                                          l10n.totalLabelColon,
+                                          cartTotal,
+                                          isBold: true,
+                                          fontSize: 20,
+                                        ),
+                                        const SizedBox(height: 16),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: LiquidButton(
+                                                onPressed: cartItems.isEmpty
+                                                    ? null
+                                                    : () => context
+                                                        .read<SaleBloc>()
+                                                        .add(const ClearCartEvent()),
+                                                type: LiquidButtonType.outlined,
+                                                child: Text(l10n.clear),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Expanded(
+                                              flex: 2,
+                                              child: LiquidButton(
+                                                onPressed: cartItems.isEmpty ? null : _checkout,
+                                                type: LiquidButtonType.filled,
+                                                backgroundColor: theme.colorScheme.primary,
+                                                child: Text(
+                                                  l10n.checkout,
+                                                  style: const TextStyle(color: Colors.white),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
+          );
         },
       );
     });
@@ -749,135 +718,130 @@ class _ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Card(
-      elevation: 2,
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Product image
-            Expanded(
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  product.imageUrl != null && product.imageUrl!.isNotEmpty
+    final liquidTheme = LiquidTheme.of(context);
+
+    return LiquidCard(
+      elevation: 4,
+      blur: 15,
+      opacity: 0.15,
+      borderRadius: 16,
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Product image
+          Expanded(
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                  child: product.imageUrl != null && product.imageUrl!.isNotEmpty
                       ? Image.network(
                           product.imageUrl!,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              color: theme.colorScheme.primary
-                                  .withValues(alpha: .05),
+                            return LiquidContainer(
+                              blur: 10,
+                              opacity: 0.1,
+                              borderRadius: 0,
                               child: Icon(
                                 Icons.inventory_2,
                                 size: 64,
-                                color: theme.colorScheme.primary
-                                    .withValues(alpha: .2),
+                                color: liquidTheme.textColor.withValues(alpha: 0.3),
                               ),
                             );
                           },
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) return child;
-                            return Container(
-                              color: Colors.grey.shade100,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes !=
-                                          null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                      : null,
-                                ),
-                              ),
+                            return Center(
+                              child: LiquidLoader(size: 40),
                             );
                           },
                         )
-                      : Container(
-                          color:
-                              theme.colorScheme.primary.withValues(alpha: .1),
+                      : LiquidContainer(
+                          blur: 10,
+                          opacity: 0.1,
+                          borderRadius: 0,
                           child: Icon(
                             Icons.inventory_2,
                             size: 64,
-                            color:
-                                theme.colorScheme.primary.withValues(alpha: .4),
+                            color: liquidTheme.textColor.withValues(alpha: 0.3),
                           ),
                         ),
-                  // Stock badge
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: product.quantity > 10
-                            ? Colors.green
-                            : product.quantity > 0
-                                ? Colors.orange
-                                : Colors.red,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        '${product.quantity}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Product info
-            Container(
-              padding: const EdgeInsets.all(12),
-              color: Colors.white,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    Localizations.localeOf(context).languageCode == 'ar'
-                        ? (product.nameAr ?? product.name)
-                        : product.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 8),
-                  // Price with emphasis
-                  Container(
+                ),
+                // Stock badge
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: LiquidContainer(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 8,
                       vertical: 4,
                     ),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withValues(alpha: .1),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
+                    blur: 10,
+                    opacity: 0.9,
+                    borderRadius: 12,
+                    color: product.quantity > 10
+                        ? Colors.green
+                        : product.quantity > 0
+                            ? Colors.orange
+                            : Colors.red,
                     child: Text(
-                      CurrencyHelper.formatCurrencySync(product.price),
-                      style: TextStyle(
-                        color: theme.colorScheme.primary,
-                        fontSize: 18,
+                      '${product.quantity}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+
+          // Product info
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  Localizations.localeOf(context).languageCode == 'ar'
+                      ? (product.nameAr ?? product.name)
+                      : product.name,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: liquidTheme.textColor,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 8),
+                // Price with emphasis
+                LiquidContainer(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  blur: 10,
+                  opacity: 0.15,
+                  borderRadius: 6,
+                  child: Text(
+                    CurrencyHelper.formatCurrencySync(product.price),
+                    style: TextStyle(
+                      color: theme.colorScheme.primary,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -890,77 +854,99 @@ class _CartItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    final liquidTheme = LiquidTheme.of(context);
+
+    return LiquidCard(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.productName,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    CurrencyHelper.formatCurrencySync(item.unitPrice),
-                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-            Row(
+      elevation: 2,
+      blur: 12,
+      opacity: 0.12,
+      borderRadius: 12,
+      padding: const EdgeInsets.all(8),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                IconButton(
-                  icon: const Icon(Icons.remove),
-                  onPressed: () {
-                    final vatIncludedInPrice =
-                        context.read<AppConfigBloc>().state.vatIncludedInPrice;
-                    context.read<SaleBloc>().add(
-                          UpdateCartItemQuantityEvent(
-                              item.id, item.quantity - 1,
-                              vatIncludedInPrice: vatIncludedInPrice),
-                        );
-                  },
-                  iconSize: 20,
+                Text(
+                  item.productName,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: liquidTheme.textColor,
+                  ),
                 ),
                 Text(
-                  item.quantity.toString(),
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {
-                    final vatIncludedInPrice =
-                        context.read<AppConfigBloc>().state.vatIncludedInPrice;
-                    context.read<SaleBloc>().add(
-                          UpdateCartItemQuantityEvent(
-                              item.id, item.quantity + 1,
-                              vatIncludedInPrice: vatIncludedInPrice),
-                        );
-                  },
-                  iconSize: 20,
+                  CurrencyHelper.formatCurrencySync(item.unitPrice),
+                  style: TextStyle(
+                    color: liquidTheme.textColor.withValues(alpha: 0.6),
+                    fontSize: 12,
+                  ),
                 ),
               ],
             ),
-            SizedBox(
-              width: 80,
-              child: Text(
-                CurrencyHelper.formatCurrencySync(item.total),
-                textAlign: TextAlign.right,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Row(
+            children: [
+              LiquidButton(
+                type: LiquidButtonType.icon,
+                size: LiquidButtonSize.small,
+                onPressed: () {
+                  final vatIncludedInPrice =
+                      context.read<AppConfigBloc>().state.vatIncludedInPrice;
+                  context.read<SaleBloc>().add(
+                        UpdateCartItemQuantityEvent(
+                            item.id, item.quantity - 1,
+                            vatIncludedInPrice: vatIncludedInPrice),
+                      );
+                },
+                child: const Icon(Icons.remove, size: 20),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Text(
+                  item.quantity.toString(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: liquidTheme.textColor,
+                  ),
+                ),
+              ),
+              LiquidButton(
+                type: LiquidButtonType.icon,
+                size: LiquidButtonSize.small,
+                onPressed: () {
+                  final vatIncludedInPrice =
+                      context.read<AppConfigBloc>().state.vatIncludedInPrice;
+                  context.read<SaleBloc>().add(
+                        UpdateCartItemQuantityEvent(
+                            item.id, item.quantity + 1,
+                            vatIncludedInPrice: vatIncludedInPrice),
+                      );
+                },
+                child: const Icon(Icons.add, size: 20),
+              ),
+            ],
+          ),
+          SizedBox(
+            width: 80,
+            child: Text(
+              CurrencyHelper.formatCurrencySync(item.total),
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: liquidTheme.textColor,
               ),
             ),
-            IconButton(
-              icon: const Icon(Icons.delete, color: Colors.red),
-              onPressed: () =>
-                  context.read<SaleBloc>().add(RemoveFromCartEvent(item.id)),
-              iconSize: 20,
-            ),
-          ],
-        ),
+          ),
+          LiquidButton(
+            type: LiquidButtonType.icon,
+            size: LiquidButtonSize.small,
+            onPressed: () =>
+                context.read<SaleBloc>().add(RemoveFromCartEvent(item.id)),
+            child: const Icon(Icons.delete, color: Colors.red, size: 20),
+          ),
+        ],
       ),
     );
   }
@@ -981,6 +967,8 @@ class _SummaryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final liquidTheme = LiquidTheme.of(context);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -989,6 +977,7 @@ class _SummaryRow extends StatelessWidget {
           style: TextStyle(
             fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
             fontSize: fontSize,
+            color: liquidTheme.textColor,
           ),
         ),
         Text(
@@ -996,6 +985,7 @@ class _SummaryRow extends StatelessWidget {
           style: TextStyle(
             fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
             fontSize: fontSize,
+            color: liquidTheme.textColor,
           ),
         ),
       ],
@@ -1014,6 +1004,8 @@ class _CustomerSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final liquidTheme = LiquidTheme.of(context);
+
     return BlocBuilder<CustomerBloc, CustomerState>(
       builder: (context, customerState) {
         List<Customer> customers = [];
@@ -1025,37 +1017,49 @@ class _CustomerSelector extends StatelessWidget {
           customers = customerState.customers;
         }
 
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              children: [
-                const Icon(Icons.person, size: 20),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: DropdownButton<Customer?>(
-                    value: selectedCustomer,
-                    hint: Text(AppLocalizations.of(context)!.walkInCustomer),
-                    isExpanded: true,
-                    underline: const SizedBox(),
-                    items: [
-                      DropdownMenuItem<Customer?>(
-                        value: null,
-                        child:
-                            Text(AppLocalizations.of(context)!.walkInCustomer),
-                      ),
-                      ...customers.map((customer) {
-                        return DropdownMenuItem<Customer>(
-                          value: customer,
-                          child: Text(customer.name),
-                        );
-                      }).toList(),
-                    ],
-                    onChanged: onCustomerSelected,
+        return LiquidCard(
+          elevation: 2,
+          blur: 12,
+          opacity: 0.12,
+          borderRadius: 12,
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            children: [
+              Icon(Icons.person, size: 20, color: liquidTheme.textColor),
+              const SizedBox(width: 8),
+              Expanded(
+                child: DropdownButton<Customer?>(
+                  value: selectedCustomer,
+                  hint: Text(
+                    AppLocalizations.of(context)!.walkInCustomer,
+                    style: TextStyle(color: liquidTheme.textColor),
                   ),
+                  isExpanded: true,
+                  underline: const SizedBox(),
+                  dropdownColor: liquidTheme.surfaceColor,
+                  style: TextStyle(color: liquidTheme.textColor),
+                  items: [
+                    DropdownMenuItem<Customer?>(
+                      value: null,
+                      child: Text(
+                        AppLocalizations.of(context)!.walkInCustomer,
+                        style: TextStyle(color: liquidTheme.textColor),
+                      ),
+                    ),
+                    ...customers.map((customer) {
+                      return DropdownMenuItem<Customer>(
+                        value: customer,
+                        child: Text(
+                          customer.name,
+                          style: TextStyle(color: liquidTheme.textColor),
+                        ),
+                      );
+                    }).toList(),
+                  ],
+                  onChanged: onCustomerSelected,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },
@@ -1099,32 +1103,35 @@ class _PaymentDialogState extends State<_PaymentDialog> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final liquidTheme = LiquidTheme.of(context);
 
     // Build the payment content
     final paymentContent = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         // Total Amount Display - Prominent
-        Container(
+        LiquidContainer(
           padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(12),
-          ),
+          blur: 15,
+          opacity: 0.2,
+          borderRadius: 12,
           child: Column(
             children: [
               Text(
                 l10n.total,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  color: theme.colorScheme.onPrimaryContainer,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: liquidTheme.textColor,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 CurrencyHelper.formatCurrencySync(widget.total),
-                style: theme.textTheme.headlineLarge?.copyWith(
+                style: TextStyle(
+                  fontSize: 32,
                   fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onPrimaryContainer,
+                  color: theme.colorScheme.primary,
                 ),
               ),
             ],
@@ -1135,8 +1142,10 @@ class _PaymentDialogState extends State<_PaymentDialog> {
         // Payment Method Selection
         Text(
           l10n.paymentMethod,
-          style: theme.textTheme.titleMedium?.copyWith(
+          style: TextStyle(
+            fontSize: 16,
             fontWeight: FontWeight.bold,
+            color: liquidTheme.textColor,
           ),
         ),
         const SizedBox(height: 12),
@@ -1168,40 +1177,32 @@ class _PaymentDialogState extends State<_PaymentDialog> {
         const SizedBox(height: 24),
 
         // Amount Paid Input
-        TextField(
+        LiquidTextField(
           controller: _paidController,
-          decoration: InputDecoration(
-            labelText: l10n.amountPaid,
-            prefixText: '${CurrencyHelper.getCurrencySymbolSync()} ',
-            border: const OutlineInputBorder(),
-            prefixIcon: const Icon(Icons.payments_outlined),
-          ),
+          labelText: l10n.amountPaid,
+          prefixText: '${CurrencyHelper.getCurrencySymbolSync()} ',
+          prefixIcon: const Icon(Icons.payments_outlined),
           keyboardType: TextInputType.number,
           autofocus: true,
         ),
         const SizedBox(height: 24),
 
         // Change Display - Dynamic
-        Container(
+        LiquidContainer(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: _change >= 0
-                ? theme.colorScheme.secondaryContainer
-                : theme.colorScheme.errorContainer,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: _change >= 0
-                  ? theme.colorScheme.secondary
-                  : theme.colorScheme.error,
-              width: 2,
-            ),
-          ),
+          blur: 15,
+          opacity: 0.2,
+          borderRadius: 8,
+          color: _change >= 0
+              ? theme.colorScheme.secondaryContainer
+              : theme.colorScheme.errorContainer,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 _change >= 0 ? l10n.change : l10n.insufficientPayment,
-                style: theme.textTheme.titleMedium?.copyWith(
+                style: TextStyle(
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: _change >= 0
                       ? theme.colorScheme.onSecondaryContainer
@@ -1211,7 +1212,8 @@ class _PaymentDialogState extends State<_PaymentDialog> {
               if (_change >= 0)
                 Text(
                   CurrencyHelper.formatCurrencySync(_change),
-                  style: theme.textTheme.headlineSmall?.copyWith(
+                  style: TextStyle(
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSecondaryContainer,
                   ),

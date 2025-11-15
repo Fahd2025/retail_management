@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/sale/sale_bloc.dart';
 import '../blocs/sale/sale_event.dart';
@@ -76,6 +77,7 @@ class _SalesScreenState extends State<SalesScreen> {
       Sale sale, DateFormat dateFormat, BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final liquidTheme = LiquidTheme.of(context);
     final vatEnabled = context.watch<AppConfigBloc>().state.vatEnabled;
     final statusColor = sale.status == SaleStatus.completed
         ? Colors.green
@@ -89,43 +91,87 @@ class _SalesScreenState extends State<SalesScreen> {
             ? l10n.return_sale
             : sale.status.toString().split('.').last.toUpperCase();
 
-    return Card(
+    return LiquidCard(
+      margin: const EdgeInsets.only(bottom: 12),
+      elevation: 3,
+      blur: 18,
+      opacity: 0.15,
+      borderRadius: 16,
+      padding: EdgeInsets.zero,
       child: ExpansionTile(
-        leading: CircleAvatar(
-          backgroundColor: statusColor.withValues(alpha: 0.2),
-          child: Icon(Icons.receipt, color: statusColor),
+        leading: LiquidContainer(
+          width: 48,
+          height: 48,
+          borderRadius: 24,
+          blur: 12,
+          opacity: 0.2,
+          backgroundColor: statusColor,
+          child: Icon(Icons.receipt, color: statusColor, size: 24),
         ),
         title: Text(
           l10n.invoiceLabel(sale.invoiceNumber),
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: liquidTheme.textColor,
+          ),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(l10n.dateLabel(dateFormat.format(sale.saleDate))),
-            Text(l10n.totalLabel(sale.totalAmount.toStringAsFixed(2))),
             Text(
-              l10n.statusLabelText(statusText),
-              style: TextStyle(color: statusColor),
+              l10n.dateLabel(dateFormat.format(sale.saleDate)),
+              style: TextStyle(
+                fontSize: 13,
+                color: liquidTheme.textColor.withValues(alpha: 0.7),
+              ),
+            ),
+            Text(
+              l10n.totalLabel(CurrencyHelper.formatCurrencySync(sale.totalAmount)),
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: statusColor.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                l10n.statusLabelText(statusText),
+                style: TextStyle(
+                  color: statusColor,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ],
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            IconButton(
-              icon: const Icon(Icons.print),
+            LiquidButton(
+              type: LiquidButtonType.icon,
+              size: LiquidButtonSize.small,
               onPressed: () => _reprintInvoice(sale),
-              tooltip: l10n.reprint,
+              child: Icon(
+                Icons.print,
+                color: theme.colorScheme.primary,
+              ),
             ),
             if (sale.status == SaleStatus.completed)
               BlocBuilder<AuthBloc, AuthState>(
                 builder: (context, authState) {
                   if (authState is Authenticated && authState.isAdmin) {
-                    return IconButton(
-                      icon: const Icon(Icons.undo, color: Colors.orange),
+                    return LiquidButton(
+                      type: LiquidButtonType.icon,
+                      size: LiquidButtonSize.small,
                       onPressed: () => _returnSale(sale),
-                      tooltip: l10n.return_sale,
+                      child: const Icon(Icons.undo, color: Colors.orange),
                     );
                   }
                   return const SizedBox.shrink();
@@ -141,7 +187,10 @@ class _SalesScreenState extends State<SalesScreen> {
               children: [
                 Text(
                   l10n.itemsLabel,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: liquidTheme.textColor,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 ...sale.items.map((item) {
@@ -153,49 +202,69 @@ class _SalesScreenState extends State<SalesScreen> {
                         Expanded(
                           child: Text(
                             '${item.productName} x ${item.quantity}',
+                            style: TextStyle(
+                              color: liquidTheme.textColor.withValues(alpha: 0.8),
+                            ),
                           ),
                         ),
                         Text(
                           CurrencyHelper.formatCurrencySync(item.total),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: liquidTheme.textColor,
+                          ),
                         ),
                       ],
                     ),
                   );
                 }).toList(),
-                const Divider(),
+                Divider(color: liquidTheme.textColor.withValues(alpha: 0.2)),
                 if (vatEnabled) ...[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(l10n.subtotalLabel),
-                      Text(CurrencyHelper.formatCurrencySync(sale.subtotal)),
+                      Text(
+                        l10n.subtotalLabel,
+                        style: TextStyle(color: liquidTheme.textColor),
+                      ),
+                      Text(
+                        CurrencyHelper.formatCurrencySync(sale.subtotal),
+                        style: TextStyle(color: liquidTheme.textColor),
+                      ),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(l10n.vatLabel),
-                      Text(CurrencyHelper.formatCurrencySync(sale.vatAmount)),
+                      Text(
+                        l10n.vatLabel,
+                        style: TextStyle(color: liquidTheme.textColor),
+                      ),
+                      Text(
+                        CurrencyHelper.formatCurrencySync(sale.vatAmount),
+                        style: TextStyle(color: liquidTheme.textColor),
+                      ),
                     ],
                   ),
-                  const Divider(),
+                  Divider(color: liquidTheme.textColor.withValues(alpha: 0.2)),
                 ],
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       l10n.totalLabelColon,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
+                        color: liquidTheme.textColor,
                       ),
                     ),
                     Text(
                       CurrencyHelper.formatCurrencySync(sale.totalAmount),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
+                        color: theme.colorScheme.primary,
                       ),
                     ),
                   ],
@@ -205,17 +274,28 @@ class _SalesScreenState extends State<SalesScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(l10n.paidLabel),
-                      Text(CurrencyHelper.formatCurrencySync(sale.paidAmount)),
+                      Text(
+                        l10n.paidLabel,
+                        style: TextStyle(color: liquidTheme.textColor),
+                      ),
+                      Text(
+                        CurrencyHelper.formatCurrencySync(sale.paidAmount),
+                        style: TextStyle(color: liquidTheme.textColor),
+                      ),
                     ],
                   ),
                   if (sale.changeAmount > 0)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(l10n.changeLabel),
-                        Text(CurrencyHelper.formatCurrencySync(
-                            sale.changeAmount)),
+                        Text(
+                          l10n.changeLabel,
+                          style: TextStyle(color: liquidTheme.textColor),
+                        ),
+                        Text(
+                          CurrencyHelper.formatCurrencySync(sale.changeAmount),
+                          style: TextStyle(color: liquidTheme.textColor),
+                        ),
                       ],
                     ),
                 ],
@@ -228,21 +308,31 @@ class _SalesScreenState extends State<SalesScreen> {
   }
 
   Future<void> _returnSale(Sale sale) async {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.returnSale),
-        content: Text(AppLocalizations.of(context)!
-            .returnSaleConfirm(sale.invoiceNumber)),
+      builder: (context) => LiquidDialog(
+        title: l10n.returnSale,
+        content: Text(
+          l10n.returnSaleConfirm(sale.invoiceNumber),
+          style: TextStyle(color: LiquidTheme.of(context).textColor),
+        ),
         actions: [
-          TextButton(
+          LiquidButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text(AppLocalizations.of(context)!.cancel),
+            type: LiquidButtonType.text,
+            child: Text(l10n.cancel),
           ),
-          ElevatedButton(
+          LiquidButton(
             onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-            child: Text(AppLocalizations.of(context)!.returnSale),
+            type: LiquidButtonType.filled,
+            backgroundColor: Colors.orange,
+            child: Text(
+              l10n.returnSale,
+              style: const TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -263,7 +353,6 @@ class _SalesScreenState extends State<SalesScreen> {
         final saleState = context.read<SaleBloc>().state;
 
         if (mounted && saleState is SaleOperationSuccess) {
-          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(l10n.saleReturnedSuccess)),
           );
@@ -275,13 +364,16 @@ class _SalesScreenState extends State<SalesScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final liquidTheme = LiquidTheme.of(context);
     final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
 
-    return Scaffold(
+    return LiquidScaffold(
       body: BlocBuilder<SaleBloc, SaleState>(
         builder: (context, state) {
           if (state is SaleLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: LiquidLoader(size: 60),
+            );
           }
 
           List<Sale> sales = [];
@@ -301,10 +393,23 @@ class _SalesScreenState extends State<SalesScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.receipt_long,
-                      size: 64, color: Colors.grey.shade300),
+                  LiquidContainer(
+                    width: 120,
+                    height: 120,
+                    borderRadius: 60,
+                    blur: 15,
+                    opacity: 0.2,
+                    child: Icon(
+                      Icons.receipt_long,
+                      size: 64,
+                      color: liquidTheme.textColor.withValues(alpha: 0.3),
+                    ),
+                  ),
                   const SizedBox(height: 16),
-                  Text(l10n.noSalesFound),
+                  Text(
+                    l10n.noSalesFound,
+                    style: TextStyle(color: liquidTheme.textColor),
+                  ),
                 ],
               ),
             );
@@ -327,86 +432,122 @@ class _SalesScreenState extends State<SalesScreen> {
                       constraints: BoxConstraints(
                         minWidth: constraints.maxWidth,
                       ),
-                      child: DataTable(
-                        columnSpacing: 24,
-                        horizontalMargin: 16,
-                        columns: [
-                          DataColumn(label: Text(l10n.invoiceLabel(''))),
-                          DataColumn(label: Text(l10n.dateLabel(''))),
-                          if (vatEnabled)
-                            DataColumn(label: Text('${l10n.vat} Amount')),
-                          DataColumn(label: Text(l10n.totalLabel(''))),
-                          DataColumn(label: Text(l10n.statusLabelText(''))),
-                          DataColumn(label: Text(l10n.itemsLabel)),
-                          DataColumn(label: Text(l10n.actions)),
-                        ],
-                        rows: sales.map((sale) {
-                          final statusColor =
-                              sale.status == SaleStatus.completed
-                                  ? Colors.green
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: LiquidCard(
+                          elevation: 4,
+                          blur: 20,
+                          opacity: 0.15,
+                          borderRadius: 16,
+                          padding: const EdgeInsets.all(16),
+                          child: DataTable(
+                            columnSpacing: 24,
+                            horizontalMargin: 16,
+                            headingTextStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: liquidTheme.textColor,
+                            ),
+                            dataTextStyle: TextStyle(
+                              color: liquidTheme.textColor.withValues(alpha: 0.9),
+                            ),
+                            columns: [
+                              DataColumn(label: Text(l10n.invoiceLabel(''))),
+                              DataColumn(label: Text(l10n.dateLabel(''))),
+                              if (vatEnabled)
+                                DataColumn(label: Text('${l10n.vat} ${l10n.amount}')),
+                              DataColumn(label: Text(l10n.totalLabel(''))),
+                              DataColumn(label: Text(l10n.statusLabelText(''))),
+                              DataColumn(label: Text(l10n.itemsLabel)),
+                              DataColumn(label: Text(l10n.actions)),
+                            ],
+                            rows: sales.map((sale) {
+                              final statusColor =
+                                  sale.status == SaleStatus.completed
+                                      ? Colors.green
+                                      : sale.status == SaleStatus.returned
+                                          ? Colors.orange
+                                          : theme.colorScheme.error;
+
+                              final statusText = sale.status == SaleStatus.completed
+                                  ? l10n.complete
                                   : sale.status == SaleStatus.returned
-                                      ? Colors.orange
-                                      : theme.colorScheme.error;
+                                      ? l10n.return_sale
+                                      : sale.status
+                                          .toString()
+                                          .split('.')
+                                          .last
+                                          .toUpperCase();
 
-                          final statusText = sale.status == SaleStatus.completed
-                              ? l10n.complete
-                              : sale.status == SaleStatus.returned
-                                  ? l10n.return_sale
-                                  : sale.status
-                                      .toString()
-                                      .split('.')
-                                      .last
-                                      .toUpperCase();
-
-                          return DataRow(cells: [
-                            DataCell(Text(sale.invoiceNumber)),
-                            DataCell(Text(dateFormat.format(sale.saleDate))),
-                            if (vatEnabled)
-                              DataCell(Text(CurrencyHelper.formatCurrencySync(
-                                  sale.vatAmount))),
-                            DataCell(Text(CurrencyHelper.formatCurrencySync(
-                                sale.totalAmount))),
-                            DataCell(
-                              Chip(
-                                label: Text(
-                                  statusText,
-                                  style: const TextStyle(fontSize: 11),
-                                ),
-                                backgroundColor:
-                                    statusColor.withValues(alpha: 0.2),
-                                labelStyle: TextStyle(color: statusColor),
-                              ),
-                            ),
-                            DataCell(Text(sale.items.length.toString())),
-                            DataCell(
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.print, size: 20),
-                                    onPressed: () => _reprintInvoice(sale),
-                                    tooltip: l10n.reprint,
-                                  ),
-                                  if (sale.status == SaleStatus.completed)
-                                    BlocBuilder<AuthBloc, AuthState>(
-                                      builder: (context, authState) {
-                                        if (authState is Authenticated &&
-                                            authState.isAdmin) {
-                                          return IconButton(
-                                            icon: const Icon(Icons.undo,
-                                                size: 20, color: Colors.orange),
-                                            onPressed: () => _returnSale(sale),
-                                            tooltip: l10n.return_sale,
-                                          );
-                                        }
-                                        return const SizedBox.shrink();
-                                      },
+                              return DataRow(cells: [
+                                DataCell(Text(sale.invoiceNumber)),
+                                DataCell(Text(dateFormat.format(sale.saleDate))),
+                                if (vatEnabled)
+                                  DataCell(Text(CurrencyHelper.formatCurrencySync(
+                                      sale.vatAmount))),
+                                DataCell(Text(CurrencyHelper.formatCurrencySync(
+                                    sale.totalAmount))),
+                                DataCell(
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 6,
                                     ),
-                                ],
-                              ),
-                            ),
-                          ]);
-                        }).toList(),
+                                    decoration: BoxDecoration(
+                                      color: statusColor.withValues(alpha: 0.15),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text(
+                                      statusText,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: statusColor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                DataCell(Text(sale.items.length.toString())),
+                                DataCell(
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      LiquidButton(
+                                        type: LiquidButtonType.icon,
+                                        size: LiquidButtonSize.small,
+                                        onPressed: () => _reprintInvoice(sale),
+                                        child: Icon(
+                                          Icons.print,
+                                          size: 20,
+                                          color: theme.colorScheme.primary,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 4),
+                                      if (sale.status == SaleStatus.completed)
+                                        BlocBuilder<AuthBloc, AuthState>(
+                                          builder: (context, authState) {
+                                            if (authState is Authenticated &&
+                                                authState.isAdmin) {
+                                              return LiquidButton(
+                                                type: LiquidButtonType.icon,
+                                                size: LiquidButtonSize.small,
+                                                onPressed: () => _returnSale(sale),
+                                                child: const Icon(
+                                                  Icons.undo,
+                                                  size: 20,
+                                                  color: Colors.orange,
+                                                ),
+                                              );
+                                            }
+                                            return const SizedBox.shrink();
+                                          },
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ]);
+                            }).toList(),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -417,10 +558,7 @@ class _SalesScreenState extends State<SalesScreen> {
                   padding: const EdgeInsets.all(16),
                   itemCount: sales.length,
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: _buildSaleCard(sales[index], dateFormat, context),
-                    );
+                    return _buildSaleCard(sales[index], dateFormat, context);
                   },
                 );
               }

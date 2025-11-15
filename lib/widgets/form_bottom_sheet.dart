@@ -1,4 +1,4 @@
-/// A reusable ModalBottomSheet wrapper for form dialogs
+/// A reusable ModalBottomSheet wrapper for form dialogs with Liquid Glass UI
 ///
 /// This widget provides a consistent design for all Add/Edit bottom sheets
 /// across the application. It includes:
@@ -7,6 +7,7 @@
 /// - Keyboard-aware scrolling
 /// - Consistent button layout
 /// - Smooth animations
+/// - Liquid Glass visual effects
 ///
 /// Usage:
 /// ```dart
@@ -22,14 +23,16 @@
 /// ```
 
 import 'package:flutter/material.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
 
-/// A customizable bottom sheet designed for form inputs
+/// A customizable bottom sheet designed for form inputs with Liquid Glass styling
 ///
 /// Features:
 /// - Automatic keyboard handling
 /// - Drag-to-dismiss gesture
 /// - Responsive sizing
 /// - Consistent action buttons layout
+/// - Liquid Glass visual effects
 class FormBottomSheet extends StatelessWidget {
   /// The title displayed at the top of the bottom sheet
   final String title;
@@ -76,6 +79,7 @@ class FormBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final liquidTheme = LiquidTheme.of(context);
     final mediaQuery = MediaQuery.of(context);
 
     // Calculate responsive height
@@ -85,151 +89,175 @@ class FormBottomSheet extends StatelessWidget {
     // Account for keyboard height to ensure form is visible when typing
     final keyboardHeight = mediaQuery.viewInsets.bottom;
 
-    return Container(
+    return LiquidCard(
       // Constrain height but allow keyboard to push content up
-      constraints: BoxConstraints(
-        maxHeight: maxHeight,
-      ),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(20),
+      borderRadius: 20,
+      elevation: 8,
+      blur: 25,
+      opacity: 0.18,
+      child: Container(
+        constraints: BoxConstraints(
+          maxHeight: maxHeight,
         ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Drag handle - visual indicator that sheet can be dismissed
-          Container(
-            margin: const EdgeInsets.only(top: 12, bottom: 8),
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-
-          // Title section with bottom border
-          Container(
-            padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: theme.dividerColor,
-                  width: 1,
-                ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Drag handle - visual indicator that sheet can be dismissed
+            Container(
+              margin: const EdgeInsets.only(top: 12, bottom: 8),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: liquidTheme.textColor.withValues(alpha: 0.4),
+                borderRadius: BorderRadius.circular(2),
               ),
             ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    title,
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
+
+            // Title section with bottom border
+            LiquidContainer(
+              padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+              borderRadius: 0,
+              blur: 5,
+              opacity: 0.1,
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: liquidTheme.textColor,
+                          ),
+                        ),
+                      ),
+                      // Close button for accessibility
+                      LiquidButton(
+                        onPressed: onCancel ?? () => Navigator.pop(context),
+                        type: LiquidButtonType.icon,
+                        size: LiquidButtonSize.small,
+                        child: Icon(
+                          Icons.close,
+                          color: liquidTheme.textColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    height: 1,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          liquidTheme.textColor.withValues(alpha: 0.1),
+                          liquidTheme.textColor.withValues(alpha: 0.3),
+                          liquidTheme.textColor.withValues(alpha: 0.1),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                // Close button for accessibility
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: onCancel ?? () => Navigator.pop(context),
-                  tooltip: cancelButtonText ?? 'Cancel',
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
 
-          // Scrollable content area
-          // Expands to fill available space but doesn't exceed max height
-          Flexible(
-            child: SingleChildScrollView(
+            // Scrollable content area
+            // Expands to fill available space but doesn't exceed max height
+            Flexible(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.fromLTRB(
+                  24,
+                  24,
+                  24,
+                  // Add extra padding when keyboard is visible
+                  keyboardHeight > 0 ? 24 : 24,
+                ),
+                child: child,
+              ),
+            ),
+
+            // Action buttons - fixed at bottom
+            // Elevated to show separation from content
+            LiquidContainer(
               padding: EdgeInsets.fromLTRB(
                 24,
+                16,
                 24,
-                24,
-                // Add extra padding when keyboard is visible
-                keyboardHeight > 0 ? 24 : 24,
+                // Add bottom padding for safe area (iPhone notch, etc.)
+                16 + mediaQuery.padding.bottom,
               ),
-              child: child,
-            ),
-          ),
-
-          // Action buttons - fixed at bottom
-          // Elevated to show separation from content
-          Container(
-            padding: EdgeInsets.fromLTRB(
-              24,
-              16,
-              24,
-              // Add bottom padding for safe area (iPhone notch, etc.)
-              16 + mediaQuery.padding.bottom,
-            ),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
-              border: Border(
-                top: BorderSide(
-                  color: theme.dividerColor,
-                  width: 1,
-                ),
-              ),
-              // Add shadow to indicate elevation
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, -2),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                // Cancel button - text style for less emphasis
-                Expanded(
-                  child: TextButton(
-                    onPressed: onCancel ?? () => Navigator.pop(context),
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: Text(
-                      cancelButtonText ?? 'Cancel',
-                      style: theme.textTheme.titleMedium,
+              borderRadius: 0,
+              blur: 10,
+              opacity: 0.15,
+              child: Column(
+                children: [
+                  Container(
+                    height: 1,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          liquidTheme.textColor.withValues(alpha: 0.1),
+                          liquidTheme.textColor.withValues(alpha: 0.3),
+                          liquidTheme.textColor.withValues(alpha: 0.1),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                // Save button - filled style for emphasis
-                Expanded(
-                  flex: 2,
-                  child: FilledButton(
-                    onPressed: isSaveDisabled || isLoading ? null : onSave,
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: isLoading
-                        ? SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                theme.colorScheme.onPrimary,
-                              ),
-                            ),
-                          )
-                        : Text(
-                            saveButtonText ?? 'Save',
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              color: theme.colorScheme.onPrimary,
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      // Cancel button - outlined style for less emphasis
+                      Expanded(
+                        child: LiquidButton(
+                          onPressed: onCancel ?? () => Navigator.pop(context),
+                          type: LiquidButtonType.outlined,
+                          size: LiquidButtonSize.large,
+                          width: double.infinity,
+                          child: Text(
+                            cancelButtonText ?? 'Cancel',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: liquidTheme.textColor,
                             ),
                           ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      // Save button - filled style for emphasis
+                      Expanded(
+                        flex: 2,
+                        child: LiquidButton(
+                          onPressed: isSaveDisabled || isLoading ? null : onSave,
+                          type: LiquidButtonType.filled,
+                          size: LiquidButtonSize.large,
+                          width: double.infinity,
+                          child: isLoading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Text(
+                                  saveButtonText ?? 'Save',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -242,6 +270,7 @@ class FormBottomSheet extends StatelessWidget {
 /// - Dismissible by dragging down
 /// - Proper keyboard handling
 /// - Barrier dismissible by tapping outside
+/// - Liquid Glass visual effects
 ///
 /// Example:
 /// ```dart
