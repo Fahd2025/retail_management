@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:csv/csv.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '../database/drift_database.dart';
@@ -95,9 +96,9 @@ class DataImportExportService {
       // Generate file
       String filePath;
       if (format == ExportFormat.json) {
-        filePath = await _saveJsonFile(exportData);
+        filePath = await _saveJsonFile(exportData, typesToExport);
       } else {
-        filePath = await _saveCsvFiles(exportData);
+        filePath = await _saveCsvFiles(exportData, typesToExport);
       }
 
       onProgress?.call(1.0);
@@ -357,8 +358,21 @@ class DataImportExportService {
   Future<List<Map<String, dynamic>>> _exportSettings() async {
     final companyInfo =
         await _database.select(_database.companyInfoTable).get();
+
+    // Get app configuration from SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    final themeMode = prefs.getString('theme_mode') ?? 'light';
+    final locale = prefs.getString('app_locale') ?? 'en';
+    final printFormat = prefs.getString('print_format_config');
+    final vatRate = prefs.getDouble('vat_rate') ?? 15.0;
+    final vatIncludedInPrice = prefs.getBool('vat_included_in_price') ?? true;
+    final vatEnabled = prefs.getBool('vat_enabled') ?? true;
+    final colorScheme = prefs.getString('color_scheme');
+    final syncUrl = prefs.getString('sync_url') ?? '';
+
     return companyInfo
         .map((ci) => {
+              // Company Information
               'id': ci.id,
               'name': ci.name,
               'nameArabic': ci.nameArabic,
@@ -371,6 +385,28 @@ class DataImportExportService {
               'currency': ci.currency,
               'createdAt': ci.createdAt,
               'updatedAt': ci.updatedAt,
+
+              // Application Configuration
+              'appConfig': {
+                // VAT Settings
+                'vatRate': vatRate,
+                'vatIncludedInPrice': vatIncludedInPrice,
+                'vatEnabled': vatEnabled,
+
+                // Theme Settings
+                'themeMode': themeMode,
+                'colorScheme': colorScheme != null ? json.decode(colorScheme) : null,
+
+                // Language Settings
+                'locale': locale,
+                'language': locale == 'ar' ? 'Arabic' : 'English',
+
+                // Print Format
+                'printFormat': printFormat != null ? json.decode(printFormat) : null,
+
+                // Sync Configuration
+                'syncUrl': syncUrl,
+              },
             })
         .toList();
   }
@@ -618,6 +654,52 @@ class DataImportExportService {
 
   // ============= FILE OPERATIONS =============
 
+  /// Generate a descriptive filename based on data types being exported
+  String _generateFilename(List<DataType> dataTypes, {bool includeTimestamp = true}) {
+    final now = DateTime.now();
+    final date = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    final time = '${now.hour.toString().padLeft(2, '0')}-${now.minute.toString().padLeft(2, '0')}-${now.second.toString().padLeft(2, '0')}';
+
+    String typeName;
+    if (dataTypes.isEmpty) {
+      typeName = 'empty';
+    } else if (dataTypes.length == 1) {
+      typeName = _dataTypeToString(dataTypes.first);
+    } else if (dataTypes.length >= 6) {
+      typeName = 'all_data';
+    } else {
+      // Use first 2-3 types with "and_more"
+      final firstTypes = dataTypes.take(2).map(_dataTypeToString).join('_');
+      typeName = '${firstTypes}_and_more';
+    }
+
+    if (includeTimestamp) {
+      return '${typeName}_${date}_$time';
+    } else {
+      return typeName;
+    }
+  }
+
+  /// Convert DataType enum to string for filename
+  String _dataTypeToString(DataType type) {
+    switch (type) {
+      case DataType.products:
+        return 'products';
+      case DataType.categories:
+        return 'categories';
+      case DataType.customers:
+        return 'customers';
+      case DataType.sales:
+        return 'sales';
+      case DataType.users:
+        return 'users';
+      case DataType.settings:
+        return 'settings';
+      case DataType.all:
+        return 'all_data';
+    }
+  }
+
   /// Get the Downloads directory with platform-specific handling
   Future<Directory> _getDownloadsDirectory() async {
     if (kIsWeb) {
@@ -677,10 +759,9 @@ class DataImportExportService {
     return companyDir;
   }
 
-  Future<String> _saveJsonFile(Map<String, dynamic> data) async {
+  Future<String> _saveJsonFile(Map<String, dynamic> data, List<DataType> dataTypes) async {
     final directory = await _createCompanyExportDirectory();
-    final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-').replaceAll('.', '-');
-    final fileName = 'data_export_$timestamp.json';
+    final fileName = '${_generateFilename(dataTypes)}.json';
     final filePath = '${directory.path}/$fileName';
 
     final file = File(filePath);
@@ -689,12 +770,12 @@ class DataImportExportService {
     return filePath;
   }
 
-  Future<String> _saveCsvFiles(Map<String, dynamic> data) async {
+  Future<String> _saveCsvFiles(Map<String, dynamic> data, List<DataType> dataTypes) async {
     final directory = await _createCompanyExportDirectory();
-    final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-').replaceAll('.', '-');
+    final folderName = _generateFilename(dataTypes);
 
     // Create a subdirectory for this export
-    final exportDir = Directory('${directory.path}/export_$timestamp');
+    final exportDir = Directory('${directory.path}/$folderName');
     if (!await exportDir.exists()) {
       await exportDir.create(recursive: true);
     }
