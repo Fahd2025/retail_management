@@ -124,33 +124,58 @@ class DataImportExportService {
 
   /// Import data from file
   Future<ImportExportResult> importData({
-    required String filePath,
+    String? filePath,
+    String? fileContent,
+    String? fileName,
     required List<DataType> dataTypes,
     Function(double)? onProgress,
   }) async {
     try {
       onProgress?.call(0.1);
 
-      final file = File(filePath);
-      if (!await file.exists()) {
+      String content;
+      String effectiveFileName;
+
+      // Handle both file path (mobile) and file content (web)
+      if (fileContent != null) {
+        // Web platform - content already provided
+        content = fileContent;
+        effectiveFileName = fileName ?? 'import';
+      } else if (filePath != null) {
+        // Mobile platform - read from file path
+        final file = File(filePath);
+        if (!await file.exists()) {
+          return ImportExportResult(
+            success: false,
+            message: 'File not found',
+            errorDetails: 'The selected file does not exist',
+          );
+        }
+        content = await file.readAsString();
+        effectiveFileName = filePath;
+      } else {
         return ImportExportResult(
           success: false,
-          message: 'File not found',
-          errorDetails: 'The selected file does not exist',
+          message: 'No file provided',
+          errorDetails: 'Either filePath or fileContent must be provided',
         );
       }
 
-      final content = await file.readAsString();
       onProgress?.call(0.2);
 
       Map<String, dynamic> importData;
 
       // Detect file format and parse
-      if (filePath.endsWith('.json')) {
+      if (effectiveFileName.endsWith('.json')) {
         importData = json.decode(content) as Map<String, dynamic>;
-      } else if (filePath.endsWith('.csv')) {
+      } else if (effectiveFileName.endsWith('.csv')) {
         // For CSV, we need to determine which type it is
-        importData = await _parseCsvFile(filePath, dataTypes);
+        if (filePath != null) {
+          importData = await _parseCsvFile(filePath, dataTypes);
+        } else {
+          // For web, parse CSV from content
+          importData = await _parseCsvFromContent(content, dataTypes);
+        }
       } else {
         return ImportExportResult(
           success: false,
@@ -846,6 +871,12 @@ class DataImportExportService {
     // In a real-world scenario, you'd need more sophisticated CSV parsing
     final file = File(filePath);
     final content = await file.readAsString();
+    return _parseCsvFromContent(content, dataTypes);
+  }
+
+  /// Parse CSV from content string (used for web platform)
+  Future<Map<String, dynamic>> _parseCsvFromContent(
+      String content, List<DataType> dataTypes) async {
     final csv = const CsvToListConverter().convert(content);
 
     if (csv.isEmpty) {

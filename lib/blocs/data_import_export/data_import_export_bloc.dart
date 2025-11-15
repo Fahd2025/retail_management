@@ -62,6 +62,8 @@ class DataImportExportBloc
     try {
       final result = await _service.importData(
         filePath: event.filePath,
+        fileContent: event.fileContent,
+        fileName: event.fileName,
         dataTypes: event.dataTypes,
         onProgress: (progress) {
           emit(DataImporting(progress: progress));
