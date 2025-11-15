@@ -362,6 +362,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get changeTheme => 'تغيير السمة';
 
   @override
+  String get themeColorScheme => 'نظام ألوان السمة';
+
+  @override
+  String get selected => 'محدد';
+
+  @override
   String get preferences => 'التفضيلات';
 
   @override
