@@ -411,8 +411,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                     DataColumn(label: Text(l10n.name)),
                                     DataColumn(label: Text(l10n.description)),
                                     DataColumn(
-                                        label: Text(
-                                            l10n.productCount(0).split(' ')[0])),
+                                        label: Text(l10n
+                                            .productCount(0)
+                                            .split(' ')[0])),
                                     DataColumn(label: Text(l10n.actions)),
                                   ],
                                   rows: _categoriesWithCount.map((data) {
@@ -550,7 +551,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                     ),
                                   ),
                                   title: Text(
-                                    Localizations.localeOf(context).languageCode ==
+                                    Localizations.localeOf(context)
+                                                .languageCode ==
                                             'ar'
                                         ? (category.nameAr ?? category.name)
                                         : category.name,

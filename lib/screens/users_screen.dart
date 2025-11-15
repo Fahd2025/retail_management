@@ -301,7 +301,9 @@ class _UsersScreenState extends State<UsersScreen> {
                                 DataCell(
                                   Chip(
                                     label: Text(
-                                      user.isActive ? l10n.active : l10n.inactive,
+                                      user.isActive
+                                          ? l10n.active
+                                          : l10n.inactive,
                                       style: const TextStyle(fontSize: 12),
                                     ),
                                     backgroundColor: user.isActive
@@ -337,7 +339,8 @@ class _UsersScreenState extends State<UsersScreen> {
                                           size: 20,
                                           color: theme.colorScheme.error,
                                         ),
-                                        onPressed: () => _deleteUser(context, user),
+                                        onPressed: () =>
+                                            _deleteUser(context, user),
                                       ),
                                     ],
                                   ),
@@ -599,7 +602,8 @@ class _UserDialogState extends State<_UserDialog> {
           borderRadius: BorderRadius.circular(16),
           color: value
               ? theme.colorScheme.primary.withValues(alpha: 0.3)
-              : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+              : theme.colorScheme.surfaceContainerHighest
+                  .withValues(alpha: 0.3),
           border: Border.all(
             color: value
                 ? theme.colorScheme.primary
@@ -625,9 +629,8 @@ class _UserDialogState extends State<_UserDialog> {
             margin: const EdgeInsets.symmetric(horizontal: 3),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: value
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.outline,
+              color:
+                  value ? theme.colorScheme.primary : theme.colorScheme.outline,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.2),

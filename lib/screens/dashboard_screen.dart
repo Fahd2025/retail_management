@@ -36,7 +36,8 @@ class DashboardScreen extends StatefulWidget {
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProviderStateMixin {
+class _DashboardScreenState extends State<DashboardScreen>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   int _previousIndex = 0;
   CompanyInfo? _companyInfo;
@@ -535,7 +536,8 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                     child: Text(
                       label,
                       style: TextStyle(
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
                         color: textColor ??
                             (isSelected
                                 ? theme.colorScheme.primary

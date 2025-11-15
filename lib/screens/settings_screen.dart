@@ -223,7 +223,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     // Check if this is a web download (filePath starts with "Downloaded: ")
     final isWebDownload = filePath.startsWith('Downloaded: ');
-    final isDirectory = !isWebDownload && !kIsWeb && FileSystemEntity.isDirectorySync(filePath);
+    final isDirectory =
+        !isWebDownload && !kIsWeb && FileSystemEntity.isDirectorySync(filePath);
 
     // Extract filename for web downloads
     String displayMessage;
@@ -390,7 +391,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           final file = XFile(filePath);
                           await Share.shareXFiles(
                             [file],
-                            subject: 'Data Export - ${DateTime.now().toString()}',
+                            subject:
+                                'Data Export - ${DateTime.now().toString()}',
                           );
                           if (context.mounted) {
                             Navigator.pop(context);
@@ -591,7 +593,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   color: textColor,
                 ),
                 title: l10n.theme,
-                subtitle: configState.isDarkMode ? l10n.darkMode : l10n.lightMode,
+                subtitle:
+                    configState.isDarkMode ? l10n.darkMode : l10n.lightMode,
                 trailing: _buildGlassSwitch(
                   value: configState.isDarkMode,
                   onChanged: (value) {
@@ -633,9 +636,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onSelected: (Locale? newLocale) {
                     if (newLocale != null) {
                       if (newLocale.languageCode == 'en') {
-                        context.read<AppConfigBloc>().add(const SetEnglishEvent());
+                        context
+                            .read<AppConfigBloc>()
+                            .add(const SetEnglishEvent());
                       } else if (newLocale.languageCode == 'ar') {
-                        context.read<AppConfigBloc>().add(const SetArabicEvent());
+                        context
+                            .read<AppConfigBloc>()
+                            .add(const SetArabicEvent());
                       }
                     }
                   },
@@ -1071,7 +1078,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _buildGlassSwitch(
                       value: configState.vatEnabled,
                       onChanged: (value) {
-                        context.read<AppConfigBloc>().add(UpdateVatEnabledEvent(value));
+                        context
+                            .read<AppConfigBloc>()
+                            .add(UpdateVatEnabledEvent(value));
                       },
                     ),
                   ],
@@ -1126,7 +1135,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   const SizedBox(height: 4),
                                   Text(
                                     '${configState.vatRate.toStringAsFixed(1)}%',
-                                    style: theme.textTheme.headlineMedium?.copyWith(
+                                    style: theme.textTheme.headlineMedium
+                                        ?.copyWith(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -1175,7 +1185,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 const SizedBox(height: 4),
                                 Text(
                                   '${configState.vatRate.toStringAsFixed(1)}%',
-                                  style: theme.textTheme.headlineMedium?.copyWith(
+                                  style:
+                                      theme.textTheme.headlineMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -1251,7 +1262,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       _buildGlassSwitch(
                         value: configState.vatIncludedInPrice,
                         onChanged: (value) {
-                          context.read<AppConfigBloc>().add(UpdateVatInclusionEvent(value));
+                          context
+                              .read<AppConfigBloc>()
+                              .add(UpdateVatInclusionEvent(value));
                         },
                       ),
                     ],
@@ -1306,9 +1319,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             context.read<AppConfigBloc>().add(const InitializeAppConfigEvent());
             CurrencyHelper.refreshCache();
             _loadCompanyInfo();
-            _showSuccessNotification(l10n.importSuccessMessage(state.itemsImported));
+            _showSuccessNotification(
+                l10n.importSuccessMessage(state.itemsImported));
           } else if (state is DataImportExportError) {
-            _showErrorNotification('${state.message}\n${state.errorDetails ?? ''}');
+            _showErrorNotification(
+                '${state.message}\n${state.errorDetails ?? ''}');
           }
         },
         builder: (context, state) {
@@ -1481,13 +1496,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
         Navigator.of(context).pop();
 
-        if (detectionResult.isValid && detectionResult.detectedTypes.isNotEmpty) {
+        if (detectionResult.isValid &&
+            detectionResult.detectedTypes.isNotEmpty) {
           final selectedTypes = await showDataTypeDetectionDialog(
             context: context,
             detectionResult: detectionResult,
           );
 
-          if (selectedTypes != null && selectedTypes.isNotEmpty && context.mounted) {
+          if (selectedTypes != null &&
+              selectedTypes.isNotEmpty &&
+              context.mounted) {
             context.read<DataImportExportBloc>().add(
                   ImportDataRequested(
                     filePath: filePath,
@@ -1790,7 +1808,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           borderRadius: BorderRadius.circular(16),
           color: value
               ? theme.colorScheme.primary.withValues(alpha: 0.3)
-              : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+              : theme.colorScheme.surfaceContainerHighest
+                  .withValues(alpha: 0.3),
           border: Border.all(
             color: value
                 ? theme.colorScheme.primary

@@ -535,7 +535,8 @@ class _CashierScreenState extends State<CashierScreen>
                                 itemCount: categories.length,
                                 itemBuilder: (context, index) {
                                   final category = categories[index];
-                                  final isSelected = category == _selectedCategory;
+                                  final isSelected =
+                                      category == _selectedCategory;
 
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -595,7 +596,8 @@ class _CashierScreenState extends State<CashierScreen>
                                       return FadeTransition(
                                         opacity: _animationController,
                                         child: ScaleTransition(
-                                          scale: Tween<double>(begin: 0.8, end: 1.0)
+                                          scale: Tween<double>(
+                                                  begin: 0.8, end: 1.0)
                                               .animate(
                                             CurvedAnimation(
                                               parent: _animationController,
@@ -608,7 +610,8 @@ class _CashierScreenState extends State<CashierScreen>
                                           ),
                                           child: _ProductCard(
                                             product: product,
-                                            onTap: () => _addProductToCart(product),
+                                            onTap: () =>
+                                                _addProductToCart(product),
                                           ),
                                         ),
                                       );
@@ -706,7 +709,8 @@ class _CashierScreenState extends State<CashierScreen>
                                 child: _CustomerSelector(
                                   selectedCustomer: _selectedCustomer,
                                   onCustomerSelected: (customer) {
-                                    setState(() => _selectedCustomer = customer);
+                                    setState(
+                                        () => _selectedCustomer = customer);
                                   },
                                 ),
                               ),
@@ -716,7 +720,8 @@ class _CashierScreenState extends State<CashierScreen>
                                 child: cartItems.isEmpty
                                     ? Center(
                                         child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             GlassmorphicContainer(
                                               width: 100,

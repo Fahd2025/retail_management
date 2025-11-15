@@ -210,7 +210,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                 DataCell(
                                   FutureBuilder<Map<String, dynamic>>(
                                     future: AppDatabase()
-                                        .getCustomerSalesStatistics(customer.id),
+                                        .getCustomerSalesStatistics(
+                                            customer.id),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         final stats = snapshot.data!;
@@ -225,7 +226,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                 DataCell(
                                   FutureBuilder<Map<String, dynamic>>(
                                     future: AppDatabase()
-                                        .getCustomerSalesStatistics(customer.id),
+                                        .getCustomerSalesStatistics(
+                                            customer.id),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         final stats = snapshot.data!;
@@ -308,7 +310,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
 
                                           if (confirm == true && mounted) {
                                             context.read<CustomerBloc>().add(
-                                                  DeleteCustomerEvent(customer.id),
+                                                  DeleteCustomerEvent(
+                                                      customer.id),
                                                 );
                                           }
                                         },

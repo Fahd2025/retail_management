@@ -156,7 +156,8 @@ class _SalesScreenState extends State<SalesScreen> {
               ),
             ),
             Text(
-              l10n.totalLabel(CurrencyHelper.formatCurrencySync(sale.totalAmount)),
+              l10n.totalLabel(
+                  CurrencyHelper.formatCurrencySync(sale.totalAmount)),
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -511,7 +512,8 @@ class _SalesScreenState extends State<SalesScreen> {
                               DataColumn(label: Text(l10n.invoiceLabel(''))),
                               DataColumn(label: Text(l10n.dateLabel(''))),
                               if (vatEnabled)
-                                DataColumn(label: Text('${l10n.vat} ${l10n.amount}')),
+                                DataColumn(
+                                    label: Text('${l10n.vat} ${l10n.amount}')),
                               DataColumn(label: Text(l10n.totalLabel(''))),
                               DataColumn(label: Text(l10n.statusLabelText(''))),
                               DataColumn(label: Text(l10n.itemsLabel)),
@@ -525,22 +527,25 @@ class _SalesScreenState extends State<SalesScreen> {
                                           ? Colors.orange
                                           : theme.colorScheme.error;
 
-                              final statusText = sale.status == SaleStatus.completed
-                                  ? l10n.complete
-                                  : sale.status == SaleStatus.returned
-                                      ? l10n.return_sale
-                                      : sale.status
-                                          .toString()
-                                          .split('.')
-                                          .last
-                                          .toUpperCase();
+                              final statusText =
+                                  sale.status == SaleStatus.completed
+                                      ? l10n.complete
+                                      : sale.status == SaleStatus.returned
+                                          ? l10n.return_sale
+                                          : sale.status
+                                              .toString()
+                                              .split('.')
+                                              .last
+                                              .toUpperCase();
 
                               return DataRow(cells: [
                                 DataCell(Text(sale.invoiceNumber)),
-                                DataCell(Text(dateFormat.format(sale.saleDate))),
+                                DataCell(
+                                    Text(dateFormat.format(sale.saleDate))),
                                 if (vatEnabled)
-                                  DataCell(Text(CurrencyHelper.formatCurrencySync(
-                                      sale.vatAmount))),
+                                  DataCell(Text(
+                                      CurrencyHelper.formatCurrencySync(
+                                          sale.vatAmount))),
                                 DataCell(Text(CurrencyHelper.formatCurrencySync(
                                     sale.totalAmount))),
                                 DataCell(
@@ -550,7 +555,8 @@ class _SalesScreenState extends State<SalesScreen> {
                                       vertical: 6,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: statusColor.withValues(alpha: 0.15),
+                                      color:
+                                          statusColor.withValues(alpha: 0.15),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Text(

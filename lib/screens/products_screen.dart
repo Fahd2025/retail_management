@@ -309,7 +309,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   ),
                                   columns: [
                                     DataColumn(label: Text(l10n.name)),
-                                    DataColumn(label: Text(l10n.barcodeRequired)),
+                                    DataColumn(
+                                        label: Text(l10n.barcodeRequired)),
                                     DataColumn(label: Text(l10n.category)),
                                     DataColumn(
                                         label: Text(vatEnabled
@@ -320,8 +321,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     if (vatEnabled) ...[
                                       DataColumn(label: Text(l10n.beforeVat)),
                                       DataColumn(
-                                          label:
-                                              Text('${l10n.vat} ${l10n.amount}')),
+                                          label: Text(
+                                              '${l10n.vat} ${l10n.amount}')),
                                       DataColumn(label: Text(l10n.afterVat)),
                                     ],
                                     DataColumn(label: Text(l10n.costRequired)),
@@ -339,13 +340,15 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                       vatAmount = priceAfterVat -
                                           (priceAfterVat /
                                               (1 + product.vatRate / 100));
-                                      priceBeforeVat = priceAfterVat - vatAmount;
+                                      priceBeforeVat =
+                                          priceAfterVat - vatAmount;
                                     } else {
                                       // VAT is excluded from the price
                                       priceBeforeVat = product.price;
-                                      vatAmount =
-                                          product.price * (product.vatRate / 100);
-                                      priceAfterVat = priceBeforeVat + vatAmount;
+                                      vatAmount = product.price *
+                                          (product.vatRate / 100);
+                                      priceAfterVat =
+                                          priceBeforeVat + vatAmount;
                                     }
 
                                     return DataRow(cells: [
@@ -357,8 +360,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                             : product.name,
                                       )),
                                       DataCell(Text(product.barcode)),
-                                      DataCell(
-                                          Text(_getCategoryName(product.category))),
+                                      DataCell(Text(
+                                          _getCategoryName(product.category))),
                                       DataCell(Text(
                                           CurrencyHelper.formatCurrencySync(
                                               product.price))),
@@ -376,7 +379,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                       DataCell(Text(
                                           CurrencyHelper.formatCurrencySync(
                                               product.cost))),
-                                      DataCell(Text(product.quantity.toString())),
+                                      DataCell(
+                                          Text(product.quantity.toString())),
                                       DataCell(
                                         Row(
                                           mainAxisSize: MainAxisSize.min,
