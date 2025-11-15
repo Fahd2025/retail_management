@@ -242,7 +242,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
+              backgroundColor: theme.colorScheme.error,
               foregroundColor: Colors.white,
             ),
             child: Text(AppLocalizations.of(context)!.delete),
@@ -274,6 +274,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     return _isLoading
         ? const Center(child: CircularProgressIndicator())
@@ -361,7 +362,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                         ),
                                         IconButton(
                                           icon: const Icon(Icons.delete,
-                                              size: 20, color: Colors.red),
+                                              size: 20, color: theme.colorScheme.error),
                                           onPressed: () => _deleteCategory(
                                               category, productCount),
                                           tooltip: l10n.tooltipDelete,
@@ -422,14 +423,14 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 children: [
                                   IconButton(
                                     icon: const Icon(Icons.edit,
-                                        color: Colors.blue),
+                                        color: theme.colorScheme.primary),
                                     onPressed: () =>
                                         showCategoryDialog(category),
                                     tooltip: l10n.tooltipEdit,
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.delete,
-                                        color: Colors.red),
+                                        color: theme.colorScheme.error),
                                     onPressed: () =>
                                         _deleteCategory(category, productCount),
                                     tooltip: l10n.tooltipDelete,

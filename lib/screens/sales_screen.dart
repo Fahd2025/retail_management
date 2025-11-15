@@ -80,7 +80,7 @@ class _SalesScreenState extends State<SalesScreen> {
         ? Colors.green
         : sale.status == SaleStatus.returned
             ? Colors.orange
-            : Colors.red;
+            : theme.colorScheme.error;
 
     final statusText = sale.status == SaleStatus.completed
         ? l10n.complete
@@ -272,6 +272,7 @@ class _SalesScreenState extends State<SalesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
 
     return Scaffold(
@@ -343,7 +344,7 @@ class _SalesScreenState extends State<SalesScreen> {
                                   ? Colors.green
                                   : sale.status == SaleStatus.returned
                                       ? Colors.orange
-                                      : Colors.red;
+                                      : theme.colorScheme.error;
 
                           final statusText = sale.status == SaleStatus.completed
                               ? l10n.complete

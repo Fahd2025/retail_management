@@ -74,7 +74,7 @@ class _UsersScreenState extends State<UsersScreen> {
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
+              backgroundColor: theme.colorScheme.error,
             ),
             child: Text(AppLocalizations.of(context)!.delete),
           ),
@@ -115,6 +115,7 @@ class _UsersScreenState extends State<UsersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       body: BlocConsumer<UserBloc, UserState>(
         listener: (context, state) {
@@ -131,7 +132,7 @@ class _UsersScreenState extends State<UsersScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
-                backgroundColor: Colors.red,
+                backgroundColor: theme.colorScheme.error,
               ),
             );
           }
@@ -210,7 +211,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                   style: const TextStyle(fontSize: 12),
                                 ),
                                 backgroundColor: user.role == UserRole.admin
-                                    ? Colors.blue.shade100
+                                    ? theme.colorScheme.primary.shade100
                                     : Colors.green.shade100,
                               ),
                             ),
@@ -222,7 +223,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                 ),
                                 backgroundColor: user.isActive
                                     ? Colors.green.shade100
-                                    : Colors.red.shade100,
+                                    : theme.colorScheme.error.shade100,
                               ),
                             ),
                             DataCell(Text(invoiceCount.toString())),
@@ -239,7 +240,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.delete,
-                                        size: 20, color: Colors.red),
+                                        size: 20, color: theme.colorScheme.error),
                                     onPressed: () => _deleteUser(context, user),
                                   ),
                                 ],
@@ -301,7 +302,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                     style: const TextStyle(fontSize: 11),
                                   ),
                                   backgroundColor: user.role == UserRole.admin
-                                      ? Colors.blue.shade100
+                                      ? theme.colorScheme.primary.shade100
                                       : Colors.green.shade100,
                                   visualDensity: VisualDensity.compact,
                                 ),
@@ -313,7 +314,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                   ),
                                   backgroundColor: user.isActive
                                       ? Colors.green.shade100
-                                      : Colors.red.shade100,
+                                      : theme.colorScheme.error.shade100,
                                   visualDensity: VisualDensity.compact,
                                 ),
                               ],
@@ -324,11 +325,11 @@ class _UsersScreenState extends State<UsersScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.edit, color: Colors.blue),
+                              icon: const Icon(Icons.edit, color: theme.colorScheme.primary),
                               onPressed: () => showUserDialog(user),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
+                              icon: const Icon(Icons.delete, color: theme.colorScheme.error),
                               onPressed: () => _deleteUser(context, user),
                             ),
                           ],
@@ -435,6 +436,7 @@ class _UserDialogState extends State<_UserDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
     // Build the form content
