@@ -808,5 +808,5 @@
       }
     }
   },
-  "appConfigNotAppliedNote": "Note: Appearance settings (theme, colors, language) found in the file will NOT be automatically applied. Your current app settings will remain unchanged."
+  "appConfigNotAppliedNote": "Note: This file contains appearance settings (theme, colors, language, VAT settings) that will be automatically applied after import. You may need to restart the app to see all changes."
 }
