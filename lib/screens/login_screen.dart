@@ -109,6 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
@@ -132,8 +133,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.blue.shade700,
-                    Colors.blue.shade500,
+                    theme.colorScheme.primary,
+                    theme.colorScheme.primary.withOpacity(0.8),
                   ],
                 ),
               ),
@@ -243,13 +244,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 width: 100,
                                 height: 100,
                                 decoration: BoxDecoration(
-                                  color: Colors.blue.shade100,
+                                  color: theme.colorScheme.primaryContainer,
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
                                   Icons.store,
                                   size: 50,
-                                  color: Colors.blue.shade700,
+                                  color: theme.colorScheme.primary,
                                 ),
                               ),
                               const SizedBox(height: 24),
@@ -262,7 +263,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     .headlineSmall
                                     ?.copyWith(
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.blue.shade700,
+                                      color: theme.colorScheme.primary,
                                     ),
                               ),
                               const SizedBox(height: 8),
@@ -281,10 +282,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               Container(
                                 padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
-                                  color: Colors.blue.shade50,
+                                  color: theme.colorScheme.primaryContainer.withOpacity(0.5),
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
-                                    color: Colors.blue.shade200,
+                                    color: theme.colorScheme.primaryContainer,
                                     width: 1,
                                   ),
                                 ),
@@ -296,14 +297,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                         Icon(
                                           Icons.info_outline,
                                           size: 20,
-                                          color: Colors.blue.shade700,
+                                          color: theme.colorScheme.primary,
                                         ),
                                         const SizedBox(width: 8),
                                         Text(
                                           l10n.defaultCredentials,
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.blue.shade700,
+                                            color: theme.colorScheme.primary,
                                           ),
                                         ),
                                       ],
@@ -418,7 +419,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   isLoading ? null : _login,
                                               style: ElevatedButton.styleFrom(
                                                 backgroundColor:
-                                                    Colors.blue.shade700,
+                                                    theme.colorScheme.primary,
                                                 foregroundColor: Colors.white,
                                                 padding:
                                                     const EdgeInsets.symmetric(
@@ -479,20 +480,20 @@ class _LoginScreenState extends State<LoginScreen> {
                           decoration: BoxDecoration(
                             color: _isNotificationError
                                 ? (configState.isDarkMode
-                                    ? Colors.red.shade900.withOpacity(0.9)
-                                    : Colors.red.shade50)
+                                    ? theme.colorScheme.error.withOpacity(0.9)
+                                    : theme.colorScheme.errorContainer)
                                 : (configState.isDarkMode
-                                    ? Colors.green.shade900.withOpacity(0.9)
-                                    : Colors.green.shade50),
+                                    ? Color(0xFF2E7D32).withOpacity(0.9)
+                                    : Color(0xFFE8F5E9)),
                             border: Border(
                               bottom: BorderSide(
                                 color: _isNotificationError
                                     ? (configState.isDarkMode
-                                        ? Colors.red.shade700
-                                        : Colors.red.shade200)
+                                        ? theme.colorScheme.error
+                                        : theme.colorScheme.errorContainer)
                                     : (configState.isDarkMode
-                                        ? Colors.green.shade700
-                                        : Colors.green.shade200),
+                                        ? Color(0xFF388E3C)
+                                        : Color(0xFFA5D6A7)),
                                 width: 2,
                               ),
                             ),
@@ -505,11 +506,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                     : Icons.check_circle_outline,
                                 color: _isNotificationError
                                     ? (configState.isDarkMode
-                                        ? Colors.red.shade300
-                                        : Colors.red.shade700)
+                                        ? theme.colorScheme.error.withOpacity(0.7)
+                                        : theme.colorScheme.error)
                                     : (configState.isDarkMode
-                                        ? Colors.green.shade300
-                                        : Colors.green.shade700),
+                                        ? Color(0xFF81C784)
+                                        : Color(0xFF388E3C)),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
@@ -518,11 +519,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   style: TextStyle(
                                     color: _isNotificationError
                                         ? (configState.isDarkMode
-                                            ? Colors.red.shade100
-                                            : Colors.red.shade900)
+                                            ? theme.colorScheme.errorContainer.withOpacity(0.5)
+                                            : theme.colorScheme.error)
                                         : (configState.isDarkMode
-                                            ? Colors.green.shade100
-                                            : Colors.green.shade900),
+                                            ? Color(0xFFC8E6C9)
+                                            : Color(0xFF2E7D32)),
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -532,11 +533,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Icons.close,
                                   color: _isNotificationError
                                       ? (configState.isDarkMode
-                                          ? Colors.red.shade300
-                                          : Colors.red.shade700)
+                                          ? theme.colorScheme.error.withOpacity(0.7)
+                                          : theme.colorScheme.error)
                                       : (configState.isDarkMode
-                                          ? Colors.green.shade300
-                                          : Colors.green.shade700),
+                                          ? Color(0xFF81C784)
+                                          : Color(0xFF388E3C)),
                                 ),
                                 onPressed: () {
                                   setState(() {

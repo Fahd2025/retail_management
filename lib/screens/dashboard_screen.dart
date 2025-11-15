@@ -128,7 +128,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Text(l10n.analyticsDashboard),
           ],
         ),
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: theme.colorScheme.primary,
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -160,7 +160,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
             return AppBar(
               title: Text(l10n.pointOfSale),
-              backgroundColor: Colors.blue.shade700,
+              backgroundColor: theme.colorScheme.primary,
               foregroundColor: Colors.white,
               actions: [
                 // Cart icon with badge
@@ -185,7 +185,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } else if (label == l10n.products) {
       return AppBar(
         title: Text(l10n.productsManagement),
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: theme.colorScheme.primary,
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -207,7 +207,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } else if (label == l10n.categories) {
       return AppBar(
         title: Text(l10n.categories),
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: theme.colorScheme.primary,
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -229,7 +229,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } else if (label == l10n.customers) {
       return AppBar(
         title: Text(l10n.customersManagement),
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: theme.colorScheme.primary,
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -249,7 +249,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } else if (label == l10n.sales) {
       return AppBar(
         title: Text(l10n.salesList),
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: theme.colorScheme.primary,
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -263,7 +263,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } else if (label == l10n.users) {
       return AppBar(
         title: Text(l10n.usersManagement),
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: theme.colorScheme.primary,
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -285,13 +285,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } else if (label == l10n.settings) {
       return AppBar(
         title: Text(l10n.settings),
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: theme.colorScheme.primary,
         foregroundColor: Colors.white,
       );
     } else {
       return AppBar(
         title: Text(label),
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: theme.colorScheme.primary,
         foregroundColor: Colors.white,
       );
     }
@@ -300,7 +300,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildDrawerHeader() {
     return DrawerHeader(
       decoration: BoxDecoration(
-        color: Colors.blue.shade700,
+        color: theme.colorScheme.primary,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -332,7 +332,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           return Icon(
                             Icons.store,
                             size: 40,
-                            color: Colors.blue.shade700,
+                            color: theme.colorScheme.primary,
                           );
                         },
                       );
@@ -340,7 +340,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       return Icon(
                         Icons.store,
                         size: 40,
-                        color: Colors.blue.shade700,
+                        color: theme.colorScheme.primary,
                       );
                     } else {
                       return Center(
@@ -350,7 +350,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.blue.shade700,
+                              theme.colorScheme.primary,
                             ),
                           ),
                         ),
@@ -371,7 +371,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: Icon(
                 Icons.store,
                 size: 40,
-                color: Colors.blue.shade700,
+                color: theme.colorScheme.primary,
               ),
             ),
           const SizedBox(height: 12),
@@ -435,7 +435,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
+              backgroundColor: theme.colorScheme.error,
               foregroundColor: Colors.white,
             ),
             child: Text(l10n.yes),
@@ -448,6 +448,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, authState) {
         if (authState is! Authenticated) {
@@ -494,7 +495,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           leading: Icon(
                             item['icon'] as IconData,
                             color: isSelected
-                                ? Colors.blue.shade700
+                                ? theme.colorScheme.primary
                                 : Colors.grey.shade700,
                           ),
                           title: Text(
@@ -504,12 +505,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ? FontWeight.bold
                                   : FontWeight.normal,
                               color: isSelected
-                                  ? Colors.blue.shade700
+                                  ? theme.colorScheme.primary
                                   : Colors.grey.shade700,
                             ),
                           ),
                           selected: isSelected,
-                          selectedTileColor: Colors.blue.shade50,
+                          selectedTileColor: theme.colorScheme.primaryContainer.withOpacity(0.3),
                           onTap: () async {
                             // Check if we're navigating away from settings (index 6 for admin)
                             final isLeavingSettings = (_previousIndex == 6 &&
@@ -535,10 +536,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   const Divider(height: 1),
                   ListTile(
-                    leading: const Icon(Icons.logout, color: Colors.red),
+                    leading: const Icon(Icons.logout, color: theme.colorScheme.error),
                     title: Text(
                       AppLocalizations.of(context)!.logout,
-                      style: const TextStyle(color: Colors.red),
+                      style: const TextStyle(color: theme.colorScheme.error),
                     ),
                     onTap: () async {
                       final l10n = AppLocalizations.of(context)!;
@@ -555,7 +556,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ElevatedButton(
                               onPressed: () => Navigator.pop(context, true),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
+                                backgroundColor: theme.colorScheme.error,
                                 foregroundColor: Colors.white,
                               ),
                               child: Text(l10n.logout),
