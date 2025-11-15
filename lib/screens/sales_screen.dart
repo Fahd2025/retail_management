@@ -610,16 +610,15 @@ class _SalesScreenState extends State<SalesScreen> {
                               ]);
                             }).toList(),
                           ),
-                        );
-                          },
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ),
               ),
-            );
-              } else {
+            ),
+          );
+        } else {
                 // Mobile: Card with ExpansionTile layout
                 return ListView.builder(
                   padding: const EdgeInsets.all(16),
