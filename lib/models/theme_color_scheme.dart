@@ -180,10 +180,10 @@ class ThemeColorScheme extends Equatable {
       'id': id,
       'name': name,
       'nameAr': nameAr,
-      'lightPrimary': lightPrimary.value,
-      'lightSecondary': lightSecondary.value,
-      'darkPrimary': darkPrimary.value,
-      'darkSecondary': darkSecondary.value,
+      'lightPrimary': lightPrimary.toARGB32(),
+      'lightSecondary': lightSecondary.toARGB32(),
+      'darkPrimary': darkPrimary.toARGB32(),
+      'darkSecondary': darkSecondary.toARGB32(),
       'isCustom': isCustom,
     };
   }

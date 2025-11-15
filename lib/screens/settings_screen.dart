@@ -687,7 +687,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final currencyOptions = _getCurrencyOptions();
 
     return DropdownButtonFormField<String>(
-      value: _selectedCurrency,
+      initialValue: _selectedCurrency,
       decoration: InputDecoration(
         labelText: '${l10n.currency} *',
         border: OutlineInputBorder(

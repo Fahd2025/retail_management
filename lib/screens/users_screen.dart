@@ -60,6 +60,7 @@ class _UsersScreenState extends State<UsersScreen> {
       return;
     }
 
+    final theme = Theme.of(context);
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -228,7 +229,8 @@ class _UsersScreenState extends State<UsersScreen> {
                             ),
                             DataCell(Text(invoiceCount.toString())),
                             DataCell(
-                              Text(CurrencyHelper.formatCurrencySync(totalSales)),
+                              Text(CurrencyHelper.formatCurrencySync(
+                                  totalSales)),
                             ),
                             DataCell(
                               Row(
@@ -240,7 +242,8 @@ class _UsersScreenState extends State<UsersScreen> {
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.delete,
-                                        size: 20, color: theme.colorScheme.error),
+                                        size: 20,
+                                        color: theme.colorScheme.error),
                                     onPressed: () => _deleteUser(context, user),
                                   ),
                                 ],
@@ -325,11 +328,13 @@ class _UsersScreenState extends State<UsersScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.edit, color: theme.colorScheme.primary),
+                              icon: Icon(Icons.edit,
+                                  color: theme.colorScheme.primary),
                               onPressed: () => showUserDialog(user),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.delete, color: theme.colorScheme.error),
+                              icon: Icon(Icons.delete,
+                                  color: theme.colorScheme.error),
                               onPressed: () => _deleteUser(context, user),
                             ),
                           ],
@@ -436,7 +441,6 @@ class _UserDialogState extends State<_UserDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
     // Build the form content

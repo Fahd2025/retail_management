@@ -75,6 +75,7 @@ class _SalesScreenState extends State<SalesScreen> {
   Widget _buildSaleCard(
       Sale sale, DateFormat dateFormat, BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     final vatEnabled = context.watch<AppConfigBloc>().state.vatEnabled;
     final statusColor = sale.status == SaleStatus.completed
         ? Colors.green
@@ -213,7 +214,8 @@ class _SalesScreenState extends State<SalesScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(l10n.changeLabel),
-                        Text(CurrencyHelper.formatCurrencySync(sale.changeAmount)),
+                        Text(CurrencyHelper.formatCurrencySync(
+                            sale.changeAmount)),
                       ],
                     ),
                 ],
@@ -360,10 +362,10 @@ class _SalesScreenState extends State<SalesScreen> {
                             DataCell(Text(sale.invoiceNumber)),
                             DataCell(Text(dateFormat.format(sale.saleDate))),
                             if (vatEnabled)
-                              DataCell(Text(
-                                  CurrencyHelper.formatCurrencySync(sale.vatAmount))),
-                            DataCell(Text(
-                                CurrencyHelper.formatCurrencySync(sale.totalAmount))),
+                              DataCell(Text(CurrencyHelper.formatCurrencySync(
+                                  sale.vatAmount))),
+                            DataCell(Text(CurrencyHelper.formatCurrencySync(
+                                sale.totalAmount))),
                             DataCell(
                               Chip(
                                 label: Text(

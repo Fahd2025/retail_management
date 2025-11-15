@@ -96,6 +96,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
             builder: (context, constraints) {
               final isDesktop = constraints.maxWidth >= 800;
               final l10n = AppLocalizations.of(context)!;
+              final theme = Theme.of(context);
 
               if (isDesktop) {
                 // Desktop/Tablet: DataTable layout that fills width
@@ -150,7 +151,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                     final totalAmount =
                                         stats['totalAmount'] as double;
                                     return Text(
-                                        CurrencyHelper.formatCurrencySync(totalAmount));
+                                        CurrencyHelper.formatCurrencySync(
+                                            totalAmount));
                                   }
                                   return const Text('...');
                                 },
@@ -161,7 +163,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
-                                    icon: const Icon(
+                                    icon: Icon(
                                       Icons.picture_as_pdf,
                                       size: 20,
                                       color: theme.colorScheme.primary,
@@ -176,8 +178,9 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                         showCustomerDialog(customer),
                                   ),
                                   IconButton(
-                                    icon: const Icon(Icons.delete,
-                                        size: 20, color: theme.colorScheme.error),
+                                    icon: Icon(Icons.delete,
+                                        size: 20,
+                                        color: theme.colorScheme.error),
                                     onPressed: () async {
                                       final confirm = await showDialog<bool>(
                                         context: context,
@@ -195,7 +198,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                               onPressed: () =>
                                                   Navigator.pop(context, true),
                                               style: ElevatedButton.styleFrom(
-                                                backgroundColor: theme.colorScheme.error,
+                                                backgroundColor:
+                                                    theme.colorScheme.error,
                                               ),
                                               child: Text(l10n.delete),
                                             ),
@@ -260,7 +264,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                       stats['invoiceCount'] as int;
                                   final totalAmount =
                                       stats['totalAmount'] as double;
-                                  final currencyFormat = CurrencyHelper.getCurrencyFormatterSync();
+                                  final currencyFormat =
+                                      CurrencyHelper.getCurrencyFormatterSync();
                                   return Text(
                                     l10n.invoicesTotal(
                                       invoiceCount,
@@ -281,7 +286,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.picture_as_pdf,
                                 color: theme.colorScheme.primary,
                               ),
@@ -294,7 +299,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                               onPressed: () => showCustomerDialog(customer),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.delete, color: theme.colorScheme.error),
+                              icon: Icon(Icons.delete,
+                                  color: theme.colorScheme.error),
                               onPressed: () async {
                                 final confirm = await showDialog<bool>(
                                   context: context,
@@ -311,7 +317,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                         onPressed: () =>
                                             Navigator.pop(context, true),
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: theme.colorScheme.error,
+                                          backgroundColor:
+                                              theme.colorScheme.error,
                                         ),
                                         child: Text(l10n.delete),
                                       ),

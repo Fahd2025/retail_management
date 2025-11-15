@@ -79,6 +79,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     models.Product product,
   ) async {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -284,17 +285,22 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   DataCell(
                                       Text(_getCategoryName(product.category))),
                                   DataCell(Text(
-                                      CurrencyHelper.formatCurrencySync(product.price))),
+                                      CurrencyHelper.formatCurrencySync(
+                                          product.price))),
                                   if (vatEnabled) ...[
                                     DataCell(Text(
-                                        CurrencyHelper.formatCurrencySync(priceBeforeVat))),
+                                        CurrencyHelper.formatCurrencySync(
+                                            priceBeforeVat))),
                                     DataCell(Text(
-                                        CurrencyHelper.formatCurrencySync(vatAmount))),
+                                        CurrencyHelper.formatCurrencySync(
+                                            vatAmount))),
                                     DataCell(Text(
-                                        CurrencyHelper.formatCurrencySync(priceAfterVat))),
+                                        CurrencyHelper.formatCurrencySync(
+                                            priceAfterVat))),
                                   ],
                                   DataCell(Text(
-                                      CurrencyHelper.formatCurrencySync(product.cost))),
+                                      CurrencyHelper.formatCurrencySync(
+                                          product.cost))),
                                   DataCell(Text(product.quantity.toString())),
                                   DataCell(
                                     Row(
@@ -307,8 +313,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                               showProductDialog(product),
                                         ),
                                         IconButton(
-                                          icon: const Icon(Icons.delete,
-                                              size: 20, color: theme.colorScheme.error),
+                                          icon: Icon(Icons.delete,
+                                              size: 20,
+                                              color: theme.colorScheme.error),
                                           onPressed: () =>
                                               _deleteProduct(context, product),
                                         ),
@@ -436,12 +443,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
-                                    icon: const Icon(Icons.edit,
+                                    icon: Icon(Icons.edit,
                                         color: theme.colorScheme.primary),
                                     onPressed: () => showProductDialog(product),
                                   ),
                                   IconButton(
-                                    icon: const Icon(Icons.delete,
+                                    icon: Icon(Icons.delete,
                                         color: theme.colorScheme.error),
                                     onPressed: () =>
                                         _deleteProduct(context, product),
@@ -457,8 +464,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     children: [
                                       _buildInfoRow(l10n.barcodeRequired,
                                           product.barcode),
-                                      _buildInfoRow(l10n.costRequired,
-                                          CurrencyHelper.formatCurrencySync(product.cost)),
+                                      _buildInfoRow(
+                                          l10n.costRequired,
+                                          CurrencyHelper.formatCurrencySync(
+                                              product.cost)),
                                       _buildInfoRow(l10n.stock,
                                           '${product.quantity} ${l10n.units}'),
                                       if (vatEnabled) ...[
@@ -473,13 +482,18 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                           ),
                                         ),
                                         const SizedBox(height: 8),
-                                        _buildInfoRow(l10n.beforeVat,
-                                            CurrencyHelper.formatCurrencySync(priceBeforeVat)),
+                                        _buildInfoRow(
+                                            l10n.beforeVat,
+                                            CurrencyHelper.formatCurrencySync(
+                                                priceBeforeVat)),
                                         _buildInfoRow(
                                             '${l10n.vat} ${l10n.amount}',
-                                            CurrencyHelper.formatCurrencySync(vatAmount)),
-                                        _buildInfoRow(l10n.afterVat,
-                                            CurrencyHelper.formatCurrencySync(priceAfterVat)),
+                                            CurrencyHelper.formatCurrencySync(
+                                                vatAmount)),
+                                        _buildInfoRow(
+                                            l10n.afterVat,
+                                            CurrencyHelper.formatCurrencySync(
+                                                priceAfterVat)),
                                       ],
                                       if (product.description != null &&
                                           product.description!.isNotEmpty) ...[
@@ -716,16 +730,16 @@ class _ProductDialogState extends State<_ProductDialog> {
                   hint: Text(l10n.selectACategory),
                   isExpanded: true,
                   validator: (v) => v == null ? l10n.required : null,
-                      items: _categories.map((category) {
-                        final isArabic =
-                            Localizations.localeOf(context).languageCode == 'ar';
-                        return DropdownMenuItem<String>(
-                          value: category.id,
-                          child: Text(isArabic
-                              ? (category.nameAr ?? category.name)
-                              : category.name),
-                        );
-                      }).toList(),
+                  items: _categories.map((category) {
+                    final isArabic =
+                        Localizations.localeOf(context).languageCode == 'ar';
+                    return DropdownMenuItem<String>(
+                      value: category.id,
+                      child: Text(isArabic
+                          ? (category.nameAr ?? category.name)
+                          : category.name),
+                    );
+                  }).toList(),
                   onChanged: (value) {
                     setState(() {
                       _selectedCategoryId = value;
@@ -801,7 +815,8 @@ class _ProductDialogState extends State<_ProductDialog> {
                       key: ValueKey('${price}_${appConfig.vatRate}'),
                       initialValue: vatAmount.toStringAsFixed(2),
                       decoration: InputDecoration(
-                        labelText: '${l10n.vat} Amount (${CurrencyHelper.getCurrencySymbolSync()})',
+                        labelText:
+                            '${l10n.vat} Amount (${CurrencyHelper.getCurrencySymbolSync()})',
                         border: const OutlineInputBorder(),
                         prefixIcon: const Icon(Icons.account_balance_wallet),
                         filled: true,
@@ -810,7 +825,8 @@ class _ProductDialogState extends State<_ProductDialog> {
                           message: l10n.vatAmountCalculatedAutomatically(
                               appConfig.vatRate.toStringAsFixed(1)),
                           child: Icon(Icons.info_outline,
-                              size: 18, color: theme.colorScheme.primary.shade600),
+                              size: 18,
+                              color: theme.colorScheme.primary.shade600),
                         ),
                       ),
                       readOnly: true,

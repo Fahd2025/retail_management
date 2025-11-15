@@ -116,6 +116,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   PreferredSizeWidget _buildAppBar(
       List<Map<String, dynamic>> navItems, BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     final label = navItems[_selectedIndex]['label'] as String;
 
     // Check if it's the Analytics Dashboard
@@ -298,6 +299,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildDrawerHeader() {
+    final theme = Theme.of(context);
     return DrawerHeader(
       decoration: BoxDecoration(
         color: theme.colorScheme.primary,
@@ -407,7 +409,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 return Text(
                   '${l10n.vatNumber}: ${_companyInfo!.vatNumber}',
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                     fontSize: 13,
                   ),
                   maxLines: 1,
@@ -422,6 +424,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<bool> _onWillPop(BuildContext context) async {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     final shouldExit = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -510,7 +513,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ),
                           ),
                           selected: isSelected,
-                          selectedTileColor: theme.colorScheme.primaryContainer.withOpacity(0.3),
+                          selectedTileColor: theme.colorScheme.primaryContainer
+                              .withValues(alpha: 0.3),
                           onTap: () async {
                             // Check if we're navigating away from settings (index 6 for admin)
                             final isLeavingSettings = (_previousIndex == 6 &&
@@ -536,10 +540,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   const Divider(height: 1),
                   ListTile(
-                    leading: const Icon(Icons.logout, color: theme.colorScheme.error),
+                    leading: Icon(Icons.logout, color: theme.colorScheme.error),
                     title: Text(
                       AppLocalizations.of(context)!.logout,
-                      style: const TextStyle(color: theme.colorScheme.error),
+                      style: TextStyle(color: theme.colorScheme.error),
                     ),
                     onTap: () async {
                       final l10n = AppLocalizations.of(context)!;

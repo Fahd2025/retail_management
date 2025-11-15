@@ -49,7 +49,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   void showCategoryDialog([models.Category? category]) {
     final l10n = AppLocalizations.of(context)!;
     final nameController = TextEditingController(text: category?.name ?? '');
-    final nameArController = TextEditingController(text: category?.nameAr ?? '');
+    final nameArController =
+        TextEditingController(text: category?.nameAr ?? '');
     final descriptionController =
         TextEditingController(text: category?.description ?? '');
     final descriptionArController =
@@ -228,6 +229,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       return;
     }
 
+    final theme = Theme.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -335,14 +337,20 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
                                 return DataRow(cells: [
                                   DataCell(Text(
-                                    Localizations.localeOf(context).languageCode == 'ar'
+                                    Localizations.localeOf(context)
+                                                .languageCode ==
+                                            'ar'
                                         ? (category.nameAr ?? category.name)
                                         : category.name,
                                   )),
                                   DataCell(
                                     Text(
-                                      Localizations.localeOf(context).languageCode == 'ar'
-                                          ? (category.descriptionAr ?? category.description ?? '-')
+                                      Localizations.localeOf(context)
+                                                  .languageCode ==
+                                              'ar'
+                                          ? (category.descriptionAr ??
+                                              category.description ??
+                                              '-')
                                           : (category.description ?? '-'),
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
@@ -361,8 +369,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                           tooltip: l10n.tooltipEdit,
                                         ),
                                         IconButton(
-                                          icon: const Icon(Icons.delete,
-                                              size: 20, color: theme.colorScheme.error),
+                                          icon: Icon(Icons.delete,
+                                              size: 20,
+                                              color: theme.colorScheme.error),
                                           onPressed: () => _deleteCategory(
                                               category, productCount),
                                           tooltip: l10n.tooltipDelete,
@@ -403,7 +412,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 ),
                               ),
                               title: Text(
-                                Localizations.localeOf(context).languageCode == 'ar'
+                                Localizations.localeOf(context).languageCode ==
+                                        'ar'
                                     ? (category.nameAr ?? category.name)
                                     : category.name,
                                 style: const TextStyle(
@@ -422,14 +432,14 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
-                                    icon: const Icon(Icons.edit,
+                                    icon: Icon(Icons.edit,
                                         color: theme.colorScheme.primary),
                                     onPressed: () =>
                                         showCategoryDialog(category),
                                     tooltip: l10n.tooltipEdit,
                                   ),
                                   IconButton(
-                                    icon: const Icon(Icons.delete,
+                                    icon: Icon(Icons.delete,
                                         color: theme.colorScheme.error),
                                     onPressed: () =>
                                         _deleteCategory(category, productCount),
@@ -438,12 +448,20 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 ],
                               ),
                               children: [
-                                if ((Localizations.localeOf(context).languageCode == 'ar'
-                                        ? (category.descriptionAr ?? category.description)
-                                        : category.description) != null &&
-                                    (Localizations.localeOf(context).languageCode == 'ar'
-                                        ? (category.descriptionAr ?? category.description)!
-                                        : category.description!).isNotEmpty)
+                                if ((Localizations.localeOf(context)
+                                                    .languageCode ==
+                                                'ar'
+                                            ? (category.descriptionAr ??
+                                                category.description)
+                                            : category.description) !=
+                                        null &&
+                                    (Localizations.localeOf(context)
+                                                    .languageCode ==
+                                                'ar'
+                                            ? (category.descriptionAr ??
+                                                category.description)!
+                                            : category.description!)
+                                        .isNotEmpty)
                                   Padding(
                                     padding: const EdgeInsets.all(16),
                                     child: Column(
@@ -459,8 +477,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          Localizations.localeOf(context).languageCode == 'ar'
-                                              ? (category.descriptionAr ?? category.description!)
+                                          Localizations.localeOf(context)
+                                                      .languageCode ==
+                                                  'ar'
+                                              ? (category.descriptionAr ??
+                                                  category.description!)
                                               : category.description!,
                                           style: TextStyle(
                                             fontSize: 14,

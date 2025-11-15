@@ -70,6 +70,8 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^6.0.0
   drift_dev: ^2.14.0
+  
+  # dart run build_runner build --delete-conflicting-outputs
   build_runner: ^2.4.0
 
 flutter:

@@ -54,7 +54,7 @@ class LowStockWidget extends StatelessWidget {
                       vertical: 4.h,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.orange.withOpacity(0.1),
+                      color: Colors.orange.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: Text(
@@ -84,13 +84,14 @@ class LowStockWidget extends StatelessWidget {
                       Icon(
                         Icons.check_circle_outline,
                         size: 48.sp,
-                        color: Colors.green.withOpacity(0.6),
+                        color: Colors.green.withValues(alpha: 0.6),
                       ),
                       SizedBox(height: 8.h),
                       Text(
                         l10n.allProductsWellStocked,
                         style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.6),
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -120,8 +121,8 @@ class LowStockWidget extends StatelessWidget {
                       height: 50.w,
                       decoration: BoxDecoration(
                         color: isCritical
-                            ? Colors.red.withOpacity(0.1)
-                            : Colors.orange.withOpacity(0.1),
+                            ? Colors.red.withValues(alpha: 0.1)
+                            : Colors.orange.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: product.productImage != null &&
@@ -210,7 +211,8 @@ class LowStockWidget extends StatelessWidget {
                         Text(
                           l10n.unitsLeft,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withOpacity(0.6),
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.6),
                           ),
                         ),
                       ],

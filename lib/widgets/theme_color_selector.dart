@@ -102,14 +102,14 @@ class _CompactColorChip extends StatelessWidget {
           border: Border.all(
             color: isSelected
                 ? theme.colorScheme.primary
-                : theme.dividerColor.withOpacity(0.5),
+                : theme.dividerColor.withValues(alpha: 0.5),
             width: isSelected ? 2.5 : 1,
           ),
           color: theme.cardColor,
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: theme.colorScheme.primary.withOpacity(0.2),
+                    color: theme.colorScheme.primary.withValues(alpha: 0.2),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   )
@@ -128,12 +128,12 @@ class _CompactColorChip extends StatelessWidget {
                 color: primaryColor,
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: theme.dividerColor.withOpacity(0.3),
+                  color: theme.dividerColor.withValues(alpha: 0.3),
                   width: 1,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: primaryColor.withOpacity(0.3),
+                    color: primaryColor.withValues(alpha: 0.3),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),
