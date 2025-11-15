@@ -374,10 +374,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                               padding: const EdgeInsets.all(16),
                               child: LayoutBuilder(
                                 builder: (context, innerConstraints) {
-                                  return IntrinsicHeight(
-                                    child: GlassmorphicContainer(
+                                  return GlassmorphicContainer(
                                       width: constraints.maxWidth - 32,
-                                      height: innerConstraints.maxHeight > 0 ? innerConstraints.maxHeight : 600,
+                                      height: 600,
                                       borderRadius: 16,
                                 blur: 20,
                                 alignment: Alignment.center,
@@ -476,8 +475,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                     ]);
                                   }).toList(),
                                 ),
-                              ),
-                            );
+                              );
                                 },
                               ),
                             ),

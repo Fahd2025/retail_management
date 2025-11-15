@@ -278,11 +278,10 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
             SizedBox(height: 16.h),
 
             // Footer with statistics summary
-            IntrinsicHeight(
-              child: GlassmorphicContainer(
+            GlassmorphicContainer(
                 width: double.infinity,
                 height: 150,
-                borderRadius: 12.r,
+                borderRadius: 12,
               blur: 20,
               alignment: Alignment.topLeft,
               border: 2,

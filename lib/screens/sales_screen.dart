@@ -91,8 +91,7 @@ class _SalesScreenState extends State<SalesScreen> {
             ? l10n.return_sale
             : sale.status.toString().split('.').last.toUpperCase();
 
-    return IntrinsicHeight(
-      child: GlassmorphicContainer(
+    return GlassmorphicContainer(
         width: double.infinity,
         height: 200,
         borderRadius: 16,
@@ -477,10 +476,9 @@ class _SalesScreenState extends State<SalesScreen> {
                         padding: const EdgeInsets.all(16),
                         child: LayoutBuilder(
                           builder: (context, innerConstraints) {
-                            return IntrinsicHeight(
-                              child: GlassmorphicContainer(
+                            return GlassmorphicContainer(
                                 width: double.infinity,
-                                height: innerConstraints.maxHeight > 0 ? innerConstraints.maxHeight : 600,
+                                height: 600,
                                 borderRadius: 16,
                           blur: 20,
                           alignment: Alignment.topLeft,

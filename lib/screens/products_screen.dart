@@ -274,10 +274,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             padding: const EdgeInsets.all(16),
                             child: LayoutBuilder(
                               builder: (context, innerConstraints) {
-                                return IntrinsicHeight(
-                                  child: GlassmorphicContainer(
+                                return GlassmorphicContainer(
                                     width: constraints.maxWidth - 32,
-                                    height: innerConstraints.maxHeight > 0 ? innerConstraints.maxHeight : 600,
+                                    height: 600,
                                     borderRadius: 16,
                                     blur: 20,
                                     alignment: Alignment.center,
@@ -481,8 +480,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           priceAfterVat = priceBeforeVat + vatAmount;
                         }
 
-                        return IntrinsicHeight(
-                          child: GlassmorphicContainer(
+                        return GlassmorphicContainer(
                             width: double.infinity,
                             height: 200,
                             borderRadius: 16,

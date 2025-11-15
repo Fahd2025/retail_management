@@ -1639,7 +1639,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return GlassmorphicContainer(
       width: double.infinity,
-      height: 150,
+      height: double.infinity,
       borderRadius: 24,
       blur: 25,
       alignment: Alignment.topLeft,
@@ -1662,6 +1662,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       padding: const EdgeInsets.all(24),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Section header
@@ -1696,6 +1697,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       title,
@@ -1736,7 +1738,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return GlassmorphicContainer(
       width: double.infinity,
-      height: 150,
+      height: 80,
       borderRadius: 12,
       blur: 15,
       alignment: Alignment.centerLeft,
@@ -1763,6 +1765,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   title,
@@ -1777,6 +1781,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: textColor.withValues(alpha: 0.7),
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ],

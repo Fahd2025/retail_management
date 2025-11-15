@@ -161,10 +161,9 @@ class _CustomersScreenState extends State<CustomersScreen> {
                         padding: const EdgeInsets.all(16),
                         child: LayoutBuilder(
                           builder: (context, innerConstraints) {
-                            return IntrinsicHeight(
-                              child: GlassmorphicContainer(
+                            return GlassmorphicContainer(
                                 width: constraints.maxWidth - 32,
-                                height: innerConstraints.maxHeight > 0 ? innerConstraints.maxHeight : 600,
+                                height: 600,
                                 borderRadius: 16,
                           blur: 20,
                           alignment: Alignment.center,
@@ -350,8 +349,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                   itemCount: customers.length,
                   itemBuilder: (context, index) {
                     final customer = customers[index];
-                    return IntrinsicHeight(
-                      child: GlassmorphicContainer(
+                    return GlassmorphicContainer(
                         width: double.infinity,
                         height: 200,
                         borderRadius: 16,
@@ -1090,8 +1088,7 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Customer Information
-        IntrinsicHeight(
-          child: GlassmorphicContainer(
+        GlassmorphicContainer(
             width: double.infinity,
             height: 150,
             borderRadius: 12,
@@ -1160,8 +1157,7 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
         const SizedBox(height: 12),
 
         // Period Dropdown wrapped in GlassmorphicContainer
-        IntrinsicHeight(
-          child: GlassmorphicContainer(
+        GlassmorphicContainer(
             width: double.infinity,
             height: 150,
             borderRadius: 12,

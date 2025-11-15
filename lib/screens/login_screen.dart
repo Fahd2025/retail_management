@@ -190,13 +190,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       return Center(
                         child: ConstrainedBox(
                           constraints: const BoxConstraints(maxWidth: 520),
-                          child: LayoutBuilder(
-                            builder: (context, constraints) {
-                              return IntrinsicHeight(
-                                child: GlassmorphicContainer(
-                                  width: constraints.maxWidth,
-                                  height: constraints.maxHeight > 0 ? constraints.maxHeight : 650,
-                                  borderRadius: 32,
+                          child: GlassmorphicContainer(
+                            width: double.infinity,
+                            height: 750,
+                            borderRadius: 32,
                             blur: 20,
                             alignment: Alignment.center,
                             border: 2,
@@ -351,11 +348,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   const SizedBox(height: 32),
 
                                   // Default Credentials Display with glass effect
-                                  IntrinsicHeight(
-                                    child: GlassmorphicContainer(
-                                      width: double.infinity,
-                                      height: 200,
-                                      borderRadius: 16,
+                                  GlassmorphicContainer(
+                                    width: double.infinity,
+                                    height: 120,
+                                    borderRadius: 16,
                                     blur: 15,
                                     alignment: Alignment.center,
                                     border: 2,
@@ -552,11 +548,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                );
+                        ),
+                      );
                     },
                   ),
                 ),
