@@ -164,7 +164,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                     icon: const Icon(
                                       Icons.picture_as_pdf,
                                       size: 20,
-                                      color: Colors.blue,
+                                      color: theme.colorScheme.primary,
                                     ),
                                     tooltip: l10n.exportInvoicesToPdf,
                                     onPressed: () =>
@@ -177,7 +177,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.delete,
-                                        size: 20, color: Colors.red),
+                                        size: 20, color: theme.colorScheme.error),
                                     onPressed: () async {
                                       final confirm = await showDialog<bool>(
                                         context: context,
@@ -195,7 +195,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                               onPressed: () =>
                                                   Navigator.pop(context, true),
                                               style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.red,
+                                                backgroundColor: theme.colorScheme.error,
                                               ),
                                               child: Text(l10n.delete),
                                             ),
@@ -283,7 +283,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                             IconButton(
                               icon: const Icon(
                                 Icons.picture_as_pdf,
-                                color: Colors.blue,
+                                color: theme.colorScheme.primary,
                               ),
                               tooltip: l10n.exportInvoicesToPdf,
                               onPressed: () =>
@@ -294,7 +294,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                               onPressed: () => showCustomerDialog(customer),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
+                              icon: const Icon(Icons.delete, color: theme.colorScheme.error),
                               onPressed: () async {
                                 final confirm = await showDialog<bool>(
                                   context: context,
@@ -311,7 +311,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                         onPressed: () =>
                                             Navigator.pop(context, true),
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.red,
+                                          backgroundColor: theme.colorScheme.error,
                                         ),
                                         child: Text(l10n.delete),
                                       ),

@@ -92,7 +92,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
+              backgroundColor: theme.colorScheme.error,
             ),
             child: Text(l10n.delete),
           ),
@@ -133,6 +133,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       body: BlocBuilder<ProductBloc, ProductState>(
         builder: (context, state) {
@@ -191,7 +192,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             horizontal: 16, vertical: 12),
                         color: vatIncludedInPrice
                             ? Colors.green.shade50
-                            : Colors.blue.shade50,
+                            : theme.colorScheme.primary.shade50,
                         child: Row(
                           children: [
                             Icon(
@@ -199,7 +200,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               size: 18,
                               color: vatIncludedInPrice
                                   ? Colors.green.shade700
-                                  : Colors.blue.shade700,
+                                  : theme.colorScheme.primary,
                             ),
                             const SizedBox(width: 8),
                             Text(
@@ -211,7 +212,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 fontWeight: FontWeight.w500,
                                 color: vatIncludedInPrice
                                     ? Colors.green.shade900
-                                    : Colors.blue.shade900,
+                                    : theme.colorScheme.primary.shade900,
                               ),
                             ),
                           ],
@@ -307,7 +308,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                         ),
                                         IconButton(
                                           icon: const Icon(Icons.delete,
-                                              size: 20, color: Colors.red),
+                                              size: 20, color: theme.colorScheme.error),
                                           onPressed: () =>
                                               _deleteProduct(context, product),
                                         ),
@@ -335,7 +336,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             horizontal: 16, vertical: 12),
                         color: vatIncludedInPrice
                             ? Colors.green.shade50
-                            : Colors.blue.shade50,
+                            : theme.colorScheme.primary.shade50,
                         child: Row(
                           children: [
                             Icon(
@@ -343,7 +344,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               size: 18,
                               color: vatIncludedInPrice
                                   ? Colors.green.shade700
-                                  : Colors.blue.shade700,
+                                  : theme.colorScheme.primary,
                             ),
                             const SizedBox(width: 8),
                             Expanded(
@@ -356,7 +357,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   fontWeight: FontWeight.w500,
                                   color: vatIncludedInPrice
                                       ? Colors.green.shade900
-                                      : Colors.blue.shade900,
+                                      : theme.colorScheme.primary.shade900,
                                 ),
                               ),
                             ),
@@ -436,12 +437,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 children: [
                                   IconButton(
                                     icon: const Icon(Icons.edit,
-                                        color: Colors.blue),
+                                        color: theme.colorScheme.primary),
                                     onPressed: () => showProductDialog(product),
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.delete,
-                                        color: Colors.red),
+                                        color: theme.colorScheme.error),
                                     onPressed: () =>
                                         _deleteProduct(context, product),
                                   ),
@@ -650,6 +651,7 @@ class _ProductDialogState extends State<_ProductDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
     // Build the form content separately for cleaner code
@@ -808,7 +810,7 @@ class _ProductDialogState extends State<_ProductDialog> {
                           message: l10n.vatAmountCalculatedAutomatically(
                               appConfig.vatRate.toStringAsFixed(1)),
                           child: Icon(Icons.info_outline,
-                              size: 18, color: Colors.blue.shade600),
+                              size: 18, color: theme.colorScheme.primary.shade600),
                         ),
                       ),
                       readOnly: true,
