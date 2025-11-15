@@ -1,6 +1,7 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/auth/auth_bloc.dart';
 import '../blocs/auth/auth_event.dart';
@@ -19,8 +20,7 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen>
-    with SingleTickerProviderStateMixin {
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -28,39 +28,11 @@ class _LoginScreenState extends State<LoginScreen>
   bool _isInitializing = false;
   String? _notificationMessage;
   bool _isNotificationError = false;
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
     super.initState();
     _initializeDefaultUsers();
-
-    // Initialize animations for smooth entrance
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 1200),
-      vsync: this,
-    );
-
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
-      ),
-    );
-
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0.2, 0.8, curve: Curves.easeOutCubic),
-      ),
-    );
-
-    _animationController.forward();
   }
 
   Future<void> _initializeDefaultUsers() async {
@@ -140,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final liquidTheme = LiquidTheme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
@@ -155,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen>
           _showNotification(errorMsg, true);
         }
       },
-      child: LiquidScaffold(
+      child: Scaffold(
         body: Stack(
           children: [
             // Animated gradient background
@@ -212,295 +184,379 @@ class _LoginScreenState extends State<LoginScreen>
             SafeArea(
               child: Center(
                 child: SingleChildScrollView(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-                  child: FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: SlideTransition(
-                      position: _slideAnimation,
-                      child: BlocBuilder<AppConfigBloc, AppConfigState>(
-                        builder: (context, configState) {
-                          return LiquidCard(
-                            elevation: 8,
-                            blur: 25,
-                            opacity: 0.18,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                  child: BlocBuilder<AppConfigBloc, AppConfigState>(
+                    builder: (context, configState) {
+                      return Center(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 520),
+                          child: GlassmorphicContainer(
+                            width: double.infinity,
+                            height: null,
                             borderRadius: 32,
-                            padding: const EdgeInsets.all(40),
-                            constraints: const BoxConstraints(maxWidth: 520),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                // Theme and Language Switchers Row
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    // Theme Switcher
-                                    LiquidTooltip(
-                                      message: l10n.switchTheme,
-                                      child: LiquidButton(
-                                        onTap: () {
-                                          context
-                                              .read<AppConfigBloc>()
-                                              .add(const ToggleThemeEvent());
-                                        },
-                                        type: LiquidButtonType.icon,
-                                        size: LiquidButtonSize.small,
-                                        child: Icon(
-                                          configState.isDarkMode
-                                              ? Icons.light_mode
-                                              : Icons.dark_mode,
-                                          color: liquidTheme.textColor,
+                            blur: 20,
+                            alignment: Alignment.center,
+                            border: 2,
+                            linearGradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                isDark
+                                    ? Colors.white.withValues(alpha: 0.1)
+                                    : Colors.white.withValues(alpha: 0.2),
+                                isDark
+                                    ? Colors.white.withValues(alpha: 0.05)
+                                    : Colors.white.withValues(alpha: 0.1),
+                              ],
+                            ),
+                            borderGradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Colors.white.withValues(alpha: 0.5),
+                                Colors.white.withValues(alpha: 0.2),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(40),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  // Theme and Language Switchers Row
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      // Theme Switcher
+                                      Tooltip(
+                                        message: l10n.switchTheme,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            context.read<AppConfigBloc>().add(const ToggleThemeEvent());
+                                          },
+                                          icon: Icon(
+                                            configState.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                                            color: isDark ? Colors.white : Colors.black87,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 12),
+                                      const SizedBox(width: 12),
 
-                                    // Language Switcher
-                                    LiquidTooltip(
-                                      message: l10n.switchLanguage,
-                                      child: LiquidPopupMenu<String>(
-                                        icon: Icon(Icons.language,
-                                            color: liquidTheme.textColor),
-                                        items: [
-                                          LiquidPopupMenuItem(
-                                            value: 'en',
-                                            child: Row(
-                                              children: [
-                                                if (configState.isEnglish)
-                                                  const Icon(Icons.check,
-                                                      size: 18),
-                                                if (configState.isEnglish)
-                                                  const SizedBox(width: 8),
-                                                Text(l10n.english),
-                                              ],
-                                            ),
+                                      // Language Switcher
+                                      Tooltip(
+                                        message: l10n.switchLanguage,
+                                        child: PopupMenuButton<String>(
+                                          icon: Icon(
+                                            Icons.language,
+                                            color: isDark ? Colors.white : Colors.black87,
                                           ),
-                                          LiquidPopupMenuItem(
-                                            value: 'ar',
-                                            child: Row(
-                                              children: [
-                                                if (configState.isArabic)
-                                                  const Icon(Icons.check,
-                                                      size: 18),
-                                                if (configState.isArabic)
-                                                  const SizedBox(width: 8),
-                                                Text(l10n.arabic),
-                                              ],
+                                          onSelected: (String value) {
+                                            if (value == 'en') {
+                                              context.read<AppConfigBloc>().add(const SetEnglishEvent());
+                                            } else {
+                                              context.read<AppConfigBloc>().add(const SetArabicEvent());
+                                            }
+                                          },
+                                          itemBuilder: (BuildContext context) => [
+                                            PopupMenuItem<String>(
+                                              value: 'en',
+                                              child: Row(
+                                                children: [
+                                                  if (configState.isEnglish)
+                                                    const Icon(Icons.check, size: 18),
+                                                  if (configState.isEnglish)
+                                                    const SizedBox(width: 8),
+                                                  Text(l10n.english),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                        onSelected: (String value) {
-                                          if (value == 'en') {
-                                            context
-                                                .read<AppConfigBloc>()
-                                                .add(const SetEnglishEvent());
-                                          } else {
-                                            context
-                                                .read<AppConfigBloc>()
-                                                .add(const SetArabicEvent());
-                                          }
-                                        },
+                                            PopupMenuItem<String>(
+                                              value: 'ar',
+                                              child: Row(
+                                                children: [
+                                                  if (configState.isArabic)
+                                                    const Icon(Icons.check, size: 18),
+                                                  if (configState.isArabic)
+                                                    const SizedBox(width: 8),
+                                                  Text(l10n.arabic),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 16),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 16),
 
-                                // Logo/Icon with glass effect
-                                LiquidContainer(
-                                  width: 120,
-                                  height: 120,
-                                  borderRadius: 60,
-                                  blur: 15,
-                                  opacity: 0.2,
-                                  child: Center(
+                                  // Logo/Icon with glass effect
+                                  GlassmorphicContainer(
+                                    width: 120,
+                                    height: 120,
+                                    borderRadius: 60,
+                                    blur: 15,
+                                    alignment: Alignment.center,
+                                    border: 2,
+                                    linearGradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        isDark
+                                            ? Colors.white.withValues(alpha: 0.1)
+                                            : Colors.white.withValues(alpha: 0.3),
+                                        isDark
+                                            ? Colors.white.withValues(alpha: 0.05)
+                                            : Colors.white.withValues(alpha: 0.1),
+                                      ],
+                                    ),
+                                    borderGradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        Colors.white.withValues(alpha: 0.6),
+                                        Colors.white.withValues(alpha: 0.2),
+                                      ],
+                                    ),
                                     child: Icon(
                                       Icons.store,
                                       size: 60,
                                       color: theme.colorScheme.primary,
                                     ),
                                   ),
-                                ),
-                                const SizedBox(height: 32),
+                                  const SizedBox(height: 32),
 
-                                // Title
-                                Text(
-                                  l10n.loginTitle,
-                                  style:
-                                      theme.textTheme.headlineSmall?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: liquidTheme.textColor,
-                                    fontSize: 28,
+                                  // Title
+                                  Text(
+                                    l10n.loginTitle,
+                                    style: theme.textTheme.headlineSmall?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: isDark ? Colors.white : Colors.black87,
+                                      fontSize: 28,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  l10n.appSubtitle,
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    color: liquidTheme.textColor
-                                        .withValues(alpha: 0.7),
-                                    fontSize: 15,
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    l10n.appSubtitle,
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: isDark
+                                          ? Colors.white.withValues(alpha: 0.7)
+                                          : Colors.black87.withValues(alpha: 0.7),
+                                      fontSize: 15,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                const SizedBox(height: 32),
+                                  const SizedBox(height: 32),
 
-                                // Default Credentials Display with glass effect
-                                LiquidBanner(
-                                  type: LiquidBannerType.info,
-                                  title: l10n.defaultCredentials,
-                                  icon: Icons.info_outline,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        l10n.adminCredentials,
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          color: liquidTheme.textColor
-                                              .withValues(alpha: 0.8),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        l10n.cashierCredentials,
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          color: liquidTheme.textColor
-                                              .withValues(alpha: 0.8),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(height: 32),
-
-                                if (_isInitializing)
-                                  Column(
-                                    children: [
-                                      LiquidLoader(size: 40),
-                                      const SizedBox(height: 16),
-                                      Text(
-                                        l10n.initializingSystem,
-                                        style: TextStyle(
-                                            color: liquidTheme.textColor),
-                                      ),
-                                    ],
-                                  )
-                                else
-                                  Form(
-                                    key: _formKey,
-                                    child: Column(
-                                      children: [
-                                        // Username field with Liquid Glass design
-                                        LiquidTextField(
-                                          controller: _usernameController,
-                                          label: l10n.username,
-                                          prefixIcon: const Icon(Icons.person),
-                                          textInputAction: TextInputAction.next,
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.isEmpty) {
-                                              return l10n.pleaseEnterUsername;
-                                            }
-                                            return null;
-                                          },
-                                          onFieldSubmitted: (_) {
-                                            FocusScope.of(context).nextFocus();
-                                          },
-                                        ),
-                                        const SizedBox(height: 20),
-
-                                        // Password field with Liquid Glass design
-                                        LiquidTextField(
-                                          controller: _passwordController,
-                                          label: l10n.password,
-                                          prefixIcon: const Icon(Icons.lock),
-                                          obscureText: _obscurePassword,
-                                          suffixIcon: IconButton(
-                                            icon: Icon(
-                                              _obscurePassword
-                                                  ? Icons.visibility
-                                                  : Icons.visibility_off,
-                                            ),
-                                            onPressed: () {
-                                              setState(() {
-                                                _obscurePassword =
-                                                    !_obscurePassword;
-                                              });
-                                            },
+                                  // Default Credentials Display with glass effect
+                                  GlassmorphicContainer(
+                                    width: double.infinity,
+                                    height: null,
+                                    borderRadius: 16,
+                                    blur: 15,
+                                    alignment: Alignment.center,
+                                    border: 2,
+                                    linearGradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        Colors.blue.withValues(alpha: 0.1),
+                                        Colors.blue.withValues(alpha: 0.05),
+                                      ],
+                                    ),
+                                    borderGradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        Colors.blue.withValues(alpha: 0.5),
+                                        Colors.blue.withValues(alpha: 0.2),
+                                      ],
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.info_outline,
+                                                color: Colors.blue,
+                                                size: 20,
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Text(
+                                                l10n.defaultCredentials,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: isDark ? Colors.white : Colors.black87,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.isEmpty) {
-                                              return l10n.pleaseEnterPassword;
-                                            }
-                                            return null;
-                                          },
-                                          onFieldSubmitted: (_) {
-                                            if (_formKey.currentState!
-                                                .validate()) {
-                                              _login();
-                                            }
-                                          },
-                                        ),
-                                        const SizedBox(height: 40),
+                                          const SizedBox(height: 12),
+                                          Text(
+                                            l10n.adminCredentials,
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              color: isDark
+                                                  ? Colors.white.withValues(alpha: 0.8)
+                                                  : Colors.black87.withValues(alpha: 0.8),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            l10n.cashierCredentials,
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              color: isDark
+                                                  ? Colors.white.withValues(alpha: 0.8)
+                                                  : Colors.black87.withValues(alpha: 0.8),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 32),
 
-                                        // Login button with Liquid Glass design
-                                        SizedBox(
-                                          width: double.infinity,
-                                          child:
-                                              BlocBuilder<AuthBloc, AuthState>(
-                                            builder: (context, state) {
-                                              final isLoading =
-                                                  state is AuthLoading;
-                                              return LiquidButton(
-                                                onPressed:
-                                                    isLoading ? null : _login,
-                                                type: LiquidButtonType.filled,
-                                                size: LiquidButtonSize.large,
-                                                width: double.infinity,
-                                                child: isLoading
-                                                    ? const SizedBox(
-                                                        height: 20,
-                                                        width: 20,
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                          strokeWidth: 2,
-                                                          color: Colors.white,
-                                                        ),
-                                                      )
-                                                    : Text(
-                                                        l10n.login,
-                                                        style: const TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                              );
-                                            },
+                                  if (_isInitializing)
+                                    Column(
+                                      children: [
+                                        const CircularProgressIndicator(),
+                                        const SizedBox(height: 16),
+                                        Text(
+                                          l10n.initializingSystem,
+                                          style: TextStyle(
+                                            color: isDark ? Colors.white : Colors.black87,
                                           ),
                                         ),
                                       ],
+                                    )
+                                  else
+                                    Form(
+                                      key: _formKey,
+                                      child: Column(
+                                        children: [
+                                          // Username field
+                                          TextFormField(
+                                            controller: _usernameController,
+                                            decoration: InputDecoration(
+                                              labelText: l10n.username,
+                                              prefixIcon: const Icon(Icons.person),
+                                              border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                              filled: true,
+                                              fillColor: isDark
+                                                  ? Colors.white.withValues(alpha: 0.1)
+                                                  : Colors.white.withValues(alpha: 0.5),
+                                            ),
+                                            textInputAction: TextInputAction.next,
+                                            validator: (value) {
+                                              if (value == null || value.isEmpty) {
+                                                return l10n.pleaseEnterUsername;
+                                              }
+                                              return null;
+                                            },
+                                            onFieldSubmitted: (_) {
+                                              FocusScope.of(context).nextFocus();
+                                            },
+                                          ),
+                                          const SizedBox(height: 20),
+
+                                          // Password field
+                                          TextFormField(
+                                            controller: _passwordController,
+                                            decoration: InputDecoration(
+                                              labelText: l10n.password,
+                                              prefixIcon: const Icon(Icons.lock),
+                                              suffixIcon: IconButton(
+                                                icon: Icon(
+                                                  _obscurePassword
+                                                      ? Icons.visibility
+                                                      : Icons.visibility_off,
+                                                ),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    _obscurePassword = !_obscurePassword;
+                                                  });
+                                                },
+                                              ),
+                                              border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                              filled: true,
+                                              fillColor: isDark
+                                                  ? Colors.white.withValues(alpha: 0.1)
+                                                  : Colors.white.withValues(alpha: 0.5),
+                                            ),
+                                            obscureText: _obscurePassword,
+                                            validator: (value) {
+                                              if (value == null || value.isEmpty) {
+                                                return l10n.pleaseEnterPassword;
+                                              }
+                                              return null;
+                                            },
+                                            onFieldSubmitted: (_) {
+                                              if (_formKey.currentState!.validate()) {
+                                                _login();
+                                              }
+                                            },
+                                          ),
+                                          const SizedBox(height: 40),
+
+                                          // Login button
+                                          SizedBox(
+                                            width: double.infinity,
+                                            child: BlocBuilder<AuthBloc, AuthState>(
+                                              builder: (context, state) {
+                                                final isLoading = state is AuthLoading;
+                                                return ElevatedButton(
+                                                  onPressed: isLoading ? null : _login,
+                                                  style: ElevatedButton.styleFrom(
+                                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(12),
+                                                    ),
+                                                    backgroundColor: theme.colorScheme.primary,
+                                                    foregroundColor: Colors.white,
+                                                  ),
+                                                  child: isLoading
+                                                      ? const SizedBox(
+                                                          height: 20,
+                                                          width: 20,
+                                                          child: CircularProgressIndicator(
+                                                            strokeWidth: 2,
+                                                            color: Colors.white,
+                                                          ),
+                                                        )
+                                                      : Text(
+                                                          l10n.login,
+                                                          style: const TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight: FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                              ],
+                                ],
+                              ),
                             ),
-                          );
-                        },
-                      ),
-                    ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
             ),
 
-            // Notification Bar with Liquid Glass design
+            // Notification Bar with glass effect
             if (_notificationMessage != null)
               Positioned(
                 top: 0,
@@ -509,16 +565,71 @@ class _LoginScreenState extends State<LoginScreen>
                 child: SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.all(16),
-                    child: LiquidAlert(
-                      type: _isNotificationError
-                          ? LiquidAlertType.error
-                          : LiquidAlertType.success,
-                      message: _notificationMessage!,
-                      onDismiss: () {
-                        setState(() {
-                          _notificationMessage = null;
-                        });
-                      },
+                    child: GlassmorphicContainer(
+                      width: double.infinity,
+                      height: null,
+                      borderRadius: 12,
+                      blur: 20,
+                      alignment: Alignment.center,
+                      border: 2,
+                      linearGradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: _isNotificationError
+                            ? [
+                                Colors.red.withValues(alpha: 0.3),
+                                Colors.red.withValues(alpha: 0.2),
+                              ]
+                            : [
+                                Colors.green.withValues(alpha: 0.3),
+                                Colors.green.withValues(alpha: 0.2),
+                              ],
+                      ),
+                      borderGradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: _isNotificationError
+                            ? [
+                                Colors.red.withValues(alpha: 0.6),
+                                Colors.red.withValues(alpha: 0.3),
+                              ]
+                            : [
+                                Colors.green.withValues(alpha: 0.6),
+                                Colors.green.withValues(alpha: 0.3),
+                              ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        child: Row(
+                          children: [
+                            Icon(
+                              _isNotificationError ? Icons.error_outline : Icons.check_circle_outline,
+                              color: _isNotificationError ? Colors.red : Colors.green,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                _notificationMessage!,
+                                style: TextStyle(
+                                  color: isDark ? Colors.white : Colors.black87,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                Icons.close,
+                                color: isDark ? Colors.white : Colors.black87,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _notificationMessage = null;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -531,7 +642,6 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   void dispose() {
-    _animationController.dispose();
     _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();

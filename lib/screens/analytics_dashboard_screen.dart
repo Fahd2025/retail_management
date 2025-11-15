@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/dashboard/dashboard_bloc.dart';
 import '../blocs/dashboard/dashboard_event.dart';
@@ -52,7 +52,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                LiquidLoader(size: 48),
+                CircularProgressIndicator(),
                 SizedBox(height: 16.h),
                 Text(
                   l10n.loadingDashboardData,
@@ -101,23 +101,14 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                   ),
                 ),
                 SizedBox(height: 24.h),
-                LiquidButton(
-                  onTap: () {
+                ElevatedButton.icon(
+                  onPressed: () {
                     context
                         .read<DashboardBloc>()
                         .add(const RefreshDashboardEvent());
                   },
-                  type: LiquidButtonType.filled,
-                  size: LiquidButtonSize.medium,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.refresh, color: Colors.white),
-                      SizedBox(width: 8.w),
-                      Text(l10n.retry,
-                          style: const TextStyle(color: Colors.white)),
-                    ],
-                  ),
+                  icon: const Icon(Icons.refresh),
+                  label: Text(l10n.retry),
                 ),
               ],
             ),
@@ -287,57 +278,74 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
             SizedBox(height: 16.h),
 
             // Footer with statistics summary
-            LiquidCard(
-              elevation: 4,
-              blur: 20,
+            GlassmorphicContainer(
+              width: double.infinity,
+              height: null,
               borderRadius: 12.r,
-              child: Padding(
-                padding: EdgeInsets.all(16.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.invoiceStatistics,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+              blur: 20,
+              alignment: Alignment.topLeft,
+              border: 2,
+              linearGradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  theme.colorScheme.surface.withOpacity(0.15),
+                  theme.colorScheme.surface.withOpacity(0.05),
+                ],
+              ),
+              borderGradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  theme.colorScheme.primary.withOpacity(0.2),
+                  theme.colorScheme.primary.withOpacity(0.1),
+                ],
+              ),
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.invoiceStatistics,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildStatItem(
+                        context,
+                        l10n.total,
+                        statistics.totalInvoices.toString(),
+                        Colors.blue,
+                        Icons.receipt_long,
                       ),
-                    ),
-                    SizedBox(height: 12.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildStatItem(
-                          context,
-                          l10n.total,
-                          statistics.totalInvoices.toString(),
-                          Colors.blue,
-                          Icons.receipt_long,
-                        ),
-                        _buildStatItem(
-                          context,
-                          l10n.complete,
-                          statistics.completedInvoices.toString(),
-                          Colors.green,
-                          Icons.check_circle,
-                        ),
-                        _buildStatItem(
-                          context,
-                          l10n.return_sale,
-                          statistics.returnedInvoices.toString(),
-                          Colors.orange,
-                          Icons.undo,
-                        ),
-                        _buildStatItem(
-                          context,
-                          l10n.cancelled,
-                          statistics.cancelledInvoices.toString(),
-                          Colors.red,
-                          Icons.cancel,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                      _buildStatItem(
+                        context,
+                        l10n.complete,
+                        statistics.completedInvoices.toString(),
+                        Colors.green,
+                        Icons.check_circle,
+                      ),
+                      _buildStatItem(
+                        context,
+                        l10n.return_sale,
+                        statistics.returnedInvoices.toString(),
+                        Colors.orange,
+                        Icons.undo,
+                      ),
+                      _buildStatItem(
+                        context,
+                        l10n.cancelled,
+                        statistics.cancelledInvoices.toString(),
+                        Colors.red,
+                        Icons.cancel,
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
             SizedBox(height: 32.h),
@@ -359,13 +367,25 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          LiquidContainer(
+          GlassmorphicContainer(
             width: 48.w,
             height: 48.w,
             borderRadius: 12.r,
             blur: 10,
-            opacity: 0.15,
-            color: color,
+            alignment: Alignment.center,
+            border: 2,
+            linearGradient: LinearGradient(
+              colors: [
+                color.withOpacity(0.15),
+                color.withOpacity(0.05),
+              ],
+            ),
+            borderGradient: LinearGradient(
+              colors: [
+                color.withOpacity(0.3),
+                color.withOpacity(0.2),
+              ],
+            ),
             child: Icon(
               icon,
               color: color,
@@ -400,8 +420,8 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => Center(
-          child: LiquidLoader(size: 48),
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
         ),
       );
 

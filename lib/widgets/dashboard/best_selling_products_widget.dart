@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../../models/dashboard_statistics.dart';
 import '../../utils/currency_helper.dart';
@@ -24,162 +24,222 @@ class BestSellingProductsWidget extends StatelessWidget {
     final currencyFormatter = CurrencyHelper.getCurrencyFormatterSync();
     final numberFormatter = NumberFormat('#,##0.##');
 
-    return LiquidCard(
-      elevation: 3,
-      blur: 18,
-      opacity: 0.15,
+    return GlassmorphicContainer(
+      width: double.infinity,
+      height: null,
       borderRadius: 12,
-      padding: EdgeInsets.all(16.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.trending_up,
-                color: theme.colorScheme.primary,
-                size: 24.sp,
-              ),
-              SizedBox(width: 8.w),
-              Text(
-                l10n.bestSellingProducts,
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 16.h),
-          if (isLoading)
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(32.h),
-                child: LiquidLoader(
-                  size: 60,
+      blur: 18,
+      alignment: Alignment.center,
+      border: 2,
+      linearGradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          theme.colorScheme.surface.withValues(alpha: 0.15),
+          theme.colorScheme.surface.withValues(alpha: 0.05),
+        ],
+      ),
+      borderGradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          theme.colorScheme.surface.withValues(alpha: 0.5),
+          theme.colorScheme.surface.withValues(alpha: 0.2),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.trending_up,
                   color: theme.colorScheme.primary,
+                  size: 24.sp,
                 ),
-              ),
-            )
-          else if (products.isEmpty)
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(32.h),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.inbox_outlined,
-                      size: 48.sp,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      l10n.noSalesDataAvailable,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color:
-                            theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                      ),
-                    ),
-                  ],
+                SizedBox(width: 8.w),
+                Text(
+                  l10n.bestSellingProducts,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            )
-          else
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: products.length,
-              separatorBuilder: (context, index) => Divider(height: 1.h),
-              itemBuilder: (context, index) {
-                final product = products[index];
-                return ListTile(
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 8.w,
-                    vertical: 8.h,
-                  ),
-                  leading: LiquidContainer(
-                    width: 50.w,
-                    height: 50.w,
-                    borderRadius: 8,
-                    blur: 10,
-                    opacity: 0.1,
-                    child: product.productImage != null &&
-                            product.productImage!.isNotEmpty
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(8.r),
-                            child: Image.asset(
-                              product.productImage!,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Icon(
-                                  Icons.shopping_bag,
-                                  color: theme.colorScheme.primary,
-                                  size: 24.sp,
-                                );
-                              },
-                            ),
-                          )
-                        : Icon(
-                            Icons.shopping_bag,
-                            color: theme.colorScheme.primary,
-                            size: 24.sp,
-                          ),
-                  ),
-                  title: Text(
-                    product.productName,
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
+              ],
+            ),
+            SizedBox(height: 16.h),
+            if (isLoading)
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.all(32.h),
+                  child: SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: CircularProgressIndicator(
+                      color: theme.colorScheme.primary,
+                      strokeWidth: 4,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                ),
+              )
+            else if (products.isEmpty)
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.all(32.h),
+                  child: Column(
                     children: [
-                      SizedBox(height: 4.h),
+                      Icon(
+                        Icons.inbox_outlined,
+                        size: 48.sp,
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                      ),
+                      SizedBox(height: 8.h),
                       Text(
-                        '${l10n.quantitySold}: ${numberFormatter.format(product.totalQuantitySold)} • ${l10n.salesCount(product.transactionCount)}',
-                        style: theme.textTheme.bodySmall?.copyWith(
+                        l10n.noSalesDataAvailable,
+                        style: theme.textTheme.bodyLarge?.copyWith(
                           color: theme.colorScheme.onSurface
                               .withValues(alpha: 0.6),
                         ),
                       ),
                     ],
                   ),
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        currencyFormatter.format(product.totalRevenue),
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.primary,
-                        ),
+                ),
+              )
+            else
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: products.length,
+                separatorBuilder: (context, index) => Divider(height: 1.h),
+                itemBuilder: (context, index) {
+                  final product = products[index];
+                  return ListTile(
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 8.h,
+                    ),
+                    leading: GlassmorphicContainer(
+                      width: 50.w,
+                      height: 50.w,
+                      borderRadius: 8,
+                      blur: 10,
+                      alignment: Alignment.center,
+                      border: 2,
+                      linearGradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          theme.colorScheme.surface.withValues(alpha: 0.1),
+                          theme.colorScheme.surface.withValues(alpha: 0.05),
+                        ],
                       ),
-                      SizedBox(height: 2.h),
-                      LiquidContainer(
-                        borderRadius: 4,
-                        blur: 8,
-                        opacity: 0.1,
-                        color: theme.colorScheme.primary,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.w,
-                          vertical: 2.h,
-                        ),
-                        child: Text(
-                          '#${index + 1}',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: theme.colorScheme.primary,
-                            fontWeight: FontWeight.bold,
+                      borderGradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          theme.colorScheme.surface.withValues(alpha: 0.5),
+                          theme.colorScheme.surface.withValues(alpha: 0.2),
+                        ],
+                      ),
+                      child: product.productImage != null &&
+                              product.productImage!.isNotEmpty
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(8.r),
+                              child: Image.asset(
+                                product.productImage!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Icon(
+                                    Icons.shopping_bag,
+                                    color: theme.colorScheme.primary,
+                                    size: 24.sp,
+                                  );
+                                },
+                              ),
+                            )
+                          : Icon(
+                              Icons.shopping_bag,
+                              color: theme.colorScheme.primary,
+                              size: 24.sp,
+                            ),
+                    ),
+                    title: Text(
+                      product.productName,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 4.h),
+                        Text(
+                          '${l10n.quantitySold}: ${numberFormatter.format(product.totalQuantitySold)} • ${l10n.salesCount(product.transactionCount)}',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.6),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-        ],
+                      ],
+                    ),
+                    trailing: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          currencyFormatter.format(product.totalRevenue),
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.primary,
+                          ),
+                        ),
+                        SizedBox(height: 2.h),
+                        GlassmorphicContainer(
+                          width: null,
+                          height: null,
+                          borderRadius: 4,
+                          blur: 8,
+                          alignment: Alignment.center,
+                          border: 1,
+                          linearGradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              theme.colorScheme.primary.withValues(alpha: 0.1),
+                              theme.colorScheme.primary.withValues(alpha: 0.05),
+                            ],
+                          ),
+                          borderGradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              theme.colorScheme.primary.withValues(alpha: 0.5),
+                              theme.colorScheme.primary.withValues(alpha: 0.2),
+                            ],
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 2.h,
+                          ),
+                          child: Text(
+                            '#${index + 1}',
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: theme.colorScheme.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+          ],
+        ),
       ),
     );
   }

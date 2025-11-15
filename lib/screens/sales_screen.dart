@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/sale/sale_bloc.dart';
 import '../blocs/sale/sale_event.dart';
@@ -77,7 +77,7 @@ class _SalesScreenState extends State<SalesScreen> {
       Sale sale, DateFormat dateFormat, BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final liquidTheme = LiquidTheme.of(context);
+    final textColor = theme.colorScheme.onSurface;
     final vatEnabled = context.watch<AppConfigBloc>().state.vatEnabled;
     final statusColor = sale.status == SaleStatus.completed
         ? Colors.green
@@ -91,28 +91,58 @@ class _SalesScreenState extends State<SalesScreen> {
             ? l10n.return_sale
             : sale.status.toString().split('.').last.toUpperCase();
 
-    return LiquidCard(
-      margin: const EdgeInsets.only(bottom: 12),
-      elevation: 3,
-      blur: 18,
-      opacity: 0.15,
+    return GlassmorphicContainer(
+      width: double.infinity,
+      height: null,
       borderRadius: 16,
+      blur: 18,
+      alignment: Alignment.centerLeft,
+      border: 2,
+      linearGradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          theme.colorScheme.surface.withOpacity(0.15),
+          theme.colorScheme.surface.withOpacity(0.05),
+        ],
+      ),
+      borderGradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          theme.colorScheme.primary.withOpacity(0.2),
+          theme.colorScheme.primary.withOpacity(0.1),
+        ],
+      ),
+      margin: const EdgeInsets.only(bottom: 12),
       padding: EdgeInsets.zero,
       child: ExpansionTile(
-        leading: LiquidContainer(
+        leading: GlassmorphicContainer(
           width: 48,
           height: 48,
           borderRadius: 24,
           blur: 12,
-          opacity: 0.2,
-          backgroundColor: statusColor,
+          alignment: Alignment.center,
+          border: 2,
+          linearGradient: LinearGradient(
+            colors: [
+              statusColor.withOpacity(0.2),
+              statusColor.withOpacity(0.1),
+            ],
+          ),
+          borderGradient: LinearGradient(
+            colors: [
+              statusColor.withOpacity(0.3),
+              statusColor.withOpacity(0.2),
+            ],
+          ),
           child: Icon(Icons.receipt, color: statusColor, size: 24),
         ),
         title: Text(
           l10n.invoiceLabel(sale.invoiceNumber),
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: liquidTheme.textColor,
+            color: textColor,
           ),
         ),
         subtitle: Column(
@@ -122,7 +152,7 @@ class _SalesScreenState extends State<SalesScreen> {
               l10n.dateLabel(dateFormat.format(sale.saleDate)),
               style: TextStyle(
                 fontSize: 13,
-                color: liquidTheme.textColor.withValues(alpha: 0.7),
+                color: textColor.withValues(alpha: 0.7),
               ),
             ),
             Text(
@@ -155,24 +185,20 @@ class _SalesScreenState extends State<SalesScreen> {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            LiquidButton(
-              type: LiquidButtonType.icon,
-              size: LiquidButtonSize.small,
-              onTap: () => _reprintInvoice(sale),
-              child: Icon(
+            IconButton(
+              icon: Icon(
                 Icons.print,
                 color: theme.colorScheme.primary,
               ),
+              onPressed: () => _reprintInvoice(sale),
             ),
             if (sale.status == SaleStatus.completed)
               BlocBuilder<AuthBloc, AuthState>(
                 builder: (context, authState) {
                   if (authState is Authenticated && authState.isAdmin) {
-                    return LiquidButton(
-                      type: LiquidButtonType.icon,
-                      size: LiquidButtonSize.small,
-                      onTap: () => _returnSale(sale),
-                      child: const Icon(Icons.undo, color: Colors.orange),
+                    return IconButton(
+                      icon: const Icon(Icons.undo, color: Colors.orange),
+                      onPressed: () => _returnSale(sale),
                     );
                   }
                   return const SizedBox.shrink();
@@ -190,7 +216,7 @@ class _SalesScreenState extends State<SalesScreen> {
                   l10n.itemsLabel,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: liquidTheme.textColor,
+                    color: textColor,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -204,8 +230,7 @@ class _SalesScreenState extends State<SalesScreen> {
                           child: Text(
                             '${item.productName} x ${item.quantity}',
                             style: TextStyle(
-                              color:
-                                  liquidTheme.textColor.withValues(alpha: 0.8),
+                              color: textColor.withValues(alpha: 0.8),
                             ),
                           ),
                         ),
@@ -213,25 +238,25 @@ class _SalesScreenState extends State<SalesScreen> {
                           CurrencyHelper.formatCurrencySync(item.total),
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: liquidTheme.textColor,
+                            color: textColor,
                           ),
                         ),
                       ],
                     ),
                   );
                 }).toList(),
-                Divider(color: liquidTheme.textColor.withValues(alpha: 0.2)),
+                Divider(color: textColor.withValues(alpha: 0.2)),
                 if (vatEnabled) ...[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         l10n.subtotalLabel,
-                        style: TextStyle(color: liquidTheme.textColor),
+                        style: TextStyle(color: textColor),
                       ),
                       Text(
                         CurrencyHelper.formatCurrencySync(sale.subtotal),
-                        style: TextStyle(color: liquidTheme.textColor),
+                        style: TextStyle(color: textColor),
                       ),
                     ],
                   ),
@@ -240,15 +265,15 @@ class _SalesScreenState extends State<SalesScreen> {
                     children: [
                       Text(
                         l10n.vatLabel,
-                        style: TextStyle(color: liquidTheme.textColor),
+                        style: TextStyle(color: textColor),
                       ),
                       Text(
                         CurrencyHelper.formatCurrencySync(sale.vatAmount),
-                        style: TextStyle(color: liquidTheme.textColor),
+                        style: TextStyle(color: textColor),
                       ),
                     ],
                   ),
-                  Divider(color: liquidTheme.textColor.withValues(alpha: 0.2)),
+                  Divider(color: textColor.withValues(alpha: 0.2)),
                 ],
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -258,7 +283,7 @@ class _SalesScreenState extends State<SalesScreen> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
-                        color: liquidTheme.textColor,
+                        color: textColor,
                       ),
                     ),
                     Text(
@@ -278,11 +303,11 @@ class _SalesScreenState extends State<SalesScreen> {
                     children: [
                       Text(
                         l10n.paidLabel,
-                        style: TextStyle(color: liquidTheme.textColor),
+                        style: TextStyle(color: textColor),
                       ),
                       Text(
                         CurrencyHelper.formatCurrencySync(sale.paidAmount),
-                        style: TextStyle(color: liquidTheme.textColor),
+                        style: TextStyle(color: textColor),
                       ),
                     ],
                   ),
@@ -292,11 +317,11 @@ class _SalesScreenState extends State<SalesScreen> {
                       children: [
                         Text(
                           l10n.changeLabel,
-                          style: TextStyle(color: liquidTheme.textColor),
+                          style: TextStyle(color: textColor),
                         ),
                         Text(
                           CurrencyHelper.formatCurrencySync(sale.changeAmount),
-                          style: TextStyle(color: liquidTheme.textColor),
+                          style: TextStyle(color: textColor),
                         ),
                       ],
                     ),
@@ -312,29 +337,29 @@ class _SalesScreenState extends State<SalesScreen> {
   Future<void> _returnSale(Sale sale) async {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final textColor = theme.colorScheme.onSurface;
 
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => LiquidDialog(
-        title: l10n.returnSale,
+      builder: (context) => AlertDialog(
+        backgroundColor: theme.colorScheme.surface,
+        title: Text(l10n.returnSale),
         content: Text(
           l10n.returnSaleConfirm(sale.invoiceNumber),
-          style: TextStyle(color: LiquidTheme.of(context).textColor),
+          style: TextStyle(color: textColor),
         ),
         actions: [
-          LiquidButton(
-            onTap: () => Navigator.pop(context, false),
-            type: LiquidButtonType.text,
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
             child: Text(l10n.cancel),
           ),
-          LiquidButton(
-            onTap: () => Navigator.pop(context, true),
-            type: LiquidButtonType.filled,
-            backgroundColor: Colors.orange,
-            child: Text(
-              l10n.returnSale,
-              style: const TextStyle(color: Colors.white),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange,
+              foregroundColor: Colors.white,
             ),
+            child: Text(l10n.returnSale),
           ),
         ],
       ),
@@ -366,15 +391,15 @@ class _SalesScreenState extends State<SalesScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final liquidTheme = LiquidTheme.of(context);
+    final textColor = theme.colorScheme.onSurface;
     final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
 
-    return LiquidScaffold(
+    return Scaffold(
       body: BlocBuilder<SaleBloc, SaleState>(
         builder: (context, state) {
           if (state is SaleLoading) {
             return Center(
-              child: LiquidLoader(size: 60),
+              child: CircularProgressIndicator(),
             );
           }
 
@@ -395,22 +420,35 @@ class _SalesScreenState extends State<SalesScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  LiquidContainer(
+                  GlassmorphicContainer(
                     width: 120,
                     height: 120,
                     borderRadius: 60,
                     blur: 15,
-                    opacity: 0.2,
+                    alignment: Alignment.center,
+                    border: 2,
+                    linearGradient: LinearGradient(
+                      colors: [
+                        theme.colorScheme.surface.withOpacity(0.2),
+                        theme.colorScheme.surface.withOpacity(0.1),
+                      ],
+                    ),
+                    borderGradient: LinearGradient(
+                      colors: [
+                        theme.colorScheme.primary.withOpacity(0.2),
+                        theme.colorScheme.primary.withOpacity(0.1),
+                      ],
+                    ),
                     child: Icon(
                       Icons.receipt_long,
                       size: 64,
-                      color: liquidTheme.textColor.withValues(alpha: 0.3),
+                      color: textColor.withValues(alpha: 0.3),
                     ),
                   ),
                   const SizedBox(height: 16),
                   Text(
                     l10n.noSalesFound,
-                    style: TextStyle(color: liquidTheme.textColor),
+                    style: TextStyle(color: textColor),
                   ),
                 ],
               ),
@@ -436,22 +474,39 @@ class _SalesScreenState extends State<SalesScreen> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(16),
-                        child: LiquidCard(
-                          elevation: 4,
-                          blur: 20,
-                          opacity: 0.15,
+                        child: GlassmorphicContainer(
+                          width: double.infinity,
+                          height: null,
                           borderRadius: 16,
+                          blur: 20,
+                          alignment: Alignment.topLeft,
+                          border: 2,
+                          linearGradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              theme.colorScheme.surface.withOpacity(0.15),
+                              theme.colorScheme.surface.withOpacity(0.05),
+                            ],
+                          ),
+                          borderGradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              theme.colorScheme.primary.withOpacity(0.2),
+                              theme.colorScheme.primary.withOpacity(0.1),
+                            ],
+                          ),
                           padding: const EdgeInsets.all(16),
                           child: DataTable(
                             columnSpacing: 24,
                             horizontalMargin: 16,
                             headingTextStyle: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: liquidTheme.textColor,
+                              color: textColor,
                             ),
                             dataTextStyle: TextStyle(
-                              color:
-                                  liquidTheme.textColor.withValues(alpha: 0.9),
+                              color: textColor.withValues(alpha: 0.9),
                             ),
                             columns: [
                               DataColumn(label: Text(l10n.invoiceLabel(''))),
@@ -519,15 +574,13 @@ class _SalesScreenState extends State<SalesScreen> {
                                   Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      LiquidButton(
-                                        type: LiquidButtonType.icon,
-                                        size: LiquidButtonSize.small,
-                                        onTap: () => _reprintInvoice(sale),
-                                        child: Icon(
+                                      IconButton(
+                                        icon: Icon(
                                           Icons.print,
                                           size: 20,
                                           color: theme.colorScheme.primary,
                                         ),
+                                        onPressed: () => _reprintInvoice(sale),
                                       ),
                                       const SizedBox(width: 4),
                                       if (sale.status == SaleStatus.completed)
@@ -535,15 +588,13 @@ class _SalesScreenState extends State<SalesScreen> {
                                           builder: (context, authState) {
                                             if (authState is Authenticated &&
                                                 authState.isAdmin) {
-                                              return LiquidButton(
-                                                type: LiquidButtonType.icon,
-                                                size: LiquidButtonSize.small,
-                                                onTap: () => _returnSale(sale),
-                                                child: const Icon(
+                                              return IconButton(
+                                                icon: const Icon(
                                                   Icons.undo,
                                                   size: 20,
                                                   color: Colors.orange,
                                                 ),
+                                                onPressed: () => _returnSale(sale),
                                               );
                                             }
                                             return const SizedBox.shrink();

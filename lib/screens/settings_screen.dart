@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:file_picker/file_picker.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:open_file/open_file.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import '../database/drift_database.dart';
 import '../models/company_info.dart';
 import '../services/sync_service.dart';
@@ -27,7 +27,7 @@ import 'package:uuid/uuid.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../utils/currency_helper.dart';
 
-/// Settings Screen with Liquid Glass UI Design
+/// Settings Screen with Glassmorphism Design
 ///
 /// Features:
 /// - Beautiful glass morphism design
@@ -239,29 +239,57 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       builder: (context) => Dialog(
         backgroundColor: Colors.transparent,
-        child: LiquidCard(
-          elevation: 8,
-          blur: 25,
-          opacity: 0.18,
+        child: GlassmorphicContainer(
+          width: 500,
+          height: null,
           borderRadius: 24,
+          blur: 25,
+          alignment: Alignment.center,
+          border: 2,
+          linearGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              theme.colorScheme.surface.withOpacity(0.18),
+              theme.colorScheme.surface.withOpacity(0.08),
+            ],
+          ),
+          borderGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              theme.colorScheme.primary.withOpacity(0.3),
+              theme.colorScheme.primary.withOpacity(0.1),
+            ],
+          ),
           padding: const EdgeInsets.all(32),
-          constraints: const BoxConstraints(maxWidth: 500),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               // Success icon
-              LiquidContainer(
+              GlassmorphicContainer(
                 width: 80,
                 height: 80,
                 borderRadius: 40,
                 blur: 15,
-                opacity: 0.2,
-                child: Center(
-                  child: Icon(
-                    Icons.check_circle,
-                    color: Colors.green[600],
-                    size: 48,
-                  ),
+                alignment: Alignment.center,
+                border: 2,
+                linearGradient: LinearGradient(
+                  colors: [
+                    Colors.green.withOpacity(0.2),
+                    Colors.green.withOpacity(0.1),
+                  ],
+                ),
+                borderGradient: LinearGradient(
+                  colors: [
+                    Colors.green.withOpacity(0.3),
+                    Colors.green.withOpacity(0.2),
+                  ],
+                ),
+                child: Icon(
+                  Icons.check_circle,
+                  color: Colors.green[600],
+                  size: 48,
                 ),
               ),
               const SizedBox(height: 24),
@@ -285,16 +313,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(height: 24),
 
               // Info banner
-              LiquidBanner(
-                type: LiquidBannerType.info,
-                icon: Icons.info_outline,
-                child: Text(
-                  isWebDownload
-                      ? 'Check your browser\'s downloads folder'
-                      : isDirectory
-                          ? 'Multiple files exported to folder'
-                          : 'File saved successfully',
-                  style: theme.textTheme.bodySmall,
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: Colors.blue.withOpacity(0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline, color: Colors.blue, size: 20),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        isWebDownload
+                            ? 'Check your browser\'s downloads folder'
+                            : isDirectory
+                                ? 'Multiple files exported to folder'
+                                : 'File saved successfully',
+                        style: theme.textTheme.bodySmall,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 24),
@@ -305,8 +348,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   // Open File button (only for non-web platforms)
                   if (!isWebDownload && !kIsWeb) ...[
-                    LiquidButton(
-                      onTap: () async {
+                    TextButton(
+                      onPressed: () async {
                         try {
                           if (isDirectory) {
                             final dir = Directory(filePath);
@@ -328,8 +371,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           }
                         }
                       },
-                      type: LiquidButtonType.outlined,
-                      size: LiquidButtonSize.medium,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -344,8 +385,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                   // Share button (only for non-web single files)
                   if (!isWebDownload && !kIsWeb && !isDirectory) ...[
-                    LiquidButton(
-                      onTap: () async {
+                    TextButton(
+                      onPressed: () async {
                         try {
                           final file = XFile(filePath);
                           await Share.shareXFiles(
@@ -362,8 +403,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           }
                         }
                       },
-                      type: LiquidButtonType.outlined,
-                      size: LiquidButtonSize.medium,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -377,10 +416,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ],
 
                   // Close button
-                  LiquidButton(
-                    onTap: () => Navigator.pop(context),
-                    type: LiquidButtonType.filled,
-                    size: LiquidButtonSize.medium,
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
                     child: Text(l10n.close),
                   ),
                 ],
@@ -460,7 +497,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final liquidTheme = LiquidTheme.of(context);
+    final textColor = theme.colorScheme.onSurface;
 
     return Scaffold(
       body: LayoutBuilder(
@@ -539,9 +576,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildAppearanceSection() {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final liquidTheme = LiquidTheme.of(context);
+    final textColor = theme.colorScheme.onSurface;
 
-    return _buildLiquidSection(
+    return _buildGlassSection(
       title: l10n.appearance,
       icon: Icons.palette,
       subtitle: l10n.changesAppliedImmediately,
@@ -553,7 +590,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               return _buildGlassTile(
                 leading: Icon(
                   configState.isDarkMode ? Icons.dark_mode : Icons.light_mode,
-                  color: liquidTheme.textColor,
+                  color: textColor,
                 ),
                 title: l10n.theme,
                 subtitle:
@@ -576,15 +613,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               return _buildGlassTile(
                 leading: Icon(
                   Icons.language,
-                  color: liquidTheme.textColor,
+                  color: textColor,
                 ),
                 title: l10n.language,
                 subtitle: _getLocaleName(configState.locale),
-                trailing: LiquidPopupMenu<Locale>(
-                  icon:
-                      Icon(Icons.arrow_drop_down, color: liquidTheme.textColor),
-                  items: _getSupportedLocales().map((locale) {
-                    return LiquidPopupMenuItem(
+                trailing: PopupMenuButton<Locale>(
+                  icon: Icon(Icons.arrow_drop_down, color: textColor),
+                  itemBuilder: (context) => _getSupportedLocales().map((locale) {
+                    return PopupMenuItem(
                       value: locale,
                       child: Row(
                         children: [
@@ -616,7 +652,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
 
           const SizedBox(height: 24),
-          Divider(color: liquidTheme.textColor.withValues(alpha: 0.1)),
+          Divider(color: textColor.withValues(alpha: 0.1)),
           const SizedBox(height: 24),
 
           // Theme Color Selection
@@ -630,7 +666,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildPrintSettingsSection() {
     final l10n = AppLocalizations.of(context)!;
 
-    return _buildLiquidSection(
+    return _buildGlassSection(
       title: l10n.printSettings,
       icon: Icons.print,
       subtitle: l10n.configureInvoicePrintingOptions,
@@ -642,14 +678,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildCompanyInfoSection() {
     final l10n = AppLocalizations.of(context)!;
 
-    return _buildLiquidSection(
+    return _buildGlassSection(
       title: l10n.companyNameEnglish,
       icon: Icons.business,
       subtitle: l10n.businessDetailsAndContactInformation,
       child: _isLoading
           ? const Padding(
               padding: EdgeInsets.all(24),
-              child: Center(child: LiquidLoader(size: 40)),
+              child: Center(child: CircularProgressIndicator()),
             )
           : Form(
               key: _formKey,
@@ -689,12 +725,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const SizedBox(height: 24),
               _buildFormRow([
-                LiquidTextField(
+                _buildTextField(
                   controller: _nameController,
                   label: '${l10n.companyNameEnglish} *',
                   validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
                 ),
-                LiquidTextField(
+                _buildTextField(
                   controller: _nameArabicController,
                   label: '${l10n.companyNameArabic} *',
                   validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
@@ -702,13 +738,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ]),
               const SizedBox(height: 16),
               _buildFormRow([
-                LiquidTextField(
+                _buildTextField(
                   controller: _addressController,
                   label: '${l10n.addressEnglish} *',
                   maxLines: 2,
                   validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
                 ),
-                LiquidTextField(
+                _buildTextField(
                   controller: _addressArabicController,
                   label: '${l10n.addressArabic} *',
                   maxLines: 2,
@@ -717,12 +753,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ]),
               const SizedBox(height: 16),
               _buildFormRow([
-                LiquidTextField(
+                _buildTextField(
                   controller: _phoneController,
                   label: '${l10n.phone} *',
                   validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
                 ),
-                LiquidTextField(
+                _buildTextField(
                   controller: _emailController,
                   label: l10n.email,
                   keyboardType: TextInputType.emailAddress,
@@ -730,12 +766,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ]),
               const SizedBox(height: 16),
               _buildFormRow([
-                LiquidTextField(
+                _buildTextField(
                   controller: _vatNumberController,
                   label: '${l10n.vatNumber} *',
                   validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
                 ),
-                LiquidTextField(
+                _buildTextField(
                   controller: _crnNumberController,
                   label: '${l10n.crnNumber} *',
                   validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
@@ -772,51 +808,51 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              LiquidTextField(
+              _buildTextField(
                 controller: _nameController,
                 label: '${l10n.companyNameEnglish} *',
                 validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
               ),
               const SizedBox(height: 16),
-              LiquidTextField(
+              _buildTextField(
                 controller: _nameArabicController,
                 label: '${l10n.companyNameArabic} *',
                 validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
               ),
               const SizedBox(height: 16),
-              LiquidTextField(
+              _buildTextField(
                 controller: _addressController,
                 label: '${l10n.addressEnglish} *',
                 maxLines: 2,
                 validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
               ),
               const SizedBox(height: 16),
-              LiquidTextField(
+              _buildTextField(
                 controller: _addressArabicController,
                 label: '${l10n.addressArabic} *',
                 maxLines: 2,
                 validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
               ),
               const SizedBox(height: 16),
-              LiquidTextField(
+              _buildTextField(
                 controller: _phoneController,
                 label: '${l10n.phone} *',
                 validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
               ),
               const SizedBox(height: 16),
-              LiquidTextField(
+              _buildTextField(
                 controller: _emailController,
                 label: l10n.email,
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16),
-              LiquidTextField(
+              _buildTextField(
                 controller: _vatNumberController,
                 label: '${l10n.vatNumber} *',
                 validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
               ),
               const SizedBox(height: 16),
-              LiquidTextField(
+              _buildTextField(
                 controller: _crnNumberController,
                 label: '${l10n.crnNumber} *',
                 validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
@@ -829,6 +865,52 @@ class _SettingsScreenState extends State<SettingsScreen> {
           );
         }
       },
+    );
+  }
+
+  /// Build a text field with glassmorphic styling
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    int maxLines = 1,
+    TextInputType? keyboardType,
+    String? Function(String?)? validator,
+  }) {
+    final theme = Theme.of(context);
+    final textColor = theme.colorScheme.onSurface;
+
+    return GlassmorphicContainer(
+      width: double.infinity,
+      height: null,
+      borderRadius: 12,
+      blur: 15,
+      alignment: Alignment.centerLeft,
+      border: 2,
+      linearGradient: LinearGradient(
+        colors: [
+          theme.colorScheme.surface.withOpacity(0.15),
+          theme.colorScheme.surface.withOpacity(0.05),
+        ],
+      ),
+      borderGradient: LinearGradient(
+        colors: [
+          theme.colorScheme.primary.withOpacity(0.2),
+          theme.colorScheme.primary.withOpacity(0.1),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          border: InputBorder.none,
+          labelStyle: TextStyle(color: textColor),
+        ),
+        style: TextStyle(color: textColor),
+        maxLines: maxLines,
+        keyboardType: keyboardType,
+        validator: validator,
+      ),
     );
   }
 
@@ -851,11 +933,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return SizedBox(
       width: double.infinity,
-      child: LiquidButton(
-        onTap: _isLoading ? null : _saveCompanyInfo,
-        type: LiquidButtonType.filled,
-        size: LiquidButtonSize.large,
-        width: double.infinity,
+      child: ElevatedButton(
+        onPressed: _isLoading ? null : _saveCompanyInfo,
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+        ),
         child: _isLoading
             ? const SizedBox(
                 width: 20,
@@ -876,27 +958,42 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  /// Build currency dropdown selector with liquid glass design
+  /// Build currency dropdown selector with glass design
   Widget _buildCurrencyDropdown() {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final liquidTheme = LiquidTheme.of(context);
+    final textColor = theme.colorScheme.onSurface;
     final currencyOptions = _getCurrencyOptions();
 
-    return LiquidContainer(
-      blur: 15,
-      opacity: 0.15,
+    return GlassmorphicContainer(
+      width: double.infinity,
+      height: null,
       borderRadius: 12,
+      blur: 15,
+      alignment: Alignment.centerLeft,
+      border: 2,
+      linearGradient: LinearGradient(
+        colors: [
+          theme.colorScheme.surface.withOpacity(0.15),
+          theme.colorScheme.surface.withOpacity(0.05),
+        ],
+      ),
+      borderGradient: LinearGradient(
+        colors: [
+          theme.colorScheme.primary.withOpacity(0.2),
+          theme.colorScheme.primary.withOpacity(0.1),
+        ],
+      ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: DropdownButtonFormField<String>(
         value: _selectedCurrency,
         decoration: InputDecoration(
           labelText: '${l10n.currency} *',
           border: InputBorder.none,
-          prefixIcon: Icon(Icons.attach_money, color: liquidTheme.textColor),
-          labelStyle: TextStyle(color: liquidTheme.textColor),
+          prefixIcon: Icon(Icons.attach_money, color: textColor),
+          labelStyle: TextStyle(color: textColor),
         ),
-        style: TextStyle(color: liquidTheme.textColor),
+        style: TextStyle(color: textColor),
         dropdownColor: theme.colorScheme.surface,
         items: currencyOptions.entries.map((entry) {
           return DropdownMenuItem<String>(
@@ -920,9 +1017,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildVATSection() {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final liquidTheme = LiquidTheme.of(context);
+    final textColor = theme.colorScheme.onSurface;
 
-    return _buildLiquidSection(
+    return _buildGlassSection(
       title: l10n.defaultVatRate,
       icon: Icons.receipt_long,
       subtitle: l10n.setDefaultVatRateDescription,
@@ -932,11 +1029,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // VAT Enable/Disable Toggle
-              LiquidCard(
-                elevation: 0,
-                blur: 20,
-                opacity: 0.15,
+              GlassmorphicContainer(
+                width: double.infinity,
+                height: null,
                 borderRadius: 16,
+                blur: 20,
+                alignment: Alignment.centerLeft,
+                border: 2,
+                linearGradient: LinearGradient(
+                  colors: [
+                    theme.colorScheme.surface.withOpacity(0.15),
+                    theme.colorScheme.surface.withOpacity(0.05),
+                  ],
+                ),
+                borderGradient: LinearGradient(
+                  colors: [
+                    theme.colorScheme.primary.withOpacity(0.2),
+                    theme.colorScheme.primary.withOpacity(0.1),
+                  ],
+                ),
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
@@ -958,8 +1069,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 ? l10n.vatEnabledDescription
                                 : l10n.vatDisabledDescription,
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color:
-                                  liquidTheme.textColor.withValues(alpha: 0.7),
+                              color: textColor.withValues(alpha: 0.7),
                             ),
                           ),
                         ],
@@ -987,34 +1097,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       return Row(
                         children: [
                           Expanded(
-                            child: LiquidTextField(
-                              key: ValueKey(configState.vatRate),
-                              initialValue: configState.vatRate.toString(),
+                            child: _buildTextField(
+                              controller: TextEditingController(text: configState.vatRate.toString()),
                               label: l10n.vatRateLabel,
-                              prefixIcon: const Icon(Icons.percent),
-                              hint: l10n.vatRateHint,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
-                              onChanged: (value) {
-                                final vatRate = double.tryParse(value);
-                                if (vatRate != null &&
-                                    vatRate >= 0 &&
-                                    vatRate <= 100) {
-                                  context
-                                      .read<AppConfigBloc>()
-                                      .add(UpdateVatRateEvent(vatRate));
-                                }
-                              },
+                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
                             ),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
-                            child: LiquidContainer(
-                              padding: const EdgeInsets.all(16),
-                              blur: 15,
-                              opacity: 0.15,
+                            child: GlassmorphicContainer(
+                              width: double.infinity,
+                              height: null,
                               borderRadius: 12,
+                              blur: 15,
+                              alignment: Alignment.center,
+                              border: 2,
+                              linearGradient: LinearGradient(
+                                colors: [
+                                  theme.colorScheme.surface.withOpacity(0.15),
+                                  theme.colorScheme.surface.withOpacity(0.05),
+                                ],
+                              ),
+                              borderGradient: LinearGradient(
+                                colors: [
+                                  theme.colorScheme.primary.withOpacity(0.2),
+                                  theme.colorScheme.primary.withOpacity(0.1),
+                                ],
+                              ),
+                              padding: const EdgeInsets.all(16),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -1039,32 +1149,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     } else {
                       return Column(
                         children: [
-                          LiquidTextField(
-                            key: ValueKey(configState.vatRate),
-                            initialValue: configState.vatRate.toString(),
+                          _buildTextField(
+                            controller: TextEditingController(text: configState.vatRate.toString()),
                             label: l10n.vatRateLabel,
-                            prefixIcon: const Icon(Icons.percent),
-                            hint: l10n.vatRateHint,
-                            keyboardType: const TextInputType.numberWithOptions(
-                                decimal: true),
-                            onChanged: (value) {
-                              final vatRate = double.tryParse(value);
-                              if (vatRate != null &&
-                                  vatRate >= 0 &&
-                                  vatRate <= 100) {
-                                context
-                                    .read<AppConfigBloc>()
-                                    .add(UpdateVatRateEvent(vatRate));
-                              }
-                            },
+                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           ),
                           const SizedBox(height: 16),
-                          LiquidContainer(
+                          GlassmorphicContainer(
                             width: double.infinity,
-                            padding: const EdgeInsets.all(16),
-                            blur: 15,
-                            opacity: 0.15,
+                            height: null,
                             borderRadius: 12,
+                            blur: 15,
+                            alignment: Alignment.center,
+                            border: 2,
+                            linearGradient: LinearGradient(
+                              colors: [
+                                theme.colorScheme.surface.withOpacity(0.15),
+                                theme.colorScheme.surface.withOpacity(0.05),
+                              ],
+                            ),
+                            borderGradient: LinearGradient(
+                              colors: [
+                                theme.colorScheme.primary.withOpacity(0.2),
+                                theme.colorScheme.primary.withOpacity(0.1),
+                              ],
+                            ),
+                            padding: const EdgeInsets.all(16),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -1089,7 +1199,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   },
                 ),
                 const SizedBox(height: 24),
-                Divider(color: liquidTheme.textColor.withValues(alpha: 0.1)),
+                Divider(color: textColor.withValues(alpha: 0.1)),
                 const SizedBox(height: 16),
                 Text(
                   l10n.vatCalculationMethod,
@@ -1099,15 +1209,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Text(
                   l10n.chooseVatCalculationMethod,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: liquidTheme.textColor.withValues(alpha: 0.7),
+                    color: textColor.withValues(alpha: 0.7),
                   ),
                 ),
                 const SizedBox(height: 16),
-                LiquidCard(
-                  elevation: 0,
-                  blur: 20,
-                  opacity: 0.15,
+                GlassmorphicContainer(
+                  width: double.infinity,
+                  height: null,
                   borderRadius: 16,
+                  blur: 20,
+                  alignment: Alignment.centerLeft,
+                  border: 2,
+                  linearGradient: LinearGradient(
+                    colors: [
+                      theme.colorScheme.surface.withOpacity(0.15),
+                      theme.colorScheme.surface.withOpacity(0.05),
+                    ],
+                  ),
+                  borderGradient: LinearGradient(
+                    colors: [
+                      theme.colorScheme.primary.withOpacity(0.2),
+                      theme.colorScheme.primary.withOpacity(0.1),
+                    ],
+                  ),
                   padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
@@ -1129,8 +1253,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   ? l10n.vatIncludedInPriceDescription
                                   : l10n.vatExcludedFromPriceDescription,
                               style: theme.textTheme.bodySmall?.copyWith(
-                                color: liquidTheme.textColor
-                                    .withValues(alpha: 0.7),
+                                color: textColor.withValues(alpha: 0.7),
                               ),
                             ),
                           ],
@@ -1148,12 +1271,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                LiquidBanner(
-                  type: LiquidBannerType.warning,
-                  icon: Icons.info_outline,
-                  child: Text(
-                    l10n.vatRateAppliedToNewProducts,
-                    style: theme.textTheme.bodySmall,
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: Colors.orange.withOpacity(0.3),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.info_outline, color: Colors.orange, size: 20),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          l10n.vatRateAppliedToNewProducts,
+                          style: theme.textTheme.bodySmall,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -1191,19 +1329,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
         builder: (context, state) {
           final isLoading = state is DataExporting || state is DataImporting;
 
-          return _buildLiquidSection(
+          return _buildGlassSection(
             title: l10n.dataImportExport,
             icon: Icons.import_export,
             subtitle: l10n.dataImportExportDescription,
             child: Column(
               children: [
                 // Warning banner
-                LiquidBanner(
-                  type: LiquidBannerType.warning,
-                  icon: Icons.info_outline,
-                  child: Text(
-                    l10n.importWarning,
-                    style: theme.textTheme.bodySmall,
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: Colors.orange.withOpacity(0.3),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.info_outline, color: Colors.orange, size: 20),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          l10n.importWarning,
+                          style: theme.textTheme.bodySmall,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
@@ -1231,18 +1384,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 // Export button
                 SizedBox(
                   width: double.infinity,
-                  child: LiquidButton(
-                    onTap: isLoading ? null : () => _handleExport(context),
-                    type: LiquidButtonType.filled,
-                    size: LiquidButtonSize.large,
-                    width: double.infinity,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.upload, size: 20),
-                        const SizedBox(width: 8),
-                        Text(l10n.exportData),
-                      ],
+                  child: ElevatedButton.icon(
+                    onPressed: isLoading ? null : () => _handleExport(context),
+                    icon: const Icon(Icons.upload, size: 20),
+                    label: Text(l10n.exportData),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                   ),
                 ),
@@ -1252,18 +1399,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 // Import button
                 SizedBox(
                   width: double.infinity,
-                  child: LiquidButton(
-                    onTap: isLoading ? null : () => _handleImport(context),
-                    type: LiquidButtonType.outlined,
-                    size: LiquidButtonSize.large,
-                    width: double.infinity,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.download, size: 20),
-                        const SizedBox(width: 8),
-                        Text(l10n.importData),
-                      ],
+                  child: OutlinedButton.icon(
+                    onPressed: isLoading ? null : () => _handleImport(context),
+                    icon: const Icon(Icons.download, size: 20),
+                    label: Text(l10n.importData),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                   ),
                 ),
@@ -1337,7 +1478,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         context: context,
         barrierDismissible: false,
         builder: (context) => const Center(
-          child: LiquidLoader(size: 40),
+          child: CircularProgressIndicator(),
         ),
       );
 
@@ -1433,18 +1574,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildSyncSection() {
     final l10n = AppLocalizations.of(context)!;
 
-    return _buildLiquidSection(
+    return _buildGlassSection(
       title: l10n.dataSynchronization,
       icon: Icons.sync,
       subtitle: l10n.syncDescription,
       child: SizedBox(
         width: double.infinity,
-        child: LiquidButton(
-          onTap: _isSyncing ? null : _syncData,
-          type: LiquidButtonType.filled,
-          size: LiquidButtonSize.large,
-          width: double.infinity,
-          child: _isSyncing
+        child: ElevatedButton.icon(
+          onPressed: _isSyncing ? null : _syncData,
+          icon: _isSyncing
               ? const SizedBox(
                   width: 20,
                   height: 20,
@@ -1453,14 +1591,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     color: Colors.white,
                   ),
                 )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.sync, size: 20),
-                    const SizedBox(width: 8),
-                    Text(_isSyncing ? l10n.syncing : l10n.syncNow),
-                  ],
-                ),
+              : const Icon(Icons.sync, size: 20),
+          label: Text(_isSyncing ? l10n.syncing : l10n.syncNow),
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+          ),
         ),
       ),
     );
@@ -1469,21 +1604,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
   /// Build About Section
   Widget _buildAboutSection() {
     final l10n = AppLocalizations.of(context)!;
-    final liquidTheme = LiquidTheme.of(context);
+    final textColor = Theme.of(context).colorScheme.onSurface;
 
-    return _buildLiquidSection(
+    return _buildGlassSection(
       title: l10n.about,
       icon: Icons.info_outline,
       child: Column(
         children: [
           _buildGlassTile(
-            leading: Icon(Icons.info_outline, color: liquidTheme.textColor),
+            leading: Icon(Icons.info_outline, color: textColor),
             title: l10n.version,
             subtitle: l10n.appVersion,
           ),
           const SizedBox(height: 16),
           _buildGlassTile(
-            leading: Icon(Icons.business, color: liquidTheme.textColor),
+            leading: Icon(Icons.business, color: textColor),
             title: l10n.appTitle,
             subtitle: l10n.posWithOfflineSupport,
           ),
@@ -1492,21 +1627,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  /// Build a liquid glass section wrapper
-  Widget _buildLiquidSection({
+  /// Build a glass morphism section wrapper
+  Widget _buildGlassSection({
     required String title,
     required IconData icon,
     String? subtitle,
     required Widget child,
   }) {
     final theme = Theme.of(context);
-    final liquidTheme = LiquidTheme.of(context);
+    final textColor = theme.colorScheme.onSurface;
 
-    return LiquidCard(
-      elevation: 4,
-      blur: 25,
-      opacity: 0.18,
+    return GlassmorphicContainer(
+      width: double.infinity,
+      height: null,
       borderRadius: 24,
+      blur: 25,
+      alignment: Alignment.topLeft,
+      border: 2,
+      linearGradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          theme.colorScheme.surface.withOpacity(0.18),
+          theme.colorScheme.surface.withOpacity(0.08),
+        ],
+      ),
+      borderGradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          theme.colorScheme.primary.withOpacity(0.3),
+          theme.colorScheme.primary.withOpacity(0.1),
+        ],
+      ),
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1514,18 +1667,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // Section header
           Row(
             children: [
-              LiquidContainer(
+              GlassmorphicContainer(
                 width: 48,
                 height: 48,
                 borderRadius: 24,
                 blur: 15,
-                opacity: 0.2,
-                child: Center(
-                  child: Icon(
-                    icon,
-                    color: theme.colorScheme.primary,
-                    size: 24,
-                  ),
+                alignment: Alignment.center,
+                border: 2,
+                linearGradient: LinearGradient(
+                  colors: [
+                    theme.colorScheme.primary.withOpacity(0.2),
+                    theme.colorScheme.primary.withOpacity(0.1),
+                  ],
+                ),
+                borderGradient: LinearGradient(
+                  colors: [
+                    theme.colorScheme.primary.withOpacity(0.3),
+                    theme.colorScheme.primary.withOpacity(0.2),
+                  ],
+                ),
+                child: Icon(
+                  icon,
+                  color: theme.colorScheme.primary,
+                  size: 24,
                 ),
               ),
               const SizedBox(width: 16),
@@ -1544,7 +1708,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Text(
                         subtitle,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: liquidTheme.textColor.withValues(alpha: 0.7),
+                          color: textColor.withValues(alpha: 0.7),
                         ),
                       ),
                     ],
@@ -1568,12 +1732,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Widget? trailing,
   }) {
     final theme = Theme.of(context);
-    final liquidTheme = LiquidTheme.of(context);
+    final textColor = theme.colorScheme.onSurface;
 
-    return LiquidContainer(
-      blur: 15,
-      opacity: 0.15,
+    return GlassmorphicContainer(
+      width: double.infinity,
+      height: null,
       borderRadius: 12,
+      blur: 15,
+      alignment: Alignment.centerLeft,
+      border: 2,
+      linearGradient: LinearGradient(
+        colors: [
+          theme.colorScheme.surface.withOpacity(0.15),
+          theme.colorScheme.surface.withOpacity(0.05),
+        ],
+      ),
+      borderGradient: LinearGradient(
+        colors: [
+          theme.colorScheme.primary.withOpacity(0.2),
+          theme.colorScheme.primary.withOpacity(0.1),
+        ],
+      ),
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
@@ -1596,7 +1775,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Text(
                     subtitle,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: liquidTheme.textColor.withValues(alpha: 0.7),
+                      color: textColor.withValues(alpha: 0.7),
                     ),
                   ),
                 ],

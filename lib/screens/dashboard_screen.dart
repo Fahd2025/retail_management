@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/auth/auth_bloc.dart';
 import '../blocs/auth/auth_event.dart';
@@ -140,22 +140,18 @@ class _DashboardScreenState extends State<DashboardScreen>
 
     // Check if it's the Analytics Dashboard
     if (label == l10n.dashboard) {
-      return LiquidAppBar(
-        title: l10n.appTitle,
+      return AppBar(
+        title: Text(l10n.appTitle),
         elevation: 4,
-        blur: 20,
+        backgroundColor: theme.colorScheme.primary.withOpacity(0.9),
         actions: [
-          LiquidTooltip(
+          Tooltip(
             message: l10n.refreshDashboard,
-            child: LiquidButton(
-              onTap: () {
-                context
-                    .read<DashboardBloc>()
-                    .add(const RefreshDashboardEvent());
+            child: IconButton(
+              onPressed: () {
+                context.read<DashboardBloc>().add(const RefreshDashboardEvent());
               },
-              type: LiquidButtonType.icon,
-              size: LiquidButtonSize.medium,
-              child: const Icon(Icons.refresh, color: Colors.white),
+              icon: const Icon(Icons.refresh),
             ),
           ),
         ],
@@ -178,10 +174,10 @@ class _DashboardScreenState extends State<DashboardScreen>
               cartItemCount = saleState.cartItemCount;
             }
 
-            return LiquidAppBar(
-              title: l10n.pointOfSale,
+            return AppBar(
+              title: Text(l10n.pointOfSale),
               elevation: 4,
-              blur: 20,
+              backgroundColor: theme.colorScheme.primary.withOpacity(0.9),
               actions: [
                 // Cart icon with badge
                 Padding(
@@ -189,14 +185,11 @@ class _DashboardScreenState extends State<DashboardScreen>
                   child: Badge(
                     label: Text('$cartItemCount'),
                     isLabelVisible: cartItemCount > 0,
-                    child: LiquidButton(
-                      onTap: () {
+                    child: IconButton(
+                      onPressed: () {
                         (_cashierKey.currentState as dynamic)?.toggleCart();
                       },
-                      type: LiquidButtonType.icon,
-                      size: LiquidButtonSize.medium,
-                      child:
-                          const Icon(Icons.shopping_cart, color: Colors.white),
+                      icon: const Icon(Icons.shopping_cart),
                     ),
                   ),
                 ),
@@ -206,162 +199,143 @@ class _DashboardScreenState extends State<DashboardScreen>
         ),
       );
     } else if (label == l10n.products) {
-      return LiquidAppBar(
-        title: l10n.productsManagement,
+      return AppBar(
+        title: Text(l10n.productsManagement),
         elevation: 4,
-        blur: 20,
+        backgroundColor: theme.colorScheme.primary.withOpacity(0.9),
         actions: [
-          LiquidTooltip(
+          Tooltip(
             message: l10n.add,
-            child: LiquidButton(
-              onTap: () {
+            child: IconButton(
+              onPressed: () {
                 (_productsKey.currentState as dynamic)?.showProductDialog();
               },
-              type: LiquidButtonType.icon,
-              size: LiquidButtonSize.medium,
-              child: const Icon(Icons.add, color: Colors.white),
+              icon: const Icon(Icons.add),
             ),
           ),
-          LiquidTooltip(
+          Tooltip(
             message: l10n.refresh,
-            child: LiquidButton(
-              onTap: () {
+            child: IconButton(
+              onPressed: () {
                 context.read<ProductBloc>().add(const LoadProductsEvent());
               },
-              type: LiquidButtonType.icon,
-              size: LiquidButtonSize.medium,
-              child: const Icon(Icons.refresh, color: Colors.white),
+              icon: const Icon(Icons.refresh),
             ),
           ),
         ],
       );
     } else if (label == l10n.categories) {
-      return LiquidAppBar(
-        title: l10n.categories,
+      return AppBar(
+        title: Text(l10n.categories),
         elevation: 4,
-        blur: 20,
+        backgroundColor: theme.colorScheme.primary.withOpacity(0.9),
         actions: [
-          LiquidTooltip(
+          Tooltip(
             message: l10n.add,
-            child: LiquidButton(
-              onTap: () {
+            child: IconButton(
+              onPressed: () {
                 (_categoriesKey.currentState as dynamic)?.showCategoryDialog();
               },
-              type: LiquidButtonType.icon,
-              size: LiquidButtonSize.medium,
-              child: const Icon(Icons.add, color: Colors.white),
+              icon: const Icon(Icons.add),
             ),
           ),
-          LiquidTooltip(
+          Tooltip(
             message: l10n.refresh,
-            child: LiquidButton(
-              onTap: () {
+            child: IconButton(
+              onPressed: () {
                 (_categoriesKey.currentState as dynamic)?.loadCategories();
               },
-              type: LiquidButtonType.icon,
-              size: LiquidButtonSize.medium,
-              child: const Icon(Icons.refresh, color: Colors.white),
+              icon: const Icon(Icons.refresh),
             ),
           ),
         ],
       );
     } else if (label == l10n.customers) {
-      return LiquidAppBar(
-        title: l10n.customersManagement,
+      return AppBar(
+        title: Text(l10n.customersManagement),
         elevation: 4,
-        blur: 20,
+        backgroundColor: theme.colorScheme.primary.withOpacity(0.9),
         actions: [
-          LiquidTooltip(
+          Tooltip(
             message: l10n.add,
-            child: LiquidButton(
-              onTap: () {
+            child: IconButton(
+              onPressed: () {
                 (_customersKey.currentState as dynamic)?.showCustomerDialog();
               },
-              type: LiquidButtonType.icon,
-              size: LiquidButtonSize.medium,
-              child: const Icon(Icons.add, color: Colors.white),
+              icon: const Icon(Icons.add),
             ),
           ),
-          LiquidTooltip(
+          Tooltip(
             message: l10n.refresh,
-            child: LiquidButton(
-              onTap: () {
+            child: IconButton(
+              onPressed: () {
                 context.read<CustomerBloc>().add(const LoadCustomersEvent());
               },
-              type: LiquidButtonType.icon,
-              size: LiquidButtonSize.medium,
-              child: const Icon(Icons.refresh, color: Colors.white),
+              icon: const Icon(Icons.refresh),
             ),
           ),
         ],
       );
     } else if (label == l10n.sales) {
-      return LiquidAppBar(
-        title: l10n.salesList,
+      return AppBar(
+        title: Text(l10n.salesList),
         elevation: 4,
-        blur: 20,
+        backgroundColor: theme.colorScheme.primary.withOpacity(0.9),
         actions: [
-          LiquidTooltip(
+          Tooltip(
             message: l10n.refresh,
-            child: LiquidButton(
-              onTap: () {
+            child: IconButton(
+              onPressed: () {
                 context.read<SaleBloc>().add(const LoadSalesEvent());
               },
-              type: LiquidButtonType.icon,
-              size: LiquidButtonSize.medium,
-              child: const Icon(Icons.refresh, color: Colors.white),
+              icon: const Icon(Icons.refresh),
             ),
           ),
         ],
       );
     } else if (label == l10n.users) {
-      return LiquidAppBar(
-        title: l10n.usersManagement,
+      return AppBar(
+        title: Text(l10n.usersManagement),
         elevation: 4,
-        blur: 20,
+        backgroundColor: theme.colorScheme.primary.withOpacity(0.9),
         actions: [
-          LiquidTooltip(
+          Tooltip(
             message: l10n.addUser,
-            child: LiquidButton(
-              onTap: () {
+            child: IconButton(
+              onPressed: () {
                 (_usersKey.currentState as dynamic)?.showUserDialog();
               },
-              type: LiquidButtonType.icon,
-              size: LiquidButtonSize.medium,
-              child: const Icon(Icons.add, color: Colors.white),
+              icon: const Icon(Icons.add),
             ),
           ),
-          LiquidTooltip(
+          Tooltip(
             message: l10n.refresh,
-            child: LiquidButton(
-              onTap: () {
+            child: IconButton(
+              onPressed: () {
                 context.read<UserBloc>().add(const LoadUsersEvent());
               },
-              type: LiquidButtonType.icon,
-              size: LiquidButtonSize.medium,
-              child: const Icon(Icons.refresh, color: Colors.white),
+              icon: const Icon(Icons.refresh),
             ),
           ),
         ],
       );
     } else if (label == l10n.settings) {
-      return LiquidAppBar(
-        title: l10n.settings,
+      return AppBar(
+        title: Text(l10n.settings),
         elevation: 4,
-        blur: 20,
+        backgroundColor: theme.colorScheme.primary.withOpacity(0.9),
       );
     } else {
-      return LiquidAppBar(
-        title: label,
+      return AppBar(
+        title: Text(label),
         elevation: 4,
-        blur: 20,
+        backgroundColor: theme.colorScheme.primary.withOpacity(0.9),
       );
     }
   }
 
   Widget _buildDrawerHeader() {
     final theme = Theme.of(context);
-    final liquidTheme = LiquidTheme.of(context);
 
     return Container(
       height: 200,
@@ -372,7 +346,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           end: Alignment.bottomRight,
           colors: [
             theme.colorScheme.primary,
-            theme.colorScheme.primary.withValues(alpha: 0.8),
+            theme.colorScheme.primary.withOpacity(0.8),
           ],
         ),
       ),
@@ -383,12 +357,29 @@ class _DashboardScreenState extends State<DashboardScreen>
           // Logo with glass effect
           if (_companyInfo?.logoPath != null &&
               _companyInfo!.logoPath!.isNotEmpty)
-            LiquidContainer(
+            GlassmorphicContainer(
               width: 60,
               height: 60,
               borderRadius: 12,
-              blur: 10,
-              opacity: 0.3,
+              blur: 15,
+              alignment: Alignment.center,
+              border: 2,
+              linearGradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.white.withOpacity(0.2),
+                  Colors.white.withOpacity(0.1),
+                ],
+              ),
+              borderGradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.white.withOpacity(0.5),
+                  Colors.white.withOpacity(0.2),
+                ],
+              ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: FutureBuilder(
@@ -402,7 +393,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         snapshot.data!,
                         fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) {
-                          return Icon(
+                          return const Icon(
                             Icons.store,
                             size: 40,
                             color: Colors.white,
@@ -410,14 +401,17 @@ class _DashboardScreenState extends State<DashboardScreen>
                         },
                       );
                     } else if (snapshot.hasError) {
-                      return Icon(
+                      return const Icon(
                         Icons.store,
                         size: 40,
                         color: Colors.white,
                       );
                     } else {
-                      return Center(
-                        child: LiquidLoader(size: 24),
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          strokeWidth: 2,
+                        ),
                       );
                     }
                   },
@@ -425,13 +419,30 @@ class _DashboardScreenState extends State<DashboardScreen>
               ),
             )
           else
-            LiquidContainer(
+            GlassmorphicContainer(
               width: 60,
               height: 60,
               borderRadius: 12,
-              blur: 10,
-              opacity: 0.3,
-              child: Icon(
+              blur: 15,
+              alignment: Alignment.center,
+              border: 2,
+              linearGradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.white.withOpacity(0.2),
+                  Colors.white.withOpacity(0.1),
+                ],
+              ),
+              borderGradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.white.withOpacity(0.5),
+                  Colors.white.withOpacity(0.2),
+                ],
+              ),
+              child: const Icon(
                 Icons.store,
                 size: 40,
                 color: Colors.white,
@@ -470,7 +481,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 return Text(
                   '${l10n.vatNumber}: ${_companyInfo!.vatNumber}',
                   style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.9),
+                    color: Colors.white.withOpacity(0.9),
                     fontSize: 13,
                   ),
                   maxLines: 1,
@@ -492,7 +503,6 @@ class _DashboardScreenState extends State<DashboardScreen>
     Color? textColor,
   }) {
     final theme = Theme.of(context);
-    final liquidTheme = LiquidTheme.of(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -501,7 +511,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: isSelected
-              ? theme.colorScheme.primaryContainer.withValues(alpha: 0.3)
+              ? theme.colorScheme.primaryContainer.withOpacity(0.3)
               : Colors.transparent,
         ),
         child: Material(
@@ -518,7 +528,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                     color: iconColor ??
                         (isSelected
                             ? theme.colorScheme.primary
-                            : liquidTheme.textColor.withValues(alpha: 0.7)),
+                            : theme.colorScheme.onSurface.withOpacity(0.7)),
                     size: 24,
                   ),
                   const SizedBox(width: 16),
@@ -531,7 +541,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         color: textColor ??
                             (isSelected
                                 ? theme.colorScheme.primary
-                                : liquidTheme.textColor.withValues(alpha: 0.8)),
+                                : theme.colorScheme.onSurface.withOpacity(0.8)),
                         fontSize: 15,
                       ),
                     ),
@@ -559,31 +569,112 @@ class _DashboardScreenState extends State<DashboardScreen>
     final theme = Theme.of(context);
     final shouldExit = await showDialog<bool>(
       context: context,
-      builder: (context) => LiquidDialog(
-        title: l10n.confirm,
-        content: Text(l10n.confirmExit),
-        actions: [
-          LiquidButton(
-            onTap: () => Navigator.pop(context, false),
-            type: LiquidButtonType.outlined,
-            child: Text(l10n.no),
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: GlassmorphicContainer(
+          width: 400,
+          height: 200,
+          borderRadius: 20,
+          blur: 20,
+          alignment: Alignment.center,
+          border: 2,
+          linearGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              theme.colorScheme.surface.withOpacity(0.9),
+              theme.colorScheme.surface.withOpacity(0.8),
+            ],
           ),
-          LiquidButton(
-            onTap: () => Navigator.pop(context, true),
-            type: LiquidButtonType.filled,
-            backgroundColor: theme.colorScheme.error,
-            child: Text(l10n.yes, style: const TextStyle(color: Colors.white)),
+          borderGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              theme.colorScheme.primary.withOpacity(0.5),
+              theme.colorScheme.primary.withOpacity(0.2),
+            ],
           ),
-        ],
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  l10n.confirm,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.confirmExit,
+                  style: theme.textTheme.bodyMedium,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    OutlinedButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: Text(l10n.no),
+                    ),
+                    const SizedBox(width: 12),
+                    ElevatedButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: theme.colorScheme.error,
+                        foregroundColor: Colors.white,
+                      ),
+                      child: Text(l10n.yes),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
     return shouldExit ?? false;
   }
 
+  Widget _buildGlassDrawer({
+    required Widget child,
+    required BuildContext context,
+  }) {
+    final theme = Theme.of(context);
+
+    return GlassmorphicContainer(
+      width: 280,
+      height: double.infinity,
+      borderRadius: 0,
+      blur: 20,
+      alignment: Alignment.centerLeft,
+      border: 0,
+      linearGradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          theme.colorScheme.surface.withOpacity(0.95),
+          theme.colorScheme.surface.withOpacity(0.9),
+        ],
+      ),
+      borderGradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          theme.colorScheme.primary.withOpacity(0.3),
+          theme.colorScheme.primary.withOpacity(0.1),
+        ],
+      ),
+      child: child,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final liquidTheme = LiquidTheme.of(context);
 
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, authState) {
@@ -607,109 +698,151 @@ class _DashboardScreenState extends State<DashboardScreen>
               Navigator.of(context).pop();
             }
           },
-          child: LiquidScaffold(
+          child: Scaffold(
             appBar: _buildAppBar(navItems, context),
-            onDrawerChanged: (isOpened) {
-              // Reload company info when drawer is opened (to show latest changes from settings)
-              if (isOpened) {
-                _loadCompanyInfo();
-              }
-            },
-            drawer: LiquidDrawer(
-              key: ValueKey(_companyInfo?.updatedAt.toString() ?? ''),
+            drawer: Drawer(
               width: 280,
-              elevation: 8,
-              blur: 30,
-              child: Column(
-                children: [
-                  _buildDrawerHeader(),
-                  Expanded(
-                    child: FadeTransition(
-                      opacity: _fadeAnimation,
-                      child: ListView(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        children: [
-                          ...navItems.asMap().entries.map((entry) {
-                            final index = entry.key;
-                            final item = entry.value;
-                            final isSelected = _selectedIndex == index;
+              backgroundColor: Colors.transparent,
+              child: _buildGlassDrawer(
+                context: context,
+                child: Column(
+                  key: ValueKey(_companyInfo?.updatedAt.toString() ?? ''),
+                  children: [
+                    _buildDrawerHeader(),
+                    Expanded(
+                      child: FadeTransition(
+                        opacity: _fadeAnimation,
+                        child: ListView(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          children: [
+                            ...navItems.asMap().entries.map((entry) {
+                              final index = entry.key;
+                              final item = entry.value;
+                              final isSelected = _selectedIndex == index;
 
-                            return _buildDrawerItem(
-                              icon: item['icon'] as IconData,
-                              label: item['label'] as String,
-                              isSelected: isSelected,
-                              onTap: () async {
-                                // Animate screen transition
-                                _animationController.reset();
-                                _animationController.forward();
+                              return _buildDrawerItem(
+                                icon: item['icon'] as IconData,
+                                label: item['label'] as String,
+                                isSelected: isSelected,
+                                onTap: () async {
+                                  // Animate screen transition
+                                  _animationController.reset();
+                                  _animationController.forward();
 
-                                // Check if we're navigating away from settings (index 7 for admin)
-                                final isLeavingSettings =
-                                    (_previousIndex == 7 &&
-                                        user.role == UserRole.admin);
+                                  // Check if we're navigating away from settings (index 7 for admin)
+                                  final isLeavingSettings = (_previousIndex == 7 &&
+                                      user.role == UserRole.admin);
 
-                                setState(() {
-                                  _previousIndex = _selectedIndex;
-                                  _selectedIndex = index;
-                                });
+                                  setState(() {
+                                    _previousIndex = _selectedIndex;
+                                    _selectedIndex = index;
+                                  });
 
-                                // Reload company info if leaving settings
-                                if (isLeavingSettings) {
-                                  await _loadCompanyInfo();
-                                }
+                                  // Reload company info if leaving settings
+                                  if (isLeavingSettings) {
+                                    await _loadCompanyInfo();
+                                  }
 
-                                if (context.mounted) {
-                                  Navigator.pop(context); // Close drawer
-                                }
-                              },
-                            );
-                          }).toList(),
-                        ],
+                                  if (context.mounted) {
+                                    Navigator.pop(context); // Close drawer
+                                  }
+                                },
+                              );
+                            }).toList(),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  const Divider(height: 1),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: _buildDrawerItem(
-                      icon: Icons.logout,
-                      label: l10n.logout,
-                      isSelected: false,
-                      iconColor: theme.colorScheme.error,
-                      textColor: theme.colorScheme.error,
-                      onTap: () async {
-                        final confirm = await showDialog<bool>(
-                          context: context,
-                          builder: (context) => LiquidDialog(
-                            title: l10n.logout,
-                            content: Text(l10n.confirmLogout),
-                            actions: [
-                              LiquidButton(
-                                onTap: () => Navigator.pop(context, false),
-                                type: LiquidButtonType.outlined,
-                                child: Text(l10n.cancel),
+                    const Divider(height: 1),
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: _buildDrawerItem(
+                        icon: Icons.logout,
+                        label: l10n.logout,
+                        isSelected: false,
+                        iconColor: theme.colorScheme.error,
+                        textColor: theme.colorScheme.error,
+                        onTap: () async {
+                          final confirm = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => Dialog(
+                              backgroundColor: Colors.transparent,
+                              child: GlassmorphicContainer(
+                                width: 400,
+                                height: 200,
+                                borderRadius: 20,
+                                blur: 20,
+                                alignment: Alignment.center,
+                                border: 2,
+                                linearGradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    theme.colorScheme.surface.withOpacity(0.9),
+                                    theme.colorScheme.surface.withOpacity(0.8),
+                                  ],
+                                ),
+                                borderGradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    theme.colorScheme.primary.withOpacity(0.5),
+                                    theme.colorScheme.primary.withOpacity(0.2),
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(24),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        l10n.logout,
+                                        style: theme.textTheme.titleLarge?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        l10n.confirmLogout,
+                                        style: theme.textTheme.bodyMedium,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const SizedBox(height: 24),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          OutlinedButton(
+                                            onPressed: () => Navigator.pop(context, false),
+                                            child: Text(l10n.cancel),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          ElevatedButton(
+                                            onPressed: () => Navigator.pop(context, true),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: theme.colorScheme.error,
+                                              foregroundColor: Colors.white,
+                                            ),
+                                            child: Text(l10n.logout),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              LiquidButton(
-                                onTap: () => Navigator.pop(context, true),
-                                type: LiquidButtonType.filled,
-                                backgroundColor: theme.colorScheme.error,
-                                child: Text(l10n.logout,
-                                    style:
-                                        const TextStyle(color: Colors.white)),
-                              ),
-                            ],
-                          ),
-                        );
+                            ),
+                          );
 
-                        if (confirm == true && mounted) {
-                          Navigator.pop(context); // Close drawer
-                          context.read<AuthBloc>().add(const LogoutEvent());
-                        }
-                      },
+                          if (confirm == true && mounted) {
+                            Navigator.pop(context); // Close drawer
+                            context.read<AuthBloc>().add(const LogoutEvent());
+                          }
+                        },
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                ],
+                    const SizedBox(height: 8),
+                  ],
+                ),
               ),
             ),
             body: FadeTransition(

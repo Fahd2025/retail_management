@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/user/user_bloc.dart';
 import '../blocs/user/user_event.dart';
@@ -62,31 +62,30 @@ class _UsersScreenState extends State<UsersScreen> {
     }
 
     final theme = Theme.of(context);
-    final liquidTheme = LiquidTheme.of(context);
+    final textColor = theme.colorScheme.onSurface;
     final l10n = AppLocalizations.of(context)!;
 
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => LiquidDialog(
-        title: l10n.deleteUser,
+      builder: (context) => AlertDialog(
+        backgroundColor: theme.colorScheme.surface,
+        title: Text(l10n.deleteUser),
         content: Text(
           l10n.deleteUserConfirm(user.username),
-          style: TextStyle(color: liquidTheme.textColor),
+          style: TextStyle(color: textColor),
         ),
         actions: [
-          LiquidButton(
-            onTap: () => Navigator.pop(context, false),
-            type: LiquidButtonType.text,
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
             child: Text(l10n.cancel),
           ),
-          LiquidButton(
-            onTap: () => Navigator.pop(context, true),
-            type: LiquidButtonType.filled,
-            backgroundColor: theme.colorScheme.error,
-            child: Text(
-              l10n.delete,
-              style: const TextStyle(color: Colors.white),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: theme.colorScheme.error,
+              foregroundColor: Colors.white,
             ),
+            child: Text(l10n.delete),
           ),
         ],
       ),
@@ -97,8 +96,7 @@ class _UsersScreenState extends State<UsersScreen> {
     }
   }
 
-  Widget _buildInfoRow(
-      String label, String value, LiquidThemeData liquidTheme) {
+  Widget _buildInfoRow(String label, String value, Color textColor) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(
@@ -110,7 +108,7 @@ class _UsersScreenState extends State<UsersScreen> {
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 14,
-                color: liquidTheme.textColor,
+                color: textColor,
               ),
             ),
           ),
@@ -119,7 +117,7 @@ class _UsersScreenState extends State<UsersScreen> {
               value,
               style: TextStyle(
                 fontSize: 14,
-                color: liquidTheme.textColor.withValues(alpha: 0.8),
+                color: textColor.withValues(alpha: 0.8),
               ),
             ),
           ),
@@ -131,9 +129,9 @@ class _UsersScreenState extends State<UsersScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final liquidTheme = LiquidTheme.of(context);
+    final textColor = theme.colorScheme.onSurface;
 
-    return LiquidScaffold(
+    return Scaffold(
       body: BlocConsumer<UserBloc, UserState>(
         listener: (context, state) {
           if (state is UserOperationSuccess) {
@@ -157,7 +155,7 @@ class _UsersScreenState extends State<UsersScreen> {
         builder: (context, state) {
           if (state is UserLoading) {
             return Center(
-              child: LiquidLoader(size: 60),
+              child: CircularProgressIndicator(),
             );
           }
 
@@ -172,32 +170,41 @@ class _UsersScreenState extends State<UsersScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  LiquidContainer(
+                  GlassmorphicContainer(
                     width: 120,
                     height: 120,
                     borderRadius: 60,
                     blur: 15,
-                    opacity: 0.2,
+                    alignment: Alignment.center,
+                    border: 2,
+                    linearGradient: LinearGradient(
+                      colors: [
+                        theme.colorScheme.surface.withOpacity(0.2),
+                        theme.colorScheme.surface.withOpacity(0.1),
+                      ],
+                    ),
+                    borderGradient: LinearGradient(
+                      colors: [
+                        theme.colorScheme.primary.withOpacity(0.2),
+                        theme.colorScheme.primary.withOpacity(0.1),
+                      ],
+                    ),
                     child: Icon(
                       Icons.people,
                       size: 64,
-                      color: liquidTheme.textColor.withValues(alpha: 0.3),
+                      color: textColor.withValues(alpha: 0.3),
                     ),
                   ),
                   const SizedBox(height: 16),
                   Text(
                     l10n.noUsersFound,
-                    style: TextStyle(color: liquidTheme.textColor),
+                    style: TextStyle(color: textColor),
                   ),
                   const SizedBox(height: 16),
-                  LiquidButton(
-                    onTap: () => showUserDialog(),
-                    type: LiquidButtonType.filled,
-                    icon: const Icon(Icons.add, color: Colors.white),
-                    child: Text(
-                      l10n.addUser,
-                      style: const TextStyle(color: Colors.white),
-                    ),
+                  ElevatedButton.icon(
+                    onPressed: () => showUserDialog(),
+                    icon: const Icon(Icons.add),
+                    label: Text(l10n.addUser),
                   ),
                 ],
               ),
@@ -221,20 +228,39 @@ class _UsersScreenState extends State<UsersScreen> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(16),
-                        child: LiquidCard(
-                          elevation: 4,
+                        child: GlassmorphicContainer(
+                          width: double.infinity,
+                          height: null,
+                          borderRadius: 16,
                           blur: 20,
-                          opacity: 0.15,
+                          alignment: Alignment.topLeft,
+                          border: 2,
+                          linearGradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              theme.colorScheme.surface.withOpacity(0.15),
+                              theme.colorScheme.surface.withOpacity(0.05),
+                            ],
+                          ),
+                          borderGradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              theme.colorScheme.primary.withOpacity(0.2),
+                              theme.colorScheme.primary.withOpacity(0.1),
+                            ],
+                          ),
                           padding: EdgeInsets.zero,
                           child: DataTable(
                             columnSpacing: 24,
                             horizontalMargin: 16,
                             headingTextStyle: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: liquidTheme.textColor,
+                              color: textColor,
                             ),
                             dataTextStyle: TextStyle(
-                              color: liquidTheme.textColor,
+                              color: textColor,
                             ),
                             columns: [
                               DataColumn(label: Text(l10n.username)),
@@ -253,13 +279,11 @@ class _UsersScreenState extends State<UsersScreen> {
                               return DataRow(cells: [
                                 DataCell(Text(
                                   user.username,
-                                  style:
-                                      TextStyle(color: liquidTheme.textColor),
+                                  style: TextStyle(color: textColor),
                                 )),
                                 DataCell(Text(
                                   user.fullName,
-                                  style:
-                                      TextStyle(color: liquidTheme.textColor),
+                                  style: TextStyle(color: textColor),
                                 )),
                                 DataCell(
                                   Chip(
@@ -289,15 +313,12 @@ class _UsersScreenState extends State<UsersScreen> {
                                 ),
                                 DataCell(Text(
                                   invoiceCount.toString(),
-                                  style:
-                                      TextStyle(color: liquidTheme.textColor),
+                                  style: TextStyle(color: textColor),
                                 )),
                                 DataCell(
                                   Text(
-                                    CurrencyHelper.formatCurrencySync(
-                                        totalSales),
-                                    style:
-                                        TextStyle(color: liquidTheme.textColor),
+                                    CurrencyHelper.formatCurrencySync(totalSales),
+                                    style: TextStyle(color: textColor),
                                   ),
                                 ),
                                 DataCell(
@@ -343,27 +364,56 @@ class _UsersScreenState extends State<UsersScreen> {
                     final invoiceCount = stats['invoiceCount'] ?? 0;
                     final totalSales = stats['totalSales'] ?? 0.0;
 
-                    return LiquidCard(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      elevation: 3,
-                      blur: 18,
-                      opacity: 0.15,
+                    return GlassmorphicContainer(
+                      width: double.infinity,
+                      height: null,
                       borderRadius: 16,
+                      blur: 18,
+                      alignment: Alignment.centerLeft,
+                      border: 2,
+                      linearGradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          theme.colorScheme.surface.withOpacity(0.15),
+                          theme.colorScheme.surface.withOpacity(0.05),
+                        ],
+                      ),
+                      borderGradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          theme.colorScheme.primary.withOpacity(0.2),
+                          theme.colorScheme.primary.withOpacity(0.1),
+                        ],
+                      ),
+                      margin: const EdgeInsets.only(bottom: 12),
                       padding: EdgeInsets.zero,
                       child: ExpansionTile(
-                        leading: LiquidContainer(
+                        leading: GlassmorphicContainer(
                           width: 40,
                           height: 40,
                           borderRadius: 20,
                           blur: 10,
-                          opacity: 0.15,
-                          child: Center(
-                            child: Icon(
-                              user.role == UserRole.admin
-                                  ? Icons.admin_panel_settings
-                                  : Icons.person,
-                              color: theme.colorScheme.primary,
-                            ),
+                          alignment: Alignment.center,
+                          border: 2,
+                          linearGradient: LinearGradient(
+                            colors: [
+                              theme.colorScheme.primary.withOpacity(0.15),
+                              theme.colorScheme.primary.withOpacity(0.05),
+                            ],
+                          ),
+                          borderGradient: LinearGradient(
+                            colors: [
+                              theme.colorScheme.primary.withOpacity(0.2),
+                              theme.colorScheme.primary.withOpacity(0.1),
+                            ],
+                          ),
+                          child: Icon(
+                            user.role == UserRole.admin
+                                ? Icons.admin_panel_settings
+                                : Icons.person,
+                            color: theme.colorScheme.primary,
                           ),
                         ),
                         title: Text(
@@ -371,7 +421,7 @@ class _UsersScreenState extends State<UsersScreen> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: liquidTheme.textColor,
+                            color: textColor,
                           ),
                         ),
                         subtitle: Column(
@@ -381,8 +431,7 @@ class _UsersScreenState extends State<UsersScreen> {
                               l10n.username + ': ' + user.username,
                               style: TextStyle(
                                 fontSize: 13,
-                                color: liquidTheme.textColor
-                                    .withValues(alpha: 0.7),
+                                color: textColor.withValues(alpha: 0.7),
                               ),
                             ),
                             Row(
@@ -442,12 +491,12 @@ class _UsersScreenState extends State<UsersScreen> {
                                 _buildInfoRow(
                                   l10n.invoiceCount,
                                   invoiceCount.toString(),
-                                  liquidTheme,
+                                  textColor,
                                 ),
                                 _buildInfoRow(
                                   l10n.total,
                                   CurrencyHelper.formatCurrencySync(totalSales),
-                                  liquidTheme,
+                                  textColor,
                                 ),
                               ],
                             ),
@@ -599,7 +648,8 @@ class _UserDialogState extends State<_UserDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final liquidTheme = LiquidTheme.of(context);
+    final theme = Theme.of(context);
+    final textColor = theme.colorScheme.onSurface;
 
     // Build the form content
     final formContent = Form(
@@ -608,10 +658,15 @@ class _UserDialogState extends State<_UserDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Username Field
-          LiquidTextField(
+          TextFormField(
             controller: _usernameController,
-            label: l10n.usernameFieldLabel,
-            prefixIcon: const Icon(Icons.person_outlined),
+            decoration: InputDecoration(
+              labelText: l10n.usernameFieldLabel,
+              prefixIcon: const Icon(Icons.person_outlined),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return l10n.usernameRequired;
@@ -627,10 +682,15 @@ class _UserDialogState extends State<_UserDialog> {
           const SizedBox(height: 16),
 
           // Full Name Field
-          LiquidTextField(
+          TextFormField(
             controller: _fullNameController,
-            label: l10n.fullNameFieldLabel,
-            prefixIcon: const Icon(Icons.badge_outlined),
+            decoration: InputDecoration(
+              labelText: l10n.fullNameFieldLabel,
+              prefixIcon: const Icon(Icons.badge_outlined),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return l10n.fullNameRequired;
@@ -642,12 +702,17 @@ class _UserDialogState extends State<_UserDialog> {
           const SizedBox(height: 16),
 
           // Password Field
-          LiquidTextField(
+          TextFormField(
             controller: _passwordController,
-            label: widget.user == null
-                ? l10n.passwordFieldLabel
-                : l10n.passwordLeaveEmpty,
-            prefixIcon: const Icon(Icons.lock_outlined),
+            decoration: InputDecoration(
+              labelText: widget.user == null
+                  ? l10n.passwordFieldLabel
+                  : l10n.passwordLeaveEmpty,
+              prefixIcon: const Icon(Icons.lock_outlined),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
             obscureText: true,
             validator: (value) {
               if (widget.user == null && (value == null || value.isEmpty)) {
@@ -667,43 +732,30 @@ class _UserDialogState extends State<_UserDialog> {
             initialValue: _selectedRole,
             decoration: InputDecoration(
               labelText: l10n.roleFieldLabel,
-              labelStyle: TextStyle(color: liquidTheme.textColor),
+              labelStyle: TextStyle(color: textColor),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: liquidTheme.textColor.withValues(alpha: 0.3),
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: Theme.of(context).colorScheme.primary,
-                  width: 2,
-                ),
-              ),
               prefixIcon: Icon(
                 Icons.admin_panel_settings_outlined,
-                color: liquidTheme.textColor.withValues(alpha: 0.7),
+                color: textColor.withValues(alpha: 0.7),
               ),
             ),
-            dropdownColor: Theme.of(context).colorScheme.surface,
-            style: TextStyle(color: liquidTheme.textColor),
+            dropdownColor: theme.colorScheme.surface,
+            style: TextStyle(color: textColor),
             items: [
               DropdownMenuItem(
                 value: UserRole.admin,
                 child: Text(
                   l10n.admin,
-                  style: TextStyle(color: liquidTheme.textColor),
+                  style: TextStyle(color: textColor),
                 ),
               ),
               DropdownMenuItem(
                 value: UserRole.cashier,
                 child: Text(
                   l10n.cashier,
-                  style: TextStyle(color: liquidTheme.textColor),
+                  style: TextStyle(color: textColor),
                 ),
               ),
             ],
@@ -716,10 +768,25 @@ class _UserDialogState extends State<_UserDialog> {
           const SizedBox(height: 16),
 
           // Active Status Switch
-          LiquidCard(
-            elevation: 2,
+          GlassmorphicContainer(
+            width: double.infinity,
+            height: null,
+            borderRadius: 12,
             blur: 10,
-            opacity: 0.1,
+            alignment: Alignment.centerLeft,
+            border: 2,
+            linearGradient: LinearGradient(
+              colors: [
+                theme.colorScheme.surface.withOpacity(0.1),
+                theme.colorScheme.surface.withOpacity(0.05),
+              ],
+            ),
+            borderGradient: LinearGradient(
+              colors: [
+                theme.colorScheme.primary.withOpacity(0.2),
+                theme.colorScheme.primary.withOpacity(0.1),
+              ],
+            ),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -732,7 +799,7 @@ class _UserDialogState extends State<_UserDialog> {
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
-                        color: liquidTheme.textColor,
+                        color: textColor,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -740,7 +807,7 @@ class _UserDialogState extends State<_UserDialog> {
                       _isActive ? l10n.active : l10n.inactive,
                       style: TextStyle(
                         fontSize: 14,
-                        color: liquidTheme.textColor.withValues(alpha: 0.6),
+                        color: textColor.withValues(alpha: 0.6),
                       ),
                     ),
                   ],

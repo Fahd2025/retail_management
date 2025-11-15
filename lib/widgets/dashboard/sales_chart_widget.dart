@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../../models/dashboard_statistics.dart';
 
@@ -29,99 +29,124 @@ class _SalesChartWidgetState extends State<SalesChartWidget> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
-    return LiquidCard(
-      elevation: 3,
-      blur: 18,
-      opacity: 0.15,
+    return GlassmorphicContainer(
+      width: double.infinity,
+      height: null,
       borderRadius: 12,
-      padding: EdgeInsets.all(16.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.show_chart,
-                    color: theme.colorScheme.primary,
-                    size: 24.sp,
-                  ),
-                  SizedBox(width: 8.w),
-                  Text(
-                    l10n.salesTrend,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              SegmentedButton<bool>(
-                segments: [
-                  ButtonSegment(
-                    value: false,
-                    label: Text(l10n.salesLabel),
-                    icon: const Icon(Icons.attach_money, size: 16),
-                  ),
-                  ButtonSegment(
-                    value: true,
-                    label: Text(l10n.vatLabel),
-                    icon: const Icon(Icons.receipt, size: 16),
-                  ),
-                ],
-                selected: {showVat},
-                onSelectionChanged: (Set<bool> selection) {
-                  setState(() {
-                    showVat = selection.first;
-                  });
-                },
-              ),
-            ],
-          ),
-          SizedBox(height: 24.h),
-          if (widget.isLoading)
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(32.h),
-                child: LiquidLoader(
-                  size: 60,
-                  color: theme.colorScheme.primary,
-                ),
-              ),
-            )
-          else if (widget.dailySalesData.isEmpty)
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(32.h),
-                child: Column(
+      blur: 18,
+      alignment: Alignment.center,
+      border: 2,
+      linearGradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          theme.colorScheme.surface.withValues(alpha: 0.15),
+          theme.colorScheme.surface.withValues(alpha: 0.05),
+        ],
+      ),
+      borderGradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          theme.colorScheme.surface.withValues(alpha: 0.5),
+          theme.colorScheme.surface.withValues(alpha: 0.2),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
                   children: [
                     Icon(
-                      Icons.bar_chart_outlined,
-                      size: 48.sp,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                      Icons.show_chart,
+                      color: theme.colorScheme.primary,
+                      size: 24.sp,
                     ),
-                    SizedBox(height: 8.h),
+                    SizedBox(width: 8.w),
                     Text(
-                      l10n.noSalesDataAvailable,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color:
-                            theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                      l10n.salesTrend,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
                 ),
-              ),
-            )
-          else
-            SizedBox(
-              height: 300.h,
-              child: LineChart(
-                _buildLineChartData(theme),
-                duration: const Duration(milliseconds: 250),
-              ),
+                SegmentedButton<bool>(
+                  segments: [
+                    ButtonSegment(
+                      value: false,
+                      label: Text(l10n.salesLabel),
+                      icon: const Icon(Icons.attach_money, size: 16),
+                    ),
+                    ButtonSegment(
+                      value: true,
+                      label: Text(l10n.vatLabel),
+                      icon: const Icon(Icons.receipt, size: 16),
+                    ),
+                  ],
+                  selected: {showVat},
+                  onSelectionChanged: (Set<bool> selection) {
+                    setState(() {
+                      showVat = selection.first;
+                    });
+                  },
+                ),
+              ],
             ),
-        ],
+            SizedBox(height: 24.h),
+            if (widget.isLoading)
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.all(32.h),
+                  child: SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: CircularProgressIndicator(
+                      color: theme.colorScheme.primary,
+                      strokeWidth: 4,
+                    ),
+                  ),
+                ),
+              )
+            else if (widget.dailySalesData.isEmpty)
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.all(32.h),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.bar_chart_outlined,
+                        size: 48.sp,
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        l10n.noSalesDataAvailable,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.6),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            else
+              SizedBox(
+                height: 300.h,
+                child: LineChart(
+                  _buildLineChartData(theme),
+                  duration: const Duration(milliseconds: 250),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -289,117 +314,142 @@ class _CategorySalesChartWidgetState extends State<CategorySalesChartWidget> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
-    return LiquidCard(
-      elevation: 3,
-      blur: 18,
-      opacity: 0.15,
+    return GlassmorphicContainer(
+      width: double.infinity,
+      height: null,
       borderRadius: 12,
-      padding: EdgeInsets.all(16.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.pie_chart,
-                color: theme.colorScheme.primary,
-                size: 24.sp,
-              ),
-              SizedBox(width: 8.w),
-              Text(
-                l10n.salesByCategory,
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 24.h),
-          if (widget.isLoading)
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(32.h),
-                child: LiquidLoader(
-                  size: 60,
-                  color: theme.colorScheme.primary,
-                ),
-              ),
-            )
-          else if (widget.categorySalesData.isEmpty)
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(32.h),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.pie_chart_outline,
-                      size: 48.sp,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      l10n.noCategoryDataAvailable,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color:
-                            theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
-          else
+      blur: 18,
+      alignment: Alignment.center,
+      border: 2,
+      linearGradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          theme.colorScheme.surface.withValues(alpha: 0.15),
+          theme.colorScheme.surface.withValues(alpha: 0.05),
+        ],
+      ),
+      borderGradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          theme.colorScheme.surface.withValues(alpha: 0.5),
+          theme.colorScheme.surface.withValues(alpha: 0.2),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             Row(
               children: [
-                Expanded(
-                  flex: 2,
-                  child: SizedBox(
-                    height: 250.h,
-                    child: PieChart(
-                      _buildPieChartData(theme),
-                      duration: const Duration(milliseconds: 250),
-                    ),
-                  ),
+                Icon(
+                  Icons.pie_chart,
+                  color: theme.colorScheme.primary,
+                  size: 24.sp,
                 ),
-                SizedBox(width: 16.w),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children:
-                        widget.categorySalesData.asMap().entries.map((entry) {
-                      final index = entry.key;
-                      final category = entry.value;
-                      return Padding(
-                        padding: EdgeInsets.symmetric(vertical: 4.h),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 12.w,
-                              height: 12.w,
-                              decoration: BoxDecoration(
-                                color: _getCategoryColor(index),
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            SizedBox(width: 8.w),
-                            Expanded(
-                              child: Text(
-                                category.categoryName,
-                                style: theme.textTheme.bodySmall,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
+                SizedBox(width: 8.w),
+                Text(
+                  l10n.salesByCategory,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
-        ],
+            SizedBox(height: 24.h),
+            if (widget.isLoading)
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.all(32.h),
+                  child: SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: CircularProgressIndicator(
+                      color: theme.colorScheme.primary,
+                      strokeWidth: 4,
+                    ),
+                  ),
+                ),
+              )
+            else if (widget.categorySalesData.isEmpty)
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.all(32.h),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.pie_chart_outline,
+                        size: 48.sp,
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        l10n.noCategoryDataAvailable,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.6),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            else
+              Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: SizedBox(
+                      height: 250.h,
+                      child: PieChart(
+                        _buildPieChartData(theme),
+                        duration: const Duration(milliseconds: 250),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 16.w),
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children:
+                          widget.categorySalesData.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final category = entry.value;
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 4.h),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 12.w,
+                                height: 12.w,
+                                decoration: BoxDecoration(
+                                  color: _getCategoryColor(index),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              SizedBox(width: 8.w),
+                              Expanded(
+                                child: Text(
+                                  category.categoryName,
+                                  style: theme.textTheme.bodySmall,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              ),
+          ],
+        ),
       ),
     );
   }
