@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:file_picker/file_picker.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:open_file/open_file.dart';
@@ -217,7 +218,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _showExportSuccessDialog(BuildContext context, String filePath) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final isDirectory = FileSystemEntity.isDirectorySync(filePath);
+
+    // Check if this is a web download (filePath starts with "Downloaded: ")
+    final isWebDownload = filePath.startsWith('Downloaded: ');
+    final isDirectory = !isWebDownload && !kIsWeb && FileSystemEntity.isDirectorySync(filePath);
+
+    // Extract filename for web downloads
+    String displayMessage;
+    if (isWebDownload) {
+      final filename = filePath.replaceFirst('Downloaded: ', '');
+      displayMessage = 'File downloaded: $filename';
+    } else {
+      displayMessage = l10n.exportSuccessMessage(filePath);
+    }
 
     showDialog(
       context: context,
@@ -242,7 +255,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              l10n.exportSuccessMessage(filePath),
+              displayMessage,
               style: theme.textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),
@@ -265,9 +278,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      isDirectory
-                          ? 'Multiple files exported to folder'
-                          : 'File saved successfully',
+                      isWebDownload
+                          ? 'Check your browser\'s downloads folder'
+                          : isDirectory
+                              ? 'Multiple files exported to folder'
+                              : 'File saved successfully',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onPrimaryContainer,
                       ),
@@ -279,38 +294,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ],
         ),
         actions: [
-          // Open File button
-          TextButton.icon(
-            onPressed: () async {
-              try {
-                if (isDirectory) {
-                  // For directories, try to open the first file or the directory itself
-                  final dir = Directory(filePath);
-                  final files = await dir.list().toList();
-                  if (files.isNotEmpty && files.first is File) {
-                    await OpenFile.open(files.first.path);
+          // Open File button (only for non-web platforms)
+          if (!isWebDownload && !kIsWeb)
+            TextButton.icon(
+              onPressed: () async {
+                try {
+                  if (isDirectory) {
+                    // For directories, try to open the first file or the directory itself
+                    final dir = Directory(filePath);
+                    final files = await dir.list().toList();
+                    if (files.isNotEmpty && files.first is File) {
+                      await OpenFile.open(files.first.path);
+                    } else {
+                      // Try to open the directory
+                      await OpenFile.open(filePath);
+                    }
                   } else {
-                    // Try to open the directory
                     await OpenFile.open(filePath);
                   }
-                } else {
-                  await OpenFile.open(filePath);
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    _showErrorSnackBar('Could not open file: $e');
+                  }
                 }
-                if (context.mounted) {
-                  Navigator.pop(context);
-                }
-              } catch (e) {
-                if (context.mounted) {
-                  _showErrorSnackBar('Could not open file: $e');
-                }
-              }
-            },
-            icon: const Icon(Icons.open_in_new),
-            label: Text(l10n.openFile ?? 'Open File'),
-          ),
+              },
+              icon: const Icon(Icons.open_in_new),
+              label: Text(l10n.openFile ?? 'Open File'),
+            ),
 
-          // Share button
-          if (!isDirectory) // Only show share for single files
+          // Share button (only for non-web single files)
+          if (!isWebDownload && !kIsWeb && !isDirectory)
             TextButton.icon(
               onPressed: () async {
                 try {
