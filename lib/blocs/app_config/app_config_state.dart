@@ -12,6 +12,7 @@ class AppConfigState extends Equatable {
   final bool vatIncludedInPrice;
   final bool vatEnabled;
   final ThemeColorScheme colorScheme;
+  final String currency; // Company currency
 
   const AppConfigState({
     required this.themeMode,
@@ -22,6 +23,7 @@ class AppConfigState extends Equatable {
     this.vatIncludedInPrice = true, // Default: VAT included in price
     this.vatEnabled = true, // Default: VAT enabled
     this.colorScheme = ThemeColorScheme.defaultBlue,
+    this.currency = 'SAR', // Default: Saudi Riyal
   });
 
   bool get isDarkMode => themeMode == ThemeMode.dark;
@@ -40,6 +42,7 @@ class AppConfigState extends Equatable {
     bool? vatIncludedInPrice,
     bool? vatEnabled,
     ThemeColorScheme? colorScheme,
+    String? currency,
   }) {
     return AppConfigState(
       themeMode: themeMode ?? this.themeMode,
@@ -50,6 +53,7 @@ class AppConfigState extends Equatable {
       vatIncludedInPrice: vatIncludedInPrice ?? this.vatIncludedInPrice,
       vatEnabled: vatEnabled ?? this.vatEnabled,
       colorScheme: colorScheme ?? this.colorScheme,
+      currency: currency ?? this.currency,
     );
   }
 
@@ -63,5 +67,6 @@ class AppConfigState extends Equatable {
         vatIncludedInPrice,
         vatEnabled,
         colorScheme,
+        currency,
       ];
 }
