@@ -1,13 +1,18 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:csv/csv.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '../database/drift_database.dart';
 import '../blocs/data_import_export/data_import_export_event.dart';
 import 'package:drift/drift.dart' as drift;
+
+// Platform-specific imports using conditional imports
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+// Conditional import for web file download
+import 'web_file_download_stub.dart'
+    if (dart.library.html) 'web_file_download.dart';
 
 /// Result model for import/export operations
 class ImportExportResult {
@@ -703,8 +708,8 @@ class DataImportExportService {
   /// Get the Downloads directory with platform-specific handling
   Future<Directory> _getDownloadsDirectory() async {
     if (kIsWeb) {
-      // For web, use the application documents directory
-      return await getApplicationDocumentsDirectory();
+      // For web, this shouldn't be called, but return a dummy directory
+      throw UnsupportedError('File system not available on web');
     }
 
     if (Platform.isAndroid) {
@@ -760,36 +765,70 @@ class DataImportExportService {
   }
 
   Future<String> _saveJsonFile(Map<String, dynamic> data, List<DataType> dataTypes) async {
-    final directory = await _createCompanyExportDirectory();
     final fileName = '${_generateFilename(dataTypes)}.json';
-    final filePath = '${directory.path}/$fileName';
+    final jsonString = json.encode(data);
 
-    final file = File(filePath);
-    await file.writeAsString(json.encode(data));
+    if (kIsWeb) {
+      // Web platform: Trigger browser download
+      _downloadFileWeb(jsonString, fileName, 'application/json');
+      return 'Downloaded: $fileName';
+    } else {
+      // Mobile/Desktop platform: Save to file system
+      final directory = await _createCompanyExportDirectory();
+      final filePath = '${directory.path}/$fileName';
 
-    return filePath;
+      final file = File(filePath);
+      await file.writeAsString(jsonString);
+
+      return filePath;
+    }
   }
 
   Future<String> _saveCsvFiles(Map<String, dynamic> data, List<DataType> dataTypes) async {
-    final directory = await _createCompanyExportDirectory();
     final folderName = _generateFilename(dataTypes);
 
-    // Create a subdirectory for this export
-    final exportDir = Directory('${directory.path}/$folderName');
-    if (!await exportDir.exists()) {
-      await exportDir.create(recursive: true);
-    }
-
-    // Save each data type as a separate CSV file
-    for (final entry in data.entries) {
-      if (entry.value is List && (entry.value as List).isNotEmpty) {
-        final csvData = _convertToCSV(entry.value as List<Map<String, dynamic>>);
-        final file = File('${exportDir.path}/${entry.key}.csv');
-        await file.writeAsString(csvData);
+    if (kIsWeb) {
+      // Web platform: For CSV, we'll create a ZIP or download first CSV
+      // For simplicity, let's download the first data type as CSV
+      if (data.isNotEmpty) {
+        final firstEntry = data.entries.first;
+        if (firstEntry.value is List && (firstEntry.value as List).isNotEmpty) {
+          final csvData = _convertToCSV(firstEntry.value as List<Map<String, dynamic>>);
+          final fileName = '${folderName}_${firstEntry.key}.csv';
+          _downloadFileWeb(csvData, fileName, 'text/csv');
+          return 'Downloaded: $fileName';
+        }
       }
-    }
+      return 'Downloaded: CSV files';
+    } else {
+      // Mobile/Desktop platform: Save to file system
+      final directory = await _createCompanyExportDirectory();
 
-    return exportDir.path;
+      // Create a subdirectory for this export
+      final exportDir = Directory('${directory.path}/$folderName');
+      if (!await exportDir.exists()) {
+        await exportDir.create(recursive: true);
+      }
+
+      // Save each data type as a separate CSV file
+      for (final entry in data.entries) {
+        if (entry.value is List && (entry.value as List).isNotEmpty) {
+          final csvData = _convertToCSV(entry.value as List<Map<String, dynamic>>);
+          final file = File('${exportDir.path}/${entry.key}.csv');
+          await file.writeAsString(csvData);
+        }
+      }
+
+      return exportDir.path;
+    }
+  }
+
+  /// Download file on web platform using browser download
+  void _downloadFileWeb(String content, String filename, String mimeType) {
+    if (kIsWeb) {
+      // Use the imported web file download function
+      downloadFileOnWeb(content, filename, mimeType);
+    }
   }
 
   String _convertToCSV(List<Map<String, dynamic>> data) {
