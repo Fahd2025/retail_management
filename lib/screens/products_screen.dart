@@ -192,7 +192,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             horizontal: 16, vertical: 12),
                         color: vatIncludedInPrice
                             ? Colors.green.shade50
-                            : theme.colorScheme.primary.shade50,
+                            : theme.colorScheme.primaryContainer.withOpacity(0.3),
                         child: Row(
                           children: [
                             Icon(
@@ -212,7 +212,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 fontWeight: FontWeight.w500,
                                 color: vatIncludedInPrice
                                     ? Colors.green.shade900
-                                    : theme.colorScheme.primary.shade900,
+                                    : theme.colorScheme.primary,
                               ),
                             ),
                           ],
@@ -336,7 +336,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             horizontal: 16, vertical: 12),
                         color: vatIncludedInPrice
                             ? Colors.green.shade50
-                            : theme.colorScheme.primary.shade50,
+                            : theme.colorScheme.primaryContainer.withOpacity(0.3),
                         child: Row(
                           children: [
                             Icon(
@@ -357,7 +357,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   fontWeight: FontWeight.w500,
                                   color: vatIncludedInPrice
                                       ? Colors.green.shade900
-                                      : theme.colorScheme.primary.shade900,
+                                      : theme.colorScheme.primary,
                                 ),
                               ),
                             ),
@@ -810,7 +810,7 @@ class _ProductDialogState extends State<_ProductDialog> {
                           message: l10n.vatAmountCalculatedAutomatically(
                               appConfig.vatRate.toStringAsFixed(1)),
                           child: Icon(Icons.info_outline,
-                              size: 18, color: theme.colorScheme.primary.shade600),
+                              size: 18, color: theme.colorScheme.primary),
                         ),
                       ),
                       readOnly: true,

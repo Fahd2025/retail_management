@@ -211,7 +211,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                   style: const TextStyle(fontSize: 12),
                                 ),
                                 backgroundColor: user.role == UserRole.admin
-                                    ? theme.colorScheme.primary.shade100
+                                    ? theme.colorScheme.primaryContainer
                                     : Colors.green.shade100,
                               ),
                             ),
@@ -223,7 +223,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                 ),
                                 backgroundColor: user.isActive
                                     ? Colors.green.shade100
-                                    : theme.colorScheme.error.shade100,
+                                    : theme.colorScheme.errorContainer,
                               ),
                             ),
                             DataCell(Text(invoiceCount.toString())),
@@ -302,7 +302,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                     style: const TextStyle(fontSize: 11),
                                   ),
                                   backgroundColor: user.role == UserRole.admin
-                                      ? theme.colorScheme.primary.shade100
+                                      ? theme.colorScheme.primaryContainer
                                       : Colors.green.shade100,
                                   visualDensity: VisualDensity.compact,
                                 ),
@@ -314,7 +314,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                   ),
                                   backgroundColor: user.isActive
                                       ? Colors.green.shade100
-                                      : theme.colorScheme.error.shade100,
+                                      : theme.colorScheme.errorContainer,
                                   visualDensity: VisualDensity.compact,
                                 ),
                               ],
