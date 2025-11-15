@@ -124,6 +124,8 @@
     "selectTheme": "Select Theme",
     "changeLanguage": "Change Language",
     "changeTheme": "Change Theme",
+    "themeColorScheme": "Theme Color Scheme",
+    "selected": "Selected",
     "preferences": "Preferences",
     "notifications": "Notifications",
     "backup": "Backup",

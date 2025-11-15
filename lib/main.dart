@@ -62,9 +62,9 @@ class MyApp extends StatelessWidget {
                 title: 'Retail Management System',
                 debugShowCheckedModeBanner: false,
 
-                // Theme configuration
-                theme: AppTheme.lightTheme,
-                darkTheme: AppTheme.darkTheme,
+                // Theme configuration with custom colors
+                theme: AppTheme.lightTheme(configState.colorScheme),
+                darkTheme: AppTheme.darkTheme(configState.colorScheme),
                 themeMode: configState.themeMode,
 
                 // Localization configuration

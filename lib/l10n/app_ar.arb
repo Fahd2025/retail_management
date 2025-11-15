@@ -128,6 +128,8 @@
   "selectTheme": "اختر السمة",
   "changeLanguage": "تغيير اللغة",
   "changeTheme": "تغيير السمة",
+  "themeColorScheme": "نظام ألوان السمة",
+  "selected": "محدد",
   "preferences": "التفضيلات",
   "notifications": "الإشعارات",
   "backup": "نسخ احتياطي",
