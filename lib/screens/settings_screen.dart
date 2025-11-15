@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -1298,23 +1299,64 @@ class _SettingsScreenState extends State<SettingsScreen> {
       allowedExtensions: ['json', 'csv'],
     );
 
-    if (result != null && result.files.single.path != null) {
-      final filePath = result.files.single.path!;
+    if (result != null) {
+      final file = result.files.single;
 
-      // Show data type selector
-      if (context.mounted) {
-        showDataTypeSelectorBottomSheet(
-          context: context,
-          isExport: false,
-          onConfirm: (dataTypes, _) {
-            context.read<DataImportExportBloc>().add(
-                  ImportDataRequested(
-                    filePath: filePath,
-                    dataTypes: dataTypes,
-                  ),
-                );
-          },
-        );
+      // On web, use bytes; on mobile, use path
+      if (kIsWeb) {
+        // Web platform - use bytes
+        if (file.bytes != null && file.name.isNotEmpty) {
+          final fileContent = utf8.decode(file.bytes!);
+          final fileName = file.name;
+
+          // Show data type selector
+          if (context.mounted) {
+            showDataTypeSelectorBottomSheet(
+              context: context,
+              isExport: false,
+              onConfirm: (dataTypes, _) {
+                context.read<DataImportExportBloc>().add(
+                      ImportDataRequested(
+                        fileContent: fileContent,
+                        fileName: fileName,
+                        dataTypes: dataTypes,
+                      ),
+                    );
+              },
+            );
+          }
+        } else {
+          // No bytes available
+          if (context.mounted) {
+            _showErrorSnackBar(l10n.selectFileToImport);
+          }
+        }
+      } else {
+        // Mobile platform - use path
+        if (file.path != null) {
+          final filePath = file.path!;
+
+          // Show data type selector
+          if (context.mounted) {
+            showDataTypeSelectorBottomSheet(
+              context: context,
+              isExport: false,
+              onConfirm: (dataTypes, _) {
+                context.read<DataImportExportBloc>().add(
+                      ImportDataRequested(
+                        filePath: filePath,
+                        dataTypes: dataTypes,
+                      ),
+                    );
+              },
+            );
+          }
+        } else {
+          // No path available
+          if (context.mounted) {
+            _showErrorSnackBar(l10n.selectFileToImport);
+          }
+        }
       }
     } else {
       // User canceled the picker

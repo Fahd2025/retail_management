@@ -40,16 +40,21 @@ class ExportDataRequested extends DataImportExportEvent {
 
 /// Event to trigger data import
 class ImportDataRequested extends DataImportExportEvent {
-  final String filePath;
+  final String? filePath;
+  final String? fileContent;
+  final String? fileName;
   final List<DataType> dataTypes;
 
   const ImportDataRequested({
-    required this.filePath,
+    this.filePath,
+    this.fileContent,
+    this.fileName,
     required this.dataTypes,
-  });
+  }) : assert(filePath != null || fileContent != null,
+         'Either filePath or fileContent must be provided');
 
   @override
-  List<Object?> get props => [filePath, dataTypes];
+  List<Object?> get props => [filePath, fileContent, fileName, dataTypes];
 }
 
 /// Event to reset the state
