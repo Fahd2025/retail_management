@@ -1164,6 +1164,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             // This ensures theme, locale, VAT settings, etc. are updated immediately
             context.read<AppConfigBloc>().add(const InitializeAppConfigEvent());
 
+            // Reload company information to update the form fields
+            _loadCompanyInfo();
+
             _showSuccessSnackBar(
                 l10n.importSuccessMessage(state.itemsImported));
           } else if (state is DataImportExportError) {
