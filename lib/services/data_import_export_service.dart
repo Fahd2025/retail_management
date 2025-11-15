@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:csv/csv.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '../database/drift_database.dart';
 import '../blocs/data_import_export/data_import_export_event.dart';
 import 'package:drift/drift.dart' as drift;
@@ -617,10 +618,69 @@ class DataImportExportService {
 
   // ============= FILE OPERATIONS =============
 
+  /// Get the Downloads directory with platform-specific handling
+  Future<Directory> _getDownloadsDirectory() async {
+    if (kIsWeb) {
+      // For web, use the application documents directory
+      return await getApplicationDocumentsDirectory();
+    }
+
+    if (Platform.isAndroid) {
+      // For Android, try to get external storage downloads directory
+      try {
+        final directory = Directory('/storage/emulated/0/Download');
+        if (await directory.exists()) {
+          return directory;
+        }
+      } catch (e) {
+        // Fallback to app-specific external storage
+      }
+      // Fallback to external storage directory
+      final directory = await getExternalStorageDirectory();
+      return directory ?? await getApplicationDocumentsDirectory();
+    } else if (Platform.isIOS) {
+      // For iOS, use application documents directory (Downloads not accessible)
+      return await getApplicationDocumentsDirectory();
+    }
+
+    // Default fallback
+    return await getApplicationDocumentsDirectory();
+  }
+
+  /// Get company name from database
+  Future<String> _getCompanyName() async {
+    try {
+      final companyInfo = await _database.getCompanyInfo();
+      if (companyInfo != null && companyInfo.name.isNotEmpty) {
+        // Clean company name for folder name (remove special characters)
+        return companyInfo.name
+            .replaceAll(RegExp(r'[<>:"/\\|?*]'), '_')
+            .trim();
+      }
+    } catch (e) {
+      // Ignore error and use default
+    }
+    return 'RetailManagement';
+  }
+
+  /// Create company-specific export directory
+  Future<Directory> _createCompanyExportDirectory() async {
+    final downloadsDir = await _getDownloadsDirectory();
+    final companyName = await _getCompanyName();
+
+    // Create company folder in Downloads
+    final companyDir = Directory('${downloadsDir.path}/$companyName');
+    if (!await companyDir.exists()) {
+      await companyDir.create(recursive: true);
+    }
+
+    return companyDir;
+  }
+
   Future<String> _saveJsonFile(Map<String, dynamic> data) async {
-    final directory = await getApplicationDocumentsDirectory();
-    final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-');
-    final fileName = 'retail_data_export_$timestamp.json';
+    final directory = await _createCompanyExportDirectory();
+    final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-').replaceAll('.', '-');
+    final fileName = 'data_export_$timestamp.json';
     final filePath = '${directory.path}/$fileName';
 
     final file = File(filePath);
@@ -630,10 +690,10 @@ class DataImportExportService {
   }
 
   Future<String> _saveCsvFiles(Map<String, dynamic> data) async {
-    final directory = await getApplicationDocumentsDirectory();
-    final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-');
+    final directory = await _createCompanyExportDirectory();
+    final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-').replaceAll('.', '-');
 
-    // Create a directory for the export
+    // Create a subdirectory for this export
     final exportDir = Directory('${directory.path}/export_$timestamp');
     if (!await exportDir.exists()) {
       await exportDir.create(recursive: true);

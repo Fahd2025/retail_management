@@ -570,5 +570,7 @@
   "invalidFileContent": "محتوى الملف غير صالح. يرجى التحقق من تنسيق الملف.",
   "importInProgress": "جارٍ الاستيراد...",
   "exportInProgress": "جارٍ التصدير...",
-  "users": "المستخدمون"
+  "users": "المستخدمون",
+  "openFile": "فتح الملف",
+  "share": "مشاركة"
 }
