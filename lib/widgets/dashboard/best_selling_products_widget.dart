@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../../models/dashboard_statistics.dart';
 import '../../utils/currency_helper.dart';
@@ -69,15 +69,14 @@ class BestSellingProductsWidget extends StatelessWidget {
                     Icon(
                       Icons.inbox_outlined,
                       size: 48.sp,
-                      color:
-                          theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
                     ),
                     SizedBox(height: 8.h),
                     Text(
                       l10n.noSalesDataAvailable,
                       style: theme.textTheme.bodyLarge?.copyWith(
-                        color: theme.colorScheme.onSurface
-                            .withValues(alpha: 0.6),
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ],

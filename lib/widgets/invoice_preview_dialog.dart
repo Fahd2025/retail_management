@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:printing/printing.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../models/sale.dart';
 import '../models/company_info.dart';
@@ -104,14 +104,15 @@ class _InvoicePreviewDialogState extends State<InvoicePreviewDialog> {
                         const SizedBox(width: 12),
                         Text(
                           'Invoice Preview',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                color: liquidTheme.textColor,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    color: liquidTheme.textColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                         const Spacer(),
                         LiquidButton(
-                          onPressed: () => Navigator.of(context).pop(),
+                          onTap: () => Navigator.of(context).pop(),
                           type: LiquidButtonType.icon,
                           size: LiquidButtonSize.small,
                           child: Icon(
@@ -161,7 +162,7 @@ class _InvoicePreviewDialogState extends State<InvoicePreviewDialog> {
                           return Padding(
                             padding: const EdgeInsets.only(right: 8),
                             child: LiquidButton(
-                              onPressed: () {
+                              onTap: () {
                                 setState(() {
                                   _selectedConfig = _selectedConfig.copyWith(
                                     format: format,
@@ -233,7 +234,8 @@ class _InvoicePreviewDialogState extends State<InvoicePreviewDialog> {
                               companyInfo: widget.companyInfo,
                               customer: widget.customer,
                               config: _selectedConfig,
-                              vatIncludedInPrice: configState.vatIncludedInPrice,
+                              vatIncludedInPrice:
+                                  configState.vatIncludedInPrice,
                               vatEnabled: configState.vatEnabled,
                             );
                           },
@@ -373,7 +375,7 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                                 ),
                                 const Spacer(),
                                 LiquidButton(
-                                  onPressed: () => Navigator.of(context).pop(),
+                                  onTap: () => Navigator.of(context).pop(),
                                   type: LiquidButtonType.icon,
                                   size: LiquidButtonSize.small,
                                   child: Icon(
@@ -423,7 +425,7 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                               children: PrintFormat.all.map((format) {
                                 final isSelected = _selectedFormat == format;
                                 return LiquidButton(
-                                  onPressed: () {
+                                  onTap: () {
                                     setState(() {
                                       _selectedFormat = format;
                                     });
@@ -475,7 +477,7 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 LiquidButton(
-                                  onPressed: () async {
+                                  onTap: () async {
                                     final config = PrintFormatConfig(
                                       format: _selectedFormat,
                                     );
@@ -516,7 +518,7 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                                 ),
                                 const SizedBox(height: 8),
                                 LiquidButton(
-                                  onPressed: () {
+                                  onTap: () {
                                     Navigator.of(context).pop();
                                     InvoicePreviewDialog.show(
                                       context: context,

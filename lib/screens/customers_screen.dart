@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/customer/customer_bloc.dart';
 import '../blocs/customer/customer_event.dart';
@@ -103,7 +103,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                   ),
                   const SizedBox(height: 16),
                   LiquidButton(
-                    onPressed: () => showCustomerDialog(),
+                    onTap: () => showCustomerDialog(),
                     type: LiquidButtonType.filled,
                     icon: const Icon(Icons.add, color: Colors.white),
                     child: Text(
@@ -167,7 +167,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                 DataCell(
                                   FutureBuilder<Map<String, dynamic>>(
                                     future: AppDatabase()
-                                        .getCustomerSalesStatistics(customer.id),
+                                        .getCustomerSalesStatistics(
+                                            customer.id),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         final stats = snapshot.data!;
@@ -182,7 +183,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                 DataCell(
                                   FutureBuilder<Map<String, dynamic>>(
                                     future: AppDatabase()
-                                        .getCustomerSalesStatistics(customer.id),
+                                        .getCustomerSalesStatistics(
+                                            customer.id),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         final stats = snapshot.data!;
@@ -203,8 +205,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                       LiquidButton(
                                         type: LiquidButtonType.icon,
                                         size: LiquidButtonSize.small,
-                                        onPressed: () =>
-                                            _showExportDialog(context, customer),
+                                        onTap: () => _showExportDialog(
+                                            context, customer),
                                         child: Icon(
                                           Icons.picture_as_pdf,
                                           size: 20,
@@ -215,7 +217,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                       LiquidButton(
                                         type: LiquidButtonType.icon,
                                         size: LiquidButtonSize.small,
-                                        onPressed: () =>
+                                        onTap: () =>
                                             showCustomerDialog(customer),
                                         child: Icon(
                                           Icons.edit,
@@ -227,26 +229,28 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                       LiquidButton(
                                         type: LiquidButtonType.icon,
                                         size: LiquidButtonSize.small,
-                                        onPressed: () async {
-                                          final confirm = await showDialog<bool>(
+                                        onTap: () async {
+                                          final confirm =
+                                              await showDialog<bool>(
                                             context: context,
                                             builder: (context) => LiquidDialog(
                                               title: l10n.deleteCustomer,
                                               content: Text(
                                                 l10n.deleteCustomerConfirm,
                                                 style: TextStyle(
-                                                    color: liquidTheme.textColor),
+                                                    color:
+                                                        liquidTheme.textColor),
                                               ),
                                               actions: [
                                                 LiquidButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(context, false),
+                                                  onTap: () => Navigator.pop(
+                                                      context, false),
                                                   type: LiquidButtonType.text,
                                                   child: Text(l10n.cancel),
                                                 ),
                                                 LiquidButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(context, true),
+                                                  onTap: () => Navigator.pop(
+                                                      context, true),
                                                   type: LiquidButtonType.filled,
                                                   backgroundColor:
                                                       theme.colorScheme.error,
@@ -262,7 +266,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
 
                                           if (confirm == true && mounted) {
                                             context.read<CustomerBloc>().add(
-                                                  DeleteCustomerEvent(customer.id),
+                                                  DeleteCustomerEvent(
+                                                      customer.id),
                                                 );
                                           }
                                         },
@@ -331,7 +336,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                 l10n.phoneLabel(customer.phone!),
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: liquidTheme.textColor.withValues(alpha: 0.7),
+                                  color: liquidTheme.textColor
+                                      .withValues(alpha: 0.7),
                                 ),
                               ),
                             if (customer.email != null)
@@ -339,7 +345,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                 l10n.emailLabel(customer.email!),
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: liquidTheme.textColor.withValues(alpha: 0.7),
+                                  color: liquidTheme.textColor
+                                      .withValues(alpha: 0.7),
                                 ),
                               ),
                             if (customer.vatNumber != null)
@@ -347,7 +354,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                 l10n.vatLabel2(customer.vatNumber!),
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: liquidTheme.textColor.withValues(alpha: 0.7),
+                                  color: liquidTheme.textColor
+                                      .withValues(alpha: 0.7),
                                 ),
                               ),
                             const SizedBox(height: 4),
@@ -378,7 +386,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                 return Text(
                                   l10n.loadingStatistics,
                                   style: TextStyle(
-                                    color: liquidTheme.textColor.withValues(alpha: 0.6),
+                                    color: liquidTheme.textColor
+                                        .withValues(alpha: 0.6),
                                   ),
                                 );
                               },
@@ -391,8 +400,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                             LiquidButton(
                               type: LiquidButtonType.icon,
                               size: LiquidButtonSize.small,
-                              onPressed: () =>
-                                  _showExportDialog(context, customer),
+                              onTap: () => _showExportDialog(context, customer),
                               child: Icon(
                                 Icons.picture_as_pdf,
                                 color: theme.colorScheme.primary,
@@ -401,7 +409,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                             LiquidButton(
                               type: LiquidButtonType.icon,
                               size: LiquidButtonSize.small,
-                              onPressed: () => showCustomerDialog(customer),
+                              onTap: () => showCustomerDialog(customer),
                               child: Icon(
                                 Icons.edit,
                                 color: theme.colorScheme.primary,
@@ -410,7 +418,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                             LiquidButton(
                               type: LiquidButtonType.icon,
                               size: LiquidButtonSize.small,
-                              onPressed: () async {
+                              onTap: () async {
                                 final confirm = await showDialog<bool>(
                                   context: context,
                                   builder: (context) => LiquidDialog(
@@ -422,13 +430,13 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                     ),
                                     actions: [
                                       LiquidButton(
-                                        onPressed: () =>
+                                        onTap: () =>
                                             Navigator.pop(context, false),
                                         type: LiquidButtonType.text,
                                         child: Text(l10n.cancel),
                                       ),
                                       LiquidButton(
-                                        onPressed: () =>
+                                        onTap: () =>
                                             Navigator.pop(context, true),
                                         type: LiquidButtonType.filled,
                                         backgroundColor:
@@ -476,7 +484,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                     customer.saudiAddress!.formattedAddress,
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: liquidTheme.textColor.withValues(alpha: 0.7),
+                                      color: liquidTheme.textColor
+                                          .withValues(alpha: 0.7),
                                     ),
                                   ),
                                 ],
@@ -1054,7 +1063,7 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
             children: [
               Expanded(
                 child: LiquidButton(
-                  onPressed: _selectStartDate,
+                  onTap: _selectStartDate,
                   type: LiquidButtonType.outlined,
                   icon: const Icon(Icons.calendar_today),
                   child: Text(
@@ -1067,7 +1076,7 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
               const SizedBox(width: 8),
               Expanded(
                 child: LiquidButton(
-                  onPressed: _selectEndDate,
+                  onTap: _selectEndDate,
                   type: LiquidButtonType.outlined,
                   icon: const Icon(Icons.calendar_today),
                   child: Text(
@@ -1131,7 +1140,8 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
                             Text(
                               l10n.invoiceCount,
                               style: theme.textTheme.labelMedium?.copyWith(
-                                color: liquidTheme.textColor.withValues(alpha: 0.7),
+                                color: liquidTheme.textColor
+                                    .withValues(alpha: 0.7),
                               ),
                             ),
                             Text(
@@ -1149,7 +1159,8 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
                             Text(
                               l10n.totalAmount(''),
                               style: theme.textTheme.labelMedium?.copyWith(
-                                color: liquidTheme.textColor.withValues(alpha: 0.7),
+                                color: liquidTheme.textColor
+                                    .withValues(alpha: 0.7),
                               ),
                             ),
                             Text(

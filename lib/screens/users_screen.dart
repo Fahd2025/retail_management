@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/user/user_bloc.dart';
 import '../blocs/user/user_event.dart';
@@ -75,12 +75,12 @@ class _UsersScreenState extends State<UsersScreen> {
         ),
         actions: [
           LiquidButton(
-            onPressed: () => Navigator.pop(context, false),
+            onTap: () => Navigator.pop(context, false),
             type: LiquidButtonType.text,
             child: Text(l10n.cancel),
           ),
           LiquidButton(
-            onPressed: () => Navigator.pop(context, true),
+            onTap: () => Navigator.pop(context, true),
             type: LiquidButtonType.filled,
             backgroundColor: theme.colorScheme.error,
             child: Text(
@@ -97,7 +97,8 @@ class _UsersScreenState extends State<UsersScreen> {
     }
   }
 
-  Widget _buildInfoRow(String label, String value, LiquidThemeData liquidTheme) {
+  Widget _buildInfoRow(
+      String label, String value, LiquidThemeData liquidTheme) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(
@@ -190,7 +191,7 @@ class _UsersScreenState extends State<UsersScreen> {
                   ),
                   const SizedBox(height: 16),
                   LiquidButton(
-                    onPressed: () => showUserDialog(),
+                    onTap: () => showUserDialog(),
                     type: LiquidButtonType.filled,
                     icon: const Icon(Icons.add, color: Colors.white),
                     child: Text(
@@ -252,11 +253,13 @@ class _UsersScreenState extends State<UsersScreen> {
                               return DataRow(cells: [
                                 DataCell(Text(
                                   user.username,
-                                  style: TextStyle(color: liquidTheme.textColor),
+                                  style:
+                                      TextStyle(color: liquidTheme.textColor),
                                 )),
                                 DataCell(Text(
                                   user.fullName,
-                                  style: TextStyle(color: liquidTheme.textColor),
+                                  style:
+                                      TextStyle(color: liquidTheme.textColor),
                                 )),
                                 DataCell(
                                   Chip(
@@ -274,7 +277,9 @@ class _UsersScreenState extends State<UsersScreen> {
                                 DataCell(
                                   Chip(
                                     label: Text(
-                                      user.isActive ? l10n.active : l10n.inactive,
+                                      user.isActive
+                                          ? l10n.active
+                                          : l10n.inactive,
                                       style: const TextStyle(fontSize: 12),
                                     ),
                                     backgroundColor: user.isActive
@@ -284,12 +289,15 @@ class _UsersScreenState extends State<UsersScreen> {
                                 ),
                                 DataCell(Text(
                                   invoiceCount.toString(),
-                                  style: TextStyle(color: liquidTheme.textColor),
+                                  style:
+                                      TextStyle(color: liquidTheme.textColor),
                                 )),
                                 DataCell(
                                   Text(
-                                    CurrencyHelper.formatCurrencySync(totalSales),
-                                    style: TextStyle(color: liquidTheme.textColor),
+                                    CurrencyHelper.formatCurrencySync(
+                                        totalSales),
+                                    style:
+                                        TextStyle(color: liquidTheme.textColor),
                                   ),
                                 ),
                                 DataCell(
@@ -310,7 +318,8 @@ class _UsersScreenState extends State<UsersScreen> {
                                           size: 20,
                                           color: theme.colorScheme.error,
                                         ),
-                                        onPressed: () => _deleteUser(context, user),
+                                        onPressed: () =>
+                                            _deleteUser(context, user),
                                       ),
                                     ],
                                   ),
@@ -372,7 +381,8 @@ class _UsersScreenState extends State<UsersScreen> {
                               l10n.username + ': ' + user.username,
                               style: TextStyle(
                                 fontSize: 13,
-                                color: liquidTheme.textColor.withValues(alpha: 0.7),
+                                color: liquidTheme.textColor
+                                    .withValues(alpha: 0.7),
                               ),
                             ),
                             Row(
@@ -543,7 +553,8 @@ class _UserDialogState extends State<_UserDialog> {
           borderRadius: BorderRadius.circular(16),
           color: value
               ? theme.colorScheme.primary.withValues(alpha: 0.3)
-              : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+              : theme.colorScheme.surfaceContainerHighest
+                  .withValues(alpha: 0.3),
           border: Border.all(
             color: value
                 ? theme.colorScheme.primary
@@ -569,9 +580,8 @@ class _UserDialogState extends State<_UserDialog> {
             margin: const EdgeInsets.symmetric(horizontal: 3),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: value
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.outline,
+              color:
+                  value ? theme.colorScheme.primary : theme.colorScheme.outline,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.2),

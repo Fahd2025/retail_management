@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/sale/sale_bloc.dart';
 import '../blocs/sale/sale_event.dart';
@@ -126,7 +126,8 @@ class _SalesScreenState extends State<SalesScreen> {
               ),
             ),
             Text(
-              l10n.totalLabel(CurrencyHelper.formatCurrencySync(sale.totalAmount)),
+              l10n.totalLabel(
+                  CurrencyHelper.formatCurrencySync(sale.totalAmount)),
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -157,7 +158,7 @@ class _SalesScreenState extends State<SalesScreen> {
             LiquidButton(
               type: LiquidButtonType.icon,
               size: LiquidButtonSize.small,
-              onPressed: () => _reprintInvoice(sale),
+              onTap: () => _reprintInvoice(sale),
               child: Icon(
                 Icons.print,
                 color: theme.colorScheme.primary,
@@ -170,7 +171,7 @@ class _SalesScreenState extends State<SalesScreen> {
                     return LiquidButton(
                       type: LiquidButtonType.icon,
                       size: LiquidButtonSize.small,
-                      onPressed: () => _returnSale(sale),
+                      onTap: () => _returnSale(sale),
                       child: const Icon(Icons.undo, color: Colors.orange),
                     );
                   }
@@ -203,7 +204,8 @@ class _SalesScreenState extends State<SalesScreen> {
                           child: Text(
                             '${item.productName} x ${item.quantity}',
                             style: TextStyle(
-                              color: liquidTheme.textColor.withValues(alpha: 0.8),
+                              color:
+                                  liquidTheme.textColor.withValues(alpha: 0.8),
                             ),
                           ),
                         ),
@@ -321,12 +323,12 @@ class _SalesScreenState extends State<SalesScreen> {
         ),
         actions: [
           LiquidButton(
-            onPressed: () => Navigator.pop(context, false),
+            onTap: () => Navigator.pop(context, false),
             type: LiquidButtonType.text,
             child: Text(l10n.cancel),
           ),
           LiquidButton(
-            onPressed: () => Navigator.pop(context, true),
+            onTap: () => Navigator.pop(context, true),
             type: LiquidButtonType.filled,
             backgroundColor: Colors.orange,
             child: Text(
@@ -448,13 +450,15 @@ class _SalesScreenState extends State<SalesScreen> {
                               color: liquidTheme.textColor,
                             ),
                             dataTextStyle: TextStyle(
-                              color: liquidTheme.textColor.withValues(alpha: 0.9),
+                              color:
+                                  liquidTheme.textColor.withValues(alpha: 0.9),
                             ),
                             columns: [
                               DataColumn(label: Text(l10n.invoiceLabel(''))),
                               DataColumn(label: Text(l10n.dateLabel(''))),
                               if (vatEnabled)
-                                DataColumn(label: Text('${l10n.vat} ${l10n.amount}')),
+                                DataColumn(
+                                    label: Text('${l10n.vat} ${l10n.amount}')),
                               DataColumn(label: Text(l10n.totalLabel(''))),
                               DataColumn(label: Text(l10n.statusLabelText(''))),
                               DataColumn(label: Text(l10n.itemsLabel)),
@@ -468,22 +472,25 @@ class _SalesScreenState extends State<SalesScreen> {
                                           ? Colors.orange
                                           : theme.colorScheme.error;
 
-                              final statusText = sale.status == SaleStatus.completed
-                                  ? l10n.complete
-                                  : sale.status == SaleStatus.returned
-                                      ? l10n.return_sale
-                                      : sale.status
-                                          .toString()
-                                          .split('.')
-                                          .last
-                                          .toUpperCase();
+                              final statusText =
+                                  sale.status == SaleStatus.completed
+                                      ? l10n.complete
+                                      : sale.status == SaleStatus.returned
+                                          ? l10n.return_sale
+                                          : sale.status
+                                              .toString()
+                                              .split('.')
+                                              .last
+                                              .toUpperCase();
 
                               return DataRow(cells: [
                                 DataCell(Text(sale.invoiceNumber)),
-                                DataCell(Text(dateFormat.format(sale.saleDate))),
+                                DataCell(
+                                    Text(dateFormat.format(sale.saleDate))),
                                 if (vatEnabled)
-                                  DataCell(Text(CurrencyHelper.formatCurrencySync(
-                                      sale.vatAmount))),
+                                  DataCell(Text(
+                                      CurrencyHelper.formatCurrencySync(
+                                          sale.vatAmount))),
                                 DataCell(Text(CurrencyHelper.formatCurrencySync(
                                     sale.totalAmount))),
                                 DataCell(
@@ -493,7 +500,8 @@ class _SalesScreenState extends State<SalesScreen> {
                                       vertical: 6,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: statusColor.withValues(alpha: 0.15),
+                                      color:
+                                          statusColor.withValues(alpha: 0.15),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Text(
@@ -514,7 +522,7 @@ class _SalesScreenState extends State<SalesScreen> {
                                       LiquidButton(
                                         type: LiquidButtonType.icon,
                                         size: LiquidButtonSize.small,
-                                        onPressed: () => _reprintInvoice(sale),
+                                        onTap: () => _reprintInvoice(sale),
                                         child: Icon(
                                           Icons.print,
                                           size: 20,
@@ -530,7 +538,7 @@ class _SalesScreenState extends State<SalesScreen> {
                                               return LiquidButton(
                                                 type: LiquidButtonType.icon,
                                                 size: LiquidButtonSize.small,
-                                                onPressed: () => _returnSale(sale),
+                                                onTap: () => _returnSale(sale),
                                                 child: const Icon(
                                                   Icons.undo,
                                                   size: 20,

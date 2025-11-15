@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/product/product_bloc.dart';
 import '../blocs/product/product_event.dart';
@@ -98,7 +98,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             child: Text(l10n.cancel),
           ),
           LiquidButton(
-            onPressed: () => Navigator.pop(context, true),
+            onTap: () => Navigator.pop(context, true),
             type: LiquidButtonType.filled,
             backgroundColor: theme.colorScheme.error,
             child: Text(
@@ -257,11 +257,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     color: liquidTheme.textColor,
                                   ),
                                   dataTextStyle: TextStyle(
-                                    color: liquidTheme.textColor.withValues(alpha: 0.9),
+                                    color: liquidTheme.textColor
+                                        .withValues(alpha: 0.9),
                                   ),
                                   columns: [
                                     DataColumn(label: Text(l10n.name)),
-                                    DataColumn(label: Text(l10n.barcodeRequired)),
+                                    DataColumn(
+                                        label: Text(l10n.barcodeRequired)),
                                     DataColumn(label: Text(l10n.category)),
                                     DataColumn(
                                         label: Text(vatEnabled
@@ -272,8 +274,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     if (vatEnabled) ...[
                                       DataColumn(label: Text(l10n.beforeVat)),
                                       DataColumn(
-                                          label:
-                                              Text('${l10n.vat} ${l10n.amount}')),
+                                          label: Text(
+                                              '${l10n.vat} ${l10n.amount}')),
                                       DataColumn(label: Text(l10n.afterVat)),
                                     ],
                                     DataColumn(label: Text(l10n.costRequired)),
@@ -291,13 +293,15 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                       vatAmount = priceAfterVat -
                                           (priceAfterVat /
                                               (1 + product.vatRate / 100));
-                                      priceBeforeVat = priceAfterVat - vatAmount;
+                                      priceBeforeVat =
+                                          priceAfterVat - vatAmount;
                                     } else {
                                       // VAT is excluded from the price
                                       priceBeforeVat = product.price;
-                                      vatAmount =
-                                          product.price * (product.vatRate / 100);
-                                      priceAfterVat = priceBeforeVat + vatAmount;
+                                      vatAmount = product.price *
+                                          (product.vatRate / 100);
+                                      priceAfterVat =
+                                          priceBeforeVat + vatAmount;
                                     }
 
                                     return DataRow(cells: [
@@ -309,8 +313,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                             : product.name,
                                       )),
                                       DataCell(Text(product.barcode)),
-                                      DataCell(
-                                          Text(_getCategoryName(product.category))),
+                                      DataCell(Text(
+                                          _getCategoryName(product.category))),
                                       DataCell(Text(
                                           CurrencyHelper.formatCurrencySync(
                                               product.price))),
@@ -328,7 +332,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                       DataCell(Text(
                                           CurrencyHelper.formatCurrencySync(
                                               product.cost))),
-                                      DataCell(Text(product.quantity.toString())),
+                                      DataCell(
+                                          Text(product.quantity.toString())),
                                       DataCell(
                                         Row(
                                           mainAxisSize: MainAxisSize.min,
@@ -336,20 +341,21 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                             LiquidButton(
                                               type: LiquidButtonType.icon,
                                               size: LiquidButtonSize.small,
-                                              onPressed: () =>
+                                              onTap: () =>
                                                   showProductDialog(product),
                                               child: Icon(
                                                 Icons.edit,
                                                 size: 20,
-                                                color: theme.colorScheme.primary,
+                                                color:
+                                                    theme.colorScheme.primary,
                                               ),
                                             ),
                                             const SizedBox(width: 4),
                                             LiquidButton(
                                               type: LiquidButtonType.icon,
                                               size: LiquidButtonSize.small,
-                                              onPressed: () =>
-                                                  _deleteProduct(context, product),
+                                              onTap: () => _deleteProduct(
+                                                  context, product),
                                               child: Icon(
                                                 Icons.delete,
                                                 size: 20,
@@ -446,7 +452,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     '${l10n.category}: ${_getCategoryName(product.category)}',
                                     style: TextStyle(
                                       fontSize: 13,
-                                      color: liquidTheme.textColor.withValues(alpha: 0.7),
+                                      color: liquidTheme.textColor
+                                          .withValues(alpha: 0.7),
                                     ),
                                   ),
                                   Text(
@@ -470,7 +477,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   LiquidButton(
                                     type: LiquidButtonType.icon,
                                     size: LiquidButtonSize.small,
-                                    onPressed: () => showProductDialog(product),
+                                    onTap: () => showProductDialog(product),
                                     child: Icon(
                                       Icons.edit,
                                       color: theme.colorScheme.primary,
@@ -479,7 +486,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   LiquidButton(
                                     type: LiquidButtonType.icon,
                                     size: LiquidButtonSize.small,
-                                    onPressed: () =>
+                                    onTap: () =>
                                         _deleteProduct(context, product),
                                     child: Icon(
                                       Icons.delete,
@@ -505,7 +512,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                           '${product.quantity} ${l10n.units}'),
                                       if (vatEnabled) ...[
                                         const SizedBox(height: 8),
-                                        Divider(color: liquidTheme.textColor.withValues(alpha: 0.2)),
+                                        Divider(
+                                            color: liquidTheme.textColor
+                                                .withValues(alpha: 0.2)),
                                         const SizedBox(height: 8),
                                         Text(
                                           l10n.vatBreakdown,
@@ -532,7 +541,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                       if (product.description != null &&
                                           product.description!.isNotEmpty) ...[
                                         const SizedBox(height: 8),
-                                        Divider(color: liquidTheme.textColor.withValues(alpha: 0.2)),
+                                        Divider(
+                                            color: liquidTheme.textColor
+                                                .withValues(alpha: 0.2)),
                                         const SizedBox(height: 8),
                                         Text(
                                           l10n.description,
@@ -547,7 +558,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                           product.description!,
                                           style: TextStyle(
                                             fontSize: 14,
-                                            color: liquidTheme.textColor.withValues(alpha: 0.7),
+                                            color: liquidTheme.textColor
+                                                .withValues(alpha: 0.7),
                                           ),
                                         ),
                                       ],
@@ -751,14 +763,16 @@ class _ProductDialogState extends State<_ProductDialog> {
                   blur: 15,
                   opacity: 0.1,
                   borderRadius: 12,
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   child: DropdownButtonFormField<String>(
                     initialValue: _selectedCategoryId,
                     decoration: InputDecoration(
                       labelText: l10n.categoryRequired,
                       border: InputBorder.none,
                       prefixIcon: const Icon(Icons.category_outlined),
-                      labelStyle: TextStyle(color: liquidTheme.textColor.withValues(alpha: 0.7)),
+                      labelStyle: TextStyle(
+                          color: liquidTheme.textColor.withValues(alpha: 0.7)),
                     ),
                     hint: Text(l10n.selectACategory),
                     isExpanded: true,
@@ -851,7 +865,8 @@ class _ProductDialogState extends State<_ProductDialog> {
                               Icon(
                                 Icons.account_balance_wallet,
                                 size: 20,
-                                color: liquidTheme.textColor.withValues(alpha: 0.7),
+                                color: liquidTheme.textColor
+                                    .withValues(alpha: 0.7),
                               ),
                               const SizedBox(width: 8),
                               Expanded(
@@ -859,7 +874,8 @@ class _ProductDialogState extends State<_ProductDialog> {
                                   '${l10n.vat} Amount',
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: liquidTheme.textColor.withValues(alpha: 0.7),
+                                    color: liquidTheme.textColor
+                                        .withValues(alpha: 0.7),
                                   ),
                                 ),
                               ),

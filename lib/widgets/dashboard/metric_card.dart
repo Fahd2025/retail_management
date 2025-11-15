@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
 import '../../utils/currency_helper.dart';
 
 /// A reusable card widget to display a single metric/statistic
@@ -98,8 +98,7 @@ class MetricCard extends StatelessWidget {
                   Text(
                     subtitle!,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface
-                          .withValues(alpha: 0.6),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

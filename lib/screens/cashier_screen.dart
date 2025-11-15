@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
 import 'package:retail_management/blocs/app_config/app_config_state.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/product/product_bloc.dart';
@@ -274,12 +274,12 @@ class _CashierScreenState extends State<CashierScreen>
                 ),
                 actions: [
                   LiquidButton(
-                    onPressed: () => Navigator.pop(context, false),
+                    onTap: () => Navigator.pop(context, false),
                     type: LiquidButtonType.text,
                     child: Text(AppLocalizations.of(context)!.no),
                   ),
                   LiquidButton(
-                    onPressed: () => Navigator.pop(context, true),
+                    onTap: () => Navigator.pop(context, true),
                     type: LiquidButtonType.filled,
                     child: Text(
                       AppLocalizations.of(context)!.printInvoice,
@@ -438,10 +438,12 @@ class _CashierScreenState extends State<CashierScreen>
                                       : LiquidBannerType.info,
                                   icon: Icons.info_outline,
                                   title: configState.vatIncludedInPrice
-                                      ? l10n.vatIncludedInPriceNote(
-                                          configState.vatRate.toStringAsFixed(1))
+                                      ? l10n.vatIncludedInPriceNote(configState
+                                          .vatRate
+                                          .toStringAsFixed(1))
                                       : l10n.vatExcludedFromPriceNote(
-                                          configState.vatRate.toStringAsFixed(1)),
+                                          configState.vatRate
+                                              .toStringAsFixed(1)),
                                 );
                               },
                             ),
@@ -457,13 +459,16 @@ class _CashierScreenState extends State<CashierScreen>
                                 itemCount: categories.length,
                                 itemBuilder: (context, index) {
                                   final category = categories[index];
-                                  final isSelected = category == _selectedCategory;
+                                  final isSelected =
+                                      category == _selectedCategory;
 
                                   return Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4),
                                     child: LiquidButton(
-                                      onPressed: () {
-                                        setState(() => _selectedCategory = category);
+                                      onTap: () {
+                                        setState(
+                                            () => _selectedCategory = category);
                                         _loadProductsByCategory();
                                       },
                                       type: isSelected
@@ -510,7 +515,8 @@ class _CashierScreenState extends State<CashierScreen>
                                       return FadeTransition(
                                         opacity: _animationController,
                                         child: ScaleTransition(
-                                          scale: Tween<double>(begin: 0.8, end: 1.0)
+                                          scale: Tween<double>(
+                                                  begin: 0.8, end: 1.0)
                                               .animate(
                                             CurvedAnimation(
                                               parent: _animationController,
@@ -523,7 +529,8 @@ class _CashierScreenState extends State<CashierScreen>
                                           ),
                                           child: _ProductCard(
                                             product: product,
-                                            onTap: () => _addProductToCart(product),
+                                            onTap: () =>
+                                                _addProductToCart(product),
                                           ),
                                         ),
                                       );
@@ -555,7 +562,8 @@ class _CashierScreenState extends State<CashierScreen>
                                 borderRadius: 0,
                                 child: Row(
                                   children: [
-                                    Icon(Icons.shopping_cart, color: liquidTheme.textColor),
+                                    Icon(Icons.shopping_cart,
+                                        color: liquidTheme.textColor),
                                     const SizedBox(width: 8),
                                     Text(
                                       l10n.cart,
@@ -569,7 +577,8 @@ class _CashierScreenState extends State<CashierScreen>
                                     Text(
                                       l10n.cartItems(cartItemCount),
                                       style: TextStyle(
-                                        color: liquidTheme.textColor.withValues(alpha: 0.6),
+                                        color: liquidTheme.textColor
+                                            .withValues(alpha: 0.6),
                                       ),
                                     ),
                                   ],
@@ -582,7 +591,8 @@ class _CashierScreenState extends State<CashierScreen>
                                 child: _CustomerSelector(
                                   selectedCustomer: _selectedCustomer,
                                   onCustomerSelected: (customer) {
-                                    setState(() => _selectedCustomer = customer);
+                                    setState(
+                                        () => _selectedCustomer = customer);
                                   },
                                 ),
                               ),
@@ -592,7 +602,8 @@ class _CashierScreenState extends State<CashierScreen>
                                 child: cartItems.isEmpty
                                     ? Center(
                                         child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             LiquidContainer(
                                               width: 100,
@@ -603,14 +614,16 @@ class _CashierScreenState extends State<CashierScreen>
                                               child: Icon(
                                                 Icons.shopping_cart_outlined,
                                                 size: 64,
-                                                color: liquidTheme.textColor.withValues(alpha: 0.3),
+                                                color: liquidTheme.textColor
+                                                    .withValues(alpha: 0.3),
                                               ),
                                             ),
                                             const SizedBox(height: 16),
                                             Text(
                                               l10n.cartIsEmpty,
                                               style: TextStyle(
-                                                color: liquidTheme.textColor.withValues(alpha: 0.6),
+                                                color: liquidTheme.textColor
+                                                    .withValues(alpha: 0.6),
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -632,15 +645,20 @@ class _CashierScreenState extends State<CashierScreen>
                                 blur: 15,
                                 opacity: 0.2,
                                 borderRadius: 0,
-                                child: BlocBuilder<AppConfigBloc, AppConfigState>(
+                                child:
+                                    BlocBuilder<AppConfigBloc, AppConfigState>(
                                   builder: (context, configState) {
                                     return Column(
                                       children: [
                                         if (configState.vatEnabled) ...[
-                                          _SummaryRow(l10n.subtotalLabel, cartSubtotal),
+                                          _SummaryRow(
+                                              l10n.subtotalLabel, cartSubtotal),
                                           const SizedBox(height: 8),
-                                          _SummaryRow(l10n.vatLabel, cartVatAmount),
-                                          Divider(color: liquidTheme.textColor.withValues(alpha: 0.3)),
+                                          _SummaryRow(
+                                              l10n.vatLabel, cartVatAmount),
+                                          Divider(
+                                              color: liquidTheme.textColor
+                                                  .withValues(alpha: 0.3)),
                                         ],
                                         _SummaryRow(
                                           l10n.totalLabelColon,
@@ -653,11 +671,12 @@ class _CashierScreenState extends State<CashierScreen>
                                           children: [
                                             Expanded(
                                               child: LiquidButton(
-                                                onPressed: cartItems.isEmpty
+                                                onTap: cartItems.isEmpty
                                                     ? null
                                                     : () => context
                                                         .read<SaleBloc>()
-                                                        .add(const ClearCartEvent()),
+                                                        .add(
+                                                            const ClearCartEvent()),
                                                 type: LiquidButtonType.outlined,
                                                 child: Text(l10n.clear),
                                               ),
@@ -666,12 +685,16 @@ class _CashierScreenState extends State<CashierScreen>
                                             Expanded(
                                               flex: 2,
                                               child: LiquidButton(
-                                                onPressed: cartItems.isEmpty ? null : _checkout,
+                                                onTap: cartItems.isEmpty
+                                                    ? null
+                                                    : _checkout,
                                                 type: LiquidButtonType.filled,
-                                                backgroundColor: theme.colorScheme.primary,
+                                                backgroundColor:
+                                                    theme.colorScheme.primary,
                                                 child: Text(
                                                   l10n.checkout,
-                                                  style: const TextStyle(color: Colors.white),
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
                                                 ),
                                               ),
                                             ),
@@ -735,8 +758,10 @@ class _ProductCard extends StatelessWidget {
               fit: StackFit.expand,
               children: [
                 ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                  child: product.imageUrl != null && product.imageUrl!.isNotEmpty
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(16)),
+                  child: product.imageUrl != null &&
+                          product.imageUrl!.isNotEmpty
                       ? Image.network(
                           product.imageUrl!,
                           fit: BoxFit.cover,
@@ -748,7 +773,8 @@ class _ProductCard extends StatelessWidget {
                               child: Icon(
                                 Icons.inventory_2,
                                 size: 64,
-                                color: liquidTheme.textColor.withValues(alpha: 0.3),
+                                color: liquidTheme.textColor
+                                    .withValues(alpha: 0.3),
                               ),
                             );
                           },
@@ -891,12 +917,11 @@ class _CartItem extends StatelessWidget {
               LiquidButton(
                 type: LiquidButtonType.icon,
                 size: LiquidButtonSize.small,
-                onPressed: () {
+                onTap: () {
                   final vatIncludedInPrice =
                       context.read<AppConfigBloc>().state.vatIncludedInPrice;
                   context.read<SaleBloc>().add(
-                        UpdateCartItemQuantityEvent(
-                            item.id, item.quantity - 1,
+                        UpdateCartItemQuantityEvent(item.id, item.quantity - 1,
                             vatIncludedInPrice: vatIncludedInPrice),
                       );
                 },
@@ -915,12 +940,11 @@ class _CartItem extends StatelessWidget {
               LiquidButton(
                 type: LiquidButtonType.icon,
                 size: LiquidButtonSize.small,
-                onPressed: () {
+                onTap: () {
                   final vatIncludedInPrice =
                       context.read<AppConfigBloc>().state.vatIncludedInPrice;
                   context.read<SaleBloc>().add(
-                        UpdateCartItemQuantityEvent(
-                            item.id, item.quantity + 1,
+                        UpdateCartItemQuantityEvent(item.id, item.quantity + 1,
                             vatIncludedInPrice: vatIncludedInPrice),
                       );
                 },
@@ -942,7 +966,7 @@ class _CartItem extends StatelessWidget {
           LiquidButton(
             type: LiquidButtonType.icon,
             size: LiquidButtonSize.small,
-            onPressed: () =>
+            onTap: () =>
                 context.read<SaleBloc>().add(RemoveFromCartEvent(item.id)),
             child: const Icon(Icons.delete, color: Colors.red, size: 20),
           ),

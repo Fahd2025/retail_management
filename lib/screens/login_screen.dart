@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/auth/auth_bloc.dart';
 import '../blocs/auth/auth_event.dart';
@@ -19,7 +19,8 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
+class _LoginScreenState extends State<LoginScreen>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -211,7 +212,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             SafeArea(
               child: Center(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
                   child: FadeTransition(
                     opacity: _fadeAnimation,
                     child: SlideTransition(
@@ -236,13 +238,17 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                     LiquidTooltip(
                                       message: l10n.switchTheme,
                                       child: LiquidButton(
-                                        onPressed: () {
-                                          context.read<AppConfigBloc>().add(const ToggleThemeEvent());
+                                        onTap: () {
+                                          context
+                                              .read<AppConfigBloc>()
+                                              .add(const ToggleThemeEvent());
                                         },
                                         type: LiquidButtonType.icon,
                                         size: LiquidButtonSize.small,
                                         child: Icon(
-                                          configState.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                                          configState.isDarkMode
+                                              ? Icons.light_mode
+                                              : Icons.dark_mode,
                                           color: liquidTheme.textColor,
                                         ),
                                       ),
@@ -253,14 +259,16 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                     LiquidTooltip(
                                       message: l10n.switchLanguage,
                                       child: LiquidPopupMenu<String>(
-                                        icon: Icon(Icons.language, color: liquidTheme.textColor),
+                                        icon: Icon(Icons.language,
+                                            color: liquidTheme.textColor),
                                         items: [
                                           LiquidPopupMenuItem(
                                             value: 'en',
                                             child: Row(
                                               children: [
                                                 if (configState.isEnglish)
-                                                  const Icon(Icons.check, size: 18),
+                                                  const Icon(Icons.check,
+                                                      size: 18),
                                                 if (configState.isEnglish)
                                                   const SizedBox(width: 8),
                                                 Text(l10n.english),
@@ -272,7 +280,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                             child: Row(
                                               children: [
                                                 if (configState.isArabic)
-                                                  const Icon(Icons.check, size: 18),
+                                                  const Icon(Icons.check,
+                                                      size: 18),
                                                 if (configState.isArabic)
                                                   const SizedBox(width: 8),
                                                 Text(l10n.arabic),
@@ -282,9 +291,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                         ],
                                         onSelected: (String value) {
                                           if (value == 'en') {
-                                            context.read<AppConfigBloc>().add(const SetEnglishEvent());
+                                            context
+                                                .read<AppConfigBloc>()
+                                                .add(const SetEnglishEvent());
                                           } else {
-                                            context.read<AppConfigBloc>().add(const SetArabicEvent());
+                                            context
+                                                .read<AppConfigBloc>()
+                                                .add(const SetArabicEvent());
                                           }
                                         },
                                       ),
@@ -313,7 +326,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                 // Title
                                 Text(
                                   l10n.loginTitle,
-                                  style: theme.textTheme.headlineSmall?.copyWith(
+                                  style:
+                                      theme.textTheme.headlineSmall?.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: liquidTheme.textColor,
                                     fontSize: 28,
@@ -324,7 +338,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                 Text(
                                   l10n.appSubtitle,
                                   style: theme.textTheme.bodyMedium?.copyWith(
-                                    color: liquidTheme.textColor.withValues(alpha: 0.7),
+                                    color: liquidTheme.textColor
+                                        .withValues(alpha: 0.7),
                                     fontSize: 15,
                                   ),
                                   textAlign: TextAlign.center,
@@ -337,14 +352,16 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                   title: l10n.defaultCredentials,
                                   icon: Icons.info_outline,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       const SizedBox(height: 8),
                                       Text(
                                         l10n.adminCredentials,
                                         style: TextStyle(
                                           fontSize: 13,
-                                          color: liquidTheme.textColor.withValues(alpha: 0.8),
+                                          color: liquidTheme.textColor
+                                              .withValues(alpha: 0.8),
                                         ),
                                       ),
                                       const SizedBox(height: 4),
@@ -352,7 +369,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                         l10n.cashierCredentials,
                                         style: TextStyle(
                                           fontSize: 13,
-                                          color: liquidTheme.textColor.withValues(alpha: 0.8),
+                                          color: liquidTheme.textColor
+                                              .withValues(alpha: 0.8),
                                         ),
                                       ),
                                     ],
@@ -367,7 +385,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                       const SizedBox(height: 16),
                                       Text(
                                         l10n.initializingSystem,
-                                        style: TextStyle(color: liquidTheme.textColor),
+                                        style: TextStyle(
+                                            color: liquidTheme.textColor),
                                       ),
                                     ],
                                   )
@@ -383,7 +402,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                           prefixIcon: const Icon(Icons.person),
                                           textInputAction: TextInputAction.next,
                                           validator: (value) {
-                                            if (value == null || value.isEmpty) {
+                                            if (value == null ||
+                                                value.isEmpty) {
                                               return l10n.pleaseEnterUsername;
                                             }
                                             return null;
@@ -408,18 +428,21 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                             ),
                                             onPressed: () {
                                               setState(() {
-                                                _obscurePassword = !_obscurePassword;
+                                                _obscurePassword =
+                                                    !_obscurePassword;
                                               });
                                             },
                                           ),
                                           validator: (value) {
-                                            if (value == null || value.isEmpty) {
+                                            if (value == null ||
+                                                value.isEmpty) {
                                               return l10n.pleaseEnterPassword;
                                             }
                                             return null;
                                           },
                                           onFieldSubmitted: (_) {
-                                            if (_formKey.currentState!.validate()) {
+                                            if (_formKey.currentState!
+                                                .validate()) {
                                               _login();
                                             }
                                           },
@@ -429,11 +452,14 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                         // Login button with Liquid Glass design
                                         SizedBox(
                                           width: double.infinity,
-                                          child: BlocBuilder<AuthBloc, AuthState>(
+                                          child:
+                                              BlocBuilder<AuthBloc, AuthState>(
                                             builder: (context, state) {
-                                              final isLoading = state is AuthLoading;
+                                              final isLoading =
+                                                  state is AuthLoading;
                                               return LiquidButton(
-                                                onPressed: isLoading ? null : _login,
+                                                onPressed:
+                                                    isLoading ? null : _login,
                                                 type: LiquidButtonType.filled,
                                                 size: LiquidButtonSize.large,
                                                 width: double.infinity,
@@ -441,7 +467,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                                     ? const SizedBox(
                                                         height: 20,
                                                         width: 20,
-                                                        child: CircularProgressIndicator(
+                                                        child:
+                                                            CircularProgressIndicator(
                                                           strokeWidth: 2,
                                                           color: Colors.white,
                                                         ),
@@ -450,7 +477,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                                         l10n.login,
                                                         style: const TextStyle(
                                                           fontSize: 16,
-                                                          fontWeight: FontWeight.bold,
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                           color: Colors.white,
                                                         ),
                                                       ),

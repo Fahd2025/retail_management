@@ -2,7 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_picker/image_picker.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
 import '../services/image_service.dart';
 
 /// Widget for picking and displaying company logo with Liquid Glass UI
@@ -191,7 +191,8 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
                 ),
                 // Gallery option
                 LiquidContainer(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                   borderRadius: 12,
                   blur: 10,
                   opacity: 0.1,
@@ -201,7 +202,8 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
                       borderRadius: 8,
                       blur: 8,
                       opacity: 0.2,
-                      child: const Icon(Icons.photo_library, color: Colors.blue),
+                      child:
+                          const Icon(Icons.photo_library, color: Colors.blue),
                     ),
                     title: Text(
                       'Choose from Gallery',
@@ -216,7 +218,8 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
                 // Camera option (not available on web)
                 if (!kIsWeb)
                   LiquidContainer(
-                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                     borderRadius: 12,
                     blur: 10,
                     opacity: 0.1,
@@ -226,7 +229,8 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
                         borderRadius: 8,
                         blur: 8,
                         opacity: 0.2,
-                        child: const Icon(Icons.camera_alt, color: Colors.green),
+                        child:
+                            const Icon(Icons.camera_alt, color: Colors.green),
                       ),
                       title: Text(
                         'Take a Photo',
@@ -241,7 +245,8 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
                 // Remove logo option
                 if (_imageBytes != null)
                   LiquidContainer(
-                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                     borderRadius: 12,
                     blur: 10,
                     opacity: 0.1,
@@ -265,7 +270,8 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
                   ),
                 // Cancel option
                 LiquidContainer(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                   borderRadius: 12,
                   blur: 10,
                   opacity: 0.1,
@@ -336,14 +342,16 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
                             child: Icon(
                               Icons.add_photo_alternate,
                               size: 48,
-                              color: liquidTheme.textColor.withValues(alpha: 0.6),
+                              color:
+                                  liquidTheme.textColor.withValues(alpha: 0.6),
                             ),
                           ),
                           const SizedBox(height: 12),
                           Text(
                             'Add Logo',
                             style: TextStyle(
-                              color: liquidTheme.textColor.withValues(alpha: 0.7),
+                              color:
+                                  liquidTheme.textColor.withValues(alpha: 0.7),
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),
@@ -376,7 +384,7 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               LiquidButton(
-                onPressed: _showImageSourceOptions,
+                onTap: _showImageSourceOptions,
                 type: LiquidButtonType.outlined,
                 size: LiquidButtonSize.small,
                 child: Row(
@@ -402,7 +410,7 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
               if (_imageBytes != null) ...[
                 const SizedBox(width: 8),
                 LiquidButton(
-                  onPressed: _removeLogo,
+                  onTap: _removeLogo,
                   type: LiquidButtonType.outlined,
                   size: LiquidButtonSize.small,
                   child: Row(

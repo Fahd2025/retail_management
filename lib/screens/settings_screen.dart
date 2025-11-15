@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:file_picker/file_picker.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:open_file/open_file.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
 import '../database/drift_database.dart';
 import '../models/company_info.dart';
 import '../services/sync_service.dart';
@@ -223,7 +223,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     // Check if this is a web download (filePath starts with "Downloaded: ")
     final isWebDownload = filePath.startsWith('Downloaded: ');
-    final isDirectory = !isWebDownload && !kIsWeb && FileSystemEntity.isDirectorySync(filePath);
+    final isDirectory =
+        !isWebDownload && !kIsWeb && FileSystemEntity.isDirectorySync(filePath);
 
     // Extract filename for web downloads
     String displayMessage;
@@ -305,7 +306,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   // Open File button (only for non-web platforms)
                   if (!isWebDownload && !kIsWeb) ...[
                     LiquidButton(
-                      onPressed: () async {
+                      onTap: () async {
                         try {
                           if (isDirectory) {
                             final dir = Directory(filePath);
@@ -344,12 +345,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   // Share button (only for non-web single files)
                   if (!isWebDownload && !kIsWeb && !isDirectory) ...[
                     LiquidButton(
-                      onPressed: () async {
+                      onTap: () async {
                         try {
                           final file = XFile(filePath);
                           await Share.shareXFiles(
                             [file],
-                            subject: 'Data Export - ${DateTime.now().toString()}',
+                            subject:
+                                'Data Export - ${DateTime.now().toString()}',
                           );
                           if (context.mounted) {
                             Navigator.pop(context);
@@ -376,7 +378,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                   // Close button
                   LiquidButton(
-                    onPressed: () => Navigator.pop(context),
+                    onTap: () => Navigator.pop(context),
                     type: LiquidButtonType.filled,
                     size: LiquidButtonSize.medium,
                     child: Text(l10n.close),
@@ -554,7 +556,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   color: liquidTheme.textColor,
                 ),
                 title: l10n.theme,
-                subtitle: configState.isDarkMode ? l10n.darkMode : l10n.lightMode,
+                subtitle:
+                    configState.isDarkMode ? l10n.darkMode : l10n.lightMode,
                 trailing: _buildGlassSwitch(
                   value: configState.isDarkMode,
                   onChanged: (value) {
@@ -578,7 +581,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title: l10n.language,
                 subtitle: _getLocaleName(configState.locale),
                 trailing: LiquidPopupMenu<Locale>(
-                  icon: Icon(Icons.arrow_drop_down, color: liquidTheme.textColor),
+                  icon:
+                      Icon(Icons.arrow_drop_down, color: liquidTheme.textColor),
                   items: _getSupportedLocales().map((locale) {
                     return LiquidPopupMenuItem(
                       value: locale,
@@ -596,9 +600,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onSelected: (Locale? newLocale) {
                     if (newLocale != null) {
                       if (newLocale.languageCode == 'en') {
-                        context.read<AppConfigBloc>().add(const SetEnglishEvent());
+                        context
+                            .read<AppConfigBloc>()
+                            .add(const SetEnglishEvent());
                       } else if (newLocale.languageCode == 'ar') {
-                        context.read<AppConfigBloc>().add(const SetArabicEvent());
+                        context
+                            .read<AppConfigBloc>()
+                            .add(const SetArabicEvent());
                       }
                     }
                   },
@@ -844,7 +852,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return SizedBox(
       width: double.infinity,
       child: LiquidButton(
-        onPressed: _isLoading ? null : _saveCompanyInfo,
+        onTap: _isLoading ? null : _saveCompanyInfo,
         type: LiquidButtonType.filled,
         size: LiquidButtonSize.large,
         width: double.infinity,
@@ -950,7 +958,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 ? l10n.vatEnabledDescription
                                 : l10n.vatDisabledDescription,
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: liquidTheme.textColor.withValues(alpha: 0.7),
+                              color:
+                                  liquidTheme.textColor.withValues(alpha: 0.7),
                             ),
                           ),
                         ],
@@ -959,7 +968,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _buildGlassSwitch(
                       value: configState.vatEnabled,
                       onChanged: (value) {
-                        context.read<AppConfigBloc>().add(UpdateVatEnabledEvent(value));
+                        context
+                            .read<AppConfigBloc>()
+                            .add(UpdateVatEnabledEvent(value));
                       },
                     ),
                   ],
@@ -982,11 +993,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               label: l10n.vatRateLabel,
                               prefixIcon: const Icon(Icons.percent),
                               hint: l10n.vatRateHint,
-                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
                               onChanged: (value) {
                                 final vatRate = double.tryParse(value);
-                                if (vatRate != null && vatRate >= 0 && vatRate <= 100) {
-                                  context.read<AppConfigBloc>().add(UpdateVatRateEvent(vatRate));
+                                if (vatRate != null &&
+                                    vatRate >= 0 &&
+                                    vatRate <= 100) {
+                                  context
+                                      .read<AppConfigBloc>()
+                                      .add(UpdateVatRateEvent(vatRate));
                                 }
                               },
                             ),
@@ -1008,7 +1025,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   const SizedBox(height: 4),
                                   Text(
                                     '${configState.vatRate.toStringAsFixed(1)}%',
-                                    style: theme.textTheme.headlineMedium?.copyWith(
+                                    style: theme.textTheme.headlineMedium
+                                        ?.copyWith(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -1027,11 +1045,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             label: l10n.vatRateLabel,
                             prefixIcon: const Icon(Icons.percent),
                             hint: l10n.vatRateHint,
-                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
                             onChanged: (value) {
                               final vatRate = double.tryParse(value);
-                              if (vatRate != null && vatRate >= 0 && vatRate <= 100) {
-                                context.read<AppConfigBloc>().add(UpdateVatRateEvent(vatRate));
+                              if (vatRate != null &&
+                                  vatRate >= 0 &&
+                                  vatRate <= 100) {
+                                context
+                                    .read<AppConfigBloc>()
+                                    .add(UpdateVatRateEvent(vatRate));
                               }
                             },
                           ),
@@ -1052,7 +1075,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 const SizedBox(height: 4),
                                 Text(
                                   '${configState.vatRate.toStringAsFixed(1)}%',
-                                  style: theme.textTheme.headlineMedium?.copyWith(
+                                  style:
+                                      theme.textTheme.headlineMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -1105,7 +1129,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   ? l10n.vatIncludedInPriceDescription
                                   : l10n.vatExcludedFromPriceDescription,
                               style: theme.textTheme.bodySmall?.copyWith(
-                                color: liquidTheme.textColor.withValues(alpha: 0.7),
+                                color: liquidTheme.textColor
+                                    .withValues(alpha: 0.7),
                               ),
                             ),
                           ],
@@ -1114,7 +1139,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       _buildGlassSwitch(
                         value: configState.vatIncludedInPrice,
                         onChanged: (value) {
-                          context.read<AppConfigBloc>().add(UpdateVatInclusionEvent(value));
+                          context
+                              .read<AppConfigBloc>()
+                              .add(UpdateVatInclusionEvent(value));
                         },
                       ),
                     ],
@@ -1154,9 +1181,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             context.read<AppConfigBloc>().add(const InitializeAppConfigEvent());
             CurrencyHelper.refreshCache();
             _loadCompanyInfo();
-            _showSuccessNotification(l10n.importSuccessMessage(state.itemsImported));
+            _showSuccessNotification(
+                l10n.importSuccessMessage(state.itemsImported));
           } else if (state is DataImportExportError) {
-            _showErrorNotification('${state.message}\n${state.errorDetails ?? ''}');
+            _showErrorNotification(
+                '${state.message}\n${state.errorDetails ?? ''}');
           }
         },
         builder: (context, state) {
@@ -1203,7 +1232,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: LiquidButton(
-                    onPressed: isLoading ? null : () => _handleExport(context),
+                    onTap: isLoading ? null : () => _handleExport(context),
                     type: LiquidButtonType.filled,
                     size: LiquidButtonSize.large,
                     width: double.infinity,
@@ -1224,7 +1253,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: LiquidButton(
-                    onPressed: isLoading ? null : () => _handleImport(context),
+                    onTap: isLoading ? null : () => _handleImport(context),
                     type: LiquidButtonType.outlined,
                     size: LiquidButtonSize.large,
                     width: double.infinity,
@@ -1326,13 +1355,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
         Navigator.of(context).pop();
 
-        if (detectionResult.isValid && detectionResult.detectedTypes.isNotEmpty) {
+        if (detectionResult.isValid &&
+            detectionResult.detectedTypes.isNotEmpty) {
           final selectedTypes = await showDataTypeDetectionDialog(
             context: context,
             detectionResult: detectionResult,
           );
 
-          if (selectedTypes != null && selectedTypes.isNotEmpty && context.mounted) {
+          if (selectedTypes != null &&
+              selectedTypes.isNotEmpty &&
+              context.mounted) {
             context.read<DataImportExportBloc>().add(
                   ImportDataRequested(
                     filePath: filePath,
@@ -1408,7 +1440,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: SizedBox(
         width: double.infinity,
         child: LiquidButton(
-          onPressed: _isSyncing ? null : _syncData,
+          onTap: _isSyncing ? null : _syncData,
           type: LiquidButtonType.filled,
           size: LiquidButtonSize.large,
           width: double.infinity,
@@ -1597,7 +1629,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           borderRadius: BorderRadius.circular(16),
           color: value
               ? theme.colorScheme.primary.withValues(alpha: 0.3)
-              : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+              : theme.colorScheme.surfaceContainerHighest
+                  .withValues(alpha: 0.3),
           border: Border.all(
             color: value
                 ? theme.colorScheme.primary

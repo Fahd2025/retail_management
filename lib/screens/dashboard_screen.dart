@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/auth/auth_bloc.dart';
 import '../blocs/auth/auth_event.dart';
@@ -36,7 +36,8 @@ class DashboardScreen extends StatefulWidget {
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProviderStateMixin {
+class _DashboardScreenState extends State<DashboardScreen>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   int _previousIndex = 0;
   CompanyInfo? _companyInfo;
@@ -147,8 +148,10 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
           LiquidTooltip(
             message: l10n.refreshDashboard,
             child: LiquidButton(
-              onPressed: () {
-                context.read<DashboardBloc>().add(const RefreshDashboardEvent());
+              onTap: () {
+                context
+                    .read<DashboardBloc>()
+                    .add(const RefreshDashboardEvent());
               },
               type: LiquidButtonType.icon,
               size: LiquidButtonSize.medium,
@@ -187,12 +190,13 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                     label: Text('$cartItemCount'),
                     isLabelVisible: cartItemCount > 0,
                     child: LiquidButton(
-                      onPressed: () {
+                      onTap: () {
                         (_cashierKey.currentState as dynamic)?.toggleCart();
                       },
                       type: LiquidButtonType.icon,
                       size: LiquidButtonSize.medium,
-                      child: const Icon(Icons.shopping_cart, color: Colors.white),
+                      child:
+                          const Icon(Icons.shopping_cart, color: Colors.white),
                     ),
                   ),
                 ),
@@ -210,7 +214,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
           LiquidTooltip(
             message: l10n.add,
             child: LiquidButton(
-              onPressed: () {
+              onTap: () {
                 (_productsKey.currentState as dynamic)?.showProductDialog();
               },
               type: LiquidButtonType.icon,
@@ -221,7 +225,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
           LiquidTooltip(
             message: l10n.refresh,
             child: LiquidButton(
-              onPressed: () {
+              onTap: () {
                 context.read<ProductBloc>().add(const LoadProductsEvent());
               },
               type: LiquidButtonType.icon,
@@ -240,7 +244,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
           LiquidTooltip(
             message: l10n.add,
             child: LiquidButton(
-              onPressed: () {
+              onTap: () {
                 (_categoriesKey.currentState as dynamic)?.showCategoryDialog();
               },
               type: LiquidButtonType.icon,
@@ -251,7 +255,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
           LiquidTooltip(
             message: l10n.refresh,
             child: LiquidButton(
-              onPressed: () {
+              onTap: () {
                 (_categoriesKey.currentState as dynamic)?.loadCategories();
               },
               type: LiquidButtonType.icon,
@@ -270,7 +274,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
           LiquidTooltip(
             message: l10n.add,
             child: LiquidButton(
-              onPressed: () {
+              onTap: () {
                 (_customersKey.currentState as dynamic)?.showCustomerDialog();
               },
               type: LiquidButtonType.icon,
@@ -281,7 +285,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
           LiquidTooltip(
             message: l10n.refresh,
             child: LiquidButton(
-              onPressed: () {
+              onTap: () {
                 context.read<CustomerBloc>().add(const LoadCustomersEvent());
               },
               type: LiquidButtonType.icon,
@@ -300,7 +304,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
           LiquidTooltip(
             message: l10n.refresh,
             child: LiquidButton(
-              onPressed: () {
+              onTap: () {
                 context.read<SaleBloc>().add(const LoadSalesEvent());
               },
               type: LiquidButtonType.icon,
@@ -319,7 +323,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
           LiquidTooltip(
             message: l10n.addUser,
             child: LiquidButton(
-              onPressed: () {
+              onTap: () {
                 (_usersKey.currentState as dynamic)?.showUserDialog();
               },
               type: LiquidButtonType.icon,
@@ -330,7 +334,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
           LiquidTooltip(
             message: l10n.refresh,
             child: LiquidButton(
-              onPressed: () {
+              onTap: () {
                 context.read<UserBloc>().add(const LoadUsersEvent());
               },
               type: LiquidButtonType.icon,
@@ -522,7 +526,8 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                     child: Text(
                       label,
                       style: TextStyle(
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
                         color: textColor ??
                             (isSelected
                                 ? theme.colorScheme.primary
@@ -559,12 +564,12 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
         content: Text(l10n.confirmExit),
         actions: [
           LiquidButton(
-            onPressed: () => Navigator.pop(context, false),
+            onTap: () => Navigator.pop(context, false),
             type: LiquidButtonType.outlined,
             child: Text(l10n.no),
           ),
           LiquidButton(
-            onPressed: () => Navigator.pop(context, true),
+            onTap: () => Navigator.pop(context, true),
             type: LiquidButtonType.filled,
             backgroundColor: theme.colorScheme.error,
             child: Text(l10n.yes, style: const TextStyle(color: Colors.white)),
@@ -639,8 +644,9 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                                 _animationController.forward();
 
                                 // Check if we're navigating away from settings (index 7 for admin)
-                                final isLeavingSettings = (_previousIndex == 7 &&
-                                    user.role == UserRole.admin);
+                                final isLeavingSettings =
+                                    (_previousIndex == 7 &&
+                                        user.role == UserRole.admin);
 
                                 setState(() {
                                   _previousIndex = _selectedIndex;
@@ -679,15 +685,17 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                             content: Text(l10n.confirmLogout),
                             actions: [
                               LiquidButton(
-                                onPressed: () => Navigator.pop(context, false),
+                                onTap: () => Navigator.pop(context, false),
                                 type: LiquidButtonType.outlined,
                                 child: Text(l10n.cancel),
                               ),
                               LiquidButton(
-                                onPressed: () => Navigator.pop(context, true),
+                                onTap: () => Navigator.pop(context, true),
                                 type: LiquidButtonType.filled,
                                 backgroundColor: theme.colorScheme.error,
-                                child: Text(l10n.logout, style: const TextStyle(color: Colors.white)),
+                                child: Text(l10n.logout,
+                                    style:
+                                        const TextStyle(color: Colors.white)),
                               ),
                             ],
                           ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../database/drift_database.dart';
 import '../models/category.dart' as models;
@@ -244,7 +244,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   ),
                   const SizedBox(height: 24),
                   LiquidButton(
-                    onPressed: () => Navigator.pop(context),
+                    onTap: () => Navigator.pop(context),
                     type: LiquidButtonType.filled,
                     width: double.infinity,
                     child: Text(
@@ -311,7 +311,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   children: [
                     Expanded(
                       child: LiquidButton(
-                        onPressed: () => Navigator.pop(context, false),
+                        onTap: () => Navigator.pop(context, false),
                         type: LiquidButtonType.outlined,
                         child: Text(
                           AppLocalizations.of(context)!.cancel,
@@ -325,7 +325,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: LiquidButton(
-                        onPressed: () => Navigator.pop(context, true),
+                        onTap: () => Navigator.pop(context, true),
                         type: LiquidButtonType.filled,
                         backgroundColor: theme.colorScheme.error,
                         child: const Text(
@@ -441,14 +441,16 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                   ),
                                   dataTextStyle: TextStyle(
                                     fontSize: 13,
-                                    color: liquidTheme.textColor.withValues(alpha: 0.8),
+                                    color: liquidTheme.textColor
+                                        .withValues(alpha: 0.8),
                                   ),
                                   columns: [
                                     DataColumn(label: Text(l10n.name)),
                                     DataColumn(label: Text(l10n.description)),
                                     DataColumn(
-                                        label: Text(
-                                            l10n.productCount(0).split(' ')[0])),
+                                        label: Text(l10n
+                                            .productCount(0)
+                                            .split(' ')[0])),
                                     DataColumn(label: Text(l10n.actions)),
                                   ],
                                   rows: _categoriesWithCount.map((data) {
@@ -486,14 +488,15 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                             LiquidTooltip(
                                               message: l10n.tooltipEdit,
                                               child: LiquidButton(
-                                                onPressed: () =>
-                                                    showCategoryDialog(category),
+                                                onTap: () => showCategoryDialog(
+                                                    category),
                                                 type: LiquidButtonType.icon,
                                                 size: LiquidButtonSize.small,
                                                 child: Icon(
                                                   Icons.edit,
                                                   size: 20,
-                                                  color: theme.colorScheme.primary,
+                                                  color:
+                                                      theme.colorScheme.primary,
                                                 ),
                                               ),
                                             ),
@@ -501,14 +504,15 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                             LiquidTooltip(
                                               message: l10n.tooltipDelete,
                                               child: LiquidButton(
-                                                onPressed: () => _deleteCategory(
+                                                onTap: () => _deleteCategory(
                                                     category, productCount),
                                                 type: LiquidButtonType.icon,
                                                 size: LiquidButtonSize.small,
                                                 child: Icon(
                                                   Icons.delete,
                                                   size: 20,
-                                                  color: theme.colorScheme.error,
+                                                  color:
+                                                      theme.colorScheme.error,
                                                 ),
                                               ),
                                             ),
@@ -564,7 +568,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                     ),
                                   ),
                                   title: Text(
-                                    Localizations.localeOf(context).languageCode ==
+                                    Localizations.localeOf(context)
+                                                .languageCode ==
                                             'ar'
                                         ? (category.nameAr ?? category.name)
                                         : category.name,
@@ -578,7 +583,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                     l10n.productCount(productCount),
                                     style: TextStyle(
                                       fontSize: 13,
-                                      color: liquidTheme.textColor.withValues(alpha: 0.6),
+                                      color: liquidTheme.textColor
+                                          .withValues(alpha: 0.6),
                                     ),
                                   ),
                                   trailing: Row(
@@ -587,7 +593,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                       LiquidTooltip(
                                         message: l10n.tooltipEdit,
                                         child: LiquidButton(
-                                          onPressed: () =>
+                                          onTap: () =>
                                               showCategoryDialog(category),
                                           type: LiquidButtonType.icon,
                                           size: LiquidButtonSize.small,
@@ -602,8 +608,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                       LiquidTooltip(
                                         message: l10n.tooltipDelete,
                                         child: LiquidButton(
-                                          onPressed: () =>
-                                              _deleteCategory(category, productCount),
+                                          onTap: () => _deleteCategory(
+                                              category, productCount),
                                           type: LiquidButtonType.icon,
                                           size: LiquidButtonSize.small,
                                           child: Icon(

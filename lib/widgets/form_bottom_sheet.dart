@@ -23,7 +23,7 @@
 /// ```
 
 import 'package:flutter/material.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
 
 /// A customizable bottom sheet designed for form inputs with Liquid Glass styling
 ///
@@ -134,7 +134,7 @@ class FormBottomSheet extends StatelessWidget {
                       ),
                       // Close button for accessibility
                       LiquidButton(
-                        onPressed: onCancel ?? () => Navigator.pop(context),
+                        onTap: onCancel ?? () => Navigator.pop(context),
                         type: LiquidButtonType.icon,
                         size: LiquidButtonSize.small,
                         child: Icon(
@@ -209,7 +209,7 @@ class FormBottomSheet extends StatelessWidget {
                       // Cancel button - outlined style for less emphasis
                       Expanded(
                         child: LiquidButton(
-                          onPressed: onCancel ?? () => Navigator.pop(context),
+                          onTap: onCancel ?? () => Navigator.pop(context),
                           type: LiquidButtonType.outlined,
                           size: LiquidButtonSize.large,
                           width: double.infinity,
@@ -228,7 +228,7 @@ class FormBottomSheet extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: LiquidButton(
-                          onPressed: isSaveDisabled || isLoading ? null : onSave,
+                          onTap: isSaveDisabled || isLoading ? null : onSave,
                           type: LiquidButtonType.filled,
                           size: LiquidButtonSize.large,
                           width: double.infinity,

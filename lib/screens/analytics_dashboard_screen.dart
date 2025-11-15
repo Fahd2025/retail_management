@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/dashboard/dashboard_bloc.dart';
 import '../blocs/dashboard/dashboard_event.dart';
@@ -102,7 +102,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                 ),
                 SizedBox(height: 24.h),
                 LiquidButton(
-                  onPressed: () {
+                  onTap: () {
                     context
                         .read<DashboardBloc>()
                         .add(const RefreshDashboardEvent());
@@ -114,7 +114,8 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                     children: [
                       const Icon(Icons.refresh, color: Colors.white),
                       SizedBox(width: 8.w),
-                      Text(l10n.retry, style: const TextStyle(color: Colors.white)),
+                      Text(l10n.retry,
+                          style: const TextStyle(color: Colors.white)),
                     ],
                   ),
                 ),
