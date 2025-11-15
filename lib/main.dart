@@ -57,9 +57,12 @@ class MyApp extends StatelessWidget {
         splitScreenMode: true,
         builder: (context, child) {
           return BlocBuilder<AppConfigBloc, AppConfigState>(
+            buildWhen: (previous, current) =>
+                previous.themeMode != current.themeMode ||
+                previous.colorScheme != current.colorScheme ||
+                previous.locale != current.locale,
             builder: (context, configState) {
               return MaterialApp(
-                key: ValueKey('${configState.themeMode}-${configState.colorScheme.id}'),
                 title: 'Retail Management System',
                 debugShowCheckedModeBanner: false,
 
