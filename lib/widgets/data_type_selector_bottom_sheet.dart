@@ -101,14 +101,17 @@ class _DataTypeSelectorBottomSheetState
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  _buildDataTypeItem(
-                    context,
-                    DataType.all,
-                    l10n.allData,
-                    l10n.allDataDescription,
-                    Icons.dataset,
-                  ),
-                  Divider(height: 1.h, indent: 72.w),
+                  // Only show "All Data" option for JSON exports
+                  if (!widget.isExport || _selectedFormat == ExportFormat.json) ...[
+                    _buildDataTypeItem(
+                      context,
+                      DataType.all,
+                      l10n.allData,
+                      l10n.allDataDescription,
+                      Icons.dataset,
+                    ),
+                    Divider(height: 1.h, indent: 72.w),
+                  ],
                   _buildDataTypeItem(
                     context,
                     DataType.products,
@@ -400,6 +403,11 @@ class _DataTypeSelectorBottomSheetState
       onTap: () {
         setState(() {
           _selectedFormat = format;
+          // Remove "All Data" selection when CSV is selected
+          // CSV can only export one data type at a time
+          if (format == ExportFormat.csv) {
+            _selectedDataTypes.remove(DataType.all);
+          }
         });
       },
       borderRadius: BorderRadius.circular(8.r),
