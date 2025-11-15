@@ -517,5 +517,58 @@
         "type": "String"
       }
     }
-  }
+  },
+  "dataImportExport": "استيراد وتصدير البيانات",
+  "dataImportExportDescription": "استيراد أو تصدير بيانات عملك",
+  "importData": "استيراد البيانات",
+  "exportData": "تصدير البيانات",
+  "selectDataToImport": "اختر البيانات للاستيراد",
+  "selectDataToExport": "اختر البيانات للتصدير",
+  "selectMultipleDataTypes": "اختر نوعًا واحدًا أو أكثر من البيانات للمتابعة",
+  "selectSingleDataType": "اختر نوع البيانات للمتابعة",
+  "allData": "جميع البيانات",
+  "allDataDescription": "تصدير أو استيراد جميع أنواع البيانات",
+  "productsDataDescription": "معلومات المخزون والأسعار",
+  "categoriesDataDescription": "فئات المنتجات والتصنيفات",
+  "customersDataDescription": "معلومات الاتصال والأعمال للعملاء",
+  "salesDataDescription": "معاملات المبيعات والفواتير",
+  "usersDataDescription": "حسابات المستخدمين والصلاحيات",
+  "settingsDataDescription": "معلومات الشركة وإعدادات النظام",
+  "exportFormat": "تنسيق التصدير",
+  "importFile": "استيراد ملف",
+  "selectFile": "اختر ملف",
+  "fileSelected": "تم اختيار الملف",
+  "noFileSelected": "لم يتم اختيار ملف",
+  "importing": "جارٍ الاستيراد...",
+  "exporting": "جارٍ التصدير...",
+  "importSuccess": "تم استيراد البيانات بنجاح",
+  "exportSuccess": "تم تصدير البيانات بنجاح",
+  "importError": "فشل الاستيراد",
+  "exportError": "فشل التصدير",
+  "importSuccessMessage": "تم استيراد {count} عنصر بنجاح",
+  "@importSuccessMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exportSuccessMessage": "تم تصدير البيانات إلى: {path}",
+  "@exportSuccessMessage": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "importWarning": "تحذير: استيراد البيانات سيدمجها مع البيانات الموجودة. سيتم استبدال الإدخالات المكررة.",
+  "exportWarning": "تحذير: لن يتم تصدير البيانات الحساسة مثل كلمات مرور المستخدمين لأسباب أمنية.",
+  "selectFileToImport": "يرجى اختيار ملف للاستيراد",
+  "selectDataTypesToProceed": "يرجى اختيار نوع واحد على الأقل من البيانات للمتابعة",
+  "unsupportedFileFormat": "تنسيق الملف غير مدعوم. يرجى اختيار ملف JSON أو CSV.",
+  "fileNotFound": "الملف غير موجود. يرجى اختيار ملف صالح.",
+  "invalidFileContent": "محتوى الملف غير صالح. يرجى التحقق من تنسيق الملف.",
+  "importInProgress": "جارٍ الاستيراد...",
+  "exportInProgress": "جارٍ التصدير...",
+  "users": "المستخدمون"
 }

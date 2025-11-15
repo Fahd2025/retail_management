@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:file_picker/file_picker.dart';
 import '../database/drift_database.dart';
 import '../models/company_info.dart';
 import '../services/sync_service.dart';
 import '../services/image_service.dart';
+import '../services/data_import_export_service.dart';
 import '../blocs/app_config/app_config_bloc.dart';
 import '../blocs/app_config/app_config_event.dart';
 import '../blocs/app_config/app_config_state.dart';
+import '../blocs/data_import_export/data_import_export_bloc.dart';
+import '../blocs/data_import_export/data_import_export_event.dart';
+import '../blocs/data_import_export/data_import_export_state.dart';
 import '../widgets/print_format_selector.dart';
 import '../widgets/settings_section.dart';
 import '../widgets/company_logo_picker.dart';
 import '../widgets/theme_color_selector.dart';
+import '../widgets/data_type_selector_bottom_sheet.dart';
 import 'package:uuid/uuid.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../utils/currency_helper.dart';
@@ -285,6 +291,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildPrintSettingsSection(),
             _buildCompanyInfoSection(),
             _builVATSection(),
+            _buildDataImportExportSection(),
             _buildSyncSection(),
             _buildAboutSection(),
           ];
@@ -988,6 +995,185 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       ],
     );
+  }
+
+  /// Build Data Import/Export Section
+  Widget _buildDataImportExportSection() {
+    final l10n = AppLocalizations.of(context)!;
+
+    return BlocProvider(
+      create: (context) => DataImportExportBloc(
+        service: DataImportExportService(database: AppDatabase()),
+      ),
+      child: BlocConsumer<DataImportExportBloc, DataImportExportState>(
+        listener: (context, state) {
+          if (state is DataExported) {
+            _showSuccessSnackBar(l10n.exportSuccessMessage(state.filePath));
+          } else if (state is DataImported) {
+            _showSuccessSnackBar(
+                l10n.importSuccessMessage(state.itemsImported));
+          } else if (state is DataImportExportError) {
+            _showErrorSnackBar('${state.message}\n${state.errorDetails ?? ''}');
+          }
+        },
+        builder: (context, state) {
+          final isLoading =
+              state is DataExporting || state is DataImporting;
+
+          return SettingsSection(
+            title: l10n.dataImportExport,
+            icon: Icons.import_export,
+            subtitle: l10n.dataImportExportDescription,
+            children: [
+              // Warning card
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.orange.shade200),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline,
+                        color: Colors.orange.shade700, size: 20),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        l10n.importWarning,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Colors.orange.shade900,
+                            ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // Progress indicator if loading
+              if (isLoading)
+                Column(
+                  children: [
+                    LinearProgressIndicator(
+                      value: state is DataExporting
+                          ? state.progress
+                          : state is DataImporting
+                              ? state.progress
+                              : 0.0,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      state is DataExporting
+                          ? l10n.exportInProgress
+                          : l10n.importInProgress,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+
+              // Export button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: isLoading
+                      ? null
+                      : () => _handleExport(context),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  icon: const Icon(Icons.upload),
+                  label: Text(l10n.exportData),
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              // Import button
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: isLoading
+                      ? null
+                      : () => _handleImport(context),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  icon: const Icon(Icons.download),
+                  label: Text(l10n.importData),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  /// Handle export data
+  void _handleExport(BuildContext context) {
+    showDataTypeSelectorBottomSheet(
+      context: context,
+      isExport: true,
+      onConfirm: (dataTypes, format) {
+        context.read<DataImportExportBloc>().add(
+              ExportDataRequested(
+                dataTypes: dataTypes,
+                format: format ?? ExportFormat.json,
+              ),
+            );
+      },
+    );
+  }
+
+  /// Handle import data
+  Future<void> _handleImport(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+
+    // First, pick a file
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['json', 'csv'],
+    );
+
+    if (result != null && result.files.single.path != null) {
+      final filePath = result.files.single.path!;
+
+      // Show data type selector
+      if (context.mounted) {
+        showDataTypeSelectorBottomSheet(
+          context: context,
+          isExport: false,
+          onConfirm: (dataTypes, _) {
+            context.read<DataImportExportBloc>().add(
+                  ImportDataRequested(
+                    filePath: filePath,
+                    dataTypes: dataTypes,
+                  ),
+                );
+          },
+        );
+      }
+    } else {
+      // User canceled the picker
+      if (context.mounted) {
+        _showErrorSnackBar(l10n.selectFileToImport);
+      }
+    }
   }
 
   /// Build Data Synchronization Section (Low Priority)
