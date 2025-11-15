@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/auth/auth_bloc.dart';
 import '../blocs/auth/auth_event.dart';
@@ -35,10 +36,12 @@ class DashboardScreen extends StatefulWidget {
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   int _previousIndex = 0;
   CompanyInfo? _companyInfo;
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
 
   // GlobalKeys for screen access
   final GlobalKey<State<CashierScreen>> _cashierKey =
@@ -56,6 +59,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     _loadCompanyInfo();
+
+    // Initialize animations for smooth transitions
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    _animationController.forward();
   }
 
   Future<void> _loadCompanyInfo() async {
@@ -121,17 +139,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     // Check if it's the Analytics Dashboard
     if (label == l10n.dashboard) {
-      return AppBar(
-        title: Text(l10n.appTitle),
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: Colors.white,
+      return LiquidAppBar(
+        title: l10n.appTitle,
+        elevation: 4,
+        blur: 20,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              context.read<DashboardBloc>().add(const RefreshDashboardEvent());
-            },
-            tooltip: l10n.refreshDashboard,
+          LiquidTooltip(
+            message: l10n.refreshDashboard,
+            child: LiquidButton(
+              onPressed: () {
+                context.read<DashboardBloc>().add(const RefreshDashboardEvent());
+              },
+              type: LiquidButtonType.icon,
+              size: LiquidButtonSize.medium,
+              child: const Icon(Icons.refresh, color: Colors.white),
+            ),
           ),
         ],
       );
@@ -153,10 +175,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               cartItemCount = saleState.cartItemCount;
             }
 
-            return AppBar(
-              title: Text(l10n.pointOfSale),
-              backgroundColor: theme.colorScheme.primary,
-              foregroundColor: Colors.white,
+            return LiquidAppBar(
+              title: l10n.pointOfSale,
+              elevation: 4,
+              blur: 20,
               actions: [
                 // Cart icon with badge
                 Padding(
@@ -164,11 +186,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: Badge(
                     label: Text('$cartItemCount'),
                     isLabelVisible: cartItemCount > 0,
-                    child: IconButton(
-                      icon: const Icon(Icons.shopping_cart),
+                    child: LiquidButton(
                       onPressed: () {
                         (_cashierKey.currentState as dynamic)?.toggleCart();
                       },
+                      type: LiquidButtonType.icon,
+                      size: LiquidButtonSize.medium,
+                      child: const Icon(Icons.shopping_cart, color: Colors.white),
                     ),
                   ),
                 ),
@@ -178,242 +202,348 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       );
     } else if (label == l10n.products) {
-      return AppBar(
-        title: Text(l10n.productsManagement),
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: Colors.white,
+      return LiquidAppBar(
+        title: l10n.productsManagement,
+        elevation: 4,
+        blur: 20,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              (_productsKey.currentState as dynamic)?.showProductDialog();
-            },
-            tooltip: l10n.add,
+          LiquidTooltip(
+            message: l10n.add,
+            child: LiquidButton(
+              onPressed: () {
+                (_productsKey.currentState as dynamic)?.showProductDialog();
+              },
+              type: LiquidButtonType.icon,
+              size: LiquidButtonSize.medium,
+              child: const Icon(Icons.add, color: Colors.white),
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              context.read<ProductBloc>().add(const LoadProductsEvent());
-            },
-            tooltip: l10n.refresh,
+          LiquidTooltip(
+            message: l10n.refresh,
+            child: LiquidButton(
+              onPressed: () {
+                context.read<ProductBloc>().add(const LoadProductsEvent());
+              },
+              type: LiquidButtonType.icon,
+              size: LiquidButtonSize.medium,
+              child: const Icon(Icons.refresh, color: Colors.white),
+            ),
           ),
         ],
       );
     } else if (label == l10n.categories) {
-      return AppBar(
-        title: Text(l10n.categories),
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: Colors.white,
+      return LiquidAppBar(
+        title: l10n.categories,
+        elevation: 4,
+        blur: 20,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              (_categoriesKey.currentState as dynamic)?.showCategoryDialog();
-            },
-            tooltip: l10n.add,
+          LiquidTooltip(
+            message: l10n.add,
+            child: LiquidButton(
+              onPressed: () {
+                (_categoriesKey.currentState as dynamic)?.showCategoryDialog();
+              },
+              type: LiquidButtonType.icon,
+              size: LiquidButtonSize.medium,
+              child: const Icon(Icons.add, color: Colors.white),
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              (_categoriesKey.currentState as dynamic)?.loadCategories();
-            },
-            tooltip: l10n.refresh,
+          LiquidTooltip(
+            message: l10n.refresh,
+            child: LiquidButton(
+              onPressed: () {
+                (_categoriesKey.currentState as dynamic)?.loadCategories();
+              },
+              type: LiquidButtonType.icon,
+              size: LiquidButtonSize.medium,
+              child: const Icon(Icons.refresh, color: Colors.white),
+            ),
           ),
         ],
       );
     } else if (label == l10n.customers) {
-      return AppBar(
-        title: Text(l10n.customersManagement),
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: Colors.white,
+      return LiquidAppBar(
+        title: l10n.customersManagement,
+        elevation: 4,
+        blur: 20,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              (_customersKey.currentState as dynamic)?.showCustomerDialog();
-            },
+          LiquidTooltip(
+            message: l10n.add,
+            child: LiquidButton(
+              onPressed: () {
+                (_customersKey.currentState as dynamic)?.showCustomerDialog();
+              },
+              type: LiquidButtonType.icon,
+              size: LiquidButtonSize.medium,
+              child: const Icon(Icons.add, color: Colors.white),
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              context.read<CustomerBloc>().add(const LoadCustomersEvent());
-            },
+          LiquidTooltip(
+            message: l10n.refresh,
+            child: LiquidButton(
+              onPressed: () {
+                context.read<CustomerBloc>().add(const LoadCustomersEvent());
+              },
+              type: LiquidButtonType.icon,
+              size: LiquidButtonSize.medium,
+              child: const Icon(Icons.refresh, color: Colors.white),
+            ),
           ),
         ],
       );
     } else if (label == l10n.sales) {
-      return AppBar(
-        title: Text(l10n.salesList),
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: Colors.white,
+      return LiquidAppBar(
+        title: l10n.salesList,
+        elevation: 4,
+        blur: 20,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              context.read<SaleBloc>().add(const LoadSalesEvent());
-            },
+          LiquidTooltip(
+            message: l10n.refresh,
+            child: LiquidButton(
+              onPressed: () {
+                context.read<SaleBloc>().add(const LoadSalesEvent());
+              },
+              type: LiquidButtonType.icon,
+              size: LiquidButtonSize.medium,
+              child: const Icon(Icons.refresh, color: Colors.white),
+            ),
           ),
         ],
       );
     } else if (label == l10n.users) {
-      return AppBar(
-        title: Text(l10n.usersManagement),
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: Colors.white,
+      return LiquidAppBar(
+        title: l10n.usersManagement,
+        elevation: 4,
+        blur: 20,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              (_usersKey.currentState as dynamic)?.showUserDialog();
-            },
-            tooltip: l10n.addUser,
+          LiquidTooltip(
+            message: l10n.addUser,
+            child: LiquidButton(
+              onPressed: () {
+                (_usersKey.currentState as dynamic)?.showUserDialog();
+              },
+              type: LiquidButtonType.icon,
+              size: LiquidButtonSize.medium,
+              child: const Icon(Icons.add, color: Colors.white),
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              context.read<UserBloc>().add(const LoadUsersEvent());
-            },
-            tooltip: l10n.refresh,
+          LiquidTooltip(
+            message: l10n.refresh,
+            child: LiquidButton(
+              onPressed: () {
+                context.read<UserBloc>().add(const LoadUsersEvent());
+              },
+              type: LiquidButtonType.icon,
+              size: LiquidButtonSize.medium,
+              child: const Icon(Icons.refresh, color: Colors.white),
+            ),
           ),
         ],
       );
     } else if (label == l10n.settings) {
-      return AppBar(
-        title: Text(l10n.settings),
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: Colors.white,
+      return LiquidAppBar(
+        title: l10n.settings,
+        elevation: 4,
+        blur: 20,
       );
     } else {
-      return AppBar(
-        title: Text(label),
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: Colors.white,
+      return LiquidAppBar(
+        title: label,
+        elevation: 4,
+        blur: 20,
       );
     }
   }
 
   Widget _buildDrawerHeader() {
     final theme = Theme.of(context);
-    return DrawerHeader(
+    final liquidTheme = LiquidTheme.of(context);
+
+    return Container(
+      height: 200,
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: theme.colorScheme.primary,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            theme.colorScheme.primary,
+            theme.colorScheme.primary.withValues(alpha: 0.8),
+          ],
+        ),
       ),
-      child: Container(
-        width: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Logo
-            if (_companyInfo?.logoPath != null &&
-                _companyInfo!.logoPath!.isNotEmpty)
-              Container(
-                height: 60,
-                width: 60,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: FutureBuilder(
-                    key: ValueKey(_companyInfo!.logoPath),
-                    future: ImageService.getImageBytes(_companyInfo!.logoPath),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done &&
-                          snapshot.hasData &&
-                          snapshot.data != null) {
-                        return Image.memory(
-                          snapshot.data!,
-                          fit: BoxFit.contain,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Icon(
-                              Icons.store,
-                              size: 40,
-                              color: theme.colorScheme.primary,
-                            );
-                          },
-                        );
-                      } else if (snapshot.hasError) {
-                        return Icon(
-                          Icons.store,
-                          size: 40,
-                          color: theme.colorScheme.primary,
-                        );
-                      } else {
-                        return Center(
-                          child: SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                theme.colorScheme.primary,
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                ),
-              )
-            else
-              Container(
-                height: 60,
-                width: 60,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  Icons.store,
-                  size: 40,
-                  color: theme.colorScheme.primary,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Logo with glass effect
+          if (_companyInfo?.logoPath != null &&
+              _companyInfo!.logoPath!.isNotEmpty)
+            LiquidContainer(
+              width: 60,
+              height: 60,
+              borderRadius: 12,
+              blur: 10,
+              opacity: 0.3,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: FutureBuilder(
+                  key: ValueKey(_companyInfo!.logoPath),
+                  future: ImageService.getImageBytes(_companyInfo!.logoPath),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done &&
+                        snapshot.hasData &&
+                        snapshot.data != null) {
+                      return Image.memory(
+                        snapshot.data!,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(
+                            Icons.store,
+                            size: 40,
+                            color: Colors.white,
+                          );
+                        },
+                      );
+                    } else if (snapshot.hasError) {
+                      return Icon(
+                        Icons.store,
+                        size: 40,
+                        color: Colors.white,
+                      );
+                    } else {
+                      return Center(
+                        child: LiquidLoader(size: 24),
+                      );
+                    }
+                  },
                 ),
               ),
-            const SizedBox(height: 12),
-            // Company Name (localized - English or Arabic based on app language)
+            )
+          else
+            LiquidContainer(
+              width: 60,
+              height: 60,
+              borderRadius: 12,
+              blur: 10,
+              opacity: 0.3,
+              child: Icon(
+                Icons.store,
+                size: 40,
+                color: Colors.white,
+              ),
+            ),
+          const SizedBox(height: 16),
+          // Company Name (localized - English or Arabic based on app language)
+          Builder(
+            builder: (context) {
+              final locale = Localizations.localeOf(context);
+              final isArabic = locale.languageCode == 'ar';
+              final companyName = isArabic
+                  ? (_companyInfo?.nameArabic ??
+                      _companyInfo?.name ??
+                      'إدارة التجزئة')
+                  : (_companyInfo?.name ?? 'Retail Management');
+
+              return Text(
+                companyName,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              );
+            },
+          ),
+          const SizedBox(height: 8),
+          // VAT Number
+          if (_companyInfo?.vatNumber != null)
             Builder(
               builder: (context) {
-                final locale = Localizations.localeOf(context);
-                final isArabic = locale.languageCode == 'ar';
-                final companyName = isArabic
-                    ? (_companyInfo?.nameArabic ??
-                        _companyInfo?.name ??
-                        'إدارة التجزئة')
-                    : (_companyInfo?.name ?? 'Retail Management');
-
+                final l10n = AppLocalizations.of(context)!;
                 return Text(
-                  companyName,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                  '${l10n.vatNumber}: ${_companyInfo!.vatNumber}',
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.9),
+                    fontSize: 13,
                   ),
-                  maxLines: 2,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 );
               },
             ),
-            const SizedBox(height: 8),
-            // VAT Number
-            if (_companyInfo?.vatNumber != null)
-              Builder(
-                builder: (context) {
-                  final l10n = AppLocalizations.of(context)!;
-                  return Text(
-                    '${l10n.vatNumber}: ${_companyInfo!.vatNumber}',
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.9),
-                      fontSize: 13,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDrawerItem({
+    required IconData icon,
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+    Color? iconColor,
+    Color? textColor,
+  }) {
+    final theme = Theme.of(context);
+    final liquidTheme = LiquidTheme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: isSelected
+              ? theme.colorScheme.primaryContainer.withValues(alpha: 0.3)
+              : Colors.transparent,
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(12),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                children: [
+                  Icon(
+                    icon,
+                    color: iconColor ??
+                        (isSelected
+                            ? theme.colorScheme.primary
+                            : liquidTheme.textColor.withValues(alpha: 0.7)),
+                    size: 24,
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Text(
+                      label,
+                      style: TextStyle(
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        color: textColor ??
+                            (isSelected
+                                ? theme.colorScheme.primary
+                                : liquidTheme.textColor.withValues(alpha: 0.8)),
+                        fontSize: 15,
+                      ),
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  );
-                },
+                  ),
+                  if (isSelected)
+                    Container(
+                      width: 4,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primary,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                ],
               ),
-          ],
+            ),
+          ),
         ),
       ),
     );
@@ -424,21 +554,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final theme = Theme.of(context);
     final shouldExit = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.confirm),
+      builder: (context) => LiquidDialog(
+        title: l10n.confirm,
         content: Text(l10n.confirmExit),
         actions: [
-          TextButton(
+          LiquidButton(
             onPressed: () => Navigator.pop(context, false),
+            type: LiquidButtonType.outlined,
             child: Text(l10n.no),
           ),
-          ElevatedButton(
+          LiquidButton(
             onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: theme.colorScheme.error,
-              foregroundColor: Colors.white,
-            ),
-            child: Text(l10n.yes),
+            type: LiquidButtonType.filled,
+            backgroundColor: theme.colorScheme.error,
+            child: Text(l10n.yes, style: const TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -449,6 +578,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final liquidTheme = LiquidTheme.of(context);
+
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, authState) {
         if (authState is! Authenticated) {
@@ -458,6 +589,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         final user = authState.user;
         final screens = _getScreens(user.role);
         final navItems = _getNavigationItems(user.role, context);
+        final l10n = AppLocalizations.of(context)!;
 
         return PopScope(
           canPop: false,
@@ -470,7 +602,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Navigator.of(context).pop();
             }
           },
-          child: Scaffold(
+          child: LiquidScaffold(
             appBar: _buildAppBar(navItems, context),
             onDrawerChanged: (isOpened) {
               // Reload company info when drawer is opened (to show latest changes from settings)
@@ -478,108 +610,113 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 _loadCompanyInfo();
               }
             },
-            drawer: Drawer(
+            drawer: LiquidDrawer(
               key: ValueKey(_companyInfo?.updatedAt.toString() ?? ''),
+              width: 280,
+              elevation: 8,
+              blur: 30,
               child: Column(
                 children: [
                   _buildDrawerHeader(),
                   Expanded(
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: navItems.length,
-                      itemBuilder: (context, index) {
-                        final item = navItems[index];
-                        final isSelected = _selectedIndex == index;
+                    child: FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: ListView(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        children: [
+                          ...navItems.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final item = entry.value;
+                            final isSelected = _selectedIndex == index;
 
-                        return ListTile(
-                          leading: Icon(
-                            item['icon'] as IconData,
-                            color: isSelected
-                                ? theme.colorScheme.primary
-                                : Colors.grey.shade700,
-                          ),
-                          title: Text(
-                            item['label'] as String,
-                            style: TextStyle(
-                              fontWeight: isSelected
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
-                              color: isSelected
-                                  ? theme.colorScheme.primary
-                                  : Colors.grey.shade700,
-                            ),
-                          ),
-                          selected: isSelected,
-                          selectedTileColor: theme.colorScheme.primaryContainer
-                              .withValues(alpha: 0.3),
-                          onTap: () async {
-                            // Check if we're navigating away from settings (index 6 for admin)
-                            final isLeavingSettings = (_previousIndex == 6 &&
-                                user.role == UserRole.admin);
+                            return _buildDrawerItem(
+                              icon: item['icon'] as IconData,
+                              label: item['label'] as String,
+                              isSelected: isSelected,
+                              onTap: () async {
+                                // Animate screen transition
+                                _animationController.reset();
+                                _animationController.forward();
 
-                            setState(() {
-                              _previousIndex = _selectedIndex;
-                              _selectedIndex = index;
-                            });
+                                // Check if we're navigating away from settings (index 7 for admin)
+                                final isLeavingSettings = (_previousIndex == 7 &&
+                                    user.role == UserRole.admin);
 
-                            // Reload company info if leaving settings
-                            if (isLeavingSettings) {
-                              await _loadCompanyInfo();
-                            }
+                                setState(() {
+                                  _previousIndex = _selectedIndex;
+                                  _selectedIndex = index;
+                                });
 
-                            if (context.mounted) {
-                              Navigator.pop(context); // Close drawer
-                            }
-                          },
-                        );
-                      },
+                                // Reload company info if leaving settings
+                                if (isLeavingSettings) {
+                                  await _loadCompanyInfo();
+                                }
+
+                                if (context.mounted) {
+                                  Navigator.pop(context); // Close drawer
+                                }
+                              },
+                            );
+                          }).toList(),
+                        ],
+                      ),
                     ),
                   ),
                   const Divider(height: 1),
-                  ListTile(
-                    leading: Icon(Icons.logout, color: theme.colorScheme.error),
-                    title: Text(
-                      AppLocalizations.of(context)!.logout,
-                      style: TextStyle(color: theme.colorScheme.error),
-                    ),
-                    onTap: () async {
-                      final l10n = AppLocalizations.of(context)!;
-                      final confirm = await showDialog<bool>(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text(l10n.logout),
-                          content: Text(l10n.confirmLogout),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, false),
-                              child: Text(l10n.cancel),
-                            ),
-                            ElevatedButton(
-                              onPressed: () => Navigator.pop(context, true),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: theme.colorScheme.error,
-                                foregroundColor: Colors.white,
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: _buildDrawerItem(
+                      icon: Icons.logout,
+                      label: l10n.logout,
+                      isSelected: false,
+                      iconColor: theme.colorScheme.error,
+                      textColor: theme.colorScheme.error,
+                      onTap: () async {
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => LiquidDialog(
+                            title: l10n.logout,
+                            content: Text(l10n.confirmLogout),
+                            actions: [
+                              LiquidButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                type: LiquidButtonType.outlined,
+                                child: Text(l10n.cancel),
                               ),
-                              child: Text(l10n.logout),
-                            ),
-                          ],
-                        ),
-                      );
+                              LiquidButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                type: LiquidButtonType.filled,
+                                backgroundColor: theme.colorScheme.error,
+                                child: Text(l10n.logout, style: const TextStyle(color: Colors.white)),
+                              ),
+                            ],
+                          ),
+                        );
 
-                      if (confirm == true && mounted) {
-                        Navigator.pop(context); // Close drawer
-                        context.read<AuthBloc>().add(const LogoutEvent());
-                      }
-                    },
+                        if (confirm == true && mounted) {
+                          Navigator.pop(context); // Close drawer
+                          context.read<AuthBloc>().add(const LogoutEvent());
+                        }
+                      },
+                    ),
                   ),
                   const SizedBox(height: 8),
                 ],
               ),
             ),
-            body: screens[_selectedIndex],
+            body: FadeTransition(
+              opacity: _fadeAnimation,
+              child: screens[_selectedIndex],
+            ),
           ),
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 }

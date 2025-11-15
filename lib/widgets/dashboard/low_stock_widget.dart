@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../../models/dashboard_statistics.dart';
 
@@ -21,218 +22,217 @@ class LowStockWidget extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final numberFormatter = NumberFormat('#,##0.##');
 
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(16.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.warning_amber_rounded,
-                  color: Colors.orange,
-                  size: 24.sp,
+    return LiquidCard(
+      elevation: 3,
+      blur: 18,
+      opacity: 0.15,
+      borderRadius: 12,
+      padding: EdgeInsets.all(16.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.warning_amber_rounded,
+                color: Colors.orange,
+                size: 24.sp,
+              ),
+              SizedBox(width: 8.w),
+              Expanded(
+                child: Text(
+                  l10n.lowStockNotifications,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                SizedBox(width: 8.w),
-                Expanded(
+              ),
+              if (products.isNotEmpty)
+                LiquidContainer(
+                  borderRadius: 12,
+                  blur: 8,
+                  opacity: 0.1,
+                  color: Colors.orange,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.w,
+                    vertical: 4.h,
+                  ),
                   child: Text(
-                    l10n.lowStockNotifications,
-                    style: theme.textTheme.titleLarge?.copyWith(
+                    '${products.length}',
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: Colors.orange,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                if (products.isNotEmpty)
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 8.w,
-                      vertical: 4.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Text(
-                      '${products.length}',
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        color: Colors.orange,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            SizedBox(height: 16.h),
-            if (isLoading)
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.all(32.h),
-                  child: const CircularProgressIndicator(),
+            ],
+          ),
+          SizedBox(height: 16.h),
+          if (isLoading)
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(32.h),
+                child: LiquidLoader(
+                  size: 60,
+                  color: theme.colorScheme.primary,
                 ),
-              )
-            else if (products.isEmpty)
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.all(32.h),
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.check_circle_outline,
-                        size: 48.sp,
-                        color: Colors.green.withValues(alpha: 0.6),
+              ),
+            )
+          else if (products.isEmpty)
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(32.h),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.check_circle_outline,
+                      size: 48.sp,
+                      color: Colors.green.withValues(alpha: 0.6),
+                    ),
+                    SizedBox(height: 8.h),
+                    Text(
+                      l10n.allProductsWellStocked,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        color: theme.colorScheme.onSurface
+                            .withValues(alpha: 0.6),
                       ),
-                      SizedBox(height: 8.h),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          else
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: products.length > 10 ? 10 : products.length,
+              separatorBuilder: (context, index) => Divider(height: 1.h),
+              itemBuilder: (context, index) {
+                final product = products[index];
+                final stockPercentage = product.reorderLevel != null
+                    ? (product.currentQuantity / product.reorderLevel!) * 100
+                    : 0.0;
+                final isCritical = product.currentQuantity <= 5;
+
+                return ListTile(
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 8.w,
+                    vertical: 8.h,
+                  ),
+                  leading: LiquidContainer(
+                    width: 50.w,
+                    height: 50.w,
+                    borderRadius: 8,
+                    blur: 10,
+                    opacity: 0.1,
+                    color: isCritical ? Colors.red : Colors.orange,
+                    child: product.productImage != null &&
+                            product.productImage!.isNotEmpty
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(8.r),
+                            child: Image.asset(
+                              product.productImage!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Icon(
+                                  Icons.inventory_2,
+                                  color:
+                                      isCritical ? Colors.red : Colors.orange,
+                                  size: 24.sp,
+                                );
+                              },
+                            ),
+                          )
+                        : Icon(
+                            Icons.inventory_2,
+                            color: isCritical ? Colors.red : Colors.orange,
+                            size: 24.sp,
+                          ),
+                  ),
+                  title: Text(
+                    product.productName,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 4.h),
+                      Row(
+                        children: [
+                          Icon(
+                            isCritical
+                                ? Icons.error_outline
+                                : Icons.warning_amber_outlined,
+                            size: 14.sp,
+                            color: isCritical ? Colors.red : Colors.orange,
+                          ),
+                          SizedBox(width: 4.w),
+                          Text(
+                            isCritical
+                                ? l10n.critical
+                                : l10n.lowStockNotifications,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: isCritical ? Colors.red : Colors.orange,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 4.h),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(2.r),
+                        child: LinearProgressIndicator(
+                          value: stockPercentage.clamp(0.0, 100.0) / 100,
+                          backgroundColor:
+                              theme.colorScheme.surfaceContainerHighest,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            isCritical ? Colors.red : Colors.orange,
+                          ),
+                          minHeight: 4.h,
+                        ),
+                      ),
+                    ],
+                  ),
+                  trailing: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
                       Text(
-                        l10n.allProductsWellStocked,
-                        style: theme.textTheme.bodyLarge?.copyWith(
+                        numberFormatter.format(product.currentQuantity),
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: isCritical ? Colors.red : Colors.orange,
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      Text(
+                        l10n.unitsLeft,
+                        style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurface
                               .withValues(alpha: 0.6),
                         ),
                       ),
                     ],
                   ),
-                ),
-              )
-            else
-              ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: products.length > 10 ? 10 : products.length,
-                separatorBuilder: (context, index) => Divider(height: 1.h),
-                itemBuilder: (context, index) {
-                  final product = products[index];
-                  final stockPercentage = product.reorderLevel != null
-                      ? (product.currentQuantity / product.reorderLevel!) * 100
-                      : 0.0;
-                  final isCritical = product.currentQuantity <= 5;
-
-                  return ListTile(
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 8.w,
-                      vertical: 8.h,
-                    ),
-                    leading: Container(
-                      width: 50.w,
-                      height: 50.w,
-                      decoration: BoxDecoration(
-                        color: isCritical
-                            ? Colors.red.withValues(alpha: 0.1)
-                            : Colors.orange.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(8.r),
-                      ),
-                      child: product.productImage != null &&
-                              product.productImage!.isNotEmpty
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(8.r),
-                              child: Image.asset(
-                                product.productImage!,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Icon(
-                                    Icons.inventory_2,
-                                    color:
-                                        isCritical ? Colors.red : Colors.orange,
-                                    size: 24.sp,
-                                  );
-                                },
-                              ),
-                            )
-                          : Icon(
-                              Icons.inventory_2,
-                              color: isCritical ? Colors.red : Colors.orange,
-                              size: 24.sp,
-                            ),
-                    ),
-                    title: Text(
-                      product.productName,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 4.h),
-                        Row(
-                          children: [
-                            Icon(
-                              isCritical
-                                  ? Icons.error_outline
-                                  : Icons.warning_amber_outlined,
-                              size: 14.sp,
-                              color: isCritical ? Colors.red : Colors.orange,
-                            ),
-                            SizedBox(width: 4.w),
-                            Text(
-                              isCritical
-                                  ? l10n.critical
-                                  : l10n.lowStockNotifications,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: isCritical ? Colors.red : Colors.orange,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 4.h),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(2.r),
-                          child: LinearProgressIndicator(
-                            value: stockPercentage.clamp(0.0, 100.0) / 100,
-                            backgroundColor:
-                                theme.colorScheme.surfaceContainerHighest,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              isCritical ? Colors.red : Colors.orange,
-                            ),
-                            minHeight: 4.h,
-                          ),
-                        ),
-                      ],
-                    ),
-                    trailing: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          numberFormatter.format(product.currentQuantity),
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: isCritical ? Colors.red : Colors.orange,
-                          ),
-                        ),
-                        SizedBox(height: 2.h),
-                        Text(
-                          l10n.unitsLeft,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface
-                                .withValues(alpha: 0.6),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
+                );
+              },
+            ),
+          if (products.length > 10) ...[
+            SizedBox(height: 8.h),
+            Center(
+              child: TextButton(
+                onPressed: () {
+                  // Navigate to products screen with low stock filter
                 },
+                child: Text(l10n.viewAllLowStockItems(products.length)),
               ),
-            if (products.length > 10) ...[
-              SizedBox(height: 8.h),
-              Center(
-                child: TextButton(
-                  onPressed: () {
-                    // Navigate to products screen with low stock filter
-                  },
-                  child: Text(l10n.viewAllLowStockItems(products.length)),
-                ),
-              ),
-            ],
+            ),
           ],
-        ),
+        ],
       ),
     );
   }

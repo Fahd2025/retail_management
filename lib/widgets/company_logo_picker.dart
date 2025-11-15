@@ -2,9 +2,10 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_picker/image_picker.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
 import '../services/image_service.dart';
 
-/// Widget for picking and displaying company logo
+/// Widget for picking and displaying company logo with Liquid Glass UI
 /// Supports both web (base64) and mobile (file storage)
 class CompanyLogoPicker extends StatefulWidget {
   final String? currentLogoPath;
@@ -161,51 +162,133 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
     }
   }
 
-  /// Show options to pick image from gallery or camera
+  /// Show options to pick image from gallery or camera with Liquid Glass UI
   void _showImageSourceOptions() {
+    final liquidTheme = LiquidTheme.of(context);
+
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+      backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
-        return SafeArea(
-          child: Wrap(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.photo_library, color: Colors.blue),
-                title: const Text('Choose from Gallery'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _pickImage(ImageSource.gallery);
-                },
-              ),
-              if (!kIsWeb) // Camera not available on web
-                ListTile(
-                  leading: const Icon(Icons.camera_alt, color: Colors.green),
-                  title: const Text('Take a Photo'),
-                  onTap: () {
-                    Navigator.pop(context);
-                    _pickImage(ImageSource.camera);
-                  },
+        return LiquidCard(
+          borderRadius: 20,
+          elevation: 8,
+          blur: 25,
+          opacity: 0.18,
+          child: SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Drag handle
+                Container(
+                  margin: const EdgeInsets.only(top: 12, bottom: 8),
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: liquidTheme.textColor.withValues(alpha: 0.4),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
-              if (_imageBytes != null)
-                ListTile(
-                  leading: const Icon(Icons.delete, color: Colors.red),
-                  title: const Text('Remove Logo'),
-                  onTap: () {
-                    Navigator.pop(context);
-                    _removeLogo();
-                  },
+                // Gallery option
+                LiquidContainer(
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  borderRadius: 12,
+                  blur: 10,
+                  opacity: 0.1,
+                  child: ListTile(
+                    leading: LiquidContainer(
+                      padding: const EdgeInsets.all(8),
+                      borderRadius: 8,
+                      blur: 8,
+                      opacity: 0.2,
+                      child: const Icon(Icons.photo_library, color: Colors.blue),
+                    ),
+                    title: Text(
+                      'Choose from Gallery',
+                      style: TextStyle(color: liquidTheme.textColor),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _pickImage(ImageSource.gallery);
+                    },
+                  ),
                 ),
-              ListTile(
-                leading: const Icon(Icons.cancel, color: Colors.grey),
-                title: const Text('Cancel'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
+                // Camera option (not available on web)
+                if (!kIsWeb)
+                  LiquidContainer(
+                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    borderRadius: 12,
+                    blur: 10,
+                    opacity: 0.1,
+                    child: ListTile(
+                      leading: LiquidContainer(
+                        padding: const EdgeInsets.all(8),
+                        borderRadius: 8,
+                        blur: 8,
+                        opacity: 0.2,
+                        child: const Icon(Icons.camera_alt, color: Colors.green),
+                      ),
+                      title: Text(
+                        'Take a Photo',
+                        style: TextStyle(color: liquidTheme.textColor),
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                        _pickImage(ImageSource.camera);
+                      },
+                    ),
+                  ),
+                // Remove logo option
+                if (_imageBytes != null)
+                  LiquidContainer(
+                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    borderRadius: 12,
+                    blur: 10,
+                    opacity: 0.1,
+                    child: ListTile(
+                      leading: LiquidContainer(
+                        padding: const EdgeInsets.all(8),
+                        borderRadius: 8,
+                        blur: 8,
+                        opacity: 0.2,
+                        child: const Icon(Icons.delete, color: Colors.red),
+                      ),
+                      title: Text(
+                        'Remove Logo',
+                        style: TextStyle(color: liquidTheme.textColor),
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                        _removeLogo();
+                      },
+                    ),
+                  ),
+                // Cancel option
+                LiquidContainer(
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  borderRadius: 12,
+                  blur: 10,
+                  opacity: 0.1,
+                  child: ListTile(
+                    leading: LiquidContainer(
+                      padding: const EdgeInsets.all(8),
+                      borderRadius: 8,
+                      blur: 8,
+                      opacity: 0.2,
+                      child: Icon(Icons.cancel, color: liquidTheme.textColor),
+                    ),
+                    title: Text(
+                      'Cancel',
+                      style: TextStyle(color: liquidTheme.textColor),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         );
       },
@@ -214,25 +297,25 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
 
   @override
   Widget build(BuildContext context) {
+    final liquidTheme = LiquidTheme.of(context);
+
     return Column(
       children: [
-        // Logo preview container
+        // Logo preview container with Liquid Glass effect
         GestureDetector(
           onTap: _isLoading ? null : _showImageSourceOptions,
-          child: Container(
+          child: LiquidCard(
             width: widget.size,
             height: widget.size,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: _errorMessage != null ? Colors.red : Colors.grey[300]!,
-                width: 2,
-              ),
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.grey[50],
-            ),
+            borderRadius: 12,
+            elevation: 4,
+            blur: 15,
+            opacity: 0.15,
             child: _isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(),
+                ? Center(
+                    child: CircularProgressIndicator(
+                      color: liquidTheme.primaryColor,
+                    ),
                   )
                 : _imageBytes != null
                     ? ClipRRect(
@@ -245,17 +328,24 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
                     : Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.add_photo_alternate,
-                            size: 48,
-                            color: Colors.grey[400],
+                          LiquidContainer(
+                            padding: const EdgeInsets.all(12),
+                            borderRadius: 12,
+                            blur: 10,
+                            opacity: 0.2,
+                            child: Icon(
+                              Icons.add_photo_alternate,
+                              size: 48,
+                              color: liquidTheme.textColor.withValues(alpha: 0.6),
+                            ),
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 12),
                           Text(
                             'Add Logo',
                             style: TextStyle(
-                              color: Colors.grey[600],
+                              color: liquidTheme.textColor.withValues(alpha: 0.7),
                               fontSize: 14,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ],
@@ -265,33 +355,77 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
         const SizedBox(height: 8),
         // Error message
         if (_errorMessage != null)
-          Text(
-            _errorMessage!,
-            style: const TextStyle(
-              color: Colors.red,
-              fontSize: 12,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.red.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
             ),
-            textAlign: TextAlign.center,
+            child: Text(
+              _errorMessage!,
+              style: const TextStyle(
+                color: Colors.red,
+                fontSize: 12,
+              ),
+              textAlign: TextAlign.center,
+            ),
           ),
-        // Action buttons
+        // Action buttons with Liquid Glass styling
         if (!_isLoading)
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextButton.icon(
+              LiquidButton(
                 onPressed: _showImageSourceOptions,
-                icon: Icon(_imageBytes != null ? Icons.edit : Icons.upload),
-                label: Text(_imageBytes != null ? 'Change' : 'Upload'),
+                type: LiquidButtonType.outlined,
+                size: LiquidButtonSize.small,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      _imageBytes != null ? Icons.edit : Icons.upload,
+                      size: 18,
+                      color: liquidTheme.textColor,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      _imageBytes != null ? 'Change' : 'Upload',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: liquidTheme.textColor,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              if (_imageBytes != null)
-                TextButton.icon(
+              if (_imageBytes != null) ...[
+                const SizedBox(width: 8),
+                LiquidButton(
                   onPressed: _removeLogo,
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  label: const Text(
-                    'Remove',
-                    style: TextStyle(color: Colors.red),
+                  type: LiquidButtonType.outlined,
+                  size: LiquidButtonSize.small,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.delete,
+                        size: 18,
+                        color: Colors.red,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Remove',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.red.shade700,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+              ],
             ],
           ),
       ],

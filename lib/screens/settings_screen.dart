@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:file_picker/file_picker.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:open_file/open_file.dart';
+import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
 import '../database/drift_database.dart';
 import '../models/company_info.dart';
 import '../services/sync_service.dart';
@@ -18,7 +19,6 @@ import '../blocs/data_import_export/data_import_export_bloc.dart';
 import '../blocs/data_import_export/data_import_export_event.dart';
 import '../blocs/data_import_export/data_import_export_state.dart';
 import '../widgets/print_format_selector.dart';
-import '../widgets/settings_section.dart';
 import '../widgets/company_logo_picker.dart';
 import '../widgets/theme_color_selector.dart';
 import '../widgets/data_type_selector_bottom_sheet.dart';
@@ -27,13 +27,13 @@ import 'package:uuid/uuid.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../utils/currency_helper.dart';
 
-/// Improved Settings Screen with responsive design and reusable components
+/// Settings Screen with Liquid Glass UI Design
 ///
 /// Features:
+/// - Beautiful glass morphism design
 /// - Responsive layout adapting to screen size (mobile, tablet, desktop)
-/// - Reusable SettingsSection, SettingsGrid, and SettingsItem components
+/// - Smooth animations and transitions
 /// - Priority-based section organization
-/// - Consistent spacing and visual hierarchy
 /// - Accessibility considerations
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -101,7 +101,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } catch (e) {
       if (mounted) {
         final l10n = AppLocalizations.of(context)!;
-        _showErrorSnackBar(l10n.errorLoadingCompanyInfo(e.toString()));
+        _showErrorNotification(l10n.errorLoadingCompanyInfo(e.toString()));
       }
     }
 
@@ -148,12 +148,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
       if (mounted) {
         final l10n = AppLocalizations.of(context)!;
-        _showSuccessSnackBar(l10n.companyInfoSavedSuccess);
+        _showSuccessNotification(l10n.companyInfoSavedSuccess);
       }
     } catch (e) {
       if (mounted) {
         final l10n = AppLocalizations.of(context)!;
-        _showErrorSnackBar(l10n.errorSaving(e.toString()));
+        _showErrorNotification(l10n.errorSaving(e.toString()));
       }
     }
 
@@ -185,16 +185,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
 
       if (result.success) {
-        _showSuccessSnackBar(message);
+        _showSuccessNotification(message);
       } else {
-        _showErrorSnackBar(message);
+        _showErrorNotification(message);
       }
     }
 
     setState(() => _isSyncing = false);
   }
 
-  void _showSuccessSnackBar(String message) {
+  void _showSuccessNotification(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -205,7 +205,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  void _showErrorSnackBar(String message) {
+  void _showErrorNotification(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -236,126 +236,156 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        title: Row(
-          children: [
-            Icon(Icons.check_circle, color: Colors.green[600], size: 28),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                l10n.exportSuccess,
-                style: theme.textTheme.titleLarge,
-              ),
-            ),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              displayMessage,
-              style: theme.textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: theme.colorScheme.primary.withOpacity(0.3),
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: LiquidCard(
+          elevation: 8,
+          blur: 25,
+          opacity: 0.18,
+          borderRadius: 24,
+          padding: const EdgeInsets.all(32),
+          constraints: const BoxConstraints(maxWidth: 500),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Success icon
+              LiquidContainer(
+                width: 80,
+                height: 80,
+                borderRadius: 40,
+                blur: 15,
+                opacity: 0.2,
+                child: Center(
+                  child: Icon(
+                    Icons.check_circle,
+                    color: Colors.green[600],
+                    size: 48,
+                  ),
                 ),
               ),
-              child: Row(
+              const SizedBox(height: 24),
+
+              // Title
+              Text(
+                l10n.exportSuccess,
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+
+              // Message
+              Text(
+                displayMessage,
+                style: theme.textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+
+              // Info banner
+              LiquidBanner(
+                type: LiquidBannerType.info,
+                icon: Icons.info_outline,
+                child: Text(
+                  isWebDownload
+                      ? 'Check your browser\'s downloads folder'
+                      : isDirectory
+                          ? 'Multiple files exported to folder'
+                          : 'File saved successfully',
+                  style: theme.textTheme.bodySmall,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Action buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Icon(
-                    Icons.info_outline,
-                    color: theme.colorScheme.primary,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      isWebDownload
-                          ? 'Check your browser\'s downloads folder'
-                          : isDirectory
-                              ? 'Multiple files exported to folder'
-                              : 'File saved successfully',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onPrimaryContainer,
+                  // Open File button (only for non-web platforms)
+                  if (!isWebDownload && !kIsWeb) ...[
+                    LiquidButton(
+                      onPressed: () async {
+                        try {
+                          if (isDirectory) {
+                            final dir = Directory(filePath);
+                            final files = await dir.list().toList();
+                            if (files.isNotEmpty && files.first is File) {
+                              await OpenFile.open(files.first.path);
+                            } else {
+                              await OpenFile.open(filePath);
+                            }
+                          } else {
+                            await OpenFile.open(filePath);
+                          }
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            _showErrorNotification('Could not open file: $e');
+                          }
+                        }
+                      },
+                      type: LiquidButtonType.outlined,
+                      size: LiquidButtonSize.medium,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.open_in_new, size: 18),
+                          const SizedBox(width: 8),
+                          Text(l10n.openFile ?? 'Open File'),
+                        ],
                       ),
                     ),
+                    const SizedBox(width: 12),
+                  ],
+
+                  // Share button (only for non-web single files)
+                  if (!isWebDownload && !kIsWeb && !isDirectory) ...[
+                    LiquidButton(
+                      onPressed: () async {
+                        try {
+                          final file = XFile(filePath);
+                          await Share.shareXFiles(
+                            [file],
+                            subject: 'Data Export - ${DateTime.now().toString()}',
+                          );
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            _showErrorNotification('Could not share file: $e');
+                          }
+                        }
+                      },
+                      type: LiquidButtonType.outlined,
+                      size: LiquidButtonSize.medium,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.share, size: 18),
+                          const SizedBox(width: 8),
+                          Text(l10n.share ?? 'Share'),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                  ],
+
+                  // Close button
+                  LiquidButton(
+                    onPressed: () => Navigator.pop(context),
+                    type: LiquidButtonType.filled,
+                    size: LiquidButtonSize.medium,
+                    child: Text(l10n.close),
                   ),
                 ],
               ),
-            ),
-          ],
-        ),
-        actions: [
-          // Open File button (only for non-web platforms)
-          if (!isWebDownload && !kIsWeb)
-            TextButton.icon(
-              onPressed: () async {
-                try {
-                  if (isDirectory) {
-                    // For directories, try to open the first file or the directory itself
-                    final dir = Directory(filePath);
-                    final files = await dir.list().toList();
-                    if (files.isNotEmpty && files.first is File) {
-                      await OpenFile.open(files.first.path);
-                    } else {
-                      // Try to open the directory
-                      await OpenFile.open(filePath);
-                    }
-                  } else {
-                    await OpenFile.open(filePath);
-                  }
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                  }
-                } catch (e) {
-                  if (context.mounted) {
-                    _showErrorSnackBar('Could not open file: $e');
-                  }
-                }
-              },
-              icon: const Icon(Icons.open_in_new),
-              label: Text(l10n.openFile ?? 'Open File'),
-            ),
-
-          // Share button (only for non-web single files)
-          if (!isWebDownload && !kIsWeb && !isDirectory)
-            TextButton.icon(
-              onPressed: () async {
-                try {
-                  final file = XFile(filePath);
-                  await Share.shareXFiles(
-                    [file],
-                    subject: 'Data Export - ${DateTime.now().toString()}',
-                  );
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                  }
-                } catch (e) {
-                  if (context.mounted) {
-                    _showErrorSnackBar('Could not share file: $e');
-                  }
-                }
-              },
-              icon: const Icon(Icons.share),
-              label: Text(l10n.share ?? 'Share'),
-            ),
-
-          // Close button
-          FilledButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(l10n.close),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -427,6 +457,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final liquidTheme = LiquidTheme.of(context);
+
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -440,7 +473,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildAppearanceSection(),
             _buildPrintSettingsSection(),
             _buildCompanyInfoSection(),
-            _builVATSection(),
+            _buildVATSection(),
             _buildDataImportExportSection(),
             _buildSyncSection(),
             _buildAboutSection(),
@@ -454,7 +487,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             content = Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 1400),
-                child: SettingsGrid(
+                child: _buildSettingsGrid(
                   spacing: 24,
                   children: sections,
                 ),
@@ -483,77 +516,105 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  /// Build responsive settings grid for desktop layout
+  Widget _buildSettingsGrid({
+    required double spacing,
+    required List<Widget> children,
+  }) {
+    return Wrap(
+      spacing: spacing,
+      runSpacing: spacing,
+      children: children.map((child) {
+        return SizedBox(
+          width: (1400 - spacing) / 2,
+          child: child,
+        );
+      }).toList(),
+    );
+  }
+
   /// Build Appearance & Language Section (High Priority)
   Widget _buildAppearanceSection() {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final liquidTheme = LiquidTheme.of(context);
 
-    return SettingsSection(
+    return _buildLiquidSection(
       title: l10n.appearance,
       icon: Icons.palette,
       subtitle: l10n.changesAppliedImmediately,
-      children: [
-        // Theme Selection
-        BlocBuilder<AppConfigBloc, AppConfigState>(
-          builder: (context, configState) {
-            return SwitchListTile(
-              secondary: Icon(
-                configState.isDarkMode ? Icons.dark_mode : Icons.light_mode,
-              ),
-              title: Text(l10n.theme),
-              subtitle: Text(
-                configState.isDarkMode ? l10n.darkMode : l10n.lightMode,
-              ),
-              value: configState.isDarkMode,
-              onChanged: (value) {
-                context.read<AppConfigBloc>().add(const ToggleThemeEvent());
-              },
-              contentPadding: EdgeInsets.zero,
-            );
-          },
-        ),
+      child: Column(
+        children: [
+          // Theme Selection
+          BlocBuilder<AppConfigBloc, AppConfigState>(
+            builder: (context, configState) {
+              return _buildGlassTile(
+                leading: Icon(
+                  configState.isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                  color: liquidTheme.textColor,
+                ),
+                title: l10n.theme,
+                subtitle: configState.isDarkMode ? l10n.darkMode : l10n.lightMode,
+                trailing: _buildGlassSwitch(
+                  value: configState.isDarkMode,
+                  onChanged: (value) {
+                    context.read<AppConfigBloc>().add(const ToggleThemeEvent());
+                  },
+                ),
+              );
+            },
+          ),
 
-        const SizedBox(height: 8),
+          const SizedBox(height: 16),
 
-        // Language Selection
-        BlocBuilder<AppConfigBloc, AppConfigState>(
-          builder: (context, configState) {
-            return ListTile(
-              leading: const Icon(Icons.language),
-              title: Text(l10n.language),
-              subtitle: Text(_getLocaleName(configState.locale)),
-              trailing: DropdownButton<Locale>(
-                value: configState.locale,
-                underline: const SizedBox(),
-                items: _getSupportedLocales().map((locale) {
-                  return DropdownMenuItem(
-                    value: locale,
-                    child: Text(_getLocaleName(locale)),
-                  );
-                }).toList(),
-                onChanged: (Locale? newLocale) {
-                  if (newLocale != null) {
-                    if (newLocale.languageCode == 'en') {
-                      context
-                          .read<AppConfigBloc>()
-                          .add(const SetEnglishEvent());
-                    } else if (newLocale.languageCode == 'ar') {
-                      context.read<AppConfigBloc>().add(const SetArabicEvent());
+          // Language Selection
+          BlocBuilder<AppConfigBloc, AppConfigState>(
+            builder: (context, configState) {
+              return _buildGlassTile(
+                leading: Icon(
+                  Icons.language,
+                  color: liquidTheme.textColor,
+                ),
+                title: l10n.language,
+                subtitle: _getLocaleName(configState.locale),
+                trailing: LiquidPopupMenu<Locale>(
+                  icon: Icon(Icons.arrow_drop_down, color: liquidTheme.textColor),
+                  items: _getSupportedLocales().map((locale) {
+                    return LiquidPopupMenuItem(
+                      value: locale,
+                      child: Row(
+                        children: [
+                          if (configState.locale == locale)
+                            const Icon(Icons.check, size: 18),
+                          if (configState.locale == locale)
+                            const SizedBox(width: 8),
+                          Text(_getLocaleName(locale)),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                  onSelected: (Locale? newLocale) {
+                    if (newLocale != null) {
+                      if (newLocale.languageCode == 'en') {
+                        context.read<AppConfigBloc>().add(const SetEnglishEvent());
+                      } else if (newLocale.languageCode == 'ar') {
+                        context.read<AppConfigBloc>().add(const SetArabicEvent());
+                      }
                     }
-                  }
-                },
-              ),
-              contentPadding: EdgeInsets.zero,
-            );
-          },
-        ),
+                  },
+                ),
+              );
+            },
+          ),
 
-        const SizedBox(height: 16),
-        const Divider(),
-        const SizedBox(height: 16),
+          const SizedBox(height: 24),
+          Divider(color: liquidTheme.textColor.withValues(alpha: 0.1)),
+          const SizedBox(height: 24),
 
-        // Theme Color Selection
-        const ThemeColorSelector(),
-      ],
+          // Theme Color Selection
+          const ThemeColorSelector(),
+        ],
+      ),
     );
   }
 
@@ -561,13 +622,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildPrintSettingsSection() {
     final l10n = AppLocalizations.of(context)!;
 
-    return SettingsSection(
+    return _buildLiquidSection(
       title: l10n.printSettings,
       icon: Icons.print,
       subtitle: l10n.configureInvoicePrintingOptions,
-      children: const [
-        PrintFormatSelector(),
-      ],
+      child: const PrintFormatSelector(),
     );
   }
 
@@ -575,22 +634,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildCompanyInfoSection() {
     final l10n = AppLocalizations.of(context)!;
 
-    return SettingsSection(
+    return _buildLiquidSection(
       title: l10n.companyNameEnglish,
       icon: Icons.business,
       subtitle: l10n.businessDetailsAndContactInformation,
-      children: [
-        if (_isLoading)
-          const Padding(
-            padding: EdgeInsets.all(24),
-            child: Center(child: CircularProgressIndicator()),
-          )
-        else
-          Form(
-            key: _formKey,
-            child: _buildCompanyInfoForm(),
-          ),
-      ],
+      child: _isLoading
+          ? const Padding(
+              padding: EdgeInsets.all(24),
+              child: Center(child: LiquidLoader(size: 40)),
+            )
+          : Form(
+              key: _formKey,
+              child: _buildCompanyInfoForm(),
+            ),
     );
   }
 
@@ -625,12 +681,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const SizedBox(height: 24),
               _buildFormRow([
-                _buildTextField(
+                LiquidTextField(
                   controller: _nameController,
                   label: '${l10n.companyNameEnglish} *',
                   validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
                 ),
-                _buildTextField(
+                LiquidTextField(
                   controller: _nameArabicController,
                   label: '${l10n.companyNameArabic} *',
                   validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
@@ -638,13 +694,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ]),
               const SizedBox(height: 16),
               _buildFormRow([
-                _buildTextField(
+                LiquidTextField(
                   controller: _addressController,
                   label: '${l10n.addressEnglish} *',
                   maxLines: 2,
                   validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
                 ),
-                _buildTextField(
+                LiquidTextField(
                   controller: _addressArabicController,
                   label: '${l10n.addressArabic} *',
                   maxLines: 2,
@@ -653,12 +709,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ]),
               const SizedBox(height: 16),
               _buildFormRow([
-                _buildTextField(
+                LiquidTextField(
                   controller: _phoneController,
                   label: '${l10n.phone} *',
                   validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
                 ),
-                _buildTextField(
+                LiquidTextField(
                   controller: _emailController,
                   label: l10n.email,
                   keyboardType: TextInputType.emailAddress,
@@ -666,12 +722,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ]),
               const SizedBox(height: 16),
               _buildFormRow([
-                _buildTextField(
+                LiquidTextField(
                   controller: _vatNumberController,
                   label: '${l10n.vatNumber} *',
                   validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
                 ),
-                _buildTextField(
+                LiquidTextField(
                   controller: _crnNumberController,
                   label: '${l10n.crnNumber} *',
                   validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
@@ -708,51 +764,51 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              _buildTextField(
+              LiquidTextField(
                 controller: _nameController,
                 label: '${l10n.companyNameEnglish} *',
                 validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
               ),
               const SizedBox(height: 16),
-              _buildTextField(
+              LiquidTextField(
                 controller: _nameArabicController,
                 label: '${l10n.companyNameArabic} *',
                 validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
               ),
               const SizedBox(height: 16),
-              _buildTextField(
+              LiquidTextField(
                 controller: _addressController,
                 label: '${l10n.addressEnglish} *',
                 maxLines: 2,
                 validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
               ),
               const SizedBox(height: 16),
-              _buildTextField(
+              LiquidTextField(
                 controller: _addressArabicController,
                 label: '${l10n.addressArabic} *',
                 maxLines: 2,
                 validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
               ),
               const SizedBox(height: 16),
-              _buildTextField(
+              LiquidTextField(
                 controller: _phoneController,
                 label: '${l10n.phone} *',
                 validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
               ),
               const SizedBox(height: 16),
-              _buildTextField(
+              LiquidTextField(
                 controller: _emailController,
                 label: l10n.email,
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16),
-              _buildTextField(
+              LiquidTextField(
                 controller: _vatNumberController,
                 label: '${l10n.vatNumber} *',
                 validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
               ),
               const SizedBox(height: 16),
-              _buildTextField(
+              LiquidTextField(
                 controller: _crnNumberController,
                 label: '${l10n.crnNumber} *',
                 validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
@@ -781,49 +837,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  /// Build a text form field with consistent styling
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    int? maxLines,
-    TextInputType? keyboardType,
-    String? Function(String?)? validator,
-  }) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 12,
-        ),
-      ),
-      maxLines: maxLines ?? 1,
-      keyboardType: keyboardType,
-      validator: validator,
-    );
-  }
-
   /// Build save button with loading state
   Widget _buildSaveButton() {
     final l10n = AppLocalizations.of(context)!;
 
     return SizedBox(
       width: double.infinity,
-      child: ElevatedButton(
+      child: LiquidButton(
         onPressed: _isLoading ? null : _saveCompanyInfo,
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 32,
-            vertical: 16,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
+        type: LiquidButtonType.filled,
+        size: LiquidButtonSize.large,
+        width: double.infinity,
         child: _isLoading
             ? const SizedBox(
                 width: 20,
@@ -833,323 +857,290 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   color: Colors.white,
                 ),
               )
-            : Text(l10n.saveCompanyInformation),
+            : Text(
+                l10n.saveCompanyInformation,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
       ),
     );
   }
 
-  /// Build currency dropdown selector
+  /// Build currency dropdown selector with liquid glass design
   Widget _buildCurrencyDropdown() {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final liquidTheme = LiquidTheme.of(context);
     final currencyOptions = _getCurrencyOptions();
 
-    return DropdownButtonFormField<String>(
-      initialValue: _selectedCurrency,
-      decoration: InputDecoration(
-        labelText: '${l10n.currency} *',
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+    return LiquidContainer(
+      blur: 15,
+      opacity: 0.15,
+      borderRadius: 12,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: DropdownButtonFormField<String>(
+        value: _selectedCurrency,
+        decoration: InputDecoration(
+          labelText: '${l10n.currency} *',
+          border: InputBorder.none,
+          prefixIcon: Icon(Icons.attach_money, color: liquidTheme.textColor),
+          labelStyle: TextStyle(color: liquidTheme.textColor),
         ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 12,
-        ),
-        prefixIcon: const Icon(Icons.attach_money),
+        style: TextStyle(color: liquidTheme.textColor),
+        dropdownColor: theme.colorScheme.surface,
+        items: currencyOptions.entries.map((entry) {
+          return DropdownMenuItem<String>(
+            value: entry.key,
+            child: Text(entry.value),
+          );
+        }).toList(),
+        onChanged: (String? newValue) {
+          if (newValue != null) {
+            setState(() {
+              _selectedCurrency = newValue;
+            });
+          }
+        },
+        validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
       ),
-      items: currencyOptions.entries.map((entry) {
-        return DropdownMenuItem<String>(
-          value: entry.key,
-          child: Text(entry.value),
-        );
-      }).toList(),
-      onChanged: (String? newValue) {
-        if (newValue != null) {
-          setState(() {
-            _selectedCurrency = newValue;
-          });
-        }
-      },
-      validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
     );
   }
 
-  /// Build VAT Rate Configuration Section (Low Priority)
-  Widget _builVATSection() {
+  /// Build VAT Rate Configuration Section
+  Widget _buildVATSection() {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final liquidTheme = LiquidTheme.of(context);
 
-    return SettingsSection(
+    return _buildLiquidSection(
       title: l10n.defaultVatRate,
-      icon: Icons.sync,
+      icon: Icons.receipt_long,
       subtitle: l10n.setDefaultVatRateDescription,
-      children: [
-        const Divider(),
-        BlocBuilder<AppConfigBloc, AppConfigState>(
-          builder: (context, configState) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // VAT Enable/Disable Toggle
-                const SizedBox(height: 16),
-                Card(
-                  elevation: 0,
-                  color: configState.vatEnabled
-                      ? Colors.green.shade50
-                      : Colors.red.shade50,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    side: BorderSide(
-                      color: configState.vatEnabled
-                          ? Colors.green.shade200
-                          : Colors.red.shade200,
-                    ),
-                  ),
-                  child: SwitchListTile(
-                    title: Text(
-                      configState.vatEnabled
-                          ? l10n.vatEnabled
-                          : l10n.vatDisabled,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
+      child: BlocBuilder<AppConfigBloc, AppConfigState>(
+        builder: (context, configState) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // VAT Enable/Disable Toggle
+              LiquidCard(
+                elevation: 0,
+                blur: 20,
+                opacity: 0.15,
+                borderRadius: 16,
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            configState.vatEnabled
+                                ? l10n.vatEnabled
+                                : l10n.vatDisabled,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
+                          const SizedBox(height: 4),
+                          Text(
+                            configState.vatEnabled
+                                ? l10n.vatEnabledDescription
+                                : l10n.vatDisabledDescription,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: liquidTheme.textColor.withValues(alpha: 0.7),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    subtitle: Text(
-                      configState.vatEnabled
-                          ? l10n.vatEnabledDescription
-                          : l10n.vatDisabledDescription,
-                      style: Theme.of(context).textTheme.bodySmall,
+                    _buildGlassSwitch(
+                      value: configState.vatEnabled,
+                      onChanged: (value) {
+                        context.read<AppConfigBloc>().add(UpdateVatEnabledEvent(value));
+                      },
                     ),
-                    value: configState.vatEnabled,
-                    onChanged: (value) {
-                      context
-                          .read<AppConfigBloc>()
-                          .add(UpdateVatEnabledEvent(value));
-                    },
-                    activeThumbColor: Colors.green.shade700,
-                  ),
+                  ],
                 ),
-                const SizedBox(height: 24),
+              ),
 
-                // Show VAT Rate and Inclusion settings only if VAT is enabled
-                if (configState.vatEnabled) ...[
-                  const SizedBox(height: 16),
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      final isWide = constraints.maxWidth >= 600;
-                      if (isWide) {
-                        return Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                key: ValueKey(configState.vatRate),
-                                initialValue: configState.vatRate.toString(),
-                                decoration: InputDecoration(
-                                  labelText: 'VAT Rate (%)',
-                                  border: const OutlineInputBorder(),
-                                  prefixIcon: const Icon(Icons.percent),
-                                  hintText: '15.0',
-                                ),
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                        decimal: true),
-                                onChanged: (value) {
-                                  final vatRate = double.tryParse(value);
-                                  if (vatRate != null &&
-                                      vatRate >= 0 &&
-                                      vatRate <= 100) {
-                                    context
-                                        .read<AppConfigBloc>()
-                                        .add(UpdateVatRateEvent(vatRate));
-                                  }
-                                },
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Container(
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue.shade50,
-                                  borderRadius: BorderRadius.circular(8),
-                                  border:
-                                      Border.all(color: Colors.blue.shade200),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      l10n.currentVatRate,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelMedium,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      '${configState.vatRate.toStringAsFixed(1)}%',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headlineMedium
-                                          ?.copyWith(
-                                            color: Colors.blue.shade700,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      } else {
-                        return Column(
-                          children: [
-                            TextFormField(
+              // Show VAT Rate and Inclusion settings only if VAT is enabled
+              if (configState.vatEnabled) ...[
+                const SizedBox(height: 24),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isWide = constraints.maxWidth >= 600;
+                    if (isWide) {
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: LiquidTextField(
                               key: ValueKey(configState.vatRate),
                               initialValue: configState.vatRate.toString(),
-                              decoration: InputDecoration(
-                                labelText: l10n.vatRateLabel,
-                                border: const OutlineInputBorder(),
-                                prefixIcon: const Icon(Icons.percent),
-                                hintText: l10n.vatRateHint,
-                              ),
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
+                              label: l10n.vatRateLabel,
+                              prefixIcon: const Icon(Icons.percent),
+                              hint: l10n.vatRateHint,
+                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
                               onChanged: (value) {
                                 final vatRate = double.tryParse(value);
-                                if (vatRate != null &&
-                                    vatRate >= 0 &&
-                                    vatRate <= 100) {
-                                  context
-                                      .read<AppConfigBloc>()
-                                      .add(UpdateVatRateEvent(vatRate));
+                                if (vatRate != null && vatRate >= 0 && vatRate <= 100) {
+                                  context.read<AppConfigBloc>().add(UpdateVatRateEvent(vatRate));
                                 }
                               },
                             ),
-                            const SizedBox(height: 16),
-                            Container(
-                              width: double.infinity,
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: LiquidContainer(
                               padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Colors.blue.shade50,
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: Colors.blue.shade200),
-                              ),
+                              blur: 15,
+                              opacity: 0.15,
+                              borderRadius: 12,
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     l10n.currentVatRate,
-                                    style:
-                                        Theme.of(context).textTheme.labelMedium,
+                                    style: theme.textTheme.labelMedium,
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
                                     '${configState.vatRate.toStringAsFixed(1)}%',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineMedium
-                                        ?.copyWith(
-                                          color: Colors.blue.shade700,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                    style: theme.textTheme.headlineMedium?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
-                          ],
-                        );
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 24),
-                  const Divider(),
-                  const SizedBox(height: 8),
-                  Text(
-                    l10n.vatCalculationMethod,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    l10n.chooseVatCalculationMethod,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600],
-                        ),
-                  ),
-                  const SizedBox(height: 12),
-                  Card(
-                    elevation: 0,
-                    color: configState.vatIncludedInPrice
-                        ? Colors.green.shade50
-                        : Colors.blue.shade50,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      side: BorderSide(
-                        color: configState.vatIncludedInPrice
-                            ? Colors.green.shade200
-                            : Colors.blue.shade200,
-                      ),
-                    ),
-                    child: SwitchListTile(
-                      title: Text(
-                        configState.vatIncludedInPrice
-                            ? l10n.vatIncludedInPrice
-                            : l10n.vatExcludedFromPrice,
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                      subtitle: Text(
-                        configState.vatIncludedInPrice
-                            ? l10n.vatIncludedInPriceDescription
-                            : l10n.vatExcludedFromPriceDescription,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      value: configState.vatIncludedInPrice,
-                      onChanged: (value) {
-                        context
-                            .read<AppConfigBloc>()
-                            .add(UpdateVatInclusionEvent(value));
-                      },
-                      activeThumbColor: Colors.green.shade700,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.amber.shade50,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.amber.shade200),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.info_outline,
-                            color: Colors.amber.shade700, size: 20),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            l10n.vatRateAppliedToNewProducts,
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Colors.amber.shade900,
-                                    ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      );
+                    } else {
+                      return Column(
+                        children: [
+                          LiquidTextField(
+                            key: ValueKey(configState.vatRate),
+                            initialValue: configState.vatRate.toString(),
+                            label: l10n.vatRateLabel,
+                            prefixIcon: const Icon(Icons.percent),
+                            hint: l10n.vatRateHint,
+                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            onChanged: (value) {
+                              final vatRate = double.tryParse(value);
+                              if (vatRate != null && vatRate >= 0 && vatRate <= 100) {
+                                context.read<AppConfigBloc>().add(UpdateVatRateEvent(vatRate));
+                              }
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          LiquidContainer(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            blur: 15,
+                            opacity: 0.15,
+                            borderRadius: 12,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  l10n.currentVatRate,
+                                  style: theme.textTheme.labelMedium,
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  '${configState.vatRate.toStringAsFixed(1)}%',
+                                  style: theme.textTheme.headlineMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                  },
+                ),
+                const SizedBox(height: 24),
+                Divider(color: liquidTheme.textColor.withValues(alpha: 0.1)),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.vatCalculationMethod,
+                  style: theme.textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  l10n.chooseVatCalculationMethod,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: liquidTheme.textColor.withValues(alpha: 0.7),
                   ),
-                ], // End of if (configState.vatEnabled)
+                ),
+                const SizedBox(height: 16),
+                LiquidCard(
+                  elevation: 0,
+                  blur: 20,
+                  opacity: 0.15,
+                  borderRadius: 16,
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              configState.vatIncludedInPrice
+                                  ? l10n.vatIncludedInPrice
+                                  : l10n.vatExcludedFromPrice,
+                              style: theme.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              configState.vatIncludedInPrice
+                                  ? l10n.vatIncludedInPriceDescription
+                                  : l10n.vatExcludedFromPriceDescription,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: liquidTheme.textColor.withValues(alpha: 0.7),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      _buildGlassSwitch(
+                        value: configState.vatIncludedInPrice,
+                        onChanged: (value) {
+                          context.read<AppConfigBloc>().add(UpdateVatInclusionEvent(value));
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                LiquidBanner(
+                  type: LiquidBannerType.warning,
+                  icon: Icons.info_outline,
+                  child: Text(
+                    l10n.vatRateAppliedToNewProducts,
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ),
               ],
-            );
-          },
-        ),
-      ],
+            ],
+          );
+        },
+      ),
     );
   }
 
   /// Build Data Import/Export Section
   Widget _buildDataImportExportSection() {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     return BlocProvider(
       create: (context) => DataImportExportBloc(
@@ -1160,124 +1151,95 @@ class _SettingsScreenState extends State<SettingsScreen> {
           if (state is DataExported) {
             _showExportSuccessDialog(context, state.filePath);
           } else if (state is DataImported) {
-            // Reload app configuration after successful import
-            // This ensures theme, locale, VAT settings, etc. are updated immediately
             context.read<AppConfigBloc>().add(const InitializeAppConfigEvent());
-
-            // Clear and refresh currency cache so all screens get the new currency
             CurrencyHelper.refreshCache();
-
-            // Reload company information to update the form fields
             _loadCompanyInfo();
-
-            _showSuccessSnackBar(
-                l10n.importSuccessMessage(state.itemsImported));
+            _showSuccessNotification(l10n.importSuccessMessage(state.itemsImported));
           } else if (state is DataImportExportError) {
-            _showErrorSnackBar('${state.message}\n${state.errorDetails ?? ''}');
+            _showErrorNotification('${state.message}\n${state.errorDetails ?? ''}');
           }
         },
         builder: (context, state) {
-          final isLoading =
-              state is DataExporting || state is DataImporting;
+          final isLoading = state is DataExporting || state is DataImporting;
 
-          return SettingsSection(
+          return _buildLiquidSection(
             title: l10n.dataImportExport,
             icon: Icons.import_export,
             subtitle: l10n.dataImportExportDescription,
-            children: [
-              // Warning card
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.orange.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.orange.shade200),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.info_outline,
-                        color: Colors.orange.shade700, size: 20),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        l10n.importWarning,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.orange.shade900,
-                            ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Progress indicator if loading
-              if (isLoading)
-                Column(
-                  children: [
-                    LinearProgressIndicator(
-                      value: state is DataExporting
-                          ? state.progress
-                          : state is DataImporting
-                              ? state.progress
-                              : 0.0,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      state is DataExporting
-                          ? l10n.exportInProgress
-                          : l10n.importInProgress,
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    const SizedBox(height: 16),
-                  ],
+            child: Column(
+              children: [
+                // Warning banner
+                LiquidBanner(
+                  type: LiquidBannerType.warning,
+                  icon: Icons.info_outline,
+                  child: Text(
+                    l10n.importWarning,
+                    style: theme.textTheme.bodySmall,
+                  ),
                 ),
 
-              // Export button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: isLoading
-                      ? null
-                      : () => _handleExport(context),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 32,
-                      vertical: 16,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                const SizedBox(height: 24),
+
+                // Progress indicator if loading
+                if (isLoading) ...[
+                  LinearProgressIndicator(
+                    value: state is DataExporting
+                        ? state.progress
+                        : state is DataImporting
+                            ? state.progress
+                            : 0.0,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    state is DataExporting
+                        ? l10n.exportInProgress
+                        : l10n.importInProgress,
+                    style: theme.textTheme.bodySmall,
+                  ),
+                  const SizedBox(height: 24),
+                ],
+
+                // Export button
+                SizedBox(
+                  width: double.infinity,
+                  child: LiquidButton(
+                    onPressed: isLoading ? null : () => _handleExport(context),
+                    type: LiquidButtonType.filled,
+                    size: LiquidButtonSize.large,
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.upload, size: 20),
+                        const SizedBox(width: 8),
+                        Text(l10n.exportData),
+                      ],
                     ),
                   ),
-                  icon: const Icon(Icons.upload),
-                  label: Text(l10n.exportData),
                 ),
-              ),
 
-              const SizedBox(height: 12),
+                const SizedBox(height: 16),
 
-              // Import button
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: isLoading
-                      ? null
-                      : () => _handleImport(context),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 32,
-                      vertical: 16,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                // Import button
+                SizedBox(
+                  width: double.infinity,
+                  child: LiquidButton(
+                    onPressed: isLoading ? null : () => _handleImport(context),
+                    type: LiquidButtonType.outlined,
+                    size: LiquidButtonSize.large,
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.download, size: 20),
+                        const SizedBox(width: 8),
+                        Text(l10n.importData),
+                      ],
                     ),
                   ),
-                  icon: const Icon(Icons.download),
-                  label: Text(l10n.importData),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),
@@ -1318,24 +1280,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
       // On web, use bytes; on mobile, use path
       if (kIsWeb) {
-        // Web platform - use bytes
         if (file.bytes != null && file.name.isNotEmpty) {
           fileContent = utf8.decode(file.bytes!);
           fileName = file.name;
         } else {
           if (context.mounted) {
-            _showErrorSnackBar(l10n.selectFileToImport);
+            _showErrorNotification(l10n.selectFileToImport);
           }
           return;
         }
       } else {
-        // Mobile platform - use path
         if (file.path != null) {
           filePath = file.path!;
           fileName = file.path!.split('/').last;
         } else {
           if (context.mounted) {
-            _showErrorSnackBar(l10n.selectFileToImport);
+            _showErrorNotification(l10n.selectFileToImport);
           }
           return;
         }
@@ -1348,16 +1308,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
         context: context,
         barrierDismissible: false,
         builder: (context) => const Center(
-          child: CircularProgressIndicator(),
+          child: LiquidLoader(size: 40),
         ),
       );
 
       try {
-        // Detect data types in the file
         final db = AppDatabase();
-        final service = DataImportExportService(
-          database: db,
-        );
+        final service = DataImportExportService(database: db);
 
         final detectionResult = await service.detectDataTypes(
           filePath: filePath,
@@ -1367,18 +1324,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
         if (!context.mounted) return;
 
-        // Close loading indicator
         Navigator.of(context).pop();
 
         if (detectionResult.isValid && detectionResult.detectedTypes.isNotEmpty) {
-          // Show detection dialog with auto-detected types
           final selectedTypes = await showDataTypeDetectionDialog(
             context: context,
             detectionResult: detectionResult,
           );
 
           if (selectedTypes != null && selectedTypes.isNotEmpty && context.mounted) {
-            // Proceed with import
             context.read<DataImportExportBloc>().add(
                   ImportDataRequested(
                     filePath: filePath,
@@ -1389,9 +1343,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 );
           }
         } else {
-          // Detection failed or no data found - show manual selector
           if (context.mounted) {
-            // Show error message if there was one
             if (detectionResult.errorMessage != null) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -1401,7 +1353,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               );
             }
 
-            // Fall back to manual selection
             showDataTypeSelectorBottomSheet(
               context: context,
               isExport: false,
@@ -1420,13 +1371,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }
       } catch (e) {
         if (context.mounted) {
-          // Close loading indicator
           Navigator.of(context).pop();
+          _showErrorNotification('Error detecting data types: ${e.toString()}');
 
-          // Show error
-          _showErrorSnackBar('Error detecting data types: ${e.toString()}');
-
-          // Fall back to manual selection
           showDataTypeSelectorBottomSheet(
             context: context,
             isExport: false,
@@ -1444,73 +1391,243 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }
       }
     } else {
-      // User canceled the picker
       if (context.mounted) {
-        _showErrorSnackBar(l10n.selectFileToImport);
+        _showErrorNotification(l10n.selectFileToImport);
       }
     }
   }
 
-  /// Build Data Synchronization Section (Low Priority)
+  /// Build Data Synchronization Section
   Widget _buildSyncSection() {
     final l10n = AppLocalizations.of(context)!;
 
-    return SettingsSection(
+    return _buildLiquidSection(
       title: l10n.dataSynchronization,
       icon: Icons.sync,
       subtitle: l10n.syncDescription,
-      children: [
-        const SizedBox(height: 8),
-        SizedBox(
+      child: SizedBox(
+        width: double.infinity,
+        child: LiquidButton(
+          onPressed: _isSyncing ? null : _syncData,
+          type: LiquidButtonType.filled,
+          size: LiquidButtonSize.large,
           width: double.infinity,
-          child: ElevatedButton.icon(
-            onPressed: _isSyncing ? null : _syncData,
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 32,
-                vertical: 16,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            icon: _isSyncing
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
-                : const Icon(Icons.sync),
-            label: Text(_isSyncing ? l10n.syncing : l10n.syncNow),
-          ),
+          child: _isSyncing
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.sync, size: 20),
+                    const SizedBox(width: 8),
+                    Text(_isSyncing ? l10n.syncing : l10n.syncNow),
+                  ],
+                ),
         ),
-      ],
+      ),
     );
   }
 
-  /// Build About Section (Low Priority)
+  /// Build About Section
   Widget _buildAboutSection() {
     final l10n = AppLocalizations.of(context)!;
+    final liquidTheme = LiquidTheme.of(context);
 
-    return SettingsSection(
+    return _buildLiquidSection(
       title: l10n.about,
       icon: Icons.info_outline,
-      children: [
-        SettingsItem(
-          icon: Icons.info_outline,
-          title: l10n.version,
-          subtitle: l10n.appVersion,
+      child: Column(
+        children: [
+          _buildGlassTile(
+            leading: Icon(Icons.info_outline, color: liquidTheme.textColor),
+            title: l10n.version,
+            subtitle: l10n.appVersion,
+          ),
+          const SizedBox(height: 16),
+          _buildGlassTile(
+            leading: Icon(Icons.business, color: liquidTheme.textColor),
+            title: l10n.appTitle,
+            subtitle: l10n.posWithOfflineSupport,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Build a liquid glass section wrapper
+  Widget _buildLiquidSection({
+    required String title,
+    required IconData icon,
+    String? subtitle,
+    required Widget child,
+  }) {
+    final theme = Theme.of(context);
+    final liquidTheme = LiquidTheme.of(context);
+
+    return LiquidCard(
+      elevation: 4,
+      blur: 25,
+      opacity: 0.18,
+      borderRadius: 24,
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Section header
+          Row(
+            children: [
+              LiquidContainer(
+                width: 48,
+                height: 48,
+                borderRadius: 24,
+                blur: 15,
+                opacity: 0.2,
+                child: Center(
+                  child: Icon(
+                    icon,
+                    color: theme.colorScheme.primary,
+                    size: 24,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    if (subtitle != null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        subtitle,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: liquidTheme.textColor.withValues(alpha: 0.7),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          child,
+        ],
+      ),
+    );
+  }
+
+  /// Build a glass morphism tile (similar to ListTile)
+  Widget _buildGlassTile({
+    Widget? leading,
+    required String title,
+    String? subtitle,
+    Widget? trailing,
+  }) {
+    final theme = Theme.of(context);
+    final liquidTheme = LiquidTheme.of(context);
+
+    return LiquidContainer(
+      blur: 15,
+      opacity: 0.15,
+      borderRadius: 12,
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          if (leading != null) ...[
+            leading,
+            const SizedBox(width: 16),
+          ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                if (subtitle != null) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: liquidTheme.textColor.withValues(alpha: 0.7),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          if (trailing != null) ...[
+            const SizedBox(width: 16),
+            trailing,
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// Build a glass morphism switch
+  Widget _buildGlassSwitch({
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) {
+    final theme = Theme.of(context);
+
+    return GestureDetector(
+      onTap: () => onChanged(!value),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: 56,
+        height: 32,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          color: value
+              ? theme.colorScheme.primary.withValues(alpha: 0.3)
+              : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+          border: Border.all(
+            color: value
+                ? theme.colorScheme.primary
+                : theme.colorScheme.outline.withValues(alpha: 0.3),
+            width: 2,
+          ),
         ),
-        const SizedBox(height: 8),
-        SettingsItem(
-          icon: Icons.business,
-          title: l10n.appTitle,
-          subtitle: l10n.posWithOfflineSupport,
+        child: AnimatedAlign(
+          duration: const Duration(milliseconds: 200),
+          alignment: value ? Alignment.centerRight : Alignment.centerLeft,
+          child: Container(
+            width: 24,
+            height: 24,
+            margin: const EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: value
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.onSurfaceVariant,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+          ),
         ),
-      ],
+      ),
     );
   }
 
