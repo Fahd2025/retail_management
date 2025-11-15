@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/print_format.dart';
+import '../../models/theme_color_scheme.dart';
 import 'app_config_event.dart';
 import 'app_config_state.dart';
 
@@ -14,6 +15,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   static const String _vatIncludedInPricePreferenceKey =
       'vat_included_in_price';
   static const String _vatEnabledPreferenceKey = 'vat_enabled';
+  static const String _colorSchemePreferenceKey = 'color_scheme';
 
   static const Locale englishLocale = Locale('en', 'US');
   static const Locale arabicLocale = Locale('ar', 'SA');
@@ -38,6 +40,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     on<UpdateVatRateEvent>(_onUpdateVatRate);
     on<UpdateVatInclusionEvent>(_onUpdateVatInclusion);
     on<UpdateVatEnabledEvent>(_onUpdateVatEnabled);
+    on<UpdateColorSchemeEvent>(_onUpdateColorScheme);
   }
 
   Future<void> _onInitialize(
@@ -55,6 +58,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
       final savedVatIncludedInPrice =
           prefs.getBool(_vatIncludedInPricePreferenceKey);
       final savedVatEnabled = prefs.getBool(_vatEnabledPreferenceKey);
+      final savedColorScheme = prefs.getString(_colorSchemePreferenceKey);
 
       final themeMode = savedTheme == 'dark' ? ThemeMode.dark : ThemeMode.light;
       final locale = savedLocale == 'ar' ? arabicLocale : englishLocale;
@@ -73,6 +77,16 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
         }
       }
 
+      ThemeColorScheme colorScheme = ThemeColorScheme.defaultBlue;
+      if (savedColorScheme != null) {
+        try {
+          final json = jsonDecode(savedColorScheme) as Map<String, dynamic>;
+          colorScheme = ThemeColorScheme.fromJson(json);
+        } catch (e) {
+          debugPrint('Error parsing color scheme: $e');
+        }
+      }
+
       emit(state.copyWith(
         themeMode: themeMode,
         locale: locale,
@@ -80,6 +94,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
         vatRate: vatRate,
         vatIncludedInPrice: vatIncludedInPrice,
         vatEnabled: vatEnabled,
+        colorScheme: colorScheme,
         isLoading: false,
       ));
     } catch (e) {
@@ -91,6 +106,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
         vatRate: 15.0,
         vatIncludedInPrice: true,
         vatEnabled: true,
+        colorScheme: ThemeColorScheme.defaultBlue,
         isLoading: false,
       ));
     }
@@ -236,6 +252,26 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
       await prefs.setBool(_vatEnabledPreferenceKey, vatEnabled);
     } catch (e) {
       debugPrint('Error saving VAT enabled preference: $e');
+    }
+  }
+
+  Future<void> _onUpdateColorScheme(
+    UpdateColorSchemeEvent event,
+    Emitter<AppConfigState> emit,
+  ) async {
+    if (state.colorScheme != event.colorScheme) {
+      await _saveColorSchemePreference(event.colorScheme);
+      emit(state.copyWith(colorScheme: event.colorScheme));
+    }
+  }
+
+  Future<void> _saveColorSchemePreference(ThemeColorScheme colorScheme) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final json = jsonEncode(colorScheme.toJson());
+      await prefs.setString(_colorSchemePreferenceKey, json);
+    } catch (e) {
+      debugPrint('Error saving color scheme preference: $e');
     }
   }
 }

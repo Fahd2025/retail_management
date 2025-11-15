@@ -10,6 +10,7 @@ import '../blocs/app_config/app_config_state.dart';
 import '../widgets/print_format_selector.dart';
 import '../widgets/settings_section.dart';
 import '../widgets/company_logo_picker.dart';
+import '../widgets/theme_color_selector.dart';
 import 'package:uuid/uuid.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../utils/currency_helper.dart';
@@ -388,6 +389,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             );
           },
         ),
+
+        const SizedBox(height: 16),
+        const Divider(),
+        const SizedBox(height: 16),
+
+        // Theme Color Selection
+        const ThemeColorSelector(),
       ],
     );
   }

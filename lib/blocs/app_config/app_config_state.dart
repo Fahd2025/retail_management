@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import '../../models/print_format.dart';
+import '../../models/theme_color_scheme.dart';
 
 class AppConfigState extends Equatable {
   final ThemeMode themeMode;
@@ -10,6 +11,7 @@ class AppConfigState extends Equatable {
   final double vatRate;
   final bool vatIncludedInPrice;
   final bool vatEnabled;
+  final ThemeColorScheme colorScheme;
 
   const AppConfigState({
     required this.themeMode,
@@ -19,6 +21,7 @@ class AppConfigState extends Equatable {
     this.vatRate = 15.0, // Default Saudi VAT rate
     this.vatIncludedInPrice = true, // Default: VAT included in price
     this.vatEnabled = true, // Default: VAT enabled
+    this.colorScheme = ThemeColorScheme.defaultBlue,
   });
 
   bool get isDarkMode => themeMode == ThemeMode.dark;
@@ -36,6 +39,7 @@ class AppConfigState extends Equatable {
     double? vatRate,
     bool? vatIncludedInPrice,
     bool? vatEnabled,
+    ThemeColorScheme? colorScheme,
   }) {
     return AppConfigState(
       themeMode: themeMode ?? this.themeMode,
@@ -45,6 +49,7 @@ class AppConfigState extends Equatable {
       vatRate: vatRate ?? this.vatRate,
       vatIncludedInPrice: vatIncludedInPrice ?? this.vatIncludedInPrice,
       vatEnabled: vatEnabled ?? this.vatEnabled,
+      colorScheme: colorScheme ?? this.colorScheme,
     );
   }
 
@@ -57,5 +62,6 @@ class AppConfigState extends Equatable {
         vatRate,
         vatIncludedInPrice,
         vatEnabled,
+        colorScheme,
       ];
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dark_theme_colors.dart';
 import 'app_typography.dart';
+import '../models/theme_color_scheme.dart';
 
 /// Application theme configuration with Material 3 design
 ///
@@ -12,8 +13,9 @@ import 'app_typography.dart';
 /// - Material 3 design system implementation
 /// - Professional appearance optimized for business applications
 /// - Reduced eye strain for extended use in dark environments
+/// - Dynamic color customization support
 class AppTheme {
-  // ==================== LIGHT THEME COLORS ====================
+  // ==================== LIGHT THEME COLORS (Default) ====================
   // Primary brand color - Blue
   static const Color primaryColor = Color(0xFF2196F3);
   static const Color primaryDarkColor = Color(0xFF1976D2);
@@ -28,22 +30,29 @@ class AppTheme {
   static const Color warningColor = Color(0xFFFFC107);
   static const Color errorColor = Color(0xFFF44336);
 
-  /// Light theme configuration
+  /// Light theme configuration with customizable colors
   /// Designed with WCAG AA compliant contrast ratios (minimum 4.5:1 for normal text)
-  static ThemeData get lightTheme {
+  ///
+  /// @param colorScheme Optional custom color scheme. If null, uses default blue theme.
+  static ThemeData lightTheme([ThemeColorScheme? colorScheme]) {
+    final scheme = colorScheme ?? ThemeColorScheme.defaultBlue;
+    final primary = scheme.lightPrimary;
+    final secondary = scheme.lightSecondary;
+    final primaryLight = Color.lerp(primary, Colors.white, 0.3)!;
+
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
 
       // Color scheme for Material 3 components
       colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryColor,
+        seedColor: primary,
         brightness: Brightness.light,
-        primary: primaryColor,
+        primary: primary,
         onPrimary: Colors.white,
-        primaryContainer: primaryLightColor,
+        primaryContainer: primaryLight,
         onPrimaryContainer: const Color(0xFF001D36),
-        secondary: secondaryColor,
+        secondary: secondary,
         onSecondary: Colors.white,
         error: errorColor,
         onError: Colors.white,
@@ -74,28 +83,28 @@ class AppTheme {
       textTheme: AppTypography.lightTextTheme(),
 
       // App bar theme
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         elevation: 0,
         centerTitle: true,
         scrolledUnderElevation: 4,
-        backgroundColor: primaryColor,
+        backgroundColor: primary,
         foregroundColor: Colors.white,
-        surfaceTintColor: primaryColor,
-        shadowColor: Color(0x1F000000),
-        iconTheme: IconThemeData(
+        surfaceTintColor: primary,
+        shadowColor: const Color(0x1F000000),
+        iconTheme: const IconThemeData(
           color: Colors.white,
           size: 24,
         ),
-        actionsIconTheme: IconThemeData(
+        actionsIconTheme: const IconThemeData(
           color: Colors.white,
           size: 24,
         ),
-        titleTextStyle: TextStyle(
+        titleTextStyle: const TextStyle(
           color: Colors.white,
           fontSize: 20,
           fontWeight: FontWeight.w600,
         ),
-        systemOverlayStyle: SystemUiOverlayStyle(
+        systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
           statusBarBrightness: Brightness.dark,
@@ -118,7 +127,7 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           elevation: 2,
-          backgroundColor: primaryColor,
+          backgroundColor: primary,
           foregroundColor: Colors.white,
           disabledBackgroundColor: const Color(0xFFE0E0E0),
           disabledForegroundColor: const Color(0xFF9E9E9E),
@@ -137,7 +146,7 @@ class AppTheme {
       // Text button theme
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: primaryColor,
+          foregroundColor: primary,
           disabledForegroundColor: const Color(0xFF9E9E9E),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           shape: RoundedRectangleBorder(
@@ -153,10 +162,10 @@ class AppTheme {
       // Outlined button theme
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: primaryColor,
+          foregroundColor: primary,
           disabledForegroundColor: const Color(0xFF9E9E9E),
-          side: const BorderSide(
-            color: primaryColor,
+          side: BorderSide(
+            color: primary,
             width: 1.5,
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -175,14 +184,14 @@ class AppTheme {
         style: IconButton.styleFrom(
           foregroundColor: const Color(0xFF424242),
           disabledForegroundColor: const Color(0xFFBDBDBD).withOpacity(0.38),
-          highlightColor: primaryColor.withOpacity(0.12),
+          highlightColor: primary.withOpacity(0.12),
           hoverColor: const Color(0xFFBDBDBD).withOpacity(0.04),
         ),
       ),
 
       // Floating action button theme
       floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: primaryLightColor,
+        backgroundColor: primaryLight,
         foregroundColor: Colors.white,
         elevation: 6,
         highlightElevation: 12,
@@ -234,8 +243,8 @@ class AppTheme {
         size: 24,
       ),
 
-      primaryIconTheme: const IconThemeData(
-        color: primaryColor,
+      primaryIconTheme: IconThemeData(
+        color: primary,
         size: 24,
       ),
 
@@ -249,7 +258,7 @@ class AppTheme {
       // Dialog theme
       dialogTheme: DialogThemeData(
         backgroundColor: Colors.white,
-        surfaceTintColor: primaryColor,
+        surfaceTintColor: primary,
         elevation: 8,
         shadowColor: const Color(0x1F000000),
         shape: RoundedRectangleBorder(
@@ -270,7 +279,7 @@ class AppTheme {
       // Bottom sheet theme
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: Colors.white,
-        surfaceTintColor: primaryColor,
+        surfaceTintColor: primary,
         modalBackgroundColor: Colors.white,
         elevation: 8,
         modalElevation: 8,
@@ -286,19 +295,19 @@ class AppTheme {
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return primaryColor;
+            return primary;
           }
           return const Color(0xFFBDBDBD);
         }),
         trackColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return primaryLightColor;
+            return primaryLight;
           }
           return const Color(0xFFE0E0E0);
         }),
         overlayColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.pressed)) {
-            return primaryColor.withOpacity(0.12);
+            return primary.withOpacity(0.12);
           }
           if (states.contains(WidgetState.hovered)) {
             return const Color(0xFFBDBDBD).withOpacity(0.04);
@@ -317,14 +326,14 @@ class AppTheme {
             return const Color(0xFFBDBDBD);
           }
           if (states.contains(WidgetState.selected)) {
-            return primaryColor;
+            return primary;
           }
           return Colors.transparent;
         }),
         checkColor: const WidgetStatePropertyAll(Colors.white),
         overlayColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.pressed)) {
-            return primaryColor.withOpacity(0.12);
+            return primary.withOpacity(0.12);
           }
           if (states.contains(WidgetState.hovered)) {
             return const Color(0xFFBDBDBD).withOpacity(0.04);
@@ -346,13 +355,13 @@ class AppTheme {
             return const Color(0xFFBDBDBD);
           }
           if (states.contains(WidgetState.selected)) {
-            return primaryColor;
+            return primary;
           }
           return const Color(0xFF424242);
         }),
         overlayColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.pressed)) {
-            return primaryColor.withOpacity(0.12);
+            return primary.withOpacity(0.12);
           }
           if (states.contains(WidgetState.hovered)) {
             return const Color(0xFFBDBDBD).withOpacity(0.04);
@@ -365,13 +374,13 @@ class AppTheme {
       ),
 
       // SnackBar theme
-      snackBarTheme: const SnackBarThemeData(
-        backgroundColor: Color(0xFF323232),
-        contentTextStyle: TextStyle(
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: const Color(0xFF323232),
+        contentTextStyle: const TextStyle(
           color: Colors.white,
           fontSize: 14,
         ),
-        actionTextColor: primaryColor,
+        actionTextColor: primary,
         disabledActionTextColor: Color(0xFF9E9E9E),
         elevation: 6,
         shape: RoundedRectangleBorder(
@@ -384,7 +393,7 @@ class AppTheme {
       // Bottom navigation bar theme
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: Colors.white,
-        selectedItemColor: primaryColor,
+        selectedItemColor: primary,
         unselectedItemColor: const Color(0xFF757575),
         selectedLabelStyle: const TextStyle(
           fontSize: 14,
@@ -402,8 +411,8 @@ class AppTheme {
       // List tile theme
       listTileTheme: ListTileThemeData(
         tileColor: Colors.transparent,
-        selectedTileColor: primaryColor.withOpacity(0.12),
-        selectedColor: primaryColor,
+        selectedTileColor: primary.withOpacity(0.12),
+        selectedColor: primary,
         iconColor: const Color(0xFF757575),
         textColor: const Color(0xFF1A1C1E),
         titleTextStyle: const TextStyle(
@@ -428,8 +437,8 @@ class AppTheme {
       ),
 
       // Progress indicator theme
-      progressIndicatorTheme: const ProgressIndicatorThemeData(
-        color: primaryColor,
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: primary,
         linearTrackColor: Color(0xFFE0E0E0),
         circularTrackColor: Color(0xFFE0E0E0),
       ),
@@ -439,8 +448,8 @@ class AppTheme {
         backgroundColor: const Color(0xFFE0E0E0),
         deleteIconColor: const Color(0xFF757575),
         disabledColor: const Color(0xFFE0E0E0).withOpacity(0.12),
-        selectedColor: primaryColor.withOpacity(0.2),
-        secondarySelectedColor: secondaryColor.withOpacity(0.2),
+        selectedColor: primary.withOpacity(0.2),
+        secondarySelectedColor: secondary.withOpacity(0.2),
         shadowColor: const Color(0x1F000000),
         labelStyle: const TextStyle(
           color: Color(0xFF1A1C1E),
@@ -469,7 +478,7 @@ class AppTheme {
         ),
         dataRowColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return primaryColor.withOpacity(0.12);
+            return primary.withOpacity(0.12);
           }
           return Colors.transparent;
         }),
@@ -490,7 +499,7 @@ class AppTheme {
 
       // Tab bar theme
       tabBarTheme: TabBarThemeData(
-        labelColor: primaryColor,
+        labelColor: primary,
         unselectedLabelColor: const Color(0xFF757575),
         labelStyle: const TextStyle(
           fontSize: 14,
@@ -499,9 +508,9 @@ class AppTheme {
         unselectedLabelStyle: const TextStyle(
           fontSize: 14,
         ),
-        indicator: const UnderlineTabIndicator(
+        indicator: UnderlineTabIndicator(
           borderSide: BorderSide(
-            color: primaryColor,
+            color: primary,
             width: 2,
           ),
         ),
@@ -526,7 +535,7 @@ class AppTheme {
     );
   }
 
-  /// Dark theme configuration
+  /// Dark theme configuration with customizable colors
   /// Designed with WCAG AA compliant contrast ratios
   /// Dark surfaces help reduce eye strain in low-light environments
   ///
@@ -535,7 +544,13 @@ class AppTheme {
   /// - High contrast text for better readability
   /// - Subtle surface elevation for visual hierarchy
   /// - Comprehensive widget theming for consistency
-  static ThemeData get darkTheme {
+  ///
+  /// @param colorScheme Optional custom color scheme. If null, uses default blue theme.
+  static ThemeData darkTheme([ThemeColorScheme? colorScheme]) {
+    final scheme = colorScheme ?? ThemeColorScheme.defaultBlue;
+    final primary = scheme.darkPrimary;
+    final secondary = scheme.darkSecondary;
+
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
@@ -544,15 +559,15 @@ class AppTheme {
       colorScheme: ColorScheme(
         brightness: Brightness.dark,
         // Primary colors
-        primary: DarkThemeColors.primary,
+        primary: primary,
         onPrimary: DarkThemeColors.onPrimary,
-        primaryContainer: DarkThemeColors.primaryContainer,
-        onPrimaryContainer: DarkThemeColors.onPrimaryContainer,
+        primaryContainer: Color.lerp(primary, Colors.black, 0.5)!,
+        onPrimaryContainer: Color.lerp(primary, Colors.white, 0.7)!,
         // Secondary colors
-        secondary: DarkThemeColors.secondary,
+        secondary: secondary,
         onSecondary: DarkThemeColors.onSecondary,
-        secondaryContainer: DarkThemeColors.secondaryContainer,
-        onSecondaryContainer: DarkThemeColors.onSecondaryContainer,
+        secondaryContainer: Color.lerp(secondary, Colors.black, 0.5)!,
+        onSecondaryContainer: Color.lerp(secondary, Colors.white, 0.7)!,
         // Error colors
         error: DarkThemeColors.error,
         onError: Colors.white,

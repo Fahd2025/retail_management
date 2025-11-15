@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import '../../models/print_format.dart';
+import '../../models/theme_color_scheme.dart';
 
 abstract class AppConfigEvent extends Equatable {
   const AppConfigEvent();
@@ -89,4 +90,13 @@ class UpdateVatEnabledEvent extends AppConfigEvent {
 
   @override
   List<Object?> get props => [vatEnabled];
+}
+
+class UpdateColorSchemeEvent extends AppConfigEvent {
+  final ThemeColorScheme colorScheme;
+
+  const UpdateColorSchemeEvent(this.colorScheme);
+
+  @override
+  List<Object?> get props => [colorScheme];
 }
