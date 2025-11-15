@@ -66,13 +66,15 @@ class BestSellingProductsWidget extends StatelessWidget {
                       Icon(
                         Icons.inbox_outlined,
                         size: 48.sp,
-                        color: theme.colorScheme.onSurface.withOpacity(0.3),
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.3),
                       ),
                       SizedBox(height: 8.h),
                       Text(
                         l10n.noSalesDataAvailable,
                         style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.6),
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -136,7 +138,8 @@ class BestSellingProductsWidget extends StatelessWidget {
                         Text(
                           '${l10n.quantitySold}: ${numberFormatter.format(product.totalQuantitySold)} • ${l10n.salesCount(product.transactionCount)}',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withOpacity(0.6),
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.6),
                           ),
                         ),
                       ],
@@ -159,7 +162,8 @@ class BestSellingProductsWidget extends StatelessWidget {
                             vertical: 2.h,
                           ),
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.primary.withOpacity(0.1),
+                            color: theme.colorScheme.primary
+                                .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(4.r),
                           ),
                           child: Text(

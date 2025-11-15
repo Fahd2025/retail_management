@@ -56,13 +56,11 @@ class AppTheme {
         onSecondary: Colors.white,
         error: errorColor,
         onError: Colors.white,
-        errorContainer: errorColor.withOpacity(0.2),
+        errorContainer: errorColor.withValues(alpha: 0.2),
         onErrorContainer: errorColor,
-        background: const Color(0xFFF5F5F5),
-        onBackground: const Color(0xFF1A1C1E),
         surface: Colors.white,
         onSurface: const Color(0xFF1A1C1E),
-        surfaceVariant: const Color(0xFFE0E0E0),
+        surfaceContainerHighest: const Color(0xFFE0E0E0),
         onSurfaceVariant: const Color(0xFF424242),
         outline: const Color(0xFF757575),
         outlineVariant: const Color(0xFFBB86FC),
@@ -183,9 +181,10 @@ class AppTheme {
       iconButtonTheme: IconButtonThemeData(
         style: IconButton.styleFrom(
           foregroundColor: const Color(0xFF424242),
-          disabledForegroundColor: const Color(0xFFBDBDBD).withOpacity(0.38),
-          highlightColor: primary.withOpacity(0.12),
-          hoverColor: const Color(0xFFBDBDBD).withOpacity(0.04),
+          disabledForegroundColor:
+              const Color(0xFFBDBDBD).withValues(alpha: 0.38),
+          highlightColor: primary.withValues(alpha: 0.12),
+          hoverColor: const Color(0xFFBDBDBD).withValues(alpha: 0.04),
         ),
       ),
 
@@ -307,13 +306,13 @@ class AppTheme {
         }),
         overlayColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.pressed)) {
-            return primary.withOpacity(0.12);
+            return primary.withValues(alpha: 0.12);
           }
           if (states.contains(WidgetState.hovered)) {
-            return const Color(0xFFBDBDBD).withOpacity(0.04);
+            return const Color(0xFFBDBDBD).withValues(alpha: 0.04);
           }
           if (states.contains(WidgetState.focused)) {
-            return const Color(0xFFBDBDBD).withOpacity(0.12);
+            return const Color(0xFFBDBDBD).withValues(alpha: 0.12);
           }
           return Colors.transparent;
         }),
@@ -333,13 +332,13 @@ class AppTheme {
         checkColor: const WidgetStatePropertyAll(Colors.white),
         overlayColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.pressed)) {
-            return primary.withOpacity(0.12);
+            return primary.withValues(alpha: 0.12);
           }
           if (states.contains(WidgetState.hovered)) {
-            return const Color(0xFFBDBDBD).withOpacity(0.04);
+            return const Color(0xFFBDBDBD).withValues(alpha: 0.04);
           }
           if (states.contains(WidgetState.focused)) {
-            return const Color(0xFFBDBDBD).withOpacity(0.12);
+            return const Color(0xFFBDBDBD).withValues(alpha: 0.12);
           }
           return Colors.transparent;
         }),
@@ -361,13 +360,13 @@ class AppTheme {
         }),
         overlayColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.pressed)) {
-            return primary.withOpacity(0.12);
+            return primary.withValues(alpha: 0.12);
           }
           if (states.contains(WidgetState.hovered)) {
-            return const Color(0xFFBDBDBD).withOpacity(0.04);
+            return const Color(0xFFBDBDBD).withValues(alpha: 0.04);
           }
           if (states.contains(WidgetState.focused)) {
-            return const Color(0xFFBDBDBD).withOpacity(0.12);
+            return const Color(0xFFBDBDBD).withValues(alpha: 0.12);
           }
           return Colors.transparent;
         }),
@@ -411,7 +410,7 @@ class AppTheme {
       // List tile theme
       listTileTheme: ListTileThemeData(
         tileColor: Colors.transparent,
-        selectedTileColor: primary.withOpacity(0.12),
+        selectedTileColor: primary.withValues(alpha: 0.12),
         selectedColor: primary,
         iconColor: const Color(0xFF757575),
         textColor: const Color(0xFF1A1C1E),
@@ -447,9 +446,9 @@ class AppTheme {
       chipTheme: ChipThemeData(
         backgroundColor: const Color(0xFFE0E0E0),
         deleteIconColor: const Color(0xFF757575),
-        disabledColor: const Color(0xFFE0E0E0).withOpacity(0.12),
-        selectedColor: primary.withOpacity(0.2),
-        secondarySelectedColor: secondary.withOpacity(0.2),
+        disabledColor: const Color(0xFFE0E0E0).withValues(alpha: 0.12),
+        selectedColor: primary.withValues(alpha: 0.2),
+        secondarySelectedColor: secondary.withValues(alpha: 0.2),
         shadowColor: const Color(0x1F000000),
         labelStyle: const TextStyle(
           color: Color(0xFF1A1C1E),
@@ -478,7 +477,7 @@ class AppTheme {
         ),
         dataRowColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return primary.withOpacity(0.12);
+            return primary.withValues(alpha: 0.12);
           }
           return Colors.transparent;
         }),
@@ -492,7 +491,7 @@ class AppTheme {
           fontWeight: FontWeight.w600,
         ),
         headingRowColor: WidgetStateProperty.resolveWith((states) {
-          return const Color(0xFFE0E0E0).withOpacity(0.5);
+          return const Color(0xFFE0E0E0).withValues(alpha: 0.5);
         }),
         dividerThickness: 1,
       ),
@@ -639,8 +638,8 @@ class AppTheme {
           elevation: 2,
           backgroundColor: DarkThemeColors.primary,
           foregroundColor: DarkThemeColors.onPrimary,
-          disabledBackgroundColor: DarkThemeColors.surfaceVariant.withOpacity(
-            0.12,
+          disabledBackgroundColor: DarkThemeColors.surfaceVariant.withValues(
+            alpha: 0.12,
           ),
           disabledForegroundColor: DarkThemeColors.textDisabled,
           shadowColor: DarkThemeColors.shadow,
@@ -678,7 +677,7 @@ class AppTheme {
         style: IconButton.styleFrom(
           foregroundColor: DarkThemeColors.onSurfaceVariant,
           disabledForegroundColor: DarkThemeColors.textDisabled,
-          highlightColor: DarkThemeColors.primary.withOpacity(0.12),
+          highlightColor: DarkThemeColors.primary.withValues(alpha: 0.12),
           hoverColor: DarkThemeColors.hoverOverlay,
         ),
       ),
@@ -722,7 +721,7 @@ class AppTheme {
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(
-            color: DarkThemeColors.border.withOpacity(0.5),
+            color: DarkThemeColors.border.withValues(alpha: 0.5),
             width: 1,
           ),
         ),
@@ -788,7 +787,8 @@ class AppTheme {
       // ==================== LIST TILE THEME ====================
       listTileTheme: ListTileThemeData(
         tileColor: Colors.transparent,
-        selectedTileColor: DarkThemeColors.primaryContainer.withOpacity(0.12),
+        selectedTileColor:
+            DarkThemeColors.primaryContainer.withValues(alpha: 0.12),
         selectedColor: DarkThemeColors.primary,
         iconColor: DarkThemeColors.onSurfaceVariant,
         textColor: DarkThemeColors.onSurface,
@@ -807,7 +807,7 @@ class AppTheme {
       chipTheme: ChipThemeData(
         backgroundColor: DarkThemeColors.surfaceVariant,
         deleteIconColor: DarkThemeColors.onSurfaceVariant,
-        disabledColor: DarkThemeColors.surfaceVariant.withOpacity(0.12),
+        disabledColor: DarkThemeColors.surfaceVariant.withValues(alpha: 0.12),
         selectedColor: DarkThemeColors.primaryContainer,
         secondarySelectedColor: DarkThemeColors.secondaryContainer,
         shadowColor: DarkThemeColors.shadow,
@@ -830,7 +830,7 @@ class AppTheme {
         ),
         dataRowColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return DarkThemeColors.primaryContainer.withOpacity(0.12);
+            return DarkThemeColors.primaryContainer.withValues(alpha: 0.12);
           }
           return Colors.transparent;
         }),
@@ -839,7 +839,7 @@ class AppTheme {
           DarkThemeColors.onSurfaceVariant,
         ),
         headingRowColor: WidgetStateProperty.all(
-          DarkThemeColors.surfaceVariant.withOpacity(0.5),
+          DarkThemeColors.surfaceVariant.withValues(alpha: 0.5),
         ),
         dividerThickness: 1,
       ),
@@ -902,7 +902,7 @@ class AppTheme {
         }),
         trackColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.disabled)) {
-            return DarkThemeColors.surfaceVariant.withOpacity(0.12);
+            return DarkThemeColors.surfaceVariant.withValues(alpha: 0.12);
           }
           if (states.contains(WidgetState.selected)) {
             return DarkThemeColors.primaryContainer;
@@ -980,7 +980,7 @@ class AppTheme {
         activeTrackColor: DarkThemeColors.primary,
         inactiveTrackColor: DarkThemeColors.surfaceVariant,
         thumbColor: DarkThemeColors.primary,
-        overlayColor: DarkThemeColors.primary.withOpacity(0.12),
+        overlayColor: DarkThemeColors.primary.withValues(alpha: 0.12),
         valueIndicatorColor: DarkThemeColors.primary,
         valueIndicatorTextStyle: AppTypography.labelMedium(
           DarkThemeColors.onPrimary,

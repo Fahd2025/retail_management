@@ -59,7 +59,8 @@ class TimePeriodFilter extends StatelessWidget {
                           Icon(
                             _getPeriodIcon(period),
                             size: 18.sp,
-                            color: theme.colorScheme.onSurface.withOpacity(0.6),
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.6),
                           ),
                           SizedBox(width: 8.w),
                           Text(
@@ -94,14 +95,15 @@ class TimePeriodFilter extends StatelessWidget {
                   Icon(
                     Icons.calendar_today,
                     size: 14.sp,
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                   SizedBox(width: 8.w),
                   Expanded(
                     child: Text(
                       dateRange.format(),
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.8),
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.8),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -186,7 +188,8 @@ class TimePeriodFilter extends StatelessWidget {
                     Text(
                       l10n.selectStartAndEndDates,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.7),
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                     ),
                     SizedBox(height: 24.h),

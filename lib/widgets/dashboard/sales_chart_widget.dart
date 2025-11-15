@@ -96,13 +96,15 @@ class _SalesChartWidgetState extends State<SalesChartWidget> {
                       Icon(
                         Icons.bar_chart_outlined,
                         size: 48.sp,
-                        color: theme.colorScheme.onSurface.withOpacity(0.3),
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.3),
                       ),
                       SizedBox(height: 8.h),
                       Text(
                         l10n.noSalesDataAvailable,
                         style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.6),
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -162,7 +164,7 @@ class _SalesChartWidgetState extends State<SalesChartWidget> {
                   child: Text(
                     DateFormat('MM/dd').format(date),
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.6),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                 );
@@ -180,7 +182,7 @@ class _SalesChartWidgetState extends State<SalesChartWidget> {
               return Text(
                 _formatCurrency(value),
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
               );
             },
@@ -229,7 +231,7 @@ class _SalesChartWidgetState extends State<SalesChartWidget> {
           belowBarData: BarAreaData(
             show: true,
             color: (showVat ? Colors.orange : theme.colorScheme.primary)
-                .withOpacity(0.1),
+                .withValues(alpha: 0.1),
           ),
         ),
       ],
@@ -329,13 +331,15 @@ class _CategorySalesChartWidgetState extends State<CategorySalesChartWidget> {
                       Icon(
                         Icons.pie_chart_outline,
                         size: 48.sp,
-                        color: theme.colorScheme.onSurface.withOpacity(0.3),
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.3),
                       ),
                       SizedBox(height: 8.h),
                       Text(
                         l10n.noCategoryDataAvailable,
                         style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.6),
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -351,8 +355,7 @@ class _CategorySalesChartWidgetState extends State<CategorySalesChartWidget> {
                       height: 250.h,
                       child: PieChart(
                         _buildPieChartData(theme),
-                        swapAnimationDuration:
-                            const Duration(milliseconds: 250),
+                        duration: const Duration(milliseconds: 250),
                       ),
                     ),
                   ),

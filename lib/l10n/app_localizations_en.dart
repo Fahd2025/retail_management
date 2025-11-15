@@ -362,6 +362,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get changeTheme => 'Change Theme';
 
   @override
+  String get themeColorScheme => 'Theme Color Scheme';
+
+  @override
+  String get selected => 'Selected';
+
+  @override
   String get preferences => 'Preferences';
 
   @override

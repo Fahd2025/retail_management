@@ -22,8 +22,7 @@ class LatestInvoicesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormatter =
-        CurrencyHelper.getCurrencyFormatterSync();
+    final currencyFormatter = CurrencyHelper.getCurrencyFormatterSync();
     final dateFormatter = DateFormat('dd/MM/yyyy HH:mm');
 
     return Card(
@@ -69,13 +68,15 @@ class LatestInvoicesWidget extends StatelessWidget {
                       Icon(
                         Icons.receipt_outlined,
                         size: 48.sp,
-                        color: theme.colorScheme.onSurface.withOpacity(0.3),
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.3),
                       ),
                       SizedBox(height: 8.h),
                       Text(
                         l10n.noInvoicesAvailable,
                         style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.6),
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -103,7 +104,7 @@ class LatestInvoicesWidget extends StatelessWidget {
                       height: 50.w,
                       decoration: BoxDecoration(
                         color: _getStatusColor(invoice.status, theme)
-                            .withOpacity(0.1),
+                            .withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: Icon(
@@ -135,7 +136,8 @@ class LatestInvoicesWidget extends StatelessWidget {
                         Text(
                           dateFormatter.format(invoice.saleDate),
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withOpacity(0.6),
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.6),
                           ),
                         ),
                         if (invoice.customerId != null) ...[
@@ -146,14 +148,14 @@ class LatestInvoicesWidget extends StatelessWidget {
                                 Icons.person_outline,
                                 size: 12.sp,
                                 color: theme.colorScheme.onSurface
-                                    .withOpacity(0.6),
+                                    .withValues(alpha: 0.6),
                               ),
                               SizedBox(width: 4.w),
                               Text(
                                 '${l10n.customerId}: ${invoice.customerId}',
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: theme.colorScheme.onSurface
-                                      .withOpacity(0.6),
+                                      .withValues(alpha: 0.6),
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -223,7 +225,7 @@ class LatestInvoicesWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(4.r),
       ),
       child: Text(
@@ -263,13 +265,13 @@ class LatestInvoicesWidget extends StatelessWidget {
         Icon(
           icon,
           size: 12.sp,
-          color: theme.colorScheme.onSurface.withOpacity(0.6),
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
         ),
         SizedBox(width: 4.w),
         Text(
           text,
           style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.6),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ),
       ],

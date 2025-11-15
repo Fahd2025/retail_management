@@ -134,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   end: Alignment.bottomRight,
                   colors: [
                     theme.colorScheme.primary,
-                    theme.colorScheme.primary.withOpacity(0.8),
+                    theme.colorScheme.primary.withValues(alpha: 0.8),
                   ],
                 ),
               ),
@@ -150,12 +150,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           padding: const EdgeInsets.all(32),
                           decoration: BoxDecoration(
                             color: configState.isDarkMode
-                                ? const Color(0xFF1E1E1E).withOpacity(0.95)
-                                : Colors.white.withOpacity(0.95),
+                                ? const Color(0xFF1E1E1E)
+                                    .withValues(alpha: 0.95)
+                                : Colors.white.withValues(alpha: 0.95),
                             borderRadius: BorderRadius.circular(24),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
+                                color: Colors.black.withValues(alpha: 0.2),
                                 blurRadius: 20,
                                 offset: const Offset(0, 10),
                               ),
@@ -282,7 +283,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               Container(
                                 padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
-                                  color: theme.colorScheme.primaryContainer.withOpacity(0.5),
+                                  color: theme.colorScheme.primaryContainer
+                                      .withValues(alpha: 0.5),
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
                                     color: theme.colorScheme.primaryContainer,
@@ -480,10 +482,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           decoration: BoxDecoration(
                             color: _isNotificationError
                                 ? (configState.isDarkMode
-                                    ? theme.colorScheme.error.withOpacity(0.9)
+                                    ? theme.colorScheme.error
+                                        .withValues(alpha: 0.9)
                                     : theme.colorScheme.errorContainer)
                                 : (configState.isDarkMode
-                                    ? Color(0xFF2E7D32).withOpacity(0.9)
+                                    ? Color(0xFF2E7D32).withValues(alpha: 0.9)
                                     : Color(0xFFE8F5E9)),
                             border: Border(
                               bottom: BorderSide(
@@ -506,7 +509,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     : Icons.check_circle_outline,
                                 color: _isNotificationError
                                     ? (configState.isDarkMode
-                                        ? theme.colorScheme.error.withOpacity(0.7)
+                                        ? theme.colorScheme.error
+                                            .withValues(alpha: 0.7)
                                         : theme.colorScheme.error)
                                     : (configState.isDarkMode
                                         ? Color(0xFF81C784)
@@ -519,7 +523,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   style: TextStyle(
                                     color: _isNotificationError
                                         ? (configState.isDarkMode
-                                            ? theme.colorScheme.errorContainer.withOpacity(0.5)
+                                            ? theme.colorScheme.errorContainer
+                                                .withValues(alpha: 0.5)
                                             : theme.colorScheme.error)
                                         : (configState.isDarkMode
                                             ? Color(0xFFC8E6C9)
@@ -533,7 +538,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Icons.close,
                                   color: _isNotificationError
                                       ? (configState.isDarkMode
-                                          ? theme.colorScheme.error.withOpacity(0.7)
+                                          ? theme.colorScheme.error
+                                              .withValues(alpha: 0.7)
                                           : theme.colorScheme.error)
                                       : (configState.isDarkMode
                                           ? Color(0xFF81C784)

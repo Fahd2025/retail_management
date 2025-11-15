@@ -76,7 +76,7 @@ class _InvoicePreviewDialogState extends State<InvoicePreviewDialog> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withOpacity(0.1),
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                 border: Border(
                   bottom: BorderSide(
                     color: Theme.of(context).dividerColor,
@@ -350,7 +350,8 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                                       companyInfo: widget.companyInfo,
                                       customer: widget.customer,
                                       config: config,
-                                      vatIncludedInPrice: configState.vatIncludedInPrice,
+                                      vatIncludedInPrice:
+                                          configState.vatIncludedInPrice,
                                       vatEnabled: configState.vatEnabled,
                                     );
                                     if (context.mounted) {

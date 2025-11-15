@@ -800,6 +800,18 @@ abstract class AppLocalizations {
   /// **'Change Theme'**
   String get changeTheme;
 
+  /// No description provided for @themeColorScheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Color Scheme'**
+  String get themeColorScheme;
+
+  /// No description provided for @selected.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected'**
+  String get selected;
+
   /// No description provided for @preferences.
   ///
   /// In en, this message translates to:

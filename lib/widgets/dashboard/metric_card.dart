@@ -33,7 +33,7 @@ class MetricCard extends StatelessWidget {
     final theme = Theme.of(context);
     final effectiveColor = color ?? theme.colorScheme.primary;
     final effectiveBackgroundColor =
-        backgroundColor ?? effectiveColor.withOpacity(0.1);
+        backgroundColor ?? effectiveColor.withValues(alpha: 0.1);
 
     return Card(
       elevation: 2,
@@ -62,8 +62,8 @@ class MetricCard extends StatelessWidget {
                           child: Text(
                             title,
                             style: theme.textTheme.titleMedium?.copyWith(
-                              color:
-                                  theme.colorScheme.onSurface.withOpacity(0.7),
+                              color: theme.colorScheme.onSurface
+                                  .withValues(alpha: 0.7),
                               fontWeight: FontWeight.w500,
                             ),
                             maxLines: 2,
@@ -100,7 +100,8 @@ class MetricCard extends StatelessWidget {
                       Text(
                         subtitle!,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.6),
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.6),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
