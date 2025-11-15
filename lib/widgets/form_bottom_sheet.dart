@@ -102,19 +102,19 @@ class FormBottomSheet extends StatelessWidget {
         end: Alignment.bottomRight,
         colors: [
           isDark
-              ? Colors.white.withOpacity(0.1)
-              : Colors.white.withOpacity(0.2),
+              ? Colors.white.withValues(alpha: 0.1)
+              : Colors.white.withValues(alpha: 0.2),
           isDark
-              ? Colors.white.withOpacity(0.05)
-              : Colors.white.withOpacity(0.1),
+              ? Colors.white.withValues(alpha: 0.05)
+              : Colors.white.withValues(alpha: 0.1),
         ],
       ),
       borderGradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          Colors.white.withOpacity(0.2),
-          Colors.white.withOpacity(0.1),
+          Colors.white.withValues(alpha: 0.2),
+          Colors.white.withValues(alpha: 0.1),
         ],
       ),
       child: Container(
@@ -130,7 +130,7 @@ class FormBottomSheet extends StatelessWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: colorScheme.onSurface.withOpacity(0.4),
+                color: colorScheme.onSurface.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -159,7 +159,8 @@ class FormBottomSheet extends StatelessWidget {
                           color: colorScheme.onSurface,
                         ),
                         style: IconButton.styleFrom(
-                          backgroundColor: colorScheme.surface.withOpacity(0.3),
+                          backgroundColor:
+                              colorScheme.surface.withValues(alpha: 0.3),
                           padding: const EdgeInsets.all(8),
                         ),
                       ),
@@ -171,9 +172,9 @@ class FormBottomSheet extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          colorScheme.onSurface.withOpacity(0.1),
-                          colorScheme.onSurface.withOpacity(0.3),
-                          colorScheme.onSurface.withOpacity(0.1),
+                          colorScheme.onSurface.withValues(alpha: 0.1),
+                          colorScheme.onSurface.withValues(alpha: 0.3),
+                          colorScheme.onSurface.withValues(alpha: 0.1),
                         ],
                       ),
                     ),
@@ -214,9 +215,9 @@ class FormBottomSheet extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          colorScheme.onSurface.withOpacity(0.1),
-                          colorScheme.onSurface.withOpacity(0.3),
-                          colorScheme.onSurface.withOpacity(0.1),
+                          colorScheme.onSurface.withValues(alpha: 0.1),
+                          colorScheme.onSurface.withValues(alpha: 0.3),
+                          colorScheme.onSurface.withValues(alpha: 0.1),
                         ],
                       ),
                     ),
@@ -231,7 +232,7 @@ class FormBottomSheet extends StatelessWidget {
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             side: BorderSide(
-                              color: colorScheme.outline.withOpacity(0.5),
+                              color: colorScheme.outline.withValues(alpha: 0.5),
                               width: 1.5,
                             ),
                             shape: RoundedRectangleBorder(
@@ -253,12 +254,13 @@ class FormBottomSheet extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: FilledButton(
-                          onPressed: isSaveDisabled || isLoading ? null : onSave,
+                          onPressed:
+                              isSaveDisabled || isLoading ? null : onSave,
                           style: FilledButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             backgroundColor: colorScheme.primary,
                             disabledBackgroundColor:
-                                colorScheme.onSurface.withOpacity(0.12),
+                                colorScheme.onSurface.withValues(alpha: 0.12),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),

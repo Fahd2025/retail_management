@@ -358,9 +358,8 @@ class _CashierScreenState extends State<CashierScreen>
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final textColor = theme.brightness == Brightness.dark
-        ? Colors.white
-        : Colors.black;
+    final textColor =
+        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     return BlocBuilder<ProductBloc, ProductState>(
         builder: (context, productState) {
@@ -426,16 +425,16 @@ class _CashierScreenState extends State<CashierScreen>
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  colorScheme.surface.withOpacity(0.1),
-                                  colorScheme.surface.withOpacity(0.05),
+                                  colorScheme.surface.withValues(alpha: 0.1),
+                                  colorScheme.surface.withValues(alpha: 0.05),
                                 ],
                               ),
                               borderGradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  colorScheme.primary.withOpacity(0.2),
-                                  colorScheme.primary.withOpacity(0.1),
+                                  colorScheme.primary.withValues(alpha: 0.2),
+                                  colorScheme.primary.withValues(alpha: 0.1),
                                 ],
                               ),
                               child: Padding(
@@ -444,7 +443,8 @@ class _CashierScreenState extends State<CashierScreen>
                                   controller: _barcodeController,
                                   decoration: InputDecoration(
                                     hintText: l10n.scanOrEnterBarcode,
-                                    prefixIcon: const Icon(Icons.qr_code_scanner),
+                                    prefixIcon:
+                                        const Icon(Icons.qr_code_scanner),
                                     border: const OutlineInputBorder(),
                                   ),
                                   onSubmitted: (_) => _scanBarcode(),
@@ -459,9 +459,10 @@ class _CashierScreenState extends State<CashierScreen>
                                   return const SizedBox.shrink();
                                 }
 
-                                final bannerColor = configState.vatIncludedInPrice
-                                    ? Colors.green
-                                    : Colors.blue;
+                                final bannerColor =
+                                    configState.vatIncludedInPrice
+                                        ? Colors.green
+                                        : Colors.blue;
 
                                 return Container(
                                   width: double.infinity,
@@ -471,9 +472,9 @@ class _CashierScreenState extends State<CashierScreen>
                                   ),
                                   padding: const EdgeInsets.all(12),
                                   decoration: BoxDecoration(
-                                    color: bannerColor.withOpacity(0.1),
+                                    color: bannerColor.withValues(alpha: 0.1),
                                     border: Border.all(
-                                      color: bannerColor.withOpacity(0.3),
+                                      color: bannerColor.withValues(alpha: 0.3),
                                     ),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
@@ -517,16 +518,16 @@ class _CashierScreenState extends State<CashierScreen>
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  colorScheme.surface.withOpacity(0.08),
-                                  colorScheme.surface.withOpacity(0.04),
+                                  colorScheme.surface.withValues(alpha: 0.08),
+                                  colorScheme.surface.withValues(alpha: 0.04),
                                 ],
                               ),
                               borderGradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  colorScheme.primary.withOpacity(0.2),
-                                  colorScheme.primary.withOpacity(0.1),
+                                  colorScheme.primary.withValues(alpha: 0.2),
+                                  colorScheme.primary.withValues(alpha: 0.1),
                                 ],
                               ),
                               child: ListView.builder(
@@ -539,15 +540,18 @@ class _CashierScreenState extends State<CashierScreen>
                                       category == _selectedCategory;
 
                                   return Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4),
                                     child: isSelected
                                         ? ElevatedButton(
                                             onPressed: () {
-                                              setState(() => _selectedCategory = category);
+                                              setState(() =>
+                                                  _selectedCategory = category);
                                               _loadProductsByCategory();
                                             },
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor: theme.colorScheme.primary,
+                                              backgroundColor:
+                                                  theme.colorScheme.primary,
                                             ),
                                             child: Text(
                                               _getCategoryName(category),
@@ -559,7 +563,8 @@ class _CashierScreenState extends State<CashierScreen>
                                           )
                                         : OutlinedButton(
                                             onPressed: () {
-                                              setState(() => _selectedCategory = category);
+                                              setState(() =>
+                                                  _selectedCategory = category);
                                               _loadProductsByCategory();
                                             },
                                             child: Text(
@@ -639,16 +644,16 @@ class _CashierScreenState extends State<CashierScreen>
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              colorScheme.surface.withOpacity(0.15),
-                              colorScheme.surface.withOpacity(0.1),
+                              colorScheme.surface.withValues(alpha: 0.15),
+                              colorScheme.surface.withValues(alpha: 0.1),
                             ],
                           ),
                           borderGradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              colorScheme.primary.withOpacity(0.2),
-                              colorScheme.primary.withOpacity(0.1),
+                              colorScheme.primary.withValues(alpha: 0.2),
+                              colorScheme.primary.withValues(alpha: 0.1),
                             ],
                           ),
                           child: Column(
@@ -665,23 +670,24 @@ class _CashierScreenState extends State<CashierScreen>
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    colorScheme.surface.withOpacity(0.2),
-                                    colorScheme.surface.withOpacity(0.1),
+                                    colorScheme.surface.withValues(alpha: 0.2),
+                                    colorScheme.surface.withValues(alpha: 0.1),
                                   ],
                                 ),
                                 borderGradient: LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    colorScheme.primary.withOpacity(0.2),
-                                    colorScheme.primary.withOpacity(0.1),
+                                    colorScheme.primary.withValues(alpha: 0.2),
+                                    colorScheme.primary.withValues(alpha: 0.1),
                                   ],
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(16),
                                   child: Row(
                                     children: [
-                                      Icon(Icons.shopping_cart, color: textColor),
+                                      Icon(Icons.shopping_cart,
+                                          color: textColor),
                                       const SizedBox(width: 8),
                                       Text(
                                         l10n.cart,
@@ -695,7 +701,8 @@ class _CashierScreenState extends State<CashierScreen>
                                       Text(
                                         l10n.cartItems(cartItemCount),
                                         style: TextStyle(
-                                          color: textColor.withOpacity(0.6),
+                                          color:
+                                              textColor.withValues(alpha: 0.6),
                                         ),
                                       ),
                                     ],
@@ -734,29 +741,35 @@ class _CashierScreenState extends State<CashierScreen>
                                                 begin: Alignment.topLeft,
                                                 end: Alignment.bottomRight,
                                                 colors: [
-                                                  colorScheme.surface.withOpacity(0.15),
-                                                  colorScheme.surface.withOpacity(0.1),
+                                                  colorScheme.surface
+                                                      .withValues(alpha: 0.15),
+                                                  colorScheme.surface
+                                                      .withValues(alpha: 0.1),
                                                 ],
                                               ),
                                               borderGradient: LinearGradient(
                                                 begin: Alignment.topLeft,
                                                 end: Alignment.bottomRight,
                                                 colors: [
-                                                  colorScheme.primary.withOpacity(0.2),
-                                                  colorScheme.primary.withOpacity(0.1),
+                                                  colorScheme.primary
+                                                      .withValues(alpha: 0.2),
+                                                  colorScheme.primary
+                                                      .withValues(alpha: 0.1),
                                                 ],
                                               ),
                                               child: Icon(
                                                 Icons.shopping_cart_outlined,
                                                 size: 64,
-                                                color: textColor.withOpacity(0.3),
+                                                color: textColor.withValues(
+                                                    alpha: 0.3),
                                               ),
                                             ),
                                             const SizedBox(height: 16),
                                             Text(
                                               l10n.cartIsEmpty,
                                               style: TextStyle(
-                                                color: textColor.withOpacity(0.6),
+                                                color: textColor.withValues(
+                                                    alpha: 0.6),
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -784,30 +797,34 @@ class _CashierScreenState extends State<CashierScreen>
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    colorScheme.surface.withOpacity(0.2),
-                                    colorScheme.surface.withOpacity(0.1),
+                                    colorScheme.surface.withValues(alpha: 0.2),
+                                    colorScheme.surface.withValues(alpha: 0.1),
                                   ],
                                 ),
                                 borderGradient: LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    colorScheme.primary.withOpacity(0.2),
-                                    colorScheme.primary.withOpacity(0.1),
+                                    colorScheme.primary.withValues(alpha: 0.2),
+                                    colorScheme.primary.withValues(alpha: 0.1),
                                   ],
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(16),
-                                  child: BlocBuilder<AppConfigBloc, AppConfigState>(
+                                  child: BlocBuilder<AppConfigBloc,
+                                      AppConfigState>(
                                     builder: (context, configState) {
                                       return Column(
                                         children: [
                                           if (configState.vatEnabled) ...[
-                                            _SummaryRow(l10n.subtotalLabel, cartSubtotal),
+                                            _SummaryRow(l10n.subtotalLabel,
+                                                cartSubtotal),
                                             const SizedBox(height: 8),
-                                            _SummaryRow(l10n.vatLabel, cartVatAmount),
+                                            _SummaryRow(
+                                                l10n.vatLabel, cartVatAmount),
                                             Divider(
-                                                color: textColor.withOpacity(0.3)),
+                                                color: textColor.withValues(
+                                                    alpha: 0.3)),
                                           ],
                                           _SummaryRow(
                                             l10n.totalLabelColon,
@@ -824,7 +841,8 @@ class _CashierScreenState extends State<CashierScreen>
                                                       ? null
                                                       : () => context
                                                           .read<SaleBloc>()
-                                                          .add(const ClearCartEvent()),
+                                                          .add(
+                                                              const ClearCartEvent()),
                                                   child: Text(l10n.clear),
                                                 ),
                                               ),
@@ -832,11 +850,13 @@ class _CashierScreenState extends State<CashierScreen>
                                               Expanded(
                                                 flex: 2,
                                                 child: ElevatedButton(
-                                                  onPressed:
-                                                      cartItems.isEmpty ? null : _checkout,
-                                                  style: ElevatedButton.styleFrom(
-                                                    backgroundColor:
-                                                        theme.colorScheme.primary,
+                                                  onPressed: cartItems.isEmpty
+                                                      ? null
+                                                      : _checkout,
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor: theme
+                                                        .colorScheme.primary,
                                                   ),
                                                   child: Text(
                                                     l10n.checkout,
@@ -890,9 +910,8 @@ class _ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final textColor = theme.brightness == Brightness.dark
-        ? Colors.white
-        : Colors.black;
+    final textColor =
+        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     return GlassmorphicContainer(
       width: double.infinity,
@@ -905,16 +924,16 @@ class _ProductCard extends StatelessWidget {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          colorScheme.surface.withOpacity(0.15),
-          colorScheme.surface.withOpacity(0.1),
+          colorScheme.surface.withValues(alpha: 0.15),
+          colorScheme.surface.withValues(alpha: 0.1),
         ],
       ),
       borderGradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          colorScheme.primary.withOpacity(0.2),
-          colorScheme.primary.withOpacity(0.1),
+          colorScheme.primary.withValues(alpha: 0.2),
+          colorScheme.primary.withValues(alpha: 0.1),
         ],
       ),
       child: InkWell(
@@ -929,15 +948,18 @@ class _ProductCard extends StatelessWidget {
                 fit: StackFit.expand,
                 children: [
                   ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                    child: product.imageUrl != null && product.imageUrl!.isNotEmpty
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(16)),
+                    child: product.imageUrl != null &&
+                            product.imageUrl!.isNotEmpty
                         ? Image.network(
                             product.imageUrl!,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return Container(
                                 decoration: BoxDecoration(
-                                  color: colorScheme.surface.withOpacity(0.1),
+                                  color: colorScheme.surface
+                                      .withValues(alpha: 0.1),
                                   borderRadius: const BorderRadius.vertical(
                                     top: Radius.circular(16),
                                   ),
@@ -945,7 +967,7 @@ class _ProductCard extends StatelessWidget {
                                 child: Icon(
                                   Icons.inventory_2,
                                   size: 64,
-                                  color: textColor.withOpacity(0.3),
+                                  color: textColor.withValues(alpha: 0.3),
                                 ),
                               );
                             },
@@ -958,7 +980,7 @@ class _ProductCard extends StatelessWidget {
                           )
                         : Container(
                             decoration: BoxDecoration(
-                              color: colorScheme.surface.withOpacity(0.1),
+                              color: colorScheme.surface.withValues(alpha: 0.1),
                               borderRadius: const BorderRadius.vertical(
                                 top: Radius.circular(16),
                               ),
@@ -966,7 +988,7 @@ class _ProductCard extends StatelessWidget {
                             child: Icon(
                               Icons.inventory_2,
                               size: 64,
-                              color: textColor.withOpacity(0.3),
+                              color: textColor.withValues(alpha: 0.3),
                             ),
                           ),
                   ),
@@ -985,7 +1007,7 @@ class _ProductCard extends StatelessWidget {
                                 : product.quantity > 0
                                     ? Colors.orange
                                     : Colors.red)
-                            .withOpacity(0.9),
+                            .withValues(alpha: 0.9),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -1028,7 +1050,7 @@ class _ProductCard extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: colorScheme.surface.withOpacity(0.15),
+                      color: colorScheme.surface.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
@@ -1059,9 +1081,8 @@ class _CartItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final textColor = theme.brightness == Brightness.dark
-        ? Colors.white
-        : Colors.black;
+    final textColor =
+        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     return GlassmorphicContainer(
       width: double.infinity,
@@ -1075,16 +1096,16 @@ class _CartItem extends StatelessWidget {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          colorScheme.surface.withOpacity(0.12),
-          colorScheme.surface.withOpacity(0.08),
+          colorScheme.surface.withValues(alpha: 0.12),
+          colorScheme.surface.withValues(alpha: 0.08),
         ],
       ),
       borderGradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          colorScheme.primary.withOpacity(0.2),
-          colorScheme.primary.withOpacity(0.1),
+          colorScheme.primary.withValues(alpha: 0.2),
+          colorScheme.primary.withValues(alpha: 0.1),
         ],
       ),
       child: Padding(
@@ -1105,7 +1126,7 @@ class _CartItem extends StatelessWidget {
                   Text(
                     CurrencyHelper.formatCurrencySync(item.unitPrice),
                     style: TextStyle(
-                      color: textColor.withOpacity(0.6),
+                      color: textColor.withValues(alpha: 0.6),
                       fontSize: 12,
                     ),
                   ),
@@ -1119,7 +1140,8 @@ class _CartItem extends StatelessWidget {
                     final vatIncludedInPrice =
                         context.read<AppConfigBloc>().state.vatIncludedInPrice;
                     context.read<SaleBloc>().add(
-                          UpdateCartItemQuantityEvent(item.id, item.quantity - 1,
+                          UpdateCartItemQuantityEvent(
+                              item.id, item.quantity - 1,
                               vatIncludedInPrice: vatIncludedInPrice),
                         );
                   },
@@ -1145,7 +1167,8 @@ class _CartItem extends StatelessWidget {
                     final vatIncludedInPrice =
                         context.read<AppConfigBloc>().state.vatIncludedInPrice;
                     context.read<SaleBloc>().add(
-                          UpdateCartItemQuantityEvent(item.id, item.quantity + 1,
+                          UpdateCartItemQuantityEvent(
+                              item.id, item.quantity + 1,
                               vatIncludedInPrice: vatIncludedInPrice),
                         );
                   },
@@ -1242,9 +1265,8 @@ class _CustomerSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final textColor = theme.brightness == Brightness.dark
-        ? Colors.white
-        : Colors.black;
+    final textColor =
+        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     return BlocBuilder<CustomerBloc, CustomerState>(
       builder: (context, customerState) {
@@ -1268,16 +1290,16 @@ class _CustomerSelector extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              colorScheme.surface.withOpacity(0.12),
-              colorScheme.surface.withOpacity(0.08),
+              colorScheme.surface.withValues(alpha: 0.12),
+              colorScheme.surface.withValues(alpha: 0.08),
             ],
           ),
           borderGradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              colorScheme.primary.withOpacity(0.2),
-              colorScheme.primary.withOpacity(0.1),
+              colorScheme.primary.withValues(alpha: 0.2),
+              colorScheme.primary.withValues(alpha: 0.1),
             ],
           ),
           child: Padding(
@@ -1364,9 +1386,8 @@ class _PaymentDialogState extends State<_PaymentDialog> {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final textColor = theme.brightness == Brightness.dark
-        ? Colors.white
-        : Colors.black;
+    final textColor =
+        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     // Build the payment content
     final paymentContent = Column(
@@ -1384,16 +1405,16 @@ class _PaymentDialogState extends State<_PaymentDialog> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              colorScheme.surface.withOpacity(0.2),
-              colorScheme.surface.withOpacity(0.1),
+              colorScheme.surface.withValues(alpha: 0.2),
+              colorScheme.surface.withValues(alpha: 0.1),
             ],
           ),
           borderGradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              colorScheme.primary.withOpacity(0.2),
-              colorScheme.primary.withOpacity(0.1),
+              colorScheme.primary.withValues(alpha: 0.2),
+              colorScheme.primary.withValues(alpha: 0.1),
             ],
           ),
           child: Padding(
@@ -1482,7 +1503,7 @@ class _PaymentDialogState extends State<_PaymentDialog> {
             color: (_change >= 0
                     ? theme.colorScheme.secondaryContainer
                     : theme.colorScheme.errorContainer)
-                .withOpacity(0.2),
+                .withValues(alpha: 0.2),
             border: Border.all(
               color: _change >= 0
                   ? theme.colorScheme.secondary

@@ -250,16 +250,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              theme.colorScheme.surface.withOpacity(0.18),
-              theme.colorScheme.surface.withOpacity(0.08),
+              theme.colorScheme.surface.withValues(alpha: 0.18),
+              theme.colorScheme.surface.withValues(alpha: 0.08),
             ],
           ),
           borderGradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              theme.colorScheme.primary.withOpacity(0.3),
-              theme.colorScheme.primary.withOpacity(0.1),
+              theme.colorScheme.primary.withValues(alpha: 0.3),
+              theme.colorScheme.primary.withValues(alpha: 0.1),
             ],
           ),
           padding: const EdgeInsets.all(32),
@@ -276,14 +276,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 border: 2,
                 linearGradient: LinearGradient(
                   colors: [
-                    Colors.green.withOpacity(0.2),
-                    Colors.green.withOpacity(0.1),
+                    Colors.green.withValues(alpha: 0.2),
+                    Colors.green.withValues(alpha: 0.1),
                   ],
                 ),
                 borderGradient: LinearGradient(
                   colors: [
-                    Colors.green.withOpacity(0.3),
-                    Colors.green.withOpacity(0.2),
+                    Colors.green.withValues(alpha: 0.3),
+                    Colors.green.withValues(alpha: 0.2),
                   ],
                 ),
                 child: Icon(
@@ -316,10 +316,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.1),
+                  color: Colors.blue.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: Colors.blue.withOpacity(0.3),
+                    color: Colors.blue.withValues(alpha: 0.3),
                     width: 1,
                   ),
                 ),
@@ -619,7 +619,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 subtitle: _getLocaleName(configState.locale),
                 trailing: PopupMenuButton<Locale>(
                   icon: Icon(Icons.arrow_drop_down, color: textColor),
-                  itemBuilder: (context) => _getSupportedLocales().map((locale) {
+                  itemBuilder: (context) =>
+                      _getSupportedLocales().map((locale) {
                     return PopupMenuItem(
                       value: locale,
                       child: Row(
@@ -888,14 +889,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       border: 2,
       linearGradient: LinearGradient(
         colors: [
-          theme.colorScheme.surface.withOpacity(0.15),
-          theme.colorScheme.surface.withOpacity(0.05),
+          theme.colorScheme.surface.withValues(alpha: 0.15),
+          theme.colorScheme.surface.withValues(alpha: 0.05),
         ],
       ),
       borderGradient: LinearGradient(
         colors: [
-          theme.colorScheme.primary.withOpacity(0.2),
-          theme.colorScheme.primary.withOpacity(0.1),
+          theme.colorScheme.primary.withValues(alpha: 0.2),
+          theme.colorScheme.primary.withValues(alpha: 0.1),
         ],
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -974,19 +975,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
       border: 2,
       linearGradient: LinearGradient(
         colors: [
-          theme.colorScheme.surface.withOpacity(0.15),
-          theme.colorScheme.surface.withOpacity(0.05),
+          theme.colorScheme.surface.withValues(alpha: 0.15),
+          theme.colorScheme.surface.withValues(alpha: 0.05),
         ],
       ),
       borderGradient: LinearGradient(
         colors: [
-          theme.colorScheme.primary.withOpacity(0.2),
-          theme.colorScheme.primary.withOpacity(0.1),
+          theme.colorScheme.primary.withValues(alpha: 0.2),
+          theme.colorScheme.primary.withValues(alpha: 0.1),
         ],
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: DropdownButtonFormField<String>(
-        value: _selectedCurrency,
+        initialValue: _selectedCurrency,
         decoration: InputDecoration(
           labelText: '${l10n.currency} *',
           border: InputBorder.none,
@@ -1038,14 +1039,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 border: 2,
                 linearGradient: LinearGradient(
                   colors: [
-                    theme.colorScheme.surface.withOpacity(0.15),
-                    theme.colorScheme.surface.withOpacity(0.05),
+                    theme.colorScheme.surface.withValues(alpha: 0.15),
+                    theme.colorScheme.surface.withValues(alpha: 0.05),
                   ],
                 ),
                 borderGradient: LinearGradient(
                   colors: [
-                    theme.colorScheme.primary.withOpacity(0.2),
-                    theme.colorScheme.primary.withOpacity(0.1),
+                    theme.colorScheme.primary.withValues(alpha: 0.2),
+                    theme.colorScheme.primary.withValues(alpha: 0.1),
                   ],
                 ),
                 padding: const EdgeInsets.all(16),
@@ -1098,9 +1099,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         children: [
                           Expanded(
                             child: _buildTextField(
-                              controller: TextEditingController(text: configState.vatRate.toString()),
+                              controller: TextEditingController(
+                                  text: configState.vatRate.toString()),
                               label: l10n.vatRateLabel,
-                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
                             ),
                           ),
                           const SizedBox(width: 16),
@@ -1114,14 +1118,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               border: 2,
                               linearGradient: LinearGradient(
                                 colors: [
-                                  theme.colorScheme.surface.withOpacity(0.15),
-                                  theme.colorScheme.surface.withOpacity(0.05),
+                                  theme.colorScheme.surface
+                                      .withValues(alpha: 0.15),
+                                  theme.colorScheme.surface
+                                      .withValues(alpha: 0.05),
                                 ],
                               ),
                               borderGradient: LinearGradient(
                                 colors: [
-                                  theme.colorScheme.primary.withOpacity(0.2),
-                                  theme.colorScheme.primary.withOpacity(0.1),
+                                  theme.colorScheme.primary
+                                      .withValues(alpha: 0.2),
+                                  theme.colorScheme.primary
+                                      .withValues(alpha: 0.1),
                                 ],
                               ),
                               padding: const EdgeInsets.all(16),
@@ -1150,9 +1158,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       return Column(
                         children: [
                           _buildTextField(
-                            controller: TextEditingController(text: configState.vatRate.toString()),
+                            controller: TextEditingController(
+                                text: configState.vatRate.toString()),
                             label: l10n.vatRateLabel,
-                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
                           ),
                           const SizedBox(height: 16),
                           GlassmorphicContainer(
@@ -1164,14 +1174,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             border: 2,
                             linearGradient: LinearGradient(
                               colors: [
-                                theme.colorScheme.surface.withOpacity(0.15),
-                                theme.colorScheme.surface.withOpacity(0.05),
+                                theme.colorScheme.surface
+                                    .withValues(alpha: 0.15),
+                                theme.colorScheme.surface
+                                    .withValues(alpha: 0.05),
                               ],
                             ),
                             borderGradient: LinearGradient(
                               colors: [
-                                theme.colorScheme.primary.withOpacity(0.2),
-                                theme.colorScheme.primary.withOpacity(0.1),
+                                theme.colorScheme.primary
+                                    .withValues(alpha: 0.2),
+                                theme.colorScheme.primary
+                                    .withValues(alpha: 0.1),
                               ],
                             ),
                             padding: const EdgeInsets.all(16),
@@ -1222,14 +1236,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   border: 2,
                   linearGradient: LinearGradient(
                     colors: [
-                      theme.colorScheme.surface.withOpacity(0.15),
-                      theme.colorScheme.surface.withOpacity(0.05),
+                      theme.colorScheme.surface.withValues(alpha: 0.15),
+                      theme.colorScheme.surface.withValues(alpha: 0.05),
                     ],
                   ),
                   borderGradient: LinearGradient(
                     colors: [
-                      theme.colorScheme.primary.withOpacity(0.2),
-                      theme.colorScheme.primary.withOpacity(0.1),
+                      theme.colorScheme.primary.withValues(alpha: 0.2),
+                      theme.colorScheme.primary.withValues(alpha: 0.1),
                     ],
                   ),
                   padding: const EdgeInsets.all(16),
@@ -1274,10 +1288,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.orange.withOpacity(0.1),
+                    color: Colors.orange.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: Colors.orange.withOpacity(0.3),
+                      color: Colors.orange.withValues(alpha: 0.3),
                       width: 1,
                     ),
                   ),
@@ -1339,10 +1353,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.orange.withOpacity(0.1),
+                    color: Colors.orange.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: Colors.orange.withOpacity(0.3),
+                      color: Colors.orange.withValues(alpha: 0.3),
                       width: 1,
                     ),
                   ),
@@ -1648,16 +1662,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          theme.colorScheme.surface.withOpacity(0.18),
-          theme.colorScheme.surface.withOpacity(0.08),
+          theme.colorScheme.surface.withValues(alpha: 0.18),
+          theme.colorScheme.surface.withValues(alpha: 0.08),
         ],
       ),
       borderGradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          theme.colorScheme.primary.withOpacity(0.3),
-          theme.colorScheme.primary.withOpacity(0.1),
+          theme.colorScheme.primary.withValues(alpha: 0.3),
+          theme.colorScheme.primary.withValues(alpha: 0.1),
         ],
       ),
       padding: const EdgeInsets.all(24),
@@ -1676,14 +1690,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 border: 2,
                 linearGradient: LinearGradient(
                   colors: [
-                    theme.colorScheme.primary.withOpacity(0.2),
-                    theme.colorScheme.primary.withOpacity(0.1),
+                    theme.colorScheme.primary.withValues(alpha: 0.2),
+                    theme.colorScheme.primary.withValues(alpha: 0.1),
                   ],
                 ),
                 borderGradient: LinearGradient(
                   colors: [
-                    theme.colorScheme.primary.withOpacity(0.3),
-                    theme.colorScheme.primary.withOpacity(0.2),
+                    theme.colorScheme.primary.withValues(alpha: 0.3),
+                    theme.colorScheme.primary.withValues(alpha: 0.2),
                   ],
                 ),
                 child: Icon(
@@ -1743,14 +1757,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       border: 2,
       linearGradient: LinearGradient(
         colors: [
-          theme.colorScheme.surface.withOpacity(0.15),
-          theme.colorScheme.surface.withOpacity(0.05),
+          theme.colorScheme.surface.withValues(alpha: 0.15),
+          theme.colorScheme.surface.withValues(alpha: 0.05),
         ],
       ),
       borderGradient: LinearGradient(
         colors: [
-          theme.colorScheme.primary.withOpacity(0.2),
-          theme.colorScheme.primary.withOpacity(0.1),
+          theme.colorScheme.primary.withValues(alpha: 0.2),
+          theme.colorScheme.primary.withValues(alpha: 0.1),
         ],
       ),
       padding: const EdgeInsets.all(16),

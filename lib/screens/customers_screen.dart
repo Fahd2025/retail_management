@@ -59,9 +59,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final textColor = theme.brightness == Brightness.dark
-        ? Colors.white
-        : Colors.black;
+    final textColor =
+        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     return Scaffold(
       body: BlocBuilder<CustomerBloc, CustomerState>(
@@ -98,22 +97,22 @@ class _CustomersScreenState extends State<CustomersScreen> {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        colorScheme.surface.withOpacity(0.2),
-                        colorScheme.surface.withOpacity(0.1),
+                        colorScheme.surface.withValues(alpha: 0.2),
+                        colorScheme.surface.withValues(alpha: 0.1),
                       ],
                     ),
                     borderGradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        colorScheme.primary.withOpacity(0.2),
-                        colorScheme.primary.withOpacity(0.1),
+                        colorScheme.primary.withValues(alpha: 0.2),
+                        colorScheme.primary.withValues(alpha: 0.1),
                       ],
                     ),
                     child: Icon(
                       Icons.people,
                       size: 64,
-                      color: textColor.withOpacity(0.3),
+                      color: textColor.withValues(alpha: 0.3),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -164,186 +163,211 @@ class _CustomersScreenState extends State<CustomersScreen> {
                             return IntrinsicHeight(
                               child: GlassmorphicContainer(
                                 width: constraints.maxWidth - 32,
-                                height: innerConstraints.maxHeight > 0 ? innerConstraints.maxHeight : 600,
+                                height: innerConstraints.maxHeight > 0
+                                    ? innerConstraints.maxHeight
+                                    : 600,
                                 borderRadius: 16,
-                          blur: 20,
-                          alignment: Alignment.center,
-                          border: 2,
-                          linearGradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              colorScheme.surface.withOpacity(0.15),
-                              colorScheme.surface.withOpacity(0.1),
-                            ],
-                          ),
-                          borderGradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              colorScheme.primary.withOpacity(0.2),
-                              colorScheme.primary.withOpacity(0.1),
-                            ],
-                          ),
-                          child: DataTable(
-                            columnSpacing: 24,
-                            horizontalMargin: 16,
-                            headingTextStyle: TextStyle(
-                              color: textColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            dataTextStyle: TextStyle(
-                              color: textColor,
-                            ),
-                            columns: [
-                              DataColumn(label: Text(l10n.name)),
-                              DataColumn(label: Text(l10n.phoneFieldLabel)),
-                              DataColumn(label: Text(l10n.emailFieldLabel)),
-                              DataColumn(label: Text(l10n.vatNumberFieldLabel)),
-                              DataColumn(label: Text(l10n.invoiceCount)),
-                              DataColumn(label: Text(l10n.totalAmount(''))),
-                              DataColumn(label: Text(l10n.actions)),
-                            ],
-                            rows: customers.map((customer) {
-                              return DataRow(cells: [
-                                DataCell(Text(customer.name)),
-                                DataCell(Text(customer.phone ?? '-')),
-                                DataCell(Text(customer.email ?? '-')),
-                                DataCell(Text(customer.vatNumber ?? '-')),
-                                DataCell(
-                                  FutureBuilder<Map<String, dynamic>>(
-                                    future: AppDatabase()
-                                        .getCustomerSalesStatistics(
-                                            customer.id),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData) {
-                                        final stats = snapshot.data!;
-                                        final invoiceCount =
-                                            stats['invoiceCount'] as int;
-                                        return Text(invoiceCount.toString());
-                                      }
-                                      return const Text('...');
-                                    },
-                                  ),
+                                blur: 20,
+                                alignment: Alignment.center,
+                                border: 2,
+                                linearGradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    colorScheme.surface.withValues(alpha: 0.15),
+                                    colorScheme.surface.withValues(alpha: 0.1),
+                                  ],
                                 ),
-                                DataCell(
-                                  FutureBuilder<Map<String, dynamic>>(
-                                    future: AppDatabase()
-                                        .getCustomerSalesStatistics(
-                                            customer.id),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData) {
-                                        final stats = snapshot.data!;
-                                        final totalAmount =
-                                            stats['totalAmount'] as double;
-                                        return Text(
-                                            CurrencyHelper.formatCurrencySync(
-                                                totalAmount));
-                                      }
-                                      return const Text('...');
-                                    },
-                                  ),
+                                borderGradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    colorScheme.primary.withValues(alpha: 0.2),
+                                    colorScheme.primary.withValues(alpha: 0.1),
+                                  ],
                                 ),
-                                DataCell(
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        onPressed: () =>
-                                            _showExportDialog(context, customer),
-                                        icon: Icon(
-                                          Icons.picture_as_pdf,
-                                          size: 20,
-                                          color: theme.colorScheme.primary,
-                                        ),
-                                        padding: EdgeInsets.zero,
-                                        constraints: const BoxConstraints(
-                                          minWidth: 32,
-                                          minHeight: 32,
+                                child: DataTable(
+                                  columnSpacing: 24,
+                                  horizontalMargin: 16,
+                                  headingTextStyle: TextStyle(
+                                    color: textColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  dataTextStyle: TextStyle(
+                                    color: textColor,
+                                  ),
+                                  columns: [
+                                    DataColumn(label: Text(l10n.name)),
+                                    DataColumn(
+                                        label: Text(l10n.phoneFieldLabel)),
+                                    DataColumn(
+                                        label: Text(l10n.emailFieldLabel)),
+                                    DataColumn(
+                                        label: Text(l10n.vatNumberFieldLabel)),
+                                    DataColumn(label: Text(l10n.invoiceCount)),
+                                    DataColumn(
+                                        label: Text(l10n.totalAmount(''))),
+                                    DataColumn(label: Text(l10n.actions)),
+                                  ],
+                                  rows: customers.map((customer) {
+                                    return DataRow(cells: [
+                                      DataCell(Text(customer.name)),
+                                      DataCell(Text(customer.phone ?? '-')),
+                                      DataCell(Text(customer.email ?? '-')),
+                                      DataCell(Text(customer.vatNumber ?? '-')),
+                                      DataCell(
+                                        FutureBuilder<Map<String, dynamic>>(
+                                          future: AppDatabase()
+                                              .getCustomerSalesStatistics(
+                                                  customer.id),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.hasData) {
+                                              final stats = snapshot.data!;
+                                              final invoiceCount =
+                                                  stats['invoiceCount'] as int;
+                                              return Text(
+                                                  invoiceCount.toString());
+                                            }
+                                            return const Text('...');
+                                          },
                                         ),
                                       ),
-                                      const SizedBox(width: 4),
-                                      IconButton(
-                                        onPressed: () =>
-                                            showCustomerDialog(customer),
-                                        icon: Icon(
-                                          Icons.edit,
-                                          size: 20,
-                                          color: theme.colorScheme.primary,
-                                        ),
-                                        padding: EdgeInsets.zero,
-                                        constraints: const BoxConstraints(
-                                          minWidth: 32,
-                                          minHeight: 32,
+                                      DataCell(
+                                        FutureBuilder<Map<String, dynamic>>(
+                                          future: AppDatabase()
+                                              .getCustomerSalesStatistics(
+                                                  customer.id),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.hasData) {
+                                              final stats = snapshot.data!;
+                                              final totalAmount =
+                                                  stats['totalAmount']
+                                                      as double;
+                                              return Text(CurrencyHelper
+                                                  .formatCurrencySync(
+                                                      totalAmount));
+                                            }
+                                            return const Text('...');
+                                          },
                                         ),
                                       ),
-                                      const SizedBox(width: 4),
-                                      IconButton(
-                                        onPressed: () async {
-                                          final confirm = await showDialog<bool>(
-                                            context: context,
-                                            builder: (context) => AlertDialog(
-                                              title: Text(l10n.deleteCustomer),
-                                              content: Text(
-                                                l10n.deleteCustomerConfirm,
-                                                style: TextStyle(color: textColor),
+                                      DataCell(
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            IconButton(
+                                              onPressed: () =>
+                                                  _showExportDialog(
+                                                      context, customer),
+                                              icon: Icon(
+                                                Icons.picture_as_pdf,
+                                                size: 20,
+                                                color:
+                                                    theme.colorScheme.primary,
                                               ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(context, false),
-                                                  child: Text(l10n.cancel),
-                                                ),
-                                                ElevatedButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(context, true),
-                                                  style: ElevatedButton.styleFrom(
-                                                    backgroundColor:
-                                                        theme.colorScheme.error,
-                                                  ),
-                                                  child: Text(
-                                                    l10n.delete,
-                                                    style: const TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                ),
-                                              ],
+                                              padding: EdgeInsets.zero,
+                                              constraints: const BoxConstraints(
+                                                minWidth: 32,
+                                                minHeight: 32,
+                                              ),
                                             ),
-                                          );
-
-                                          if (confirm == true && mounted) {
-                                            context.read<CustomerBloc>().add(
-                                                  DeleteCustomerEvent(
-                                                      customer.id),
+                                            const SizedBox(width: 4),
+                                            IconButton(
+                                              onPressed: () =>
+                                                  showCustomerDialog(customer),
+                                              icon: Icon(
+                                                Icons.edit,
+                                                size: 20,
+                                                color:
+                                                    theme.colorScheme.primary,
+                                              ),
+                                              padding: EdgeInsets.zero,
+                                              constraints: const BoxConstraints(
+                                                minWidth: 32,
+                                                minHeight: 32,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 4),
+                                            IconButton(
+                                              onPressed: () async {
+                                                final confirm =
+                                                    await showDialog<bool>(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      AlertDialog(
+                                                    title: Text(
+                                                        l10n.deleteCustomer),
+                                                    content: Text(
+                                                      l10n.deleteCustomerConfirm,
+                                                      style: TextStyle(
+                                                          color: textColor),
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context, false),
+                                                        child:
+                                                            Text(l10n.cancel),
+                                                      ),
+                                                      ElevatedButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context, true),
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          backgroundColor: theme
+                                                              .colorScheme
+                                                              .error,
+                                                        ),
+                                                        child: Text(
+                                                          l10n.delete,
+                                                          style:
+                                                              const TextStyle(
+                                                                  color: Colors
+                                                                      .white),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 );
-                                          }
-                                        },
-                                        icon: Icon(
-                                          Icons.delete,
-                                          size: 20,
-                                          color: theme.colorScheme.error,
-                                        ),
-                                        padding: EdgeInsets.zero,
-                                        constraints: const BoxConstraints(
-                                          minWidth: 32,
-                                          minHeight: 32,
+
+                                                if (confirm == true &&
+                                                    mounted) {
+                                                  context
+                                                      .read<CustomerBloc>()
+                                                      .add(
+                                                        DeleteCustomerEvent(
+                                                            customer.id),
+                                                      );
+                                                }
+                                              },
+                                              icon: Icon(
+                                                Icons.delete,
+                                                size: 20,
+                                                color: theme.colorScheme.error,
+                                              ),
+                                              padding: EdgeInsets.zero,
+                                              constraints: const BoxConstraints(
+                                                minWidth: 32,
+                                                minHeight: 32,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ]);
+                                  }).toList(),
                                 ),
-                              ]);
-                            }).toList(),
-                          ),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
-          );
-        } else {
+                );
+              } else {
                 // Mobile: Card with ExpansionTile layout
                 return ListView.builder(
                   padding: const EdgeInsets.all(16),
@@ -355,240 +379,242 @@ class _CustomersScreenState extends State<CustomersScreen> {
                         width: double.infinity,
                         height: 200,
                         borderRadius: 16,
-                      blur: 18,
-                      alignment: Alignment.center,
-                      border: 2,
-                      margin: const EdgeInsets.only(bottom: 12),
-                      linearGradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          colorScheme.surface.withOpacity(0.15),
-                          colorScheme.surface.withOpacity(0.1),
-                        ],
-                      ),
-                      borderGradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          colorScheme.primary.withOpacity(0.2),
-                          colorScheme.primary.withOpacity(0.1),
-                        ],
-                      ),
-                      child: ExpansionTile(
-                        leading: GlassmorphicContainer(
-                          width: 40,
-                          height: 40,
-                          borderRadius: 20,
-                          blur: 10,
-                          alignment: Alignment.center,
-                          border: 2,
-                          linearGradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              colorScheme.surface.withOpacity(0.15),
-                              colorScheme.surface.withOpacity(0.1),
-                            ],
-                          ),
-                          borderGradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              colorScheme.primary.withOpacity(0.2),
-                              colorScheme.primary.withOpacity(0.1),
-                            ],
-                          ),
-                          child: Text(
-                            customer.name[0].toUpperCase(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: theme.colorScheme.primary,
+                        blur: 18,
+                        alignment: Alignment.center,
+                        border: 2,
+                        margin: const EdgeInsets.only(bottom: 12),
+                        linearGradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            colorScheme.surface.withValues(alpha: 0.15),
+                            colorScheme.surface.withValues(alpha: 0.1),
+                          ],
+                        ),
+                        borderGradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            colorScheme.primary.withValues(alpha: 0.2),
+                            colorScheme.primary.withValues(alpha: 0.1),
+                          ],
+                        ),
+                        child: ExpansionTile(
+                          leading: GlassmorphicContainer(
+                            width: 40,
+                            height: 40,
+                            borderRadius: 20,
+                            blur: 10,
+                            alignment: Alignment.center,
+                            border: 2,
+                            linearGradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                colorScheme.surface.withValues(alpha: 0.15),
+                                colorScheme.surface.withValues(alpha: 0.1),
+                              ],
+                            ),
+                            borderGradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                colorScheme.primary.withValues(alpha: 0.2),
+                                colorScheme.primary.withValues(alpha: 0.1),
+                              ],
+                            ),
+                            child: Text(
+                              customer.name[0].toUpperCase(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: theme.colorScheme.primary,
+                              ),
                             ),
                           ),
-                        ),
-                        title: Text(
-                          customer.name,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: textColor,
+                          title: Text(
+                            customer.name,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: textColor,
+                            ),
                           ),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (customer.phone != null)
-                              Text(
-                                l10n.phoneLabel(customer.phone!),
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: textColor.withOpacity(0.7),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (customer.phone != null)
+                                Text(
+                                  l10n.phoneLabel(customer.phone!),
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: textColor.withValues(alpha: 0.7),
+                                  ),
                                 ),
-                              ),
-                            if (customer.email != null)
-                              Text(
-                                l10n.emailLabel(customer.email!),
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: textColor.withOpacity(0.7),
+                              if (customer.email != null)
+                                Text(
+                                  l10n.emailLabel(customer.email!),
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: textColor.withValues(alpha: 0.7),
+                                  ),
                                 ),
-                              ),
-                            if (customer.vatNumber != null)
-                              Text(
-                                l10n.vatLabel2(customer.vatNumber!),
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: textColor.withOpacity(0.7),
+                              if (customer.vatNumber != null)
+                                Text(
+                                  l10n.vatLabel2(customer.vatNumber!),
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: textColor.withValues(alpha: 0.7),
+                                  ),
                                 ),
-                              ),
-                            const SizedBox(height: 4),
-                            FutureBuilder<Map<String, dynamic>>(
-                              future: AppDatabase().getCustomerSalesStatistics(
-                                customer.id,
-                              ),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  final stats = snapshot.data!;
-                                  final invoiceCount =
-                                      stats['invoiceCount'] as int;
-                                  final totalAmount =
-                                      stats['totalAmount'] as double;
-                                  final currencyFormat =
-                                      CurrencyHelper.getCurrencyFormatterSync();
+                              const SizedBox(height: 4),
+                              FutureBuilder<Map<String, dynamic>>(
+                                future:
+                                    AppDatabase().getCustomerSalesStatistics(
+                                  customer.id,
+                                ),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    final stats = snapshot.data!;
+                                    final invoiceCount =
+                                        stats['invoiceCount'] as int;
+                                    final totalAmount =
+                                        stats['totalAmount'] as double;
+                                    final currencyFormat = CurrencyHelper
+                                        .getCurrencyFormatterSync();
+                                    return Text(
+                                      l10n.invoicesTotal(
+                                        invoiceCount,
+                                        currencyFormat.format(totalAmount),
+                                      ),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: theme.colorScheme.primary,
+                                      ),
+                                    );
+                                  }
                                   return Text(
-                                    l10n.invoicesTotal(
-                                      invoiceCount,
-                                      currencyFormat.format(totalAmount),
-                                    ),
+                                    l10n.loadingStatistics,
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: theme.colorScheme.primary,
+                                      color: textColor.withValues(alpha: 0.6),
                                     ),
                                   );
-                                }
-                                return Text(
-                                  l10n.loadingStatistics,
-                                  style: TextStyle(
-                                    color: textColor.withOpacity(0.6),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              onPressed: () =>
-                                  _showExportDialog(context, customer),
-                              icon: Icon(
-                                Icons.picture_as_pdf,
-                                color: theme.colorScheme.primary,
+                                },
                               ),
-                              padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(
-                                minWidth: 32,
-                                minHeight: 32,
+                            ],
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                onPressed: () =>
+                                    _showExportDialog(context, customer),
+                                icon: Icon(
+                                  Icons.picture_as_pdf,
+                                  color: theme.colorScheme.primary,
+                                ),
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(
+                                  minWidth: 32,
+                                  minHeight: 32,
+                                ),
                               ),
-                            ),
-                            IconButton(
-                              onPressed: () => showCustomerDialog(customer),
-                              icon: Icon(
-                                Icons.edit,
-                                color: theme.colorScheme.primary,
+                              IconButton(
+                                onPressed: () => showCustomerDialog(customer),
+                                icon: Icon(
+                                  Icons.edit,
+                                  color: theme.colorScheme.primary,
+                                ),
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(
+                                  minWidth: 32,
+                                  minHeight: 32,
+                                ),
                               ),
-                              padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(
-                                minWidth: 32,
-                                minHeight: 32,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () async {
-                                final confirm = await showDialog<bool>(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: Text(l10n.deleteCustomer),
-                                    content: Text(
-                                      l10n.deleteCustomerConfirm,
-                                      style: TextStyle(color: textColor),
+                              IconButton(
+                                onPressed: () async {
+                                  final confirm = await showDialog<bool>(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: Text(l10n.deleteCustomer),
+                                      content: Text(
+                                        l10n.deleteCustomerConfirm,
+                                        style: TextStyle(color: textColor),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, false),
+                                          child: Text(l10n.cancel),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, true),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                theme.colorScheme.error,
+                                          ),
+                                          child: Text(
+                                            l10n.delete,
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, false),
-                                        child: Text(l10n.cancel),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, true),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              theme.colorScheme.error,
-                                        ),
-                                        child: Text(
-                                          l10n.delete,
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
+                                  );
 
-                                if (confirm == true && mounted) {
-                                  context.read<CustomerBloc>().add(
-                                        DeleteCustomerEvent(customer.id),
-                                      );
-                                }
-                              },
-                              icon: Icon(
-                                Icons.delete,
-                                color: theme.colorScheme.error,
+                                  if (confirm == true && mounted) {
+                                    context.read<CustomerBloc>().add(
+                                          DeleteCustomerEvent(customer.id),
+                                        );
+                                  }
+                                },
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: theme.colorScheme.error,
+                                ),
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(
+                                  minWidth: 32,
+                                  minHeight: 32,
+                                ),
                               ),
-                              padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(
-                                minWidth: 32,
-                                minHeight: 32,
+                            ],
+                          ),
+                          children: [
+                            if (customer.saudiAddress != null)
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      l10n.saudiNationalAddress,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        color: textColor,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      customer.saudiAddress!.formattedAddress,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: textColor.withValues(alpha: 0.7),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
                           ],
                         ),
-                        children: [
-                          if (customer.saudiAddress != null)
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    l10n.saudiNationalAddress,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      color: textColor,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    customer.saudiAddress!.formattedAddress,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: textColor.withOpacity(0.7),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                        ],
                       ),
-                    ),
-                  );
-                },
-              );
+                    );
+                  },
+                );
+              }
             },
           );
         },
@@ -710,9 +736,8 @@ class _CustomerDialogState extends State<_CustomerDialog> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final textColor = theme.brightness == Brightness.dark
-        ? Colors.white
-        : Colors.black;
+    final textColor =
+        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     // Build the form content
     final formContent = Form(
@@ -795,7 +820,7 @@ class _CustomerDialogState extends State<_CustomerDialog> {
 
           // Saudi National Address Section
           const SizedBox(height: 32),
-          Divider(color: textColor.withOpacity(0.2)),
+          Divider(color: textColor.withValues(alpha: 0.2)),
           const SizedBox(height: 16),
 
           Text(
@@ -1080,9 +1105,8 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final textColor = theme.brightness == Brightness.dark
-        ? Colors.white
-        : Colors.black;
+    final textColor =
+        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     // Build the export configuration content
     final exportContent = Column(
@@ -1095,55 +1119,56 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
             width: double.infinity,
             height: 150,
             borderRadius: 12,
-          blur: 15,
-          alignment: Alignment.center,
-          border: 2,
-          linearGradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              colorScheme.surface.withOpacity(0.15),
-              colorScheme.surface.withOpacity(0.1),
-            ],
-          ),
-          borderGradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              colorScheme.primary.withOpacity(0.2),
-              colorScheme.primary.withOpacity(0.1),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.person,
-                  color: theme.colorScheme.primary,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.customer,
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          color: textColor.withOpacity(0.7),
-                        ),
-                      ),
-                      Text(
-                        widget.customer.name,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: textColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+            blur: 15,
+            alignment: Alignment.center,
+            border: 2,
+            linearGradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                colorScheme.surface.withValues(alpha: 0.15),
+                colorScheme.surface.withValues(alpha: 0.1),
               ],
+            ),
+            borderGradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                colorScheme.primary.withValues(alpha: 0.2),
+                colorScheme.primary.withValues(alpha: 0.1),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.person,
+                    color: theme.colorScheme.primary,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.customer,
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            color: textColor.withValues(alpha: 0.7),
+                          ),
+                        ),
+                        Text(
+                          widget.customer.name,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: textColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -1165,67 +1190,68 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
             width: double.infinity,
             height: 150,
             borderRadius: 12,
-          blur: 15,
-          alignment: Alignment.center,
-          border: 2,
-          linearGradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              colorScheme.surface.withOpacity(0.1),
-              colorScheme.surface.withOpacity(0.05),
-            ],
-          ),
-          borderGradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              colorScheme.primary.withOpacity(0.2),
-              colorScheme.primary.withOpacity(0.1),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            child: DropdownButtonFormField<String>(
-              value: _filterOption,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 0,
-                  vertical: 8,
-                ),
-                prefixIcon: Icon(
-                  Icons.date_range,
-                  color: theme.colorScheme.primary,
-                ),
-              ),
-              dropdownColor: theme.scaffoldBackgroundColor,
-              style: TextStyle(color: textColor),
-              items: [
-                DropdownMenuItem(value: 'all', child: Text(l10n.allTime)),
-                DropdownMenuItem(
-                  value: 'last_month',
-                  child: Text(l10n.monthly),
-                ),
-                DropdownMenuItem(
-                  value: 'last_3_months',
-                  child: Text(l10n.lastThreeMonths),
-                ),
-                DropdownMenuItem(
-                  value: 'last_year',
-                  child: Text(l10n.yearly),
-                ),
-                DropdownMenuItem(
-                  value: 'custom',
-                  child: Text(l10n.custom),
-                ),
+            blur: 15,
+            alignment: Alignment.center,
+            border: 2,
+            linearGradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                colorScheme.surface.withValues(alpha: 0.1),
+                colorScheme.surface.withValues(alpha: 0.05),
               ],
-              onChanged: (value) {
-                setState(() {
-                  _filterOption = value!;
-                  _setDateRangeFromFilter();
-                });
-              },
+            ),
+            borderGradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                colorScheme.primary.withValues(alpha: 0.2),
+                colorScheme.primary.withValues(alpha: 0.1),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              child: DropdownButtonFormField<String>(
+                initialValue: _filterOption,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 0,
+                    vertical: 8,
+                  ),
+                  prefixIcon: Icon(
+                    Icons.date_range,
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+                dropdownColor: theme.scaffoldBackgroundColor,
+                style: TextStyle(color: textColor),
+                items: [
+                  DropdownMenuItem(value: 'all', child: Text(l10n.allTime)),
+                  DropdownMenuItem(
+                    value: 'last_month',
+                    child: Text(l10n.monthly),
+                  ),
+                  DropdownMenuItem(
+                    value: 'last_3_months',
+                    child: Text(l10n.lastThreeMonths),
+                  ),
+                  DropdownMenuItem(
+                    value: 'last_year',
+                    child: Text(l10n.yearly),
+                  ),
+                  DropdownMenuItem(
+                    value: 'custom',
+                    child: Text(l10n.custom),
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _filterOption = value!;
+                    _setDateRangeFromFilter();
+                  });
+                },
+              ),
             ),
           ),
         ),
@@ -1289,16 +1315,16 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    colorScheme.surface.withOpacity(0.15),
-                    colorScheme.surface.withOpacity(0.1),
+                    colorScheme.surface.withValues(alpha: 0.15),
+                    colorScheme.surface.withValues(alpha: 0.1),
                   ],
                 ),
                 borderGradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    colorScheme.primary.withOpacity(0.2),
-                    colorScheme.primary.withOpacity(0.1),
+                    colorScheme.primary.withValues(alpha: 0.2),
+                    colorScheme.primary.withValues(alpha: 0.1),
                   ],
                 ),
                 child: Padding(
@@ -1332,7 +1358,7 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
                               Text(
                                 l10n.invoiceCount,
                                 style: theme.textTheme.labelMedium?.copyWith(
-                                  color: textColor.withOpacity(0.7),
+                                  color: textColor.withValues(alpha: 0.7),
                                 ),
                               ),
                               Text(
@@ -1350,7 +1376,7 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
                               Text(
                                 l10n.totalAmount(''),
                                 style: theme.textTheme.labelMedium?.copyWith(
-                                  color: textColor.withOpacity(0.7),
+                                  color: textColor.withValues(alpha: 0.7),
                                 ),
                               ),
                               Text(

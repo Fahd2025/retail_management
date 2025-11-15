@@ -179,14 +179,14 @@ class _UsersScreenState extends State<UsersScreen> {
                     border: 2,
                     linearGradient: LinearGradient(
                       colors: [
-                        theme.colorScheme.surface.withOpacity(0.2),
-                        theme.colorScheme.surface.withOpacity(0.1),
+                        theme.colorScheme.surface.withValues(alpha: 0.2),
+                        theme.colorScheme.surface.withValues(alpha: 0.1),
                       ],
                     ),
                     borderGradient: LinearGradient(
                       colors: [
-                        theme.colorScheme.primary.withOpacity(0.2),
-                        theme.colorScheme.primary.withOpacity(0.1),
+                        theme.colorScheme.primary.withValues(alpha: 0.2),
+                        theme.colorScheme.primary.withValues(alpha: 0.1),
                       ],
                     ),
                     child: Icon(
@@ -233,133 +233,149 @@ class _UsersScreenState extends State<UsersScreen> {
                             return IntrinsicHeight(
                               child: GlassmorphicContainer(
                                 width: double.infinity,
-                                height: innerConstraints.maxHeight > 0 ? innerConstraints.maxHeight : 600,
+                                height: innerConstraints.maxHeight > 0
+                                    ? innerConstraints.maxHeight
+                                    : 600,
                                 borderRadius: 16,
-                          blur: 20,
-                          alignment: Alignment.topLeft,
-                          border: 2,
-                          linearGradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              theme.colorScheme.surface.withOpacity(0.15),
-                              theme.colorScheme.surface.withOpacity(0.05),
-                            ],
-                          ),
-                          borderGradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              theme.colorScheme.primary.withOpacity(0.2),
-                              theme.colorScheme.primary.withOpacity(0.1),
-                            ],
-                          ),
-                          padding: EdgeInsets.zero,
-                          child: DataTable(
-                            columnSpacing: 24,
-                            horizontalMargin: 16,
-                            headingTextStyle: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: textColor,
-                            ),
-                            dataTextStyle: TextStyle(
-                              color: textColor,
-                            ),
-                            columns: [
-                              DataColumn(label: Text(l10n.username)),
-                              DataColumn(label: Text(l10n.fullName)),
-                              DataColumn(label: Text(l10n.role)),
-                              DataColumn(label: Text(l10n.status)),
-                              DataColumn(label: Text(l10n.invoiceCount)),
-                              DataColumn(label: Text(l10n.total)),
-                              DataColumn(label: Text(l10n.actions)),
-                            ],
-                            rows: users.map((user) {
-                              final stats = userSalesStats[user.id] ?? {};
-                              final invoiceCount = stats['invoiceCount'] ?? 0;
-                              final totalSales = stats['totalSales'] ?? 0.0;
+                                blur: 20,
+                                alignment: Alignment.topLeft,
+                                border: 2,
+                                linearGradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    theme.colorScheme.surface
+                                        .withValues(alpha: 0.15),
+                                    theme.colorScheme.surface
+                                        .withValues(alpha: 0.05),
+                                  ],
+                                ),
+                                borderGradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    theme.colorScheme.primary
+                                        .withValues(alpha: 0.2),
+                                    theme.colorScheme.primary
+                                        .withValues(alpha: 0.1),
+                                  ],
+                                ),
+                                padding: EdgeInsets.zero,
+                                child: DataTable(
+                                  columnSpacing: 24,
+                                  horizontalMargin: 16,
+                                  headingTextStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: textColor,
+                                  ),
+                                  dataTextStyle: TextStyle(
+                                    color: textColor,
+                                  ),
+                                  columns: [
+                                    DataColumn(label: Text(l10n.username)),
+                                    DataColumn(label: Text(l10n.fullName)),
+                                    DataColumn(label: Text(l10n.role)),
+                                    DataColumn(label: Text(l10n.status)),
+                                    DataColumn(label: Text(l10n.invoiceCount)),
+                                    DataColumn(label: Text(l10n.total)),
+                                    DataColumn(label: Text(l10n.actions)),
+                                  ],
+                                  rows: users.map((user) {
+                                    final stats = userSalesStats[user.id] ?? {};
+                                    final invoiceCount =
+                                        stats['invoiceCount'] ?? 0;
+                                    final totalSales =
+                                        stats['totalSales'] ?? 0.0;
 
-                              return DataRow(cells: [
-                                DataCell(Text(
-                                  user.username,
-                                  style: TextStyle(color: textColor),
-                                )),
-                                DataCell(Text(
-                                  user.fullName,
-                                  style: TextStyle(color: textColor),
-                                )),
-                                DataCell(
-                                  Chip(
-                                    label: Text(
-                                      user.role == UserRole.admin
-                                          ? l10n.admin
-                                          : l10n.cashier,
-                                      style: const TextStyle(fontSize: 12),
-                                    ),
-                                    backgroundColor: user.role == UserRole.admin
-                                        ? theme.colorScheme.primaryContainer
-                                        : Colors.green.shade100,
-                                  ),
-                                ),
-                                DataCell(
-                                  Chip(
-                                    label: Text(
-                                      user.isActive
-                                          ? l10n.active
-                                          : l10n.inactive,
-                                      style: const TextStyle(fontSize: 12),
-                                    ),
-                                    backgroundColor: user.isActive
-                                        ? Colors.green.shade100
-                                        : theme.colorScheme.errorContainer,
-                                  ),
-                                ),
-                                DataCell(Text(
-                                  invoiceCount.toString(),
-                                  style: TextStyle(color: textColor),
-                                )),
-                                DataCell(
-                                  Text(
-                                    CurrencyHelper.formatCurrencySync(totalSales),
-                                    style: TextStyle(color: textColor),
-                                  ),
-                                ),
-                                DataCell(
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        icon: Icon(
-                                          Icons.edit,
-                                          size: 20,
-                                          color: theme.colorScheme.primary,
+                                    return DataRow(cells: [
+                                      DataCell(Text(
+                                        user.username,
+                                        style: TextStyle(color: textColor),
+                                      )),
+                                      DataCell(Text(
+                                        user.fullName,
+                                        style: TextStyle(color: textColor),
+                                      )),
+                                      DataCell(
+                                        Chip(
+                                          label: Text(
+                                            user.role == UserRole.admin
+                                                ? l10n.admin
+                                                : l10n.cashier,
+                                            style:
+                                                const TextStyle(fontSize: 12),
+                                          ),
+                                          backgroundColor:
+                                              user.role == UserRole.admin
+                                                  ? theme.colorScheme
+                                                      .primaryContainer
+                                                  : Colors.green.shade100,
                                         ),
-                                        onPressed: () => showUserDialog(user),
                                       ),
-                                      IconButton(
-                                        icon: Icon(
-                                          Icons.delete,
-                                          size: 20,
-                                          color: theme.colorScheme.error,
+                                      DataCell(
+                                        Chip(
+                                          label: Text(
+                                            user.isActive
+                                                ? l10n.active
+                                                : l10n.inactive,
+                                            style:
+                                                const TextStyle(fontSize: 12),
+                                          ),
+                                          backgroundColor: user.isActive
+                                              ? Colors.green.shade100
+                                              : theme
+                                                  .colorScheme.errorContainer,
                                         ),
-                                        onPressed: () =>
-                                            _deleteUser(context, user),
                                       ),
-                                    ],
-                                  ),
+                                      DataCell(Text(
+                                        invoiceCount.toString(),
+                                        style: TextStyle(color: textColor),
+                                      )),
+                                      DataCell(
+                                        Text(
+                                          CurrencyHelper.formatCurrencySync(
+                                              totalSales),
+                                          style: TextStyle(color: textColor),
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            IconButton(
+                                              icon: Icon(
+                                                Icons.edit,
+                                                size: 20,
+                                                color:
+                                                    theme.colorScheme.primary,
+                                              ),
+                                              onPressed: () =>
+                                                  showUserDialog(user),
+                                            ),
+                                            IconButton(
+                                              icon: Icon(
+                                                Icons.delete,
+                                                size: 20,
+                                                color: theme.colorScheme.error,
+                                              ),
+                                              onPressed: () =>
+                                                  _deleteUser(context, user),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ]);
+                                  }).toList(),
                                 ),
-                              ]);
-                            }).toList(),
-                          ),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
-          );
-        } else {
+                );
+              } else {
                 // Mobile: Card with ExpansionTile layout
                 return ListView.builder(
                   padding: const EdgeInsets.all(16),
@@ -375,145 +391,153 @@ class _UsersScreenState extends State<UsersScreen> {
                         width: double.infinity,
                         height: 200,
                         borderRadius: 16,
-                      blur: 18,
-                      alignment: Alignment.centerLeft,
-                      border: 2,
-                      linearGradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          theme.colorScheme.surface.withOpacity(0.15),
-                          theme.colorScheme.surface.withOpacity(0.05),
-                        ],
-                      ),
-                      borderGradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          theme.colorScheme.primary.withOpacity(0.2),
-                          theme.colorScheme.primary.withOpacity(0.1),
-                        ],
-                      ),
-                      margin: const EdgeInsets.only(bottom: 12),
-                      padding: EdgeInsets.zero,
-                      child: ExpansionTile(
-                        leading: GlassmorphicContainer(
-                          width: 40,
-                          height: 40,
-                          borderRadius: 20,
-                          blur: 10,
-                          alignment: Alignment.center,
-                          border: 2,
-                          linearGradient: LinearGradient(
-                            colors: [
-                              theme.colorScheme.primary.withOpacity(0.15),
-                              theme.colorScheme.primary.withOpacity(0.05),
-                            ],
-                          ),
-                          borderGradient: LinearGradient(
-                            colors: [
-                              theme.colorScheme.primary.withOpacity(0.2),
-                              theme.colorScheme.primary.withOpacity(0.1),
-                            ],
-                          ),
-                          child: Icon(
-                            user.role == UserRole.admin
-                                ? Icons.admin_panel_settings
-                                : Icons.person,
-                            color: theme.colorScheme.primary,
-                          ),
+                        blur: 18,
+                        alignment: Alignment.centerLeft,
+                        border: 2,
+                        linearGradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            theme.colorScheme.surface.withValues(alpha: 0.15),
+                            theme.colorScheme.surface.withValues(alpha: 0.05),
+                          ],
                         ),
-                        title: Text(
-                          user.fullName,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: textColor,
-                          ),
+                        borderGradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            theme.colorScheme.primary.withValues(alpha: 0.2),
+                            theme.colorScheme.primary.withValues(alpha: 0.1),
+                          ],
                         ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              l10n.username + ': ' + user.username,
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: textColor.withValues(alpha: 0.7),
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Chip(
-                                  label: Text(
-                                    user.role == UserRole.admin
-                                        ? l10n.admin
-                                        : l10n.cashier,
-                                    style: const TextStyle(fontSize: 11),
-                                  ),
-                                  backgroundColor: user.role == UserRole.admin
-                                      ? theme.colorScheme.primaryContainer
-                                      : Colors.green.shade100,
-                                  visualDensity: VisualDensity.compact,
-                                ),
-                                const SizedBox(width: 8),
-                                Chip(
-                                  label: Text(
-                                    user.isActive ? l10n.active : l10n.inactive,
-                                    style: const TextStyle(fontSize: 11),
-                                  ),
-                                  backgroundColor: user.isActive
-                                      ? Colors.green.shade100
-                                      : theme.colorScheme.errorContainer,
-                                  visualDensity: VisualDensity.compact,
-                                ),
+                        margin: const EdgeInsets.only(bottom: 12),
+                        padding: EdgeInsets.zero,
+                        child: ExpansionTile(
+                          leading: GlassmorphicContainer(
+                            width: 40,
+                            height: 40,
+                            borderRadius: 20,
+                            blur: 10,
+                            alignment: Alignment.center,
+                            border: 2,
+                            linearGradient: LinearGradient(
+                              colors: [
+                                theme.colorScheme.primary
+                                    .withValues(alpha: 0.15),
+                                theme.colorScheme.primary
+                                    .withValues(alpha: 0.05),
                               ],
+                            ),
+                            borderGradient: LinearGradient(
+                              colors: [
+                                theme.colorScheme.primary
+                                    .withValues(alpha: 0.2),
+                                theme.colorScheme.primary
+                                    .withValues(alpha: 0.1),
+                              ],
+                            ),
+                            child: Icon(
+                              user.role == UserRole.admin
+                                  ? Icons.admin_panel_settings
+                                  : Icons.person,
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                          title: Text(
+                            user.fullName,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: textColor,
+                            ),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10n.username + ': ' + user.username,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: textColor.withValues(alpha: 0.7),
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Chip(
+                                    label: Text(
+                                      user.role == UserRole.admin
+                                          ? l10n.admin
+                                          : l10n.cashier,
+                                      style: const TextStyle(fontSize: 11),
+                                    ),
+                                    backgroundColor: user.role == UserRole.admin
+                                        ? theme.colorScheme.primaryContainer
+                                        : Colors.green.shade100,
+                                    visualDensity: VisualDensity.compact,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Chip(
+                                    label: Text(
+                                      user.isActive
+                                          ? l10n.active
+                                          : l10n.inactive,
+                                      style: const TextStyle(fontSize: 11),
+                                    ),
+                                    backgroundColor: user.isActive
+                                        ? Colors.green.shade100
+                                        : theme.colorScheme.errorContainer,
+                                    visualDensity: VisualDensity.compact,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  Icons.edit,
+                                  color: theme.colorScheme.primary,
+                                ),
+                                onPressed: () => showUserDialog(user),
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: theme.colorScheme.error,
+                                ),
+                                onPressed: () => _deleteUser(context, user),
+                              ),
+                            ],
+                          ),
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildInfoRow(
+                                    l10n.invoiceCount,
+                                    invoiceCount.toString(),
+                                    textColor,
+                                  ),
+                                  _buildInfoRow(
+                                    l10n.total,
+                                    CurrencyHelper.formatCurrencySync(
+                                        totalSales),
+                                    textColor,
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                Icons.edit,
-                                color: theme.colorScheme.primary,
-                              ),
-                              onPressed: () => showUserDialog(user),
-                            ),
-                            IconButton(
-                              icon: Icon(
-                                Icons.delete,
-                                color: theme.colorScheme.error,
-                              ),
-                              onPressed: () => _deleteUser(context, user),
-                            ),
-                          ],
-                        ),
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _buildInfoRow(
-                                  l10n.invoiceCount,
-                                  invoiceCount.toString(),
-                                  textColor,
-                                ),
-                                _buildInfoRow(
-                                  l10n.total,
-                                  CurrencyHelper.formatCurrencySync(totalSales),
-                                  textColor,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
                       ),
-                    ),
-                  );
-                },
-              );
+                    );
+                  },
+                );
+              }
             },
           );
         },
@@ -784,14 +808,14 @@ class _UserDialogState extends State<_UserDialog> {
             border: 2,
             linearGradient: LinearGradient(
               colors: [
-                theme.colorScheme.surface.withOpacity(0.1),
-                theme.colorScheme.surface.withOpacity(0.05),
+                theme.colorScheme.surface.withValues(alpha: 0.1),
+                theme.colorScheme.surface.withValues(alpha: 0.05),
               ],
             ),
             borderGradient: LinearGradient(
               colors: [
-                theme.colorScheme.primary.withOpacity(0.2),
-                theme.colorScheme.primary.withOpacity(0.1),
+                theme.colorScheme.primary.withValues(alpha: 0.2),
+                theme.colorScheme.primary.withValues(alpha: 0.1),
               ],
             ),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

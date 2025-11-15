@@ -90,10 +90,10 @@ class _DataTypeDetectionDialogState extends State<DataTypeDetectionDialog> {
               Container(
                 padding: EdgeInsets.all(12.r),
                 decoration: BoxDecoration(
-                  color: colorScheme.primaryContainer.withOpacity(0.5),
+                  color: colorScheme.primaryContainer.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(8.r),
                   border: Border.all(
-                    color: colorScheme.primary.withOpacity(0.3),
+                    color: colorScheme.primary.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Row(
@@ -124,7 +124,8 @@ class _DataTypeDetectionDialogState extends State<DataTypeDetectionDialog> {
             Flexible(
               child: Container(
                 decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+                  color: colorScheme.surfaceContainerHighest
+                      .withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(12.r),
                   border: Border.all(
                     color: colorScheme.outlineVariant,
@@ -188,7 +189,9 @@ class _DataTypeDetectionDialogState extends State<DataTypeDetectionDialog> {
             Icon(
               _getDataTypeIcon(dataType),
               size: 20.sp,
-              color: isSelected ? colorScheme.primary : colorScheme.onSurfaceVariant,
+              color: isSelected
+                  ? colorScheme.primary
+                  : colorScheme.onSurfaceVariant,
             ),
             SizedBox(width: 12.w),
             Expanded(

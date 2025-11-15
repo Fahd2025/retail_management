@@ -102,7 +102,8 @@ class _DataTypeSelectorBottomSheetState
               child: Column(
                 children: [
                   // Only show "All Data" option for JSON exports
-                  if (!widget.isExport || _selectedFormat == ExportFormat.json) ...[
+                  if (!widget.isExport ||
+                      _selectedFormat == ExportFormat.json) ...[
                     _buildDataTypeItem(
                       context,
                       DataType.all,
@@ -302,7 +303,7 @@ class _DataTypeSelectorBottomSheetState
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
           color: isSelected
-              ? colorScheme.primary.withOpacity(0.1)
+              ? colorScheme.primary.withValues(alpha: 0.1)
               : Colors.transparent,
           child: Row(
             children: [
@@ -311,7 +312,7 @@ class _DataTypeSelectorBottomSheetState
                 height: 48.h,
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? colorScheme.primary.withOpacity(0.2)
+                      ? colorScheme.primary.withValues(alpha: 0.2)
                       : Colors.grey[200],
                   borderRadius: BorderRadius.circular(12.r),
                 ),
@@ -329,7 +330,8 @@ class _DataTypeSelectorBottomSheetState
                     Text(
                       title,
                       style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
                         color: isDisabled ? Colors.grey[400] : null,
                       ),
                     ),
@@ -369,8 +371,9 @@ class _DataTypeSelectorBottomSheetState
               else
                 Radio<DataType>(
                   value: type,
-                  groupValue:
-                      _selectedDataTypes.isEmpty ? null : _selectedDataTypes.first,
+                  groupValue: _selectedDataTypes.isEmpty
+                      ? null
+                      : _selectedDataTypes.first,
                   onChanged: isDisabled
                       ? null
                       : (value) {
@@ -415,7 +418,7 @@ class _DataTypeSelectorBottomSheetState
         padding: EdgeInsets.symmetric(vertical: 16.h),
         decoration: BoxDecoration(
           color: isSelected
-              ? colorScheme.primary.withOpacity(0.1)
+              ? colorScheme.primary.withValues(alpha: 0.1)
               : Colors.grey[100],
           border: Border.all(
             color: isSelected ? colorScheme.primary : Colors.grey[300]!,

@@ -283,72 +283,72 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                 width: double.infinity,
                 height: 150,
                 borderRadius: 12.r,
-              blur: 20,
-              alignment: Alignment.topLeft,
-              border: 2,
-              linearGradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  theme.colorScheme.surface.withOpacity(0.15),
-                  theme.colorScheme.surface.withOpacity(0.05),
-                ],
-              ),
-              borderGradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  theme.colorScheme.primary.withOpacity(0.2),
-                  theme.colorScheme.primary.withOpacity(0.1),
-                ],
-              ),
-              padding: EdgeInsets.all(16.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.invoiceStatistics,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
+                blur: 20,
+                alignment: Alignment.topLeft,
+                border: 2,
+                linearGradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    theme.colorScheme.surface.withValues(alpha: 0.15),
+                    theme.colorScheme.surface.withValues(alpha: 0.05),
+                  ],
+                ),
+                borderGradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    theme.colorScheme.primary.withValues(alpha: 0.2),
+                    theme.colorScheme.primary.withValues(alpha: 0.1),
+                  ],
+                ),
+                padding: EdgeInsets.all(16.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.invoiceStatistics,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _buildStatItem(
-                        context,
-                        l10n.total,
-                        statistics.totalInvoices.toString(),
-                        Colors.blue,
-                        Icons.receipt_long,
-                      ),
-                      _buildStatItem(
-                        context,
-                        l10n.complete,
-                        statistics.completedInvoices.toString(),
-                        Colors.green,
-                        Icons.check_circle,
-                      ),
-                      _buildStatItem(
-                        context,
-                        l10n.return_sale,
-                        statistics.returnedInvoices.toString(),
-                        Colors.orange,
-                        Icons.undo,
-                      ),
-                      _buildStatItem(
-                        context,
-                        l10n.cancelled,
-                        statistics.cancelledInvoices.toString(),
-                        Colors.red,
-                        Icons.cancel,
-                      ),
-                    ],
-                  ),
-                ],
+                    SizedBox(height: 12.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _buildStatItem(
+                          context,
+                          l10n.total,
+                          statistics.totalInvoices.toString(),
+                          Colors.blue,
+                          Icons.receipt_long,
+                        ),
+                        _buildStatItem(
+                          context,
+                          l10n.complete,
+                          statistics.completedInvoices.toString(),
+                          Colors.green,
+                          Icons.check_circle,
+                        ),
+                        _buildStatItem(
+                          context,
+                          l10n.return_sale,
+                          statistics.returnedInvoices.toString(),
+                          Colors.orange,
+                          Icons.undo,
+                        ),
+                        _buildStatItem(
+                          context,
+                          l10n.cancelled,
+                          statistics.cancelledInvoices.toString(),
+                          Colors.red,
+                          Icons.cancel,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
             ),
             SizedBox(height: 32.h),
           ],
@@ -378,14 +378,14 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
             border: 2,
             linearGradient: LinearGradient(
               colors: [
-                color.withOpacity(0.15),
-                color.withOpacity(0.05),
+                color.withValues(alpha: 0.15),
+                color.withValues(alpha: 0.05),
               ],
             ),
             borderGradient: LinearGradient(
               colors: [
-                color.withOpacity(0.3),
-                color.withOpacity(0.2),
+                color.withValues(alpha: 0.3),
+                color.withValues(alpha: 0.2),
               ],
             ),
             child: Icon(

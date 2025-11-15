@@ -96,241 +96,243 @@ class _SalesScreenState extends State<SalesScreen> {
         width: double.infinity,
         height: 200,
         borderRadius: 16,
-      blur: 18,
-      alignment: Alignment.centerLeft,
-      border: 2,
-      linearGradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          theme.colorScheme.surface.withOpacity(0.15),
-          theme.colorScheme.surface.withOpacity(0.05),
-        ],
-      ),
-      borderGradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          theme.colorScheme.primary.withOpacity(0.2),
-          theme.colorScheme.primary.withOpacity(0.1),
-        ],
-      ),
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: EdgeInsets.zero,
-      child: ExpansionTile(
-        leading: GlassmorphicContainer(
-          width: 48,
-          height: 48,
-          borderRadius: 24,
-          blur: 12,
-          alignment: Alignment.center,
-          border: 2,
-          linearGradient: LinearGradient(
-            colors: [
-              statusColor.withOpacity(0.2),
-              statusColor.withOpacity(0.1),
-            ],
-          ),
-          borderGradient: LinearGradient(
-            colors: [
-              statusColor.withOpacity(0.3),
-              statusColor.withOpacity(0.2),
-            ],
-          ),
-          child: Icon(Icons.receipt, color: statusColor, size: 24),
+        blur: 18,
+        alignment: Alignment.centerLeft,
+        border: 2,
+        linearGradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            theme.colorScheme.surface.withValues(alpha: 0.15),
+            theme.colorScheme.surface.withValues(alpha: 0.05),
+          ],
         ),
-        title: Text(
-          l10n.invoiceLabel(sale.invoiceNumber),
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: textColor,
-          ),
+        borderGradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            theme.colorScheme.primary.withValues(alpha: 0.2),
+            theme.colorScheme.primary.withValues(alpha: 0.1),
+          ],
         ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.dateLabel(dateFormat.format(sale.saleDate)),
-              style: TextStyle(
-                fontSize: 13,
-                color: textColor.withValues(alpha: 0.7),
-              ),
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: EdgeInsets.zero,
+        child: ExpansionTile(
+          leading: GlassmorphicContainer(
+            width: 48,
+            height: 48,
+            borderRadius: 24,
+            blur: 12,
+            alignment: Alignment.center,
+            border: 2,
+            linearGradient: LinearGradient(
+              colors: [
+                statusColor.withValues(alpha: 0.2),
+                statusColor.withValues(alpha: 0.1),
+              ],
             ),
-            Text(
-              l10n.totalLabel(
-                  CurrencyHelper.formatCurrencySync(sale.totalAmount)),
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.primary,
-              ),
+            borderGradient: LinearGradient(
+              colors: [
+                statusColor.withValues(alpha: 0.3),
+                statusColor.withValues(alpha: 0.2),
+              ],
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: statusColor.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                l10n.statusLabelText(statusText),
+            child: Icon(Icons.receipt, color: statusColor, size: 24),
+          ),
+          title: Text(
+            l10n.invoiceLabel(sale.invoiceNumber),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: textColor,
+            ),
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.dateLabel(dateFormat.format(sale.saleDate)),
                 style: TextStyle(
-                  color: statusColor,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                  color: textColor.withValues(alpha: 0.7),
                 ),
               ),
-            ),
-          ],
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              icon: Icon(
-                Icons.print,
-                color: theme.colorScheme.primary,
+              Text(
+                l10n.totalLabel(
+                    CurrencyHelper.formatCurrencySync(sale.totalAmount)),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.primary,
+                ),
               ),
-              onPressed: () => _reprintInvoice(sale),
-            ),
-            if (sale.status == SaleStatus.completed)
-              BlocBuilder<AuthBloc, AuthState>(
-                builder: (context, authState) {
-                  if (authState is Authenticated && authState.isAdmin) {
-                    return IconButton(
-                      icon: const Icon(Icons.undo, color: Colors.orange),
-                      onPressed: () => _returnSale(sale),
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
-          ],
-        ),
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.itemsLabel,
+              Container(
+                margin: const EdgeInsets.only(top: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: statusColor.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  l10n.statusLabelText(statusText),
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: textColor,
+                    color: statusColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 8),
-                ...sale.items.map((item) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            '${item.productName} x ${item.quantity}',
-                            style: TextStyle(
-                              color: textColor.withValues(alpha: 0.8),
+              ),
+            ],
+          ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.print,
+                  color: theme.colorScheme.primary,
+                ),
+                onPressed: () => _reprintInvoice(sale),
+              ),
+              if (sale.status == SaleStatus.completed)
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, authState) {
+                    if (authState is Authenticated && authState.isAdmin) {
+                      return IconButton(
+                        icon: const Icon(Icons.undo, color: Colors.orange),
+                        onPressed: () => _returnSale(sale),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
+            ],
+          ),
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.itemsLabel,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: textColor,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  ...sale.items.map((item) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '${item.productName} x ${item.quantity}',
+                              style: TextStyle(
+                                color: textColor.withValues(alpha: 0.8),
+                              ),
                             ),
                           ),
-                        ),
-                        Text(
-                          CurrencyHelper.formatCurrencySync(item.total),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: textColor,
+                          Text(
+                            CurrencyHelper.formatCurrencySync(item.total),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: textColor,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                }).toList(),
-                Divider(color: textColor.withValues(alpha: 0.2)),
-                if (vatEnabled) ...[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        l10n.subtotalLabel,
-                        style: TextStyle(color: textColor),
+                        ],
                       ),
-                      Text(
-                        CurrencyHelper.formatCurrencySync(sale.subtotal),
-                        style: TextStyle(color: textColor),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        l10n.vatLabel,
-                        style: TextStyle(color: textColor),
-                      ),
-                      Text(
-                        CurrencyHelper.formatCurrencySync(sale.vatAmount),
-                        style: TextStyle(color: textColor),
-                      ),
-                    ],
-                  ),
+                    );
+                  }).toList(),
                   Divider(color: textColor.withValues(alpha: 0.2)),
-                ],
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      l10n.totalLabelColon,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: textColor,
-                      ),
-                    ),
-                    Text(
-                      CurrencyHelper.formatCurrencySync(sale.totalAmount),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                  ],
-                ),
-                if (sale.paidAmount > 0) ...[
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        l10n.paidLabel,
-                        style: TextStyle(color: textColor),
-                      ),
-                      Text(
-                        CurrencyHelper.formatCurrencySync(sale.paidAmount),
-                        style: TextStyle(color: textColor),
-                      ),
-                    ],
-                  ),
-                  if (sale.changeAmount > 0)
+                  if (vatEnabled) ...[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          l10n.changeLabel,
+                          l10n.subtotalLabel,
                           style: TextStyle(color: textColor),
                         ),
                         Text(
-                          CurrencyHelper.formatCurrencySync(sale.changeAmount),
+                          CurrencyHelper.formatCurrencySync(sale.subtotal),
                           style: TextStyle(color: textColor),
                         ),
                       ],
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          l10n.vatLabel,
+                          style: TextStyle(color: textColor),
+                        ),
+                        Text(
+                          CurrencyHelper.formatCurrencySync(sale.vatAmount),
+                          style: TextStyle(color: textColor),
+                        ),
+                      ],
+                    ),
+                    Divider(color: textColor.withValues(alpha: 0.2)),
+                  ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        l10n.totalLabelColon,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: textColor,
+                        ),
+                      ),
+                      Text(
+                        CurrencyHelper.formatCurrencySync(sale.totalAmount),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (sale.paidAmount > 0) ...[
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          l10n.paidLabel,
+                          style: TextStyle(color: textColor),
+                        ),
+                        Text(
+                          CurrencyHelper.formatCurrencySync(sale.paidAmount),
+                          style: TextStyle(color: textColor),
+                        ),
+                      ],
+                    ),
+                    if (sale.changeAmount > 0)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            l10n.changeLabel,
+                            style: TextStyle(color: textColor),
+                          ),
+                          Text(
+                            CurrencyHelper.formatCurrencySync(
+                                sale.changeAmount),
+                            style: TextStyle(color: textColor),
+                          ),
+                        ],
+                      ),
+                  ],
                 ],
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -430,14 +432,14 @@ class _SalesScreenState extends State<SalesScreen> {
                     border: 2,
                     linearGradient: LinearGradient(
                       colors: [
-                        theme.colorScheme.surface.withOpacity(0.2),
-                        theme.colorScheme.surface.withOpacity(0.1),
+                        theme.colorScheme.surface.withValues(alpha: 0.2),
+                        theme.colorScheme.surface.withValues(alpha: 0.1),
                       ],
                     ),
                     borderGradient: LinearGradient(
                       colors: [
-                        theme.colorScheme.primary.withOpacity(0.2),
-                        theme.colorScheme.primary.withOpacity(0.1),
+                        theme.colorScheme.primary.withValues(alpha: 0.2),
+                        theme.colorScheme.primary.withValues(alpha: 0.1),
                       ],
                     ),
                     child: Icon(
@@ -480,145 +482,164 @@ class _SalesScreenState extends State<SalesScreen> {
                             return IntrinsicHeight(
                               child: GlassmorphicContainer(
                                 width: double.infinity,
-                                height: innerConstraints.maxHeight > 0 ? innerConstraints.maxHeight : 600,
+                                height: innerConstraints.maxHeight > 0
+                                    ? innerConstraints.maxHeight
+                                    : 600,
                                 borderRadius: 16,
-                          blur: 20,
-                          alignment: Alignment.topLeft,
-                          border: 2,
-                          linearGradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              theme.colorScheme.surface.withOpacity(0.15),
-                              theme.colorScheme.surface.withOpacity(0.05),
-                            ],
-                          ),
-                          borderGradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              theme.colorScheme.primary.withOpacity(0.2),
-                              theme.colorScheme.primary.withOpacity(0.1),
-                            ],
-                          ),
-                          padding: const EdgeInsets.all(16),
-                          child: DataTable(
-                            columnSpacing: 24,
-                            horizontalMargin: 16,
-                            headingTextStyle: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: textColor,
-                            ),
-                            dataTextStyle: TextStyle(
-                              color: textColor.withValues(alpha: 0.9),
-                            ),
-                            columns: [
-                              DataColumn(label: Text(l10n.invoiceLabel(''))),
-                              DataColumn(label: Text(l10n.dateLabel(''))),
-                              if (vatEnabled)
-                                DataColumn(
-                                    label: Text('${l10n.vat} ${l10n.amount}')),
-                              DataColumn(label: Text(l10n.totalLabel(''))),
-                              DataColumn(label: Text(l10n.statusLabelText(''))),
-                              DataColumn(label: Text(l10n.itemsLabel)),
-                              DataColumn(label: Text(l10n.actions)),
-                            ],
-                            rows: sales.map((sale) {
-                              final statusColor =
-                                  sale.status == SaleStatus.completed
-                                      ? Colors.green
-                                      : sale.status == SaleStatus.returned
-                                          ? Colors.orange
-                                          : theme.colorScheme.error;
-
-                              final statusText =
-                                  sale.status == SaleStatus.completed
-                                      ? l10n.complete
-                                      : sale.status == SaleStatus.returned
-                                          ? l10n.return_sale
-                                          : sale.status
-                                              .toString()
-                                              .split('.')
-                                              .last
-                                              .toUpperCase();
-
-                              return DataRow(cells: [
-                                DataCell(Text(sale.invoiceNumber)),
-                                DataCell(
-                                    Text(dateFormat.format(sale.saleDate))),
-                                if (vatEnabled)
-                                  DataCell(Text(
-                                      CurrencyHelper.formatCurrencySync(
-                                          sale.vatAmount))),
-                                DataCell(Text(CurrencyHelper.formatCurrencySync(
-                                    sale.totalAmount))),
-                                DataCell(
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 6,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color:
-                                          statusColor.withValues(alpha: 0.15),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Text(
-                                      statusText,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: statusColor,
-                                      ),
-                                    ),
-                                  ),
+                                blur: 20,
+                                alignment: Alignment.topLeft,
+                                border: 2,
+                                linearGradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    theme.colorScheme.surface
+                                        .withValues(alpha: 0.15),
+                                    theme.colorScheme.surface
+                                        .withValues(alpha: 0.05),
+                                  ],
                                 ),
-                                DataCell(Text(sale.items.length.toString())),
-                                DataCell(
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        icon: Icon(
-                                          Icons.print,
-                                          size: 20,
-                                          color: theme.colorScheme.primary,
-                                        ),
-                                        onPressed: () => _reprintInvoice(sale),
-                                      ),
-                                      const SizedBox(width: 4),
-                                      if (sale.status == SaleStatus.completed)
-                                        BlocBuilder<AuthBloc, AuthState>(
-                                          builder: (context, authState) {
-                                            if (authState is Authenticated &&
-                                                authState.isAdmin) {
-                                              return IconButton(
-                                                icon: const Icon(
-                                                  Icons.undo,
-                                                  size: 20,
-                                                  color: Colors.orange,
-                                                ),
-                                                onPressed: () => _returnSale(sale),
-                                              );
-                                            }
-                                            return const SizedBox.shrink();
-                                          },
-                                        ),
-                                    ],
-                                  ),
+                                borderGradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    theme.colorScheme.primary
+                                        .withValues(alpha: 0.2),
+                                    theme.colorScheme.primary
+                                        .withValues(alpha: 0.1),
+                                  ],
                                 ),
-                              ]);
-                            }).toList(),
-                          ),
+                                padding: const EdgeInsets.all(16),
+                                child: DataTable(
+                                  columnSpacing: 24,
+                                  horizontalMargin: 16,
+                                  headingTextStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: textColor,
+                                  ),
+                                  dataTextStyle: TextStyle(
+                                    color: textColor.withValues(alpha: 0.9),
+                                  ),
+                                  columns: [
+                                    DataColumn(
+                                        label: Text(l10n.invoiceLabel(''))),
+                                    DataColumn(label: Text(l10n.dateLabel(''))),
+                                    if (vatEnabled)
+                                      DataColumn(
+                                          label: Text(
+                                              '${l10n.vat} ${l10n.amount}')),
+                                    DataColumn(
+                                        label: Text(l10n.totalLabel(''))),
+                                    DataColumn(
+                                        label: Text(l10n.statusLabelText(''))),
+                                    DataColumn(label: Text(l10n.itemsLabel)),
+                                    DataColumn(label: Text(l10n.actions)),
+                                  ],
+                                  rows: sales.map((sale) {
+                                    final statusColor =
+                                        sale.status == SaleStatus.completed
+                                            ? Colors.green
+                                            : sale.status == SaleStatus.returned
+                                                ? Colors.orange
+                                                : theme.colorScheme.error;
+
+                                    final statusText =
+                                        sale.status == SaleStatus.completed
+                                            ? l10n.complete
+                                            : sale.status == SaleStatus.returned
+                                                ? l10n.return_sale
+                                                : sale.status
+                                                    .toString()
+                                                    .split('.')
+                                                    .last
+                                                    .toUpperCase();
+
+                                    return DataRow(cells: [
+                                      DataCell(Text(sale.invoiceNumber)),
+                                      DataCell(Text(
+                                          dateFormat.format(sale.saleDate))),
+                                      if (vatEnabled)
+                                        DataCell(Text(
+                                            CurrencyHelper.formatCurrencySync(
+                                                sale.vatAmount))),
+                                      DataCell(Text(
+                                          CurrencyHelper.formatCurrencySync(
+                                              sale.totalAmount))),
+                                      DataCell(
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                            vertical: 6,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: statusColor.withValues(
+                                                alpha: 0.15),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          child: Text(
+                                            statusText,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600,
+                                              color: statusColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      DataCell(
+                                          Text(sale.items.length.toString())),
+                                      DataCell(
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            IconButton(
+                                              icon: Icon(
+                                                Icons.print,
+                                                size: 20,
+                                                color:
+                                                    theme.colorScheme.primary,
+                                              ),
+                                              onPressed: () =>
+                                                  _reprintInvoice(sale),
+                                            ),
+                                            const SizedBox(width: 4),
+                                            if (sale.status ==
+                                                SaleStatus.completed)
+                                              BlocBuilder<AuthBloc, AuthState>(
+                                                builder: (context, authState) {
+                                                  if (authState
+                                                          is Authenticated &&
+                                                      authState.isAdmin) {
+                                                    return IconButton(
+                                                      icon: const Icon(
+                                                        Icons.undo,
+                                                        size: 20,
+                                                        color: Colors.orange,
+                                                      ),
+                                                      onPressed: () =>
+                                                          _returnSale(sale),
+                                                    );
+                                                  }
+                                                  return const SizedBox
+                                                      .shrink();
+                                                },
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                    ]);
+                                  }).toList(),
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
-          );
-        } else {
+                );
+              } else {
                 // Mobile: Card with ExpansionTile layout
                 return ListView.builder(
                   padding: const EdgeInsets.all(16),

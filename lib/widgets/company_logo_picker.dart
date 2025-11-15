@@ -185,150 +185,154 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
               end: Alignment.bottomRight,
               colors: [
                 isDark
-                    ? Colors.white.withOpacity(0.1)
-                    : Colors.white.withOpacity(0.2),
+                    ? Colors.white.withValues(alpha: 0.1)
+                    : Colors.white.withValues(alpha: 0.2),
                 isDark
-                    ? Colors.white.withOpacity(0.05)
-                    : Colors.white.withOpacity(0.1),
+                    ? Colors.white.withValues(alpha: 0.05)
+                    : Colors.white.withValues(alpha: 0.1),
               ],
             ),
             borderGradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.2),
-                Colors.white.withOpacity(0.1),
+                Colors.white.withValues(alpha: 0.2),
+                Colors.white.withValues(alpha: 0.1),
               ],
             ),
             child: SafeArea(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                // Drag handle
-                Container(
-                  margin: const EdgeInsets.only(top: 12, bottom: 8),
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: colorScheme.onSurface.withOpacity(0.4),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                // Gallery option
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: colorScheme.surface.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: ListTile(
-                    leading: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(Icons.photo_library, color: Colors.blue),
+                  // Drag handle
+                  Container(
+                    margin: const EdgeInsets.only(top: 12, bottom: 8),
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: colorScheme.onSurface.withValues(alpha: 0.4),
+                      borderRadius: BorderRadius.circular(2),
                     ),
-                    title: Text(
-                      'Choose from Gallery',
-                      style: TextStyle(color: colorScheme.onSurface),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      _pickImage(ImageSource.gallery);
-                    },
                   ),
-                ),
-                // Camera option (not available on web)
-                if (!kIsWeb)
+                  // Gallery option
                   Container(
                     margin:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                     decoration: BoxDecoration(
-                      color: colorScheme.surface.withOpacity(0.3),
+                      color: colorScheme.surface.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: ListTile(
                       leading: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.2),
+                          color: Colors.blue.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Icon(Icons.camera_alt, color: Colors.green),
+                        child:
+                            const Icon(Icons.photo_library, color: Colors.blue),
                       ),
                       title: Text(
-                        'Take a Photo',
+                        'Choose from Gallery',
                         style: TextStyle(color: colorScheme.onSurface),
                       ),
                       onTap: () {
                         Navigator.pop(context);
-                        _pickImage(ImageSource.camera);
+                        _pickImage(ImageSource.gallery);
                       },
                     ),
                   ),
-                // Remove logo option
-                if (_imageBytes != null)
+                  // Camera option (not available on web)
+                  if (!kIsWeb)
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: colorScheme.surface.withValues(alpha: 0.3),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ListTile(
+                        leading: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child:
+                              const Icon(Icons.camera_alt, color: Colors.green),
+                        ),
+                        title: Text(
+                          'Take a Photo',
+                          style: TextStyle(color: colorScheme.onSurface),
+                        ),
+                        onTap: () {
+                          Navigator.pop(context);
+                          _pickImage(ImageSource.camera);
+                        },
+                      ),
+                    ),
+                  // Remove logo option
+                  if (_imageBytes != null)
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: colorScheme.surface.withValues(alpha: 0.3),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ListTile(
+                        leading: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.red.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(Icons.delete, color: Colors.red),
+                        ),
+                        title: Text(
+                          'Remove Logo',
+                          style: TextStyle(color: colorScheme.onSurface),
+                        ),
+                        onTap: () {
+                          Navigator.pop(context);
+                          _removeLogo();
+                        },
+                      ),
+                    ),
+                  // Cancel option
                   Container(
                     margin:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                     decoration: BoxDecoration(
-                      color: colorScheme.surface.withOpacity(0.3),
+                      color: colorScheme.surface.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: ListTile(
                       leading: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.red.withOpacity(0.2),
+                          color: colorScheme.surface.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Icon(Icons.delete, color: Colors.red),
+                        child: Icon(
+                          Icons.cancel,
+                          color: colorScheme.onSurface,
+                        ),
                       ),
                       title: Text(
-                        'Remove Logo',
+                        'Cancel',
                         style: TextStyle(color: colorScheme.onSurface),
                       ),
                       onTap: () {
                         Navigator.pop(context);
-                        _removeLogo();
                       },
                     ),
                   ),
-                // Cancel option
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: colorScheme.surface.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: ListTile(
-                    leading: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: colorScheme.surface.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Icon(
-                        Icons.cancel,
-                        color: colorScheme.onSurface,
-                      ),
-                    ),
-                    title: Text(
-                      'Cancel',
-                      style: TextStyle(color: colorScheme.onSurface),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
+                  const SizedBox(height: 16),
+                ],
+              ),
             ),
           ),
-        ),
         );
       },
     );
@@ -357,19 +361,19 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
               end: Alignment.bottomRight,
               colors: [
                 isDark
-                    ? Colors.white.withOpacity(0.1)
-                    : Colors.white.withOpacity(0.15),
+                    ? Colors.white.withValues(alpha: 0.1)
+                    : Colors.white.withValues(alpha: 0.15),
                 isDark
-                    ? Colors.white.withOpacity(0.05)
-                    : Colors.white.withOpacity(0.08),
+                    ? Colors.white.withValues(alpha: 0.05)
+                    : Colors.white.withValues(alpha: 0.08),
               ],
             ),
             borderGradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.2),
-                Colors.white.withOpacity(0.1),
+                Colors.white.withValues(alpha: 0.2),
+                Colors.white.withValues(alpha: 0.1),
               ],
             ),
             child: _isLoading
@@ -392,20 +396,22 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: colorScheme.surface.withOpacity(0.3),
+                              color: colorScheme.surface.withValues(alpha: 0.3),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(
                               Icons.add_photo_alternate,
                               size: 48,
-                              color: colorScheme.onSurface.withOpacity(0.6),
+                              color:
+                                  colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
                           ),
                           const SizedBox(height: 12),
                           Text(
                             'Add Logo',
                             style: TextStyle(
-                              color: colorScheme.onSurface.withOpacity(0.7),
+                              color:
+                                  colorScheme.onSurface.withValues(alpha: 0.7),
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),
@@ -420,7 +426,7 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.red.withOpacity(0.1),
+              color: Colors.red.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(

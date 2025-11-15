@@ -143,13 +143,15 @@ class _DashboardScreenState extends State<DashboardScreen>
       return AppBar(
         title: Text(l10n.appTitle),
         elevation: 4,
-        backgroundColor: theme.colorScheme.primary.withOpacity(0.9),
+        backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.9),
         actions: [
           Tooltip(
             message: l10n.refreshDashboard,
             child: IconButton(
               onPressed: () {
-                context.read<DashboardBloc>().add(const RefreshDashboardEvent());
+                context
+                    .read<DashboardBloc>()
+                    .add(const RefreshDashboardEvent());
               },
               icon: const Icon(Icons.refresh),
             ),
@@ -177,7 +179,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             return AppBar(
               title: Text(l10n.pointOfSale),
               elevation: 4,
-              backgroundColor: theme.colorScheme.primary.withOpacity(0.9),
+              backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.9),
               actions: [
                 // Cart icon with badge
                 Padding(
@@ -202,7 +204,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       return AppBar(
         title: Text(l10n.productsManagement),
         elevation: 4,
-        backgroundColor: theme.colorScheme.primary.withOpacity(0.9),
+        backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.9),
         actions: [
           Tooltip(
             message: l10n.add,
@@ -228,7 +230,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       return AppBar(
         title: Text(l10n.categories),
         elevation: 4,
-        backgroundColor: theme.colorScheme.primary.withOpacity(0.9),
+        backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.9),
         actions: [
           Tooltip(
             message: l10n.add,
@@ -254,7 +256,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       return AppBar(
         title: Text(l10n.customersManagement),
         elevation: 4,
-        backgroundColor: theme.colorScheme.primary.withOpacity(0.9),
+        backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.9),
         actions: [
           Tooltip(
             message: l10n.add,
@@ -280,7 +282,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       return AppBar(
         title: Text(l10n.salesList),
         elevation: 4,
-        backgroundColor: theme.colorScheme.primary.withOpacity(0.9),
+        backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.9),
         actions: [
           Tooltip(
             message: l10n.refresh,
@@ -297,7 +299,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       return AppBar(
         title: Text(l10n.usersManagement),
         elevation: 4,
-        backgroundColor: theme.colorScheme.primary.withOpacity(0.9),
+        backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.9),
         actions: [
           Tooltip(
             message: l10n.addUser,
@@ -323,13 +325,13 @@ class _DashboardScreenState extends State<DashboardScreen>
       return AppBar(
         title: Text(l10n.settings),
         elevation: 4,
-        backgroundColor: theme.colorScheme.primary.withOpacity(0.9),
+        backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.9),
       );
     } else {
       return AppBar(
         title: Text(label),
         elevation: 4,
-        backgroundColor: theme.colorScheme.primary.withOpacity(0.9),
+        backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.9),
       );
     }
   }
@@ -346,7 +348,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           end: Alignment.bottomRight,
           colors: [
             theme.colorScheme.primary,
-            theme.colorScheme.primary.withOpacity(0.8),
+            theme.colorScheme.primary.withValues(alpha: 0.8),
           ],
         ),
       ),
@@ -368,16 +370,16 @@ class _DashboardScreenState extends State<DashboardScreen>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Colors.white.withOpacity(0.2),
-                  Colors.white.withOpacity(0.1),
+                  Colors.white.withValues(alpha: 0.2),
+                  Colors.white.withValues(alpha: 0.1),
                 ],
               ),
               borderGradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Colors.white.withOpacity(0.5),
-                  Colors.white.withOpacity(0.2),
+                  Colors.white.withValues(alpha: 0.5),
+                  Colors.white.withValues(alpha: 0.2),
                 ],
               ),
               child: ClipRRect(
@@ -409,7 +411,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                     } else {
                       return const Center(
                         child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
                           strokeWidth: 2,
                         ),
                       );
@@ -430,16 +433,16 @@ class _DashboardScreenState extends State<DashboardScreen>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Colors.white.withOpacity(0.2),
-                  Colors.white.withOpacity(0.1),
+                  Colors.white.withValues(alpha: 0.2),
+                  Colors.white.withValues(alpha: 0.1),
                 ],
               ),
               borderGradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Colors.white.withOpacity(0.5),
-                  Colors.white.withOpacity(0.2),
+                  Colors.white.withValues(alpha: 0.5),
+                  Colors.white.withValues(alpha: 0.2),
                 ],
               ),
               child: const Icon(
@@ -481,7 +484,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 return Text(
                   '${l10n.vatNumber}: ${_companyInfo!.vatNumber}',
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                     fontSize: 13,
                   ),
                   maxLines: 1,
@@ -511,7 +514,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: isSelected
-              ? theme.colorScheme.primaryContainer.withOpacity(0.3)
+              ? theme.colorScheme.primaryContainer.withValues(alpha: 0.3)
               : Colors.transparent,
         ),
         child: Material(
@@ -528,7 +531,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                     color: iconColor ??
                         (isSelected
                             ? theme.colorScheme.primary
-                            : theme.colorScheme.onSurface.withOpacity(0.7)),
+                            : theme.colorScheme.onSurface
+                                .withValues(alpha: 0.7)),
                     size: 24,
                   ),
                   const SizedBox(width: 16),
@@ -541,7 +545,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                         color: textColor ??
                             (isSelected
                                 ? theme.colorScheme.primary
-                                : theme.colorScheme.onSurface.withOpacity(0.8)),
+                                : theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.8)),
                         fontSize: 15,
                       ),
                     ),
@@ -582,16 +587,16 @@ class _DashboardScreenState extends State<DashboardScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              theme.colorScheme.surface.withOpacity(0.9),
-              theme.colorScheme.surface.withOpacity(0.8),
+              theme.colorScheme.surface.withValues(alpha: 0.9),
+              theme.colorScheme.surface.withValues(alpha: 0.8),
             ],
           ),
           borderGradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              theme.colorScheme.primary.withOpacity(0.5),
-              theme.colorScheme.primary.withOpacity(0.2),
+              theme.colorScheme.primary.withValues(alpha: 0.5),
+              theme.colorScheme.primary.withValues(alpha: 0.2),
             ],
           ),
           child: Padding(
@@ -656,16 +661,16 @@ class _DashboardScreenState extends State<DashboardScreen>
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-          theme.colorScheme.surface.withOpacity(0.95),
-          theme.colorScheme.surface.withOpacity(0.9),
+          theme.colorScheme.surface.withValues(alpha: 0.95),
+          theme.colorScheme.surface.withValues(alpha: 0.9),
         ],
       ),
       borderGradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          theme.colorScheme.primary.withOpacity(0.3),
-          theme.colorScheme.primary.withOpacity(0.1),
+          theme.colorScheme.primary.withValues(alpha: 0.3),
+          theme.colorScheme.primary.withValues(alpha: 0.1),
         ],
       ),
       child: child,
@@ -730,8 +735,9 @@ class _DashboardScreenState extends State<DashboardScreen>
                                   _animationController.forward();
 
                                   // Check if we're navigating away from settings (index 7 for admin)
-                                  final isLeavingSettings = (_previousIndex == 7 &&
-                                      user.role == UserRole.admin);
+                                  final isLeavingSettings =
+                                      (_previousIndex == 7 &&
+                                          user.role == UserRole.admin);
 
                                   setState(() {
                                     _previousIndex = _selectedIndex;
@@ -778,16 +784,20 @@ class _DashboardScreenState extends State<DashboardScreen>
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    theme.colorScheme.surface.withOpacity(0.9),
-                                    theme.colorScheme.surface.withOpacity(0.8),
+                                    theme.colorScheme.surface
+                                        .withValues(alpha: 0.9),
+                                    theme.colorScheme.surface
+                                        .withValues(alpha: 0.8),
                                   ],
                                 ),
                                 borderGradient: LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    theme.colorScheme.primary.withOpacity(0.5),
-                                    theme.colorScheme.primary.withOpacity(0.2),
+                                    theme.colorScheme.primary
+                                        .withValues(alpha: 0.5),
+                                    theme.colorScheme.primary
+                                        .withValues(alpha: 0.2),
                                   ],
                                 ),
                                 child: Padding(
@@ -797,7 +807,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                                     children: [
                                       Text(
                                         l10n.logout,
-                                        style: theme.textTheme.titleLarge?.copyWith(
+                                        style: theme.textTheme.titleLarge
+                                            ?.copyWith(
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -809,17 +820,21 @@ class _DashboardScreenState extends State<DashboardScreen>
                                       ),
                                       const SizedBox(height: 24),
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
                                         children: [
                                           OutlinedButton(
-                                            onPressed: () => Navigator.pop(context, false),
+                                            onPressed: () =>
+                                                Navigator.pop(context, false),
                                             child: Text(l10n.cancel),
                                           ),
                                           const SizedBox(width: 12),
                                           ElevatedButton(
-                                            onPressed: () => Navigator.pop(context, true),
+                                            onPressed: () =>
+                                                Navigator.pop(context, true),
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor: theme.colorScheme.error,
+                                              backgroundColor:
+                                                  theme.colorScheme.error,
                                               foregroundColor: Colors.white,
                                             ),
                                             child: Text(l10n.logout),

@@ -277,139 +277,160 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 return IntrinsicHeight(
                                   child: GlassmorphicContainer(
                                     width: constraints.maxWidth - 32,
-                                    height: innerConstraints.maxHeight > 0 ? innerConstraints.maxHeight : 600,
+                                    height: innerConstraints.maxHeight > 0
+                                        ? innerConstraints.maxHeight
+                                        : 600,
                                     borderRadius: 16,
                                     blur: 20,
                                     alignment: Alignment.center,
                                     border: 2,
-                              linearGradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  theme.colorScheme.surface.withValues(alpha: 0.15),
-                                  theme.colorScheme.surface.withValues(alpha: 0.05),
-                                ],
-                              ),
-                              borderGradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  theme.colorScheme.primary.withValues(alpha: 0.2),
-                                  theme.colorScheme.primary.withValues(alpha: 0.1),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: DataTable(
-                                  columnSpacing: 20,
-                                  horizontalMargin: 16,
-                                  headingTextStyle: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: theme.colorScheme.onSurface,
-                                  ),
-                                  dataTextStyle: TextStyle(
-                                    color: theme.colorScheme.onSurface.withValues(alpha: 0.9),
-                                  ),
-                                  columns: [
-                                    DataColumn(label: Text(l10n.name)),
-                                    DataColumn(
-                                        label: Text(l10n.barcodeRequired)),
-                                    DataColumn(label: Text(l10n.category)),
-                                    DataColumn(
-                                        label: Text(vatEnabled
-                                            ? (vatIncludedInPrice
-                                                ? l10n.priceVatIncluded
-                                                : l10n.priceVatExcluded)
-                                            : l10n.price)),
-                                    if (vatEnabled) ...[
-                                      DataColumn(label: Text(l10n.beforeVat)),
-                                      DataColumn(
-                                          label: Text(
-                                              '${l10n.vat} ${l10n.amount}')),
-                                      DataColumn(label: Text(l10n.afterVat)),
-                                    ],
-                                    DataColumn(label: Text(l10n.costRequired)),
-                                    DataColumn(label: Text(l10n.stock)),
-                                    DataColumn(label: Text(l10n.actions)),
-                                  ],
-                                  rows: products.map((product) {
-                                    // Calculate VAT breakdown based on inclusion mode
-                                    final double priceBeforeVat,
-                                        vatAmount,
-                                        priceAfterVat;
-                                    if (vatIncludedInPrice) {
-                                      // VAT is included in the price
-                                      priceAfterVat = product.price;
-                                      vatAmount = priceAfterVat -
-                                          (priceAfterVat /
-                                              (1 + product.vatRate / 100));
-                                      priceBeforeVat =
-                                          priceAfterVat - vatAmount;
-                                    } else {
-                                      // VAT is excluded from the price
-                                      priceBeforeVat = product.price;
-                                      vatAmount = product.price *
-                                          (product.vatRate / 100);
-                                      priceAfterVat =
-                                          priceBeforeVat + vatAmount;
-                                    }
-
-                                    return DataRow(cells: [
-                                      DataCell(Text(
-                                        Localizations.localeOf(context)
-                                                    .languageCode ==
-                                                'ar'
-                                            ? (product.nameAr ?? product.name)
-                                            : product.name,
-                                      )),
-                                      DataCell(Text(product.barcode)),
-                                      DataCell(Text(
-                                          _getCategoryName(product.category))),
-                                      DataCell(Text(
-                                          CurrencyHelper.formatCurrencySync(
-                                              product.price))),
-                                      if (vatEnabled) ...[
-                                        DataCell(Text(
-                                            CurrencyHelper.formatCurrencySync(
-                                                priceBeforeVat))),
-                                        DataCell(Text(
-                                            CurrencyHelper.formatCurrencySync(
-                                                vatAmount))),
-                                        DataCell(Text(
-                                            CurrencyHelper.formatCurrencySync(
-                                                priceAfterVat))),
+                                    linearGradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        theme.colorScheme.surface
+                                            .withValues(alpha: 0.15),
+                                        theme.colorScheme.surface
+                                            .withValues(alpha: 0.05),
                                       ],
-                                      DataCell(Text(
-                                          CurrencyHelper.formatCurrencySync(
-                                              product.cost))),
-                                      DataCell(
-                                          Text(product.quantity.toString())),
-                                      DataCell(
-                                        Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(Icons.edit, size: 20),
-                                              color: theme.colorScheme.primary,
-                                              onPressed: () =>
-                                                  showProductDialog(product),
-                                            ),
-                                            const SizedBox(width: 4),
-                                            IconButton(
-                                              icon: const Icon(Icons.delete, size: 20),
-                                              color: theme.colorScheme.error,
-                                              onPressed: () =>
-                                                  _deleteProduct(context, product),
-                                            ),
-                                          ],
+                                    ),
+                                    borderGradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        theme.colorScheme.primary
+                                            .withValues(alpha: 0.2),
+                                        theme.colorScheme.primary
+                                            .withValues(alpha: 0.1),
+                                      ],
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16),
+                                      child: DataTable(
+                                        columnSpacing: 20,
+                                        horizontalMargin: 16,
+                                        headingTextStyle: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: theme.colorScheme.onSurface,
                                         ),
+                                        dataTextStyle: TextStyle(
+                                          color: theme.colorScheme.onSurface
+                                              .withValues(alpha: 0.9),
+                                        ),
+                                        columns: [
+                                          DataColumn(label: Text(l10n.name)),
+                                          DataColumn(
+                                              label:
+                                                  Text(l10n.barcodeRequired)),
+                                          DataColumn(
+                                              label: Text(l10n.category)),
+                                          DataColumn(
+                                              label: Text(vatEnabled
+                                                  ? (vatIncludedInPrice
+                                                      ? l10n.priceVatIncluded
+                                                      : l10n.priceVatExcluded)
+                                                  : l10n.price)),
+                                          if (vatEnabled) ...[
+                                            DataColumn(
+                                                label: Text(l10n.beforeVat)),
+                                            DataColumn(
+                                                label: Text(
+                                                    '${l10n.vat} ${l10n.amount}')),
+                                            DataColumn(
+                                                label: Text(l10n.afterVat)),
+                                          ],
+                                          DataColumn(
+                                              label: Text(l10n.costRequired)),
+                                          DataColumn(label: Text(l10n.stock)),
+                                          DataColumn(label: Text(l10n.actions)),
+                                        ],
+                                        rows: products.map((product) {
+                                          // Calculate VAT breakdown based on inclusion mode
+                                          final double priceBeforeVat,
+                                              vatAmount,
+                                              priceAfterVat;
+                                          if (vatIncludedInPrice) {
+                                            // VAT is included in the price
+                                            priceAfterVat = product.price;
+                                            vatAmount = priceAfterVat -
+                                                (priceAfterVat /
+                                                    (1 +
+                                                        product.vatRate / 100));
+                                            priceBeforeVat =
+                                                priceAfterVat - vatAmount;
+                                          } else {
+                                            // VAT is excluded from the price
+                                            priceBeforeVat = product.price;
+                                            vatAmount = product.price *
+                                                (product.vatRate / 100);
+                                            priceAfterVat =
+                                                priceBeforeVat + vatAmount;
+                                          }
+
+                                          return DataRow(cells: [
+                                            DataCell(Text(
+                                              Localizations.localeOf(context)
+                                                          .languageCode ==
+                                                      'ar'
+                                                  ? (product.nameAr ??
+                                                      product.name)
+                                                  : product.name,
+                                            )),
+                                            DataCell(Text(product.barcode)),
+                                            DataCell(Text(_getCategoryName(
+                                                product.category))),
+                                            DataCell(Text(CurrencyHelper
+                                                .formatCurrencySync(
+                                                    product.price))),
+                                            if (vatEnabled) ...[
+                                              DataCell(Text(CurrencyHelper
+                                                  .formatCurrencySync(
+                                                      priceBeforeVat))),
+                                              DataCell(Text(CurrencyHelper
+                                                  .formatCurrencySync(
+                                                      vatAmount))),
+                                              DataCell(Text(CurrencyHelper
+                                                  .formatCurrencySync(
+                                                      priceAfterVat))),
+                                            ],
+                                            DataCell(Text(CurrencyHelper
+                                                .formatCurrencySync(
+                                                    product.cost))),
+                                            DataCell(Text(
+                                                product.quantity.toString())),
+                                            DataCell(
+                                              Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  IconButton(
+                                                    icon: const Icon(Icons.edit,
+                                                        size: 20),
+                                                    color: theme
+                                                        .colorScheme.primary,
+                                                    onPressed: () =>
+                                                        showProductDialog(
+                                                            product),
+                                                  ),
+                                                  const SizedBox(width: 4),
+                                                  IconButton(
+                                                    icon: const Icon(
+                                                        Icons.delete,
+                                                        size: 20),
+                                                    color:
+                                                        theme.colorScheme.error,
+                                                    onPressed: () =>
+                                                        _deleteProduct(
+                                                            context, product),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ]);
+                                        }).toList(),
                                       ),
-                                    ]);
-                                  }).toList(),
-                                ),
-                              ),
-                            ),
-                          );
+                                    ),
+                                  ),
+                                );
                               },
                             ),
                           ),
@@ -489,174 +510,188 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             blur: 18,
                             alignment: Alignment.center,
                             border: 2,
-                          linearGradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              theme.colorScheme.surface.withValues(alpha: 0.15),
-                              theme.colorScheme.surface.withValues(alpha: 0.05),
-                            ],
-                          ),
-                          borderGradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              theme.colorScheme.primary.withValues(alpha: 0.2),
-                              theme.colorScheme.primary.withValues(alpha: 0.1),
-                            ],
-                          ),
-                          margin: const EdgeInsets.only(bottom: 12),
-                          child: ExpansionTile(
-                            leading: GlassmorphicContainer(
-                              width: 40,
-                              height: 40,
-                              borderRadius: 20,
-                              blur: 10,
-                              alignment: Alignment.center,
-                              border: 2,
-                              linearGradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  theme.colorScheme.surface.withValues(alpha: 0.15),
-                                  theme.colorScheme.surface.withValues(alpha: 0.05),
-                                ],
-                              ),
-                              borderGradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  theme.colorScheme.primary.withValues(alpha: 0.2),
-                                  theme.colorScheme.primary.withValues(alpha: 0.1),
-                                ],
-                              ),
-                              child: Icon(
-                                Icons.inventory_2,
-                                color: theme.colorScheme.primary,
-                                size: 20,
-                              ),
-                            ),
-                            title: Text(
-                              Localizations.localeOf(context).languageCode ==
-                                      'ar'
-                                  ? (product.nameAr ?? product.name)
-                                  : product.name,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: theme.colorScheme.onSurface,
-                              ),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${l10n.category}: ${_getCategoryName(product.category)}',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                                  ),
-                                ),
-                                Text(
-                                  (vatEnabled
-                                          ? (vatIncludedInPrice
-                                              ? l10n.priceVatIncluded
-                                              : l10n.priceVatExcluded)
-                                          : l10n.price) +
-                                      ': ${CurrencyHelper.formatCurrencySync(product.price)}',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: theme.colorScheme.primary,
-                                  ),
-                                ),
+                            linearGradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                theme.colorScheme.surface
+                                    .withValues(alpha: 0.15),
+                                theme.colorScheme.surface
+                                    .withValues(alpha: 0.05),
                               ],
                             ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.edit),
-                                  color: theme.colorScheme.primary,
-                                  onPressed: () => showProductDialog(product),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  color: theme.colorScheme.error,
-                                  onPressed: () =>
-                                      _deleteProduct(context, product),
-                                ),
+                            borderGradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                theme.colorScheme.primary
+                                    .withValues(alpha: 0.2),
+                                theme.colorScheme.primary
+                                    .withValues(alpha: 0.1),
                               ],
                             ),
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    _buildInfoRow(l10n.barcodeRequired,
-                                        product.barcode),
-                                    _buildInfoRow(
-                                        l10n.costRequired,
-                                        CurrencyHelper.formatCurrencySync(
-                                            product.cost)),
-                                    _buildInfoRow(l10n.stock,
-                                        '${product.quantity} ${l10n.units}'),
-                                    if (vatEnabled) ...[
-                                      const SizedBox(height: 8),
-                                      Divider(color: theme.colorScheme.onSurface.withValues(alpha: 0.2)),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        l10n.vatBreakdown,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                          color: theme.colorScheme.onSurface,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      _buildInfoRow(
-                                          l10n.beforeVat,
-                                          CurrencyHelper.formatCurrencySync(
-                                              priceBeforeVat)),
-                                      _buildInfoRow(
-                                          '${l10n.vat} ${l10n.amount}',
-                                          CurrencyHelper.formatCurrencySync(
-                                              vatAmount)),
-                                      _buildInfoRow(
-                                          l10n.afterVat,
-                                          CurrencyHelper.formatCurrencySync(
-                                              priceAfterVat)),
-                                    ],
-                                    if (product.description != null &&
-                                        product.description!.isNotEmpty) ...[
-                                      const SizedBox(height: 8),
-                                      Divider(color: theme.colorScheme.onSurface.withValues(alpha: 0.2)),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        l10n.description,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                          color: theme.colorScheme.onSurface,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        product.description!,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                                        ),
-                                      ),
-                                    ],
+                            margin: const EdgeInsets.only(bottom: 12),
+                            child: ExpansionTile(
+                              leading: GlassmorphicContainer(
+                                width: 40,
+                                height: 40,
+                                borderRadius: 20,
+                                blur: 10,
+                                alignment: Alignment.center,
+                                border: 2,
+                                linearGradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    theme.colorScheme.surface
+                                        .withValues(alpha: 0.15),
+                                    theme.colorScheme.surface
+                                        .withValues(alpha: 0.05),
                                   ],
                                 ),
+                                borderGradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    theme.colorScheme.primary
+                                        .withValues(alpha: 0.2),
+                                    theme.colorScheme.primary
+                                        .withValues(alpha: 0.1),
+                                  ],
+                                ),
+                                child: Icon(
+                                  Icons.inventory_2,
+                                  color: theme.colorScheme.primary,
+                                  size: 20,
+                                ),
                               ),
-                            ],
+                              title: Text(
+                                Localizations.localeOf(context).languageCode ==
+                                        'ar'
+                                    ? (product.nameAr ?? product.name)
+                                    : product.name,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.colorScheme.onSurface,
+                                ),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${l10n.category}: ${_getCategoryName(product.category)}',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: theme.colorScheme.onSurface
+                                          .withValues(alpha: 0.7),
+                                    ),
+                                  ),
+                                  Text(
+                                    (vatEnabled
+                                            ? (vatIncludedInPrice
+                                                ? l10n.priceVatIncluded
+                                                : l10n.priceVatExcluded)
+                                            : l10n.price) +
+                                        ': ${CurrencyHelper.formatCurrencySync(product.price)}',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: theme.colorScheme.primary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.edit),
+                                    color: theme.colorScheme.primary,
+                                    onPressed: () => showProductDialog(product),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    color: theme.colorScheme.error,
+                                    onPressed: () =>
+                                        _deleteProduct(context, product),
+                                  ),
+                                ],
+                              ),
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildInfoRow(l10n.barcodeRequired,
+                                          product.barcode),
+                                      _buildInfoRow(
+                                          l10n.costRequired,
+                                          CurrencyHelper.formatCurrencySync(
+                                              product.cost)),
+                                      _buildInfoRow(l10n.stock,
+                                          '${product.quantity} ${l10n.units}'),
+                                      if (vatEnabled) ...[
+                                        const SizedBox(height: 8),
+                                        Divider(
+                                            color: theme.colorScheme.onSurface
+                                                .withValues(alpha: 0.2)),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          l10n.vatBreakdown,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                            color: theme.colorScheme.onSurface,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        _buildInfoRow(
+                                            l10n.beforeVat,
+                                            CurrencyHelper.formatCurrencySync(
+                                                priceBeforeVat)),
+                                        _buildInfoRow(
+                                            '${l10n.vat} ${l10n.amount}',
+                                            CurrencyHelper.formatCurrencySync(
+                                                vatAmount)),
+                                        _buildInfoRow(
+                                            l10n.afterVat,
+                                            CurrencyHelper.formatCurrencySync(
+                                                priceAfterVat)),
+                                      ],
+                                      if (product.description != null &&
+                                          product.description!.isNotEmpty) ...[
+                                        const SizedBox(height: 8),
+                                        Divider(
+                                            color: theme.colorScheme.onSurface
+                                                .withValues(alpha: 0.2)),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          l10n.description,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                            color: theme.colorScheme.onSurface,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          product.description!,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: theme.colorScheme.onSurface
+                                                .withValues(alpha: 0.7),
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
                         );
                       },
                     ),
@@ -856,7 +891,7 @@ class _ProductDialogState extends State<_ProductDialog> {
                   ),
                 )
               : DropdownButtonFormField<String>(
-                  value: _selectedCategoryId,
+                  initialValue: _selectedCategoryId,
                   decoration: InputDecoration(
                     labelText: l10n.categoryRequired,
                     border: const OutlineInputBorder(),
@@ -980,7 +1015,8 @@ class _ProductDialogState extends State<_ProductDialog> {
                                 Icon(
                                   Icons.account_balance_wallet,
                                   size: 20,
-                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                  color: theme.colorScheme.onSurface
+                                      .withValues(alpha: 0.7),
                                 ),
                                 const SizedBox(width: 8),
                                 Expanded(
@@ -988,13 +1024,15 @@ class _ProductDialogState extends State<_ProductDialog> {
                                     '${l10n.vat} Amount',
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                      color: theme.colorScheme.onSurface
+                                          .withValues(alpha: 0.7),
                                     ),
                                   ),
                                 ),
                                 Tooltip(
-                                  message: l10n.vatAmountCalculatedAutomatically(
-                                      appConfig.vatRate.toStringAsFixed(1)),
+                                  message:
+                                      l10n.vatAmountCalculatedAutomatically(
+                                          appConfig.vatRate.toStringAsFixed(1)),
                                   child: Icon(
                                     Icons.info_outline,
                                     size: 18,

@@ -85,19 +85,19 @@ class _InvoicePreviewDialogState extends State<InvoicePreviewDialog> {
           end: Alignment.bottomRight,
           colors: [
             isDark
-                ? Colors.white.withOpacity(0.1)
-                : Colors.white.withOpacity(0.2),
+                ? Colors.white.withValues(alpha: 0.1)
+                : Colors.white.withValues(alpha: 0.2),
             isDark
-                ? Colors.white.withOpacity(0.05)
-                : Colors.white.withOpacity(0.1),
+                ? Colors.white.withValues(alpha: 0.05)
+                : Colors.white.withValues(alpha: 0.1),
           ],
         ),
         borderGradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Colors.white.withOpacity(0.2),
-            Colors.white.withOpacity(0.1),
+            Colors.white.withValues(alpha: 0.2),
+            Colors.white.withValues(alpha: 0.1),
           ],
         ),
         child: Column(
@@ -108,7 +108,7 @@ class _InvoicePreviewDialogState extends State<InvoicePreviewDialog> {
               decoration: BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
-                    color: colorScheme.onSurface.withOpacity(0.1),
+                    color: colorScheme.onSurface.withValues(alpha: 0.1),
                   ),
                 ),
               ),
@@ -119,7 +119,7 @@ class _InvoicePreviewDialogState extends State<InvoicePreviewDialog> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: colorScheme.surface.withOpacity(0.3),
+                          color: colorScheme.surface.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Icon(
@@ -143,7 +143,8 @@ class _InvoicePreviewDialogState extends State<InvoicePreviewDialog> {
                           color: colorScheme.onSurface,
                         ),
                         style: IconButton.styleFrom(
-                          backgroundColor: colorScheme.surface.withOpacity(0.3),
+                          backgroundColor:
+                              colorScheme.surface.withValues(alpha: 0.3),
                         ),
                       ),
                     ],
@@ -154,9 +155,9 @@ class _InvoicePreviewDialogState extends State<InvoicePreviewDialog> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          colorScheme.onSurface.withOpacity(0.1),
-                          colorScheme.onSurface.withOpacity(0.3),
-                          colorScheme.onSurface.withOpacity(0.1),
+                          colorScheme.onSurface.withValues(alpha: 0.1),
+                          colorScheme.onSurface.withValues(alpha: 0.3),
+                          colorScheme.onSurface.withValues(alpha: 0.1),
                         ],
                       ),
                     ),
@@ -171,7 +172,7 @@ class _InvoicePreviewDialogState extends State<InvoicePreviewDialog> {
               decoration: BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
-                    color: colorScheme.onSurface.withOpacity(0.1),
+                    color: colorScheme.onSurface.withValues(alpha: 0.1),
                   ),
                 ),
               ),
@@ -260,9 +261,9 @@ class _InvoicePreviewDialogState extends State<InvoicePreviewDialog> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          colorScheme.onSurface.withOpacity(0.1),
-                          colorScheme.onSurface.withOpacity(0.3),
-                          colorScheme.onSurface.withOpacity(0.1),
+                          colorScheme.onSurface.withValues(alpha: 0.1),
+                          colorScheme.onSurface.withValues(alpha: 0.3),
+                          colorScheme.onSurface.withValues(alpha: 0.1),
                         ],
                       ),
                     ),
@@ -393,19 +394,19 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
             end: Alignment.bottomRight,
             colors: [
               isDark
-                  ? Colors.white.withOpacity(0.1)
-                  : Colors.white.withOpacity(0.2),
+                  ? Colors.white.withValues(alpha: 0.1)
+                  : Colors.white.withValues(alpha: 0.2),
               isDark
-                  ? Colors.white.withOpacity(0.05)
-                  : Colors.white.withOpacity(0.1),
+                  ? Colors.white.withValues(alpha: 0.05)
+                  : Colors.white.withValues(alpha: 0.1),
             ],
           ),
           borderGradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.white.withOpacity(0.2),
-              Colors.white.withOpacity(0.1),
+              Colors.white.withValues(alpha: 0.2),
+              Colors.white.withValues(alpha: 0.1),
             ],
           ),
           child: Column(
@@ -417,7 +418,7 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: colorScheme.onSurface.withOpacity(0.4),
+                  color: colorScheme.onSurface.withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -435,7 +436,8 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                         decoration: BoxDecoration(
                           border: Border(
                             bottom: BorderSide(
-                              color: colorScheme.onSurface.withOpacity(0.1),
+                              color:
+                                  colorScheme.onSurface.withValues(alpha: 0.1),
                             ),
                           ),
                         ),
@@ -446,7 +448,8 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                                 Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    color: colorScheme.surface.withOpacity(0.3),
+                                    color: colorScheme.surface
+                                        .withValues(alpha: 0.3),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Icon(
@@ -469,8 +472,8 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                                     color: colorScheme.onSurface,
                                   ),
                                   style: IconButton.styleFrom(
-                                    backgroundColor:
-                                        colorScheme.surface.withOpacity(0.3),
+                                    backgroundColor: colorScheme.surface
+                                        .withValues(alpha: 0.3),
                                   ),
                                 ),
                               ],
@@ -481,9 +484,12 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    colorScheme.onSurface.withOpacity(0.1),
-                                    colorScheme.onSurface.withOpacity(0.3),
-                                    colorScheme.onSurface.withOpacity(0.1),
+                                    colorScheme.onSurface
+                                        .withValues(alpha: 0.1),
+                                    colorScheme.onSurface
+                                        .withValues(alpha: 0.3),
+                                    colorScheme.onSurface
+                                        .withValues(alpha: 0.1),
                                   ],
                                 ),
                               ),
@@ -578,9 +584,9 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              colorScheme.onSurface.withOpacity(0.1),
-                              colorScheme.onSurface.withOpacity(0.3),
-                              colorScheme.onSurface.withOpacity(0.1),
+                              colorScheme.onSurface.withValues(alpha: 0.1),
+                              colorScheme.onSurface.withValues(alpha: 0.3),
+                              colorScheme.onSurface.withValues(alpha: 0.1),
                             ],
                           ),
                         ),
