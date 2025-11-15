@@ -83,6 +83,41 @@ class _DataTypeDetectionDialogState extends State<DataTypeDetectionDialog> {
                 color: colorScheme.onSurfaceVariant,
               ),
             ),
+
+            // Warning banner if app configuration is detected
+            if (widget.detectionResult.hasAppConfig) ...[
+              SizedBox(height: 16.h),
+              Container(
+                padding: EdgeInsets.all(12.r),
+                decoration: BoxDecoration(
+                  color: colorScheme.secondaryContainer.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(8.r),
+                  border: Border.all(
+                    color: colorScheme.secondary.withOpacity(0.3),
+                  ),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      color: colorScheme.onSecondaryContainer,
+                      size: 20.sp,
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Text(
+                        l10n.appConfigNotAppliedNote,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSecondaryContainer,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+
             SizedBox(height: 24.h),
 
             // Detected data types list

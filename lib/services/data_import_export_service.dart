@@ -37,12 +37,16 @@ class DataTypeDetectionResult {
   final Map<DataType, int> itemCounts;
   final bool isValid;
   final String? errorMessage;
+  final bool hasAppConfig; // Whether imported settings contain app configuration
+  final Map<String, dynamic>? appConfigData; // The app config data if present
 
   DataTypeDetectionResult({
     required this.detectedTypes,
     required this.itemCounts,
     required this.isValid,
     this.errorMessage,
+    this.hasAppConfig = false,
+    this.appConfigData,
   });
 }
 
@@ -419,9 +423,23 @@ class DataImportExportService {
         itemCounts[DataType.users] = (data['users'] as List).length;
       }
 
+      // Check for settings and app configuration
+      bool hasAppConfig = false;
+      Map<String, dynamic>? appConfigData;
+
       if (data.containsKey('settings') && data['settings'] is List) {
         detectedTypes.add(DataType.settings);
         itemCounts[DataType.settings] = (data['settings'] as List).length;
+
+        // Check if settings contain app configuration
+        final settingsList = data['settings'] as List;
+        if (settingsList.isNotEmpty) {
+          final firstSetting = settingsList.first as Map<String, dynamic>;
+          if (firstSetting.containsKey('appConfig') && firstSetting['appConfig'] != null) {
+            hasAppConfig = true;
+            appConfigData = firstSetting['appConfig'] as Map<String, dynamic>;
+          }
+        }
       }
 
       if (detectedTypes.isEmpty) {
@@ -437,6 +455,8 @@ class DataImportExportService {
         detectedTypes: detectedTypes,
         itemCounts: itemCounts,
         isValid: true,
+        hasAppConfig: hasAppConfig,
+        appConfigData: appConfigData,
       );
     } catch (e) {
       return DataTypeDetectionResult(
@@ -856,6 +876,13 @@ class DataImportExportService {
               mode: drift.InsertMode.insertOrReplace,
             );
         count++;
+
+        // NOTE: App configuration (theme, color scheme, language, etc.) from
+        // the imported data is NOT automatically applied. This prevents
+        // unwanted changes to the user's current app appearance settings.
+        // The appConfig data is available in settingData['appConfig'] if
+        // needed for manual restoration in the future.
+
       } catch (e) {
         continue;
       }
