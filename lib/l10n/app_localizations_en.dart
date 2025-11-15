@@ -1556,4 +1556,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openFile => 'Open File';
+
+  @override
+  String get detectedDataTypes => 'Detected Data Types';
+
+  @override
+  String get detectedDataTypesDescription =>
+      'We found the following data in your file. You can modify the selection before importing.';
+
+  @override
+  String itemsCount(int count) {
+    return '$count items';
+  }
+
+  @override
+  String get appConfigNotAppliedNote =>
+      'Note: This file contains appearance settings (theme, colors, language, VAT settings) that will be automatically applied after import. You may need to restart the app to see all changes.';
 }

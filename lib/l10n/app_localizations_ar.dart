@@ -1548,4 +1548,20 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get openFile => 'فتح الملف';
+
+  @override
+  String get detectedDataTypes => 'أنواع البيانات المكتشفة';
+
+  @override
+  String get detectedDataTypesDescription =>
+      'لقد وجدنا البيانات التالية في ملفك. يمكنك تعديل التحديد قبل الاستيراد.';
+
+  @override
+  String itemsCount(int count) {
+    return '$count عنصر';
+  }
+
+  @override
+  String get appConfigNotAppliedNote =>
+      'ملاحظة: يحتوي هذا الملف على إعدادات المظهر (المظهر، الألوان، اللغة، إعدادات ضريبة القيمة المضافة) التي سيتم تطبيقها تلقائيًا بعد الاستيراد. قد تحتاج إلى إعادة تشغيل التطبيق لرؤية جميع التغييرات.';
 }

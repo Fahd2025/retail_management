@@ -2959,6 +2959,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open File'**
   String get openFile;
+
+  /// No description provided for @detectedDataTypes.
+  ///
+  /// In en, this message translates to:
+  /// **'Detected Data Types'**
+  String get detectedDataTypes;
+
+  /// No description provided for @detectedDataTypesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'We found the following data in your file. You can modify the selection before importing.'**
+  String get detectedDataTypesDescription;
+
+  /// No description provided for @itemsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items'**
+  String itemsCount(int count);
+
+  /// No description provided for @appConfigNotAppliedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note: This file contains appearance settings (theme, colors, language, VAT settings) that will be automatically applied after import. You may need to restart the app to see all changes.'**
+  String get appConfigNotAppliedNote;
 }
 
 class _AppLocalizationsDelegate
