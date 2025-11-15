@@ -427,85 +427,58 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<DataImportExportBloc, DataImportExportState>(
-      listener: (context, state) {
-        if (state is DataImported) {
-          // Reload app configuration after successful import
-          // This ensures theme, locale, VAT settings, etc. are updated
-          context.read<AppConfigBloc>().add(const InitializeAppConfigEvent());
+    return Scaffold(
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final width = constraints.maxWidth;
+          final isMobile = width < 600;
+          final isTablet = width >= 600 && width < 1200;
+          final isDesktop = width >= 1200;
 
-          // Show success message
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Colors.green,
-              duration: const Duration(seconds: 3),
-            ),
-          );
-        } else if (state is DataImportExportError) {
-          // Show error message
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Colors.red,
-              duration: const Duration(seconds: 5),
-            ),
-          );
-        }
-      },
-      child: Scaffold(
-        body: LayoutBuilder(
-          builder: (context, constraints) {
-            final width = constraints.maxWidth;
-            final isMobile = width < 600;
-            final isTablet = width >= 600 && width < 1200;
-            final isDesktop = width >= 1200;
+          // Build all sections
+          final sections = [
+            _buildAppearanceSection(),
+            _buildPrintSettingsSection(),
+            _buildCompanyInfoSection(),
+            _builVATSection(),
+            _buildDataImportExportSection(),
+            _buildSyncSection(),
+            _buildAboutSection(),
+          ];
 
-            // Build all sections
-            final sections = [
-              _buildAppearanceSection(),
-              _buildPrintSettingsSection(),
-              _buildCompanyInfoSection(),
-              _builVATSection(),
-              _buildDataImportExportSection(),
-              _buildSyncSection(),
-              _buildAboutSection(),
-            ];
+          // Apply responsive layout
+          Widget content;
 
-            // Apply responsive layout
-            Widget content;
-
-            if (isDesktop) {
-              // Desktop: Two-column grid with max width
-              content = Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1400),
-                  child: SettingsGrid(
-                    spacing: 24,
-                    children: sections,
-                  ),
+          if (isDesktop) {
+            // Desktop: Two-column grid with max width
+            content = Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1400),
+                child: SettingsGrid(
+                  spacing: 24,
+                  children: sections,
                 ),
-              );
-            } else {
-              // Mobile/Tablet: Single column
-              content = Column(
-                children: sections
-                    .map((section) => Padding(
-                          padding: EdgeInsets.only(
-                            bottom: isTablet ? 24 : 16,
-                          ),
-                          child: section,
-                        ))
-                    .toList(),
-              );
-            }
-
-            return SingleChildScrollView(
-              padding: EdgeInsets.all(isMobile ? 16 : 32),
-              child: content,
+              ),
             );
-          },
-        ),
+          } else {
+            // Mobile/Tablet: Single column
+            content = Column(
+              children: sections
+                  .map((section) => Padding(
+                        padding: EdgeInsets.only(
+                          bottom: isTablet ? 24 : 16,
+                        ),
+                        child: section,
+                      ))
+                  .toList(),
+            );
+          }
+
+          return SingleChildScrollView(
+            padding: EdgeInsets.all(isMobile ? 16 : 32),
+            child: content,
+          );
+        },
       ),
     );
   }
@@ -1187,6 +1160,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           if (state is DataExported) {
             _showExportSuccessDialog(context, state.filePath);
           } else if (state is DataImported) {
+            // Reload app configuration after successful import
+            // This ensures theme, locale, VAT settings, etc. are updated immediately
+            context.read<AppConfigBloc>().add(const InitializeAppConfigEvent());
+
             _showSuccessSnackBar(
                 l10n.importSuccessMessage(state.itemsImported));
           } else if (state is DataImportExportError) {
