@@ -1061,8 +1061,10 @@ class DataImportExportService {
         final firstEntry = data.entries.first;
         if (firstEntry.value is List && (firstEntry.value as List).isNotEmpty) {
           final csvData = _convertToCSV(firstEntry.value as List<Map<String, dynamic>>);
+          // Add UTF-8 BOM for proper Arabic character display in Excel
+          final csvWithBOM = '\uFEFF$csvData';
           final fileName = '${folderName}_${firstEntry.key}.csv';
-          _downloadFileWeb(csvData, fileName, 'text/csv');
+          _downloadFileWeb(csvWithBOM, fileName, 'text/csv;charset=utf-8');
           return 'Downloaded: $fileName';
         }
       }
@@ -1081,8 +1083,10 @@ class DataImportExportService {
       for (final entry in data.entries) {
         if (entry.value is List && (entry.value as List).isNotEmpty) {
           final csvData = _convertToCSV(entry.value as List<Map<String, dynamic>>);
+          // Add UTF-8 BOM for proper Arabic character display in Excel
+          final csvWithBOM = '\uFEFF$csvData';
           final file = File('${exportDir.path}/${entry.key}.csv');
-          await file.writeAsString(csvData);
+          await file.writeAsString(csvWithBOM, encoding: utf8);
         }
       }
 
