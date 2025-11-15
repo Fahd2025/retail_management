@@ -797,5 +797,15 @@
   "exportInProgress": "Export in progress...",
   "users": "Users",
   "openFile": "Open File",
-  "share": "Share"
+  "share": "Share",
+  "detectedDataTypes": "Detected Data Types",
+  "detectedDataTypesDescription": "We found the following data in your file. You can modify the selection before importing.",
+  "itemsCount": "{count} items",
+  "@itemsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

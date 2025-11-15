@@ -22,6 +22,7 @@ import '../widgets/settings_section.dart';
 import '../widgets/company_logo_picker.dart';
 import '../widgets/theme_color_selector.dart';
 import '../widgets/data_type_selector_bottom_sheet.dart';
+import '../widgets/data_type_detection_dialog.dart';
 import 'package:uuid/uuid.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../utils/currency_helper.dart';
@@ -1289,7 +1290,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  /// Handle import data
+  /// Handle import data with automatic detection
   Future<void> _handleImport(BuildContext context) async {
     final l10n = AppLocalizations.of(context)!;
 
@@ -1301,22 +1302,102 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     if (result != null) {
       final file = result.files.single;
+      String? filePath;
+      String? fileContent;
+      String? fileName;
 
       // On web, use bytes; on mobile, use path
       if (kIsWeb) {
         // Web platform - use bytes
         if (file.bytes != null && file.name.isNotEmpty) {
-          final fileContent = utf8.decode(file.bytes!);
-          final fileName = file.name;
-
-          // Show data type selector
+          fileContent = utf8.decode(file.bytes!);
+          fileName = file.name;
+        } else {
           if (context.mounted) {
+            _showErrorSnackBar(l10n.selectFileToImport);
+          }
+          return;
+        }
+      } else {
+        // Mobile platform - use path
+        if (file.path != null) {
+          filePath = file.path!;
+          fileName = file.path!.split('/').last;
+        } else {
+          if (context.mounted) {
+            _showErrorSnackBar(l10n.selectFileToImport);
+          }
+          return;
+        }
+      }
+
+      if (!context.mounted) return;
+
+      // Show loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+
+      try {
+        // Detect data types in the file
+        final service = DataImportExportService(
+          database: context.read<AppDatabase>(),
+        );
+
+        final detectionResult = await service.detectDataTypes(
+          filePath: filePath,
+          fileContent: fileContent,
+          fileName: fileName,
+        );
+
+        if (!context.mounted) return;
+
+        // Close loading indicator
+        Navigator.of(context).pop();
+
+        if (detectionResult.isValid && detectionResult.detectedTypes.isNotEmpty) {
+          // Show detection dialog with auto-detected types
+          final selectedTypes = await showDataTypeDetectionDialog(
+            context: context,
+            detectionResult: detectionResult,
+          );
+
+          if (selectedTypes != null && selectedTypes.isNotEmpty && context.mounted) {
+            // Proceed with import
+            context.read<DataImportExportBloc>().add(
+                  ImportDataRequested(
+                    filePath: filePath,
+                    fileContent: fileContent,
+                    fileName: fileName,
+                    dataTypes: selectedTypes,
+                  ),
+                );
+          }
+        } else {
+          // Detection failed or no data found - show manual selector
+          if (context.mounted) {
+            // Show error message if there was one
+            if (detectionResult.errorMessage != null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(detectionResult.errorMessage!),
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                ),
+              );
+            }
+
+            // Fall back to manual selection
             showDataTypeSelectorBottomSheet(
               context: context,
               isExport: false,
               onConfirm: (dataTypes, _) {
                 context.read<DataImportExportBloc>().add(
                       ImportDataRequested(
+                        filePath: filePath,
                         fileContent: fileContent,
                         fileName: fileName,
                         dataTypes: dataTypes,
@@ -1325,37 +1406,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             );
           }
-        } else {
-          // No bytes available
-          if (context.mounted) {
-            _showErrorSnackBar(l10n.selectFileToImport);
-          }
         }
-      } else {
-        // Mobile platform - use path
-        if (file.path != null) {
-          final filePath = file.path!;
+      } catch (e) {
+        if (context.mounted) {
+          // Close loading indicator
+          Navigator.of(context).pop();
 
-          // Show data type selector
-          if (context.mounted) {
-            showDataTypeSelectorBottomSheet(
-              context: context,
-              isExport: false,
-              onConfirm: (dataTypes, _) {
-                context.read<DataImportExportBloc>().add(
-                      ImportDataRequested(
-                        filePath: filePath,
-                        dataTypes: dataTypes,
-                      ),
-                    );
-              },
-            );
-          }
-        } else {
-          // No path available
-          if (context.mounted) {
-            _showErrorSnackBar(l10n.selectFileToImport);
-          }
+          // Show error
+          _showErrorSnackBar('Error detecting data types: ${e.toString()}');
+
+          // Fall back to manual selection
+          showDataTypeSelectorBottomSheet(
+            context: context,
+            isExport: false,
+            onConfirm: (dataTypes, _) {
+              context.read<DataImportExportBloc>().add(
+                    ImportDataRequested(
+                      filePath: filePath,
+                      fileContent: fileContent,
+                      fileName: fileName,
+                      dataTypes: dataTypes,
+                    ),
+                  );
+            },
+          );
         }
       }
     } else {
