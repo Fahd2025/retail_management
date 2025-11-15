@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/print_format.dart';
 import '../../models/theme_color_scheme.dart';
+import '../../database/drift_database.dart';
 import 'app_config_event.dart';
 import 'app_config_state.dart';
 
@@ -87,6 +88,18 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
         }
       }
 
+      // Load currency from database
+      String currency = 'SAR'; // Default
+      try {
+        final db = AppDatabase();
+        final companyInfo = await db.getCompanyInfo();
+        if (companyInfo != null) {
+          currency = companyInfo.currency;
+        }
+      } catch (e) {
+        debugPrint('Error loading currency from database: $e');
+      }
+
       emit(state.copyWith(
         themeMode: themeMode,
         locale: locale,
@@ -95,6 +108,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
         vatIncludedInPrice: vatIncludedInPrice,
         vatEnabled: vatEnabled,
         colorScheme: colorScheme,
+        currency: currency,
         isLoading: false,
       ));
     } catch (e) {
@@ -107,6 +121,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
         vatIncludedInPrice: true,
         vatEnabled: true,
         colorScheme: ThemeColorScheme.defaultBlue,
+        currency: 'SAR',
         isLoading: false,
       ));
     }
