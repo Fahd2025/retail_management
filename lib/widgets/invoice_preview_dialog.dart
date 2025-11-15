@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:printing/printing.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../models/sale.dart';
 import '../models/company_info.dart';
@@ -11,7 +11,7 @@ import '../services/invoice_service.dart';
 import '../blocs/app_config/app_config_bloc.dart';
 import '../blocs/app_config/app_config_state.dart';
 
-/// Dialog for previewing and printing invoices with Liquid Glass UI
+/// Dialog for previewing and printing invoices with Glassmorphism UI
 ///
 /// This dialog allows users to:
 /// 1. Preview the invoice PDF before printing
@@ -67,191 +67,255 @@ class _InvoicePreviewDialogState extends State<InvoicePreviewDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final liquidTheme = LiquidTheme.of(context);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
     return Dialog(
       backgroundColor: Colors.transparent,
-      child: LiquidCard(
-        elevation: 12,
-        blur: 30,
-        opacity: 0.2,
+      child: GlassmorphicContainer(
+        width: MediaQuery.of(context).size.width * 0.9,
+        height: MediaQuery.of(context).size.height * 0.9,
         borderRadius: 20,
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.9,
-          height: MediaQuery.of(context).size.height * 0.9,
-          child: Column(
-            children: [
-              // Header with Liquid Glass effect
-              LiquidContainer(
-                padding: const EdgeInsets.all(16),
-                borderRadius: 0,
-                blur: 10,
-                opacity: 0.15,
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        LiquidContainer(
-                          padding: const EdgeInsets.all(8),
-                          borderRadius: 8,
-                          blur: 8,
-                          opacity: 0.2,
-                          child: Icon(
-                            Icons.print,
-                            color: liquidTheme.textColor,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          'Invoice Preview',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                color: liquidTheme.textColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                        const Spacer(),
-                        LiquidButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          type: LiquidButtonType.icon,
-                          size: LiquidButtonSize.small,
-                          child: Icon(
-                            Icons.close,
-                            color: liquidTheme.textColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Container(
-                      height: 1,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            liquidTheme.textColor.withValues(alpha: 0.1),
-                            liquidTheme.textColor.withValues(alpha: 0.3),
-                            liquidTheme.textColor.withValues(alpha: 0.1),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+        blur: 30,
+        alignment: Alignment.center,
+        border: 2,
+        linearGradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            isDark
+                ? Colors.white.withOpacity(0.1)
+                : Colors.white.withOpacity(0.2),
+            isDark
+                ? Colors.white.withOpacity(0.05)
+                : Colors.white.withOpacity(0.1),
+          ],
+        ),
+        borderGradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.white.withOpacity(0.2),
+            Colors.white.withOpacity(0.1),
+          ],
+        ),
+        child: Column(
+          children: [
+            // Header with glassmorphism effect
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: colorScheme.onSurface.withOpacity(0.1),
+                  ),
                 ),
               ),
-
-              // Format selector with Liquid Glass chips
-              LiquidContainer(
-                padding: const EdgeInsets.all(16),
-                borderRadius: 0,
-                blur: 5,
-                opacity: 0.1,
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          'Format:',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: liquidTheme.textColor,
-                          ),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: colorScheme.surface.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        const SizedBox(width: 16),
-                        ...PrintFormat.all.map((format) {
-                          final isSelected = _selectedConfig.format == format;
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: LiquidButton(
-                              onPressed: () {
-                                setState(() {
-                                  _selectedConfig = _selectedConfig.copyWith(
-                                    format: format,
-                                  );
-                                });
-                              },
-                              type: isSelected
-                                  ? LiquidButtonType.filled
-                                  : LiquidButtonType.outlined,
-                              size: LiquidButtonSize.small,
-                              child: Text(
-                                format.displayName,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: isSelected
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                                  color: isSelected
-                                      ? Colors.white
-                                      : liquidTheme.textColor,
+                        child: Icon(
+                          Icons.print,
+                          color: colorScheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Invoice Preview',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color: colorScheme.onSurface,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: Icon(
+                          Icons.close,
+                          color: colorScheme.onSurface,
+                        ),
+                        style: IconButton.styleFrom(
+                          backgroundColor: colorScheme.surface.withOpacity(0.3),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    height: 1,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          colorScheme.onSurface.withOpacity(0.1),
+                          colorScheme.onSurface.withOpacity(0.3),
+                          colorScheme.onSurface.withOpacity(0.1),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Format selector with glassmorphism chips
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: colorScheme.onSurface.withOpacity(0.1),
+                  ),
+                ),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'Format:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      ...PrintFormat.all.map((format) {
+                        final isSelected = _selectedConfig.format == format;
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: isSelected
+                              ? FilledButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _selectedConfig =
+                                          _selectedConfig.copyWith(
+                                        format: format,
+                                      );
+                                    });
+                                  },
+                                  style: FilledButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 8,
+                                    ),
+                                    backgroundColor: colorScheme.primary,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    format.displayName,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                )
+                              : OutlinedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _selectedConfig =
+                                          _selectedConfig.copyWith(
+                                        format: format,
+                                      );
+                                    });
+                                  },
+                                  style: OutlinedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 8,
+                                    ),
+                                    side: BorderSide(
+                                      color: colorScheme.outline,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    format.displayName,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal,
+                                      color: colorScheme.onSurface,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          );
-                        }),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Container(
-                      height: 1,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            liquidTheme.textColor.withValues(alpha: 0.1),
-                            liquidTheme.textColor.withValues(alpha: 0.3),
-                            liquidTheme.textColor.withValues(alpha: 0.1),
-                          ],
-                        ),
+                        );
+                      }),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    height: 1,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          colorScheme.onSurface.withOpacity(0.1),
+                          colorScheme.onSurface.withOpacity(0.3),
+                          colorScheme.onSurface.withOpacity(0.1),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+            ),
 
-              // PDF Preview
-              Expanded(
-                child: BlocBuilder<AppConfigBloc, AppConfigState>(
-                  builder: (context, configState) {
-                    return PdfPreview(
-                      build: (format) => _invoiceService.previewInvoice(
-                        sale: widget.sale,
-                        companyInfo: widget.companyInfo,
-                        customer: widget.customer,
-                        config: _selectedConfig,
-                        vatIncludedInPrice: configState.vatIncludedInPrice,
-                        vatEnabled: configState.vatEnabled,
+            // PDF Preview
+            Expanded(
+              child: BlocBuilder<AppConfigBloc, AppConfigState>(
+                builder: (context, configState) {
+                  return PdfPreview(
+                    build: (format) => _invoiceService.previewInvoice(
+                      sale: widget.sale,
+                      companyInfo: widget.companyInfo,
+                      customer: widget.customer,
+                      config: _selectedConfig,
+                      vatIncludedInPrice: configState.vatIncludedInPrice,
+                      vatEnabled: configState.vatEnabled,
+                    ),
+                    canChangeOrientation: false,
+                    canChangePageFormat: false,
+                    canDebug: false,
+                    pdfFileName:
+                        'Invoice_${widget.sale.invoiceNumber}_${_selectedConfig.format.id}.pdf',
+                    actions: [
+                      PdfPreviewAction(
+                        icon: const Icon(Icons.print),
+                        onPressed: (context, build, pageFormat) async {
+                          await _invoiceService.printInvoice(
+                            sale: widget.sale,
+                            companyInfo: widget.companyInfo,
+                            customer: widget.customer,
+                            config: _selectedConfig,
+                            vatIncludedInPrice: configState.vatIncludedInPrice,
+                            vatEnabled: configState.vatEnabled,
+                          );
+                        },
                       ),
-                      canChangeOrientation: false,
-                      canChangePageFormat: false,
-                      canDebug: false,
-                      pdfFileName:
-                          'Invoice_${widget.sale.invoiceNumber}_${_selectedConfig.format.id}.pdf',
-                      actions: [
-                        PdfPreviewAction(
-                          icon: const Icon(Icons.print),
-                          onPressed: (context, build, pageFormat) async {
-                            await _invoiceService.printInvoice(
-                              sale: widget.sale,
-                              companyInfo: widget.companyInfo,
-                              customer: widget.customer,
-                              config: _selectedConfig,
-                              vatIncludedInPrice: configState.vatIncludedInPrice,
-                              vatEnabled: configState.vatEnabled,
-                            );
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                ),
+                    ],
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-/// Bottom sheet for quick invoice preview and print with Liquid Glass UI
+/// Bottom sheet for quick invoice preview and print with Glassmorphism UI
 ///
 /// A more compact version suitable for mobile devices
 class InvoicePreviewBottomSheet extends StatefulWidget {
@@ -307,7 +371,9 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final liquidTheme = LiquidTheme.of(context);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
     return DraggableScrollableSheet(
       initialChildSize: 0.4,
@@ -315,11 +381,33 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
       maxChildSize: 0.9,
       expand: false,
       builder: (context, scrollController) {
-        return LiquidCard(
+        return GlassmorphicContainer(
+          width: double.infinity,
+          height: double.infinity,
           borderRadius: 20,
-          elevation: 8,
           blur: 25,
-          opacity: 0.18,
+          alignment: Alignment.center,
+          border: 2,
+          linearGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              isDark
+                  ? Colors.white.withOpacity(0.1)
+                  : Colors.white.withOpacity(0.2),
+              isDark
+                  ? Colors.white.withOpacity(0.05)
+                  : Colors.white.withOpacity(0.1),
+            ],
+          ),
+          borderGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white.withOpacity(0.2),
+              Colors.white.withOpacity(0.1),
+            ],
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -329,7 +417,7 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: liquidTheme.textColor.withValues(alpha: 0.4),
+                  color: colorScheme.onSurface.withOpacity(0.4),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -342,43 +430,47 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       // Header
-                      LiquidContainer(
+                      Container(
                         padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                        borderRadius: 0,
-                        blur: 5,
-                        opacity: 0.1,
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: colorScheme.onSurface.withOpacity(0.1),
+                            ),
+                          ),
+                        ),
                         child: Column(
                           children: [
                             Row(
                               children: [
-                                LiquidContainer(
+                                Container(
                                   padding: const EdgeInsets.all(8),
-                                  borderRadius: 8,
-                                  blur: 8,
-                                  opacity: 0.2,
+                                  decoration: BoxDecoration(
+                                    color: colorScheme.surface.withOpacity(0.3),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                   child: Icon(
                                     Icons.print,
-                                    color: liquidTheme.textColor,
+                                    color: colorScheme.onSurface,
                                   ),
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
                                   l10n.printInvoice,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleLarge
-                                      ?.copyWith(
-                                        color: liquidTheme.textColor,
-                                      ),
+                                  style: theme.textTheme.titleLarge?.copyWith(
+                                    color: colorScheme.onSurface,
+                                  ),
                                 ),
                                 const Spacer(),
-                                LiquidButton(
+                                IconButton(
                                   onPressed: () => Navigator.of(context).pop(),
-                                  type: LiquidButtonType.icon,
-                                  size: LiquidButtonSize.small,
-                                  child: Icon(
+                                  icon: Icon(
                                     Icons.close,
-                                    color: liquidTheme.textColor,
+                                    color: colorScheme.onSurface,
+                                  ),
+                                  style: IconButton.styleFrom(
+                                    backgroundColor:
+                                        colorScheme.surface.withOpacity(0.3),
                                   ),
                                 ),
                               ],
@@ -389,12 +481,9 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    liquidTheme.textColor
-                                        .withValues(alpha: 0.1),
-                                    liquidTheme.textColor
-                                        .withValues(alpha: 0.3),
-                                    liquidTheme.textColor
-                                        .withValues(alpha: 0.1),
+                                    colorScheme.onSurface.withOpacity(0.1),
+                                    colorScheme.onSurface.withOpacity(0.3),
+                                    colorScheme.onSurface.withOpacity(0.1),
                                   ],
                                 ),
                               ),
@@ -414,7 +503,7 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                               '${l10n.selectFormat}:',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: liquidTheme.textColor,
+                                color: colorScheme.onSurface,
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -422,29 +511,61 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                               spacing: 8,
                               children: PrintFormat.all.map((format) {
                                 final isSelected = _selectedFormat == format;
-                                return LiquidButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _selectedFormat = format;
-                                    });
-                                  },
-                                  type: isSelected
-                                      ? LiquidButtonType.filled
-                                      : LiquidButtonType.outlined,
-                                  size: LiquidButtonSize.small,
-                                  child: Text(
-                                    format.displayName,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: isSelected
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                      color: isSelected
-                                          ? Colors.white
-                                          : liquidTheme.textColor,
-                                    ),
-                                  ),
-                                );
+                                return isSelected
+                                    ? FilledButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _selectedFormat = format;
+                                          });
+                                        },
+                                        style: FilledButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 16,
+                                            vertical: 8,
+                                          ),
+                                          backgroundColor: colorScheme.primary,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          format.displayName,
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      )
+                                    : OutlinedButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _selectedFormat = format;
+                                          });
+                                        },
+                                        style: OutlinedButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 16,
+                                            vertical: 8,
+                                          ),
+                                          side: BorderSide(
+                                            color: colorScheme.outline,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          format.displayName,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.normal,
+                                            color: colorScheme.onSurface,
+                                          ),
+                                        ),
+                                      );
                               }).toList(),
                             ),
                           ],
@@ -457,9 +578,9 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              liquidTheme.textColor.withValues(alpha: 0.1),
-                              liquidTheme.textColor.withValues(alpha: 0.3),
-                              liquidTheme.textColor.withValues(alpha: 0.1),
+                              colorScheme.onSurface.withOpacity(0.1),
+                              colorScheme.onSurface.withOpacity(0.3),
+                              colorScheme.onSurface.withOpacity(0.1),
                             ],
                           ),
                         ),
@@ -474,7 +595,7 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                LiquidButton(
+                                FilledButton(
                                   onPressed: () async {
                                     final config = PrintFormatConfig(
                                       format: _selectedFormat,
@@ -492,9 +613,14 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                                       Navigator.of(context).pop();
                                     }
                                   },
-                                  type: LiquidButtonType.filled,
-                                  size: LiquidButtonSize.large,
-                                  width: double.infinity,
+                                  style: FilledButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
+                                    backgroundColor: colorScheme.primary,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -515,7 +641,7 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                                   ),
                                 ),
                                 const SizedBox(height: 8),
-                                LiquidButton(
+                                OutlinedButton(
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                     InvoicePreviewDialog.show(
@@ -528,15 +654,22 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                                       ),
                                     );
                                   },
-                                  type: LiquidButtonType.outlined,
-                                  size: LiquidButtonSize.large,
-                                  width: double.infinity,
+                                  style: OutlinedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
+                                    side: BorderSide(
+                                      color: colorScheme.outline,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(
                                         Icons.preview,
-                                        color: liquidTheme.textColor,
+                                        color: colorScheme.onSurface,
                                       ),
                                       const SizedBox(width: 8),
                                       Text(
@@ -544,7 +677,7 @@ class _InvoicePreviewBottomSheetState extends State<InvoicePreviewBottomSheet> {
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
-                                          color: liquidTheme.textColor,
+                                          color: colorScheme.onSurface,
                                         ),
                                       ),
                                     ],

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import 'blocs/app_config/app_config_bloc.dart';
 import 'blocs/app_config/app_config_event.dart';
@@ -63,50 +62,29 @@ class MyApp extends StatelessWidget {
                 previous.colorScheme != current.colorScheme ||
                 previous.locale != current.locale,
             builder: (context, configState) {
-              return LiquidThemeProvider(
-                theme: LiquidTheme(
-                  brightness: configState.themeMode == ThemeMode.dark
-                      ? Brightness.dark
-                      : Brightness.light,
-                  primaryColor: configState.colorScheme.lightPrimary,
-                  accentColor: configState.colorScheme.lightSecondary,
-                  backgroundColor: configState.themeMode == ThemeMode.dark
-                      ? const Color(0xFF121212)
-                      : const Color(0xFFF5F5F5),
-                  surfaceColor: configState.themeMode == ThemeMode.dark
-                      ? const Color(0xFF1E1E1E)
-                      : Colors.white,
-                  textColor: configState.themeMode == ThemeMode.dark
-                      ? Colors.white
-                      : const Color(0xFF1A1C1E),
-                  borderRadius: 16.0,
-                  glassBlur: 20.0,
-                  glassOpacity: 0.15,
-                ),
-                child: MaterialApp(
-                  title: 'Retail Management System',
-                  debugShowCheckedModeBanner: false,
+              return MaterialApp(
+                title: 'Retail Management System',
+                debugShowCheckedModeBanner: false,
 
-                  // Theme configuration with custom colors
-                  theme: AppTheme.lightTheme(configState.colorScheme),
-                  darkTheme: AppTheme.darkTheme(configState.colorScheme),
-                  themeMode: configState.themeMode,
+                // Theme configuration with custom colors
+                theme: AppTheme.lightTheme(configState.colorScheme),
+                darkTheme: AppTheme.darkTheme(configState.colorScheme),
+                themeMode: configState.themeMode,
 
-                  // Localization configuration
-                  locale: configState.locale,
-                  supportedLocales: const [
-                    Locale('en', 'US'),
-                    Locale('ar', 'SA'),
-                  ],
-                  localizationsDelegates: [
-                    AppLocalizations.delegate,
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                    GlobalCupertinoLocalizations.delegate,
-                  ],
+                // Localization configuration
+                locale: configState.locale,
+                supportedLocales: const [
+                  Locale('en', 'US'),
+                  Locale('ar', 'SA'),
+                ],
+                localizationsDelegates: [
+                  AppLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
 
-                  home: const AuthWrapper(),
-                ),
+                home: const AuthWrapper(),
               );
             },
           );

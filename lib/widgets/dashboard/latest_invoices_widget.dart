@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../../models/sale.dart';
 import '../../utils/currency_helper.dart';
@@ -26,178 +26,218 @@ class LatestInvoicesWidget extends StatelessWidget {
     final currencyFormatter = CurrencyHelper.getCurrencyFormatterSync();
     final dateFormatter = DateFormat('dd/MM/yyyy HH:mm');
 
-    return LiquidCard(
-      elevation: 3,
-      blur: 18,
-      opacity: 0.15,
+    return GlassmorphicContainer(
+      width: double.infinity,
+      height: null,
       borderRadius: 12,
-      padding: EdgeInsets.all(16.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.receipt_long,
-                color: theme.colorScheme.primary,
-                size: 24.sp,
-              ),
-              SizedBox(width: 8.w),
-              Text(
-                l10n.latestSalesInvoices,
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 16.h),
-          if (isLoading)
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(32.h),
-                child: LiquidLoader(
-                  size: 60,
+      blur: 18,
+      alignment: Alignment.center,
+      border: 2,
+      linearGradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          theme.colorScheme.surface.withValues(alpha: 0.15),
+          theme.colorScheme.surface.withValues(alpha: 0.05),
+        ],
+      ),
+      borderGradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          theme.colorScheme.surface.withValues(alpha: 0.5),
+          theme.colorScheme.surface.withValues(alpha: 0.2),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.receipt_long,
                   color: theme.colorScheme.primary,
+                  size: 24.sp,
                 ),
-              ),
-            )
-          else if (invoices.isEmpty)
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(32.h),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.receipt_outlined,
-                      size: 48.sp,
-                      color:
-                          theme.colorScheme.onSurface.withValues(alpha: 0.3),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      l10n.noInvoicesAvailable,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: theme.colorScheme.onSurface
-                            .withValues(alpha: 0.6),
-                      ),
-                    ),
-                  ],
+                SizedBox(width: 8.w),
+                Text(
+                  l10n.latestSalesInvoices,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            )
-          else
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: invoices.length > 10 ? 10 : invoices.length,
-              separatorBuilder: (context, index) => Divider(height: 1.h),
-              itemBuilder: (context, index) {
-                final invoice = invoices[index];
-                return ListTile(
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 8.w,
-                    vertical: 8.h,
-                  ),
-                  onTap: onInvoiceTap != null
-                      ? () => onInvoiceTap!(invoice)
-                      : null,
-                  leading: LiquidContainer(
-                    width: 50.w,
-                    height: 50.w,
-                    borderRadius: 8,
-                    blur: 10,
-                    opacity: 0.1,
-                    color: _getStatusColor(invoice.status, theme),
-                    child: Icon(
-                      _getStatusIcon(invoice.status),
-                      color: _getStatusColor(invoice.status, theme),
-                      size: 24.sp,
+              ],
+            ),
+            SizedBox(height: 16.h),
+            if (isLoading)
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.all(32.h),
+                  child: SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: CircularProgressIndicator(
+                      color: theme.colorScheme.primary,
+                      strokeWidth: 4,
                     ),
                   ),
-                  title: Row(
+                ),
+              )
+            else if (invoices.isEmpty)
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.all(32.h),
+                  child: Column(
                     children: [
-                      Expanded(
-                        child: Text(
-                          invoice.invoiceNumber,
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      Icon(
+                        Icons.receipt_outlined,
+                        size: 48.sp,
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.3),
                       ),
-                      SizedBox(width: 8.w),
-                      _buildStatusBadge(invoice.status, theme, context),
-                    ],
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 4.h),
+                      SizedBox(height: 8.h),
                       Text(
-                        dateFormatter.format(invoice.saleDate),
-                        style: theme.textTheme.bodySmall?.copyWith(
+                        l10n.noInvoicesAvailable,
+                        style: theme.textTheme.bodyLarge?.copyWith(
                           color: theme.colorScheme.onSurface
                               .withValues(alpha: 0.6),
                         ),
                       ),
-                      if (invoice.customerId != null) ...[
-                        SizedBox(height: 2.h),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.person_outline,
-                              size: 12.sp,
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.6),
+                    ],
+                  ),
+                ),
+              )
+            else
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: invoices.length > 10 ? 10 : invoices.length,
+                separatorBuilder: (context, index) => Divider(height: 1.h),
+                itemBuilder: (context, index) {
+                  final invoice = invoices[index];
+                  return ListTile(
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 8.h,
+                    ),
+                    onTap: onInvoiceTap != null
+                        ? () => onInvoiceTap!(invoice)
+                        : null,
+                    leading: GlassmorphicContainer(
+                      width: 50.w,
+                      height: 50.w,
+                      borderRadius: 8,
+                      blur: 10,
+                      alignment: Alignment.center,
+                      border: 2,
+                      linearGradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          _getStatusColor(invoice.status, theme).withValues(alpha: 0.1),
+                          _getStatusColor(invoice.status, theme).withValues(alpha: 0.05),
+                        ],
+                      ),
+                      borderGradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          _getStatusColor(invoice.status, theme).withValues(alpha: 0.5),
+                          _getStatusColor(invoice.status, theme).withValues(alpha: 0.2),
+                        ],
+                      ),
+                      child: Icon(
+                        _getStatusIcon(invoice.status),
+                        color: _getStatusColor(invoice.status, theme),
+                        size: 24.sp,
+                      ),
+                    ),
+                    title: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            invoice.invoiceNumber,
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.w600,
                             ),
-                            SizedBox(width: 4.w),
-                            Text(
-                              '${l10n.customerId}: ${invoice.customerId}',
-                              style: theme.textTheme.bodySmall?.copyWith(
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        _buildStatusBadge(invoice.status, theme, context),
+                      ],
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 4.h),
+                        Text(
+                          dateFormatter.format(invoice.saleDate),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.6),
+                          ),
+                        ),
+                        if (invoice.customerId != null) ...[
+                          SizedBox(height: 2.h),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.person_outline,
+                                size: 12.sp,
                                 color: theme.colorScheme.onSurface
                                     .withValues(alpha: 0.6),
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
+                              SizedBox(width: 4.w),
+                              Text(
+                                '${l10n.customerId}: ${invoice.customerId}',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurface
+                                      .withValues(alpha: 0.6),
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ],
                       ],
-                    ],
-                  ),
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        currencyFormatter.format(invoice.totalAmount),
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.primary,
+                    ),
+                    trailing: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          currencyFormatter.format(invoice.totalAmount),
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.primary,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 2.h),
-                      _buildPaymentMethodBadge(
-                          invoice.paymentMethod, theme, context),
-                    ],
-                  ),
-                );
-              },
-            ),
-          if (invoices.length > 10) ...[
-            SizedBox(height: 8.h),
-            Center(
-              child: TextButton(
-                onPressed: () {
-                  // Navigate to sales screen
+                        SizedBox(height: 2.h),
+                        _buildPaymentMethodBadge(
+                            invoice.paymentMethod, theme, context),
+                      ],
+                    ),
+                  );
                 },
-                child: Text(l10n.viewAllInvoices(invoices.length)),
               ),
-            ),
+            if (invoices.length > 10) ...[
+              SizedBox(height: 8.h),
+              Center(
+                child: TextButton(
+                  onPressed: () {
+                    // Navigate to sales screen
+                  },
+                  child: Text(l10n.viewAllInvoices(invoices.length)),
+                ),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

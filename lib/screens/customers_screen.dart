@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/customer/customer_bloc.dart';
 import '../blocs/customer/customer_event.dart';
@@ -58,14 +58,17 @@ class _CustomersScreenState extends State<CustomersScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final liquidTheme = LiquidTheme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textColor = theme.brightness == Brightness.dark
+        ? Colors.white
+        : Colors.black;
 
-    return LiquidScaffold(
+    return Scaffold(
       body: BlocBuilder<CustomerBloc, CustomerState>(
         builder: (context, state) {
           if (state is CustomerLoading) {
-            return Center(
-              child: LiquidLoader(size: 60),
+            return const Center(
+              child: CircularProgressIndicator(),
             );
           }
 
@@ -84,31 +87,54 @@ class _CustomersScreenState extends State<CustomersScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  LiquidContainer(
+                  GlassmorphicContainer(
                     width: 120,
                     height: 120,
                     borderRadius: 60,
                     blur: 15,
-                    opacity: 0.2,
+                    alignment: Alignment.center,
+                    border: 2,
+                    linearGradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        colorScheme.surface.withOpacity(0.2),
+                        colorScheme.surface.withOpacity(0.1),
+                      ],
+                    ),
+                    borderGradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        colorScheme.primary.withOpacity(0.2),
+                        colorScheme.primary.withOpacity(0.1),
+                      ],
+                    ),
                     child: Icon(
                       Icons.people,
                       size: 64,
-                      color: liquidTheme.textColor.withValues(alpha: 0.3),
+                      color: textColor.withOpacity(0.3),
                     ),
                   ),
                   const SizedBox(height: 16),
                   Text(
                     l10n.noCustomersFound,
-                    style: TextStyle(color: liquidTheme.textColor),
+                    style: TextStyle(color: textColor),
                   ),
                   const SizedBox(height: 16),
-                  LiquidButton(
+                  ElevatedButton.icon(
                     onPressed: () => showCustomerDialog(),
-                    type: LiquidButtonType.filled,
                     icon: const Icon(Icons.add, color: Colors.white),
-                    child: Text(
+                    label: Text(
                       l10n.addCustomer,
                       style: const TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: colorScheme.primary,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
                     ),
                   ),
                 ],
@@ -133,21 +159,38 @@ class _CustomersScreenState extends State<CustomersScreen> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(16),
-                        child: LiquidCard(
-                          elevation: 4,
-                          blur: 20,
-                          opacity: 0.15,
+                        child: GlassmorphicContainer(
+                          width: constraints.maxWidth - 32,
+                          height: null,
                           borderRadius: 16,
-                          padding: EdgeInsets.zero,
+                          blur: 20,
+                          alignment: Alignment.center,
+                          border: 2,
+                          linearGradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              colorScheme.surface.withOpacity(0.15),
+                              colorScheme.surface.withOpacity(0.1),
+                            ],
+                          ),
+                          borderGradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              colorScheme.primary.withOpacity(0.2),
+                              colorScheme.primary.withOpacity(0.1),
+                            ],
+                          ),
                           child: DataTable(
                             columnSpacing: 24,
                             horizontalMargin: 16,
                             headingTextStyle: TextStyle(
-                              color: liquidTheme.textColor,
+                              color: textColor,
                               fontWeight: FontWeight.bold,
                             ),
                             dataTextStyle: TextStyle(
-                              color: liquidTheme.textColor,
+                              color: textColor,
                             ),
                             columns: [
                               DataColumn(label: Text(l10n.name)),
@@ -200,56 +243,59 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                   Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      LiquidButton(
-                                        type: LiquidButtonType.icon,
-                                        size: LiquidButtonSize.small,
+                                      IconButton(
                                         onPressed: () =>
                                             _showExportDialog(context, customer),
-                                        child: Icon(
+                                        icon: Icon(
                                           Icons.picture_as_pdf,
                                           size: 20,
                                           color: theme.colorScheme.primary,
                                         ),
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(
+                                          minWidth: 32,
+                                          minHeight: 32,
+                                        ),
                                       ),
                                       const SizedBox(width: 4),
-                                      LiquidButton(
-                                        type: LiquidButtonType.icon,
-                                        size: LiquidButtonSize.small,
+                                      IconButton(
                                         onPressed: () =>
                                             showCustomerDialog(customer),
-                                        child: Icon(
+                                        icon: Icon(
                                           Icons.edit,
                                           size: 20,
                                           color: theme.colorScheme.primary,
                                         ),
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(
+                                          minWidth: 32,
+                                          minHeight: 32,
+                                        ),
                                       ),
                                       const SizedBox(width: 4),
-                                      LiquidButton(
-                                        type: LiquidButtonType.icon,
-                                        size: LiquidButtonSize.small,
+                                      IconButton(
                                         onPressed: () async {
                                           final confirm = await showDialog<bool>(
                                             context: context,
-                                            builder: (context) => LiquidDialog(
-                                              title: l10n.deleteCustomer,
+                                            builder: (context) => AlertDialog(
+                                              title: Text(l10n.deleteCustomer),
                                               content: Text(
                                                 l10n.deleteCustomerConfirm,
-                                                style: TextStyle(
-                                                    color: liquidTheme.textColor),
+                                                style: TextStyle(color: textColor),
                                               ),
                                               actions: [
-                                                LiquidButton(
+                                                TextButton(
                                                   onPressed: () =>
                                                       Navigator.pop(context, false),
-                                                  type: LiquidButtonType.text,
                                                   child: Text(l10n.cancel),
                                                 ),
-                                                LiquidButton(
+                                                ElevatedButton(
                                                   onPressed: () =>
                                                       Navigator.pop(context, true),
-                                                  type: LiquidButtonType.filled,
-                                                  backgroundColor:
-                                                      theme.colorScheme.error,
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        theme.colorScheme.error,
+                                                  ),
                                                   child: Text(
                                                     l10n.delete,
                                                     style: const TextStyle(
@@ -266,10 +312,15 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                                 );
                                           }
                                         },
-                                        child: Icon(
+                                        icon: Icon(
                                           Icons.delete,
                                           size: 20,
                                           color: theme.colorScheme.error,
+                                        ),
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(
+                                          minWidth: 32,
+                                          minHeight: 32,
                                         ),
                                       ),
                                     ],
@@ -290,28 +341,60 @@ class _CustomersScreenState extends State<CustomersScreen> {
                   itemCount: customers.length,
                   itemBuilder: (context, index) {
                     final customer = customers[index];
-                    return LiquidCard(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      elevation: 3,
-                      blur: 18,
-                      opacity: 0.15,
+                    return GlassmorphicContainer(
+                      width: double.infinity,
+                      height: null,
                       borderRadius: 16,
-                      padding: EdgeInsets.zero,
+                      blur: 18,
+                      alignment: Alignment.center,
+                      border: 2,
+                      margin: const EdgeInsets.only(bottom: 12),
+                      linearGradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          colorScheme.surface.withOpacity(0.15),
+                          colorScheme.surface.withOpacity(0.1),
+                        ],
+                      ),
+                      borderGradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          colorScheme.primary.withOpacity(0.2),
+                          colorScheme.primary.withOpacity(0.1),
+                        ],
+                      ),
                       child: ExpansionTile(
-                        leading: LiquidContainer(
+                        leading: GlassmorphicContainer(
                           width: 40,
                           height: 40,
                           borderRadius: 20,
                           blur: 10,
-                          opacity: 0.15,
-                          child: Center(
-                            child: Text(
-                              customer.name[0].toUpperCase(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: theme.colorScheme.primary,
-                              ),
+                          alignment: Alignment.center,
+                          border: 2,
+                          linearGradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              colorScheme.surface.withOpacity(0.15),
+                              colorScheme.surface.withOpacity(0.1),
+                            ],
+                          ),
+                          borderGradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              colorScheme.primary.withOpacity(0.2),
+                              colorScheme.primary.withOpacity(0.1),
+                            ],
+                          ),
+                          child: Text(
+                            customer.name[0].toUpperCase(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: theme.colorScheme.primary,
                             ),
                           ),
                         ),
@@ -320,7 +403,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: liquidTheme.textColor,
+                            color: textColor,
                           ),
                         ),
                         subtitle: Column(
@@ -331,7 +414,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                 l10n.phoneLabel(customer.phone!),
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: liquidTheme.textColor.withValues(alpha: 0.7),
+                                  color: textColor.withOpacity(0.7),
                                 ),
                               ),
                             if (customer.email != null)
@@ -339,7 +422,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                 l10n.emailLabel(customer.email!),
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: liquidTheme.textColor.withValues(alpha: 0.7),
+                                  color: textColor.withOpacity(0.7),
                                 ),
                               ),
                             if (customer.vatNumber != null)
@@ -347,7 +430,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                 l10n.vatLabel2(customer.vatNumber!),
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: liquidTheme.textColor.withValues(alpha: 0.7),
+                                  color: textColor.withOpacity(0.7),
                                 ),
                               ),
                             const SizedBox(height: 4),
@@ -378,7 +461,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                 return Text(
                                   l10n.loadingStatistics,
                                   style: TextStyle(
-                                    color: liquidTheme.textColor.withValues(alpha: 0.6),
+                                    color: textColor.withOpacity(0.6),
                                   ),
                                 );
                               },
@@ -388,51 +471,54 @@ class _CustomersScreenState extends State<CustomersScreen> {
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            LiquidButton(
-                              type: LiquidButtonType.icon,
-                              size: LiquidButtonSize.small,
+                            IconButton(
                               onPressed: () =>
                                   _showExportDialog(context, customer),
-                              child: Icon(
+                              icon: Icon(
                                 Icons.picture_as_pdf,
                                 color: theme.colorScheme.primary,
                               ),
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(
+                                minWidth: 32,
+                                minHeight: 32,
+                              ),
                             ),
-                            LiquidButton(
-                              type: LiquidButtonType.icon,
-                              size: LiquidButtonSize.small,
+                            IconButton(
                               onPressed: () => showCustomerDialog(customer),
-                              child: Icon(
+                              icon: Icon(
                                 Icons.edit,
                                 color: theme.colorScheme.primary,
                               ),
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(
+                                minWidth: 32,
+                                minHeight: 32,
+                              ),
                             ),
-                            LiquidButton(
-                              type: LiquidButtonType.icon,
-                              size: LiquidButtonSize.small,
+                            IconButton(
                               onPressed: () async {
                                 final confirm = await showDialog<bool>(
                                   context: context,
-                                  builder: (context) => LiquidDialog(
-                                    title: l10n.deleteCustomer,
+                                  builder: (context) => AlertDialog(
+                                    title: Text(l10n.deleteCustomer),
                                     content: Text(
                                       l10n.deleteCustomerConfirm,
-                                      style: TextStyle(
-                                          color: liquidTheme.textColor),
+                                      style: TextStyle(color: textColor),
                                     ),
                                     actions: [
-                                      LiquidButton(
+                                      TextButton(
                                         onPressed: () =>
                                             Navigator.pop(context, false),
-                                        type: LiquidButtonType.text,
                                         child: Text(l10n.cancel),
                                       ),
-                                      LiquidButton(
+                                      ElevatedButton(
                                         onPressed: () =>
                                             Navigator.pop(context, true),
-                                        type: LiquidButtonType.filled,
-                                        backgroundColor:
-                                            theme.colorScheme.error,
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              theme.colorScheme.error,
+                                        ),
                                         child: Text(
                                           l10n.delete,
                                           style: const TextStyle(
@@ -449,9 +535,14 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                       );
                                 }
                               },
-                              child: Icon(
+                              icon: Icon(
                                 Icons.delete,
                                 color: theme.colorScheme.error,
+                              ),
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(
+                                minWidth: 32,
+                                minHeight: 32,
                               ),
                             ),
                           ],
@@ -468,7 +559,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
-                                      color: liquidTheme.textColor,
+                                      color: textColor,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
@@ -476,7 +567,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                     customer.saudiAddress!.formattedAddress,
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: liquidTheme.textColor.withValues(alpha: 0.7),
+                                      color: textColor.withOpacity(0.7),
                                     ),
                                   ),
                                 ],
@@ -609,7 +700,9 @@ class _CustomerDialogState extends State<_CustomerDialog> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final liquidTheme = LiquidTheme.of(context);
+    final textColor = theme.brightness == Brightness.dark
+        ? Colors.white
+        : Colors.black;
 
     // Build the form content
     final formContent = Form(
@@ -629,55 +722,70 @@ class _CustomerDialogState extends State<_CustomerDialog> {
           const SizedBox(height: 16),
 
           // Customer Name Field
-          LiquidTextField(
+          TextFormField(
             controller: _nameController,
-            label: l10n.customerNameRequired,
-            prefixIcon: const Icon(Icons.person_outlined),
+            decoration: InputDecoration(
+              labelText: l10n.customerNameRequired,
+              prefixIcon: const Icon(Icons.person_outlined),
+              border: const OutlineInputBorder(),
+            ),
             validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
             textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: 16),
 
           // Email Field
-          LiquidTextField(
+          TextFormField(
             controller: _emailController,
-            label: l10n.emailFieldLabel,
-            prefixIcon: const Icon(Icons.email_outlined),
+            decoration: InputDecoration(
+              labelText: l10n.emailFieldLabel,
+              prefixIcon: const Icon(Icons.email_outlined),
+              border: const OutlineInputBorder(),
+            ),
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: 16),
 
           // Phone Field
-          LiquidTextField(
+          TextFormField(
             controller: _phoneController,
-            label: l10n.phoneFieldLabel,
-            prefixIcon: const Icon(Icons.phone_outlined),
+            decoration: InputDecoration(
+              labelText: l10n.phoneFieldLabel,
+              prefixIcon: const Icon(Icons.phone_outlined),
+              border: const OutlineInputBorder(),
+            ),
             keyboardType: TextInputType.phone,
             textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: 16),
 
           // VAT Number Field
-          LiquidTextField(
+          TextFormField(
             controller: _vatNumberController,
-            label: l10n.vatNumberFieldLabel,
-            prefixIcon: const Icon(Icons.receipt_outlined),
+            decoration: InputDecoration(
+              labelText: l10n.vatNumberFieldLabel,
+              prefixIcon: const Icon(Icons.receipt_outlined),
+              border: const OutlineInputBorder(),
+            ),
             textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: 16),
 
           // CRN Number Field
-          LiquidTextField(
+          TextFormField(
             controller: _crnNumberController,
-            label: l10n.crnNumberFieldLabel,
-            prefixIcon: const Icon(Icons.business_outlined),
+            decoration: InputDecoration(
+              labelText: l10n.crnNumberFieldLabel,
+              prefixIcon: const Icon(Icons.business_outlined),
+              border: const OutlineInputBorder(),
+            ),
             textInputAction: TextInputAction.next,
           ),
 
           // Saudi National Address Section
           const SizedBox(height: 32),
-          Divider(color: liquidTheme.textColor.withValues(alpha: 0.2)),
+          Divider(color: textColor.withOpacity(0.2)),
           const SizedBox(height: 16),
 
           Text(
@@ -693,19 +801,25 @@ class _CustomerDialogState extends State<_CustomerDialog> {
           Row(
             children: [
               Expanded(
-                child: LiquidTextField(
+                child: TextFormField(
                   controller: _buildingController,
-                  label: l10n.buildingNumber,
-                  prefixIcon: const Icon(Icons.home_outlined),
+                  decoration: InputDecoration(
+                    labelText: l10n.buildingNumber,
+                    prefixIcon: const Icon(Icons.home_outlined),
+                    border: const OutlineInputBorder(),
+                  ),
                   textInputAction: TextInputAction.next,
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: LiquidTextField(
+                child: TextFormField(
                   controller: _streetController,
-                  label: l10n.streetName,
-                  prefixIcon: const Icon(Icons.streetview_outlined),
+                  decoration: InputDecoration(
+                    labelText: l10n.streetName,
+                    prefixIcon: const Icon(Icons.streetview_outlined),
+                    border: const OutlineInputBorder(),
+                  ),
                   textInputAction: TextInputAction.next,
                 ),
               ),
@@ -717,19 +831,25 @@ class _CustomerDialogState extends State<_CustomerDialog> {
           Row(
             children: [
               Expanded(
-                child: LiquidTextField(
+                child: TextFormField(
                   controller: _districtController,
-                  label: l10n.district,
-                  prefixIcon: const Icon(Icons.location_city_outlined),
+                  decoration: InputDecoration(
+                    labelText: l10n.district,
+                    prefixIcon: const Icon(Icons.location_city_outlined),
+                    border: const OutlineInputBorder(),
+                  ),
                   textInputAction: TextInputAction.next,
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: LiquidTextField(
+                child: TextFormField(
                   controller: _cityController,
-                  label: l10n.city,
-                  prefixIcon: const Icon(Icons.location_on_outlined),
+                  decoration: InputDecoration(
+                    labelText: l10n.city,
+                    prefixIcon: const Icon(Icons.location_on_outlined),
+                    border: const OutlineInputBorder(),
+                  ),
                   textInputAction: TextInputAction.next,
                 ),
               ),
@@ -741,20 +861,26 @@ class _CustomerDialogState extends State<_CustomerDialog> {
           Row(
             children: [
               Expanded(
-                child: LiquidTextField(
+                child: TextFormField(
                   controller: _postalCodeController,
-                  label: l10n.postalCode,
-                  prefixIcon: const Icon(Icons.mail_outline),
+                  decoration: InputDecoration(
+                    labelText: l10n.postalCode,
+                    prefixIcon: const Icon(Icons.mail_outline),
+                    border: const OutlineInputBorder(),
+                  ),
                   keyboardType: TextInputType.number,
                   textInputAction: TextInputAction.next,
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: LiquidTextField(
+                child: TextFormField(
                   controller: _additionalNumberController,
-                  label: l10n.additionalNumber,
-                  prefixIcon: const Icon(Icons.tag_outlined),
+                  decoration: InputDecoration(
+                    labelText: l10n.additionalNumber,
+                    prefixIcon: const Icon(Icons.tag_outlined),
+                    border: const OutlineInputBorder(),
+                  ),
                   keyboardType: TextInputType.number,
                   textInputAction: TextInputAction.done,
                 ),
@@ -943,7 +1069,10 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
     final dateFormat = DateFormat('dd/MM/yyyy');
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final liquidTheme = LiquidTheme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textColor = theme.brightness == Brightness.dark
+        ? Colors.white
+        : Colors.black;
 
     // Build the export configuration content
     final exportContent = Column(
@@ -951,39 +1080,60 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Customer Information
-        LiquidCard(
-          elevation: 2,
-          blur: 15,
-          opacity: 0.15,
+        GlassmorphicContainer(
+          width: double.infinity,
+          height: null,
           borderRadius: 12,
-          child: Row(
-            children: [
-              Icon(
-                Icons.person,
-                color: theme.colorScheme.primary,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.customer,
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        color: liquidTheme.textColor.withValues(alpha: 0.7),
-                      ),
-                    ),
-                    Text(
-                      widget.customer.name,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: liquidTheme.textColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+          blur: 15,
+          alignment: Alignment.center,
+          border: 2,
+          linearGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              colorScheme.surface.withOpacity(0.15),
+              colorScheme.surface.withOpacity(0.1),
             ],
+          ),
+          borderGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              colorScheme.primary.withOpacity(0.2),
+              colorScheme.primary.withOpacity(0.1),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.person,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.customer,
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: textColor.withOpacity(0.7),
+                        ),
+                      ),
+                      Text(
+                        widget.customer.name,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: textColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 24),
@@ -993,57 +1143,78 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
           l10n.selectPeriod,
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
-            color: liquidTheme.textColor,
+            color: textColor,
           ),
         ),
         const SizedBox(height: 12),
 
-        // Period Dropdown wrapped in LiquidContainer
-        LiquidContainer(
-          blur: 15,
-          opacity: 0.1,
+        // Period Dropdown wrapped in GlassmorphicContainer
+        GlassmorphicContainer(
+          width: double.infinity,
+          height: null,
           borderRadius: 12,
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-          child: DropdownButtonFormField<String>(
-            value: _filterOption,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 0,
-                vertical: 8,
-              ),
-              prefixIcon: Icon(
-                Icons.date_range,
-                color: theme.colorScheme.primary,
-              ),
-            ),
-            dropdownColor: theme.scaffoldBackgroundColor,
-            style: TextStyle(color: liquidTheme.textColor),
-            items: [
-              DropdownMenuItem(value: 'all', child: Text(l10n.allTime)),
-              DropdownMenuItem(
-                value: 'last_month',
-                child: Text(l10n.monthly),
-              ),
-              DropdownMenuItem(
-                value: 'last_3_months',
-                child: Text(l10n.lastThreeMonths),
-              ),
-              DropdownMenuItem(
-                value: 'last_year',
-                child: Text(l10n.yearly),
-              ),
-              DropdownMenuItem(
-                value: 'custom',
-                child: Text(l10n.custom),
-              ),
+          blur: 15,
+          alignment: Alignment.center,
+          border: 2,
+          linearGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              colorScheme.surface.withOpacity(0.1),
+              colorScheme.surface.withOpacity(0.05),
             ],
-            onChanged: (value) {
-              setState(() {
-                _filterOption = value!;
-                _setDateRangeFromFilter();
-              });
-            },
+          ),
+          borderGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              colorScheme.primary.withOpacity(0.2),
+              colorScheme.primary.withOpacity(0.1),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            child: DropdownButtonFormField<String>(
+              value: _filterOption,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 0,
+                  vertical: 8,
+                ),
+                prefixIcon: Icon(
+                  Icons.date_range,
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+              dropdownColor: theme.scaffoldBackgroundColor,
+              style: TextStyle(color: textColor),
+              items: [
+                DropdownMenuItem(value: 'all', child: Text(l10n.allTime)),
+                DropdownMenuItem(
+                  value: 'last_month',
+                  child: Text(l10n.monthly),
+                ),
+                DropdownMenuItem(
+                  value: 'last_3_months',
+                  child: Text(l10n.lastThreeMonths),
+                ),
+                DropdownMenuItem(
+                  value: 'last_year',
+                  child: Text(l10n.yearly),
+                ),
+                DropdownMenuItem(
+                  value: 'custom',
+                  child: Text(l10n.custom),
+                ),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _filterOption = value!;
+                  _setDateRangeFromFilter();
+                });
+              },
+            ),
           ),
         ),
 
@@ -1053,11 +1224,10 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
           Row(
             children: [
               Expanded(
-                child: LiquidButton(
+                child: OutlinedButton.icon(
                   onPressed: _selectStartDate,
-                  type: LiquidButtonType.outlined,
                   icon: const Icon(Icons.calendar_today),
-                  child: Text(
+                  label: Text(
                     _startDate == null
                         ? l10n.from
                         : dateFormat.format(_startDate!),
@@ -1066,11 +1236,10 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: LiquidButton(
+                child: OutlinedButton.icon(
                   onPressed: _selectEndDate,
-                  type: LiquidButtonType.outlined,
                   icon: const Icon(Icons.calendar_today),
-                  child: Text(
+                  label: Text(
                     _endDate == null ? l10n.to : dateFormat.format(_endDate!),
                   ),
                 ),
@@ -1097,80 +1266,101 @@ class _ExportInvoicesDialogState extends State<_ExportInvoicesDialog> {
               final totalAmount = stats['totalAmount'] as double;
               final currencyFormat = CurrencyHelper.getCurrencyFormatterSync();
 
-              return LiquidCard(
-                elevation: 3,
-                blur: 18,
-                opacity: 0.15,
+              return GlassmorphicContainer(
+                width: double.infinity,
+                height: null,
                 borderRadius: 12,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.visibility,
-                          color: theme.colorScheme.primary,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          l10n.preview,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: liquidTheme.textColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              l10n.invoiceCount,
-                              style: theme.textTheme.labelMedium?.copyWith(
-                                color: liquidTheme.textColor.withValues(alpha: 0.7),
-                              ),
-                            ),
-                            Text(
-                              '${sales.length}',
-                              style: theme.textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: liquidTheme.textColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              l10n.totalAmount(''),
-                              style: theme.textTheme.labelMedium?.copyWith(
-                                color: liquidTheme.textColor.withValues(alpha: 0.7),
-                              ),
-                            ),
-                            Text(
-                              currencyFormat.format(totalAmount),
-                              style: theme.textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: liquidTheme.textColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                blur: 18,
+                alignment: Alignment.center,
+                border: 2,
+                linearGradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    colorScheme.surface.withOpacity(0.15),
+                    colorScheme.surface.withOpacity(0.1),
                   ],
+                ),
+                borderGradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    colorScheme.primary.withOpacity(0.2),
+                    colorScheme.primary.withOpacity(0.1),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.visibility,
+                            color: theme.colorScheme.primary,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            l10n.preview,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: textColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10n.invoiceCount,
+                                style: theme.textTheme.labelMedium?.copyWith(
+                                  color: textColor.withOpacity(0.7),
+                                ),
+                              ),
+                              Text(
+                                '${sales.length}',
+                                style: theme.textTheme.headlineMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                l10n.totalAmount(''),
+                                style: theme.textTheme.labelMedium?.copyWith(
+                                  color: textColor.withOpacity(0.7),
+                                ),
+                              ),
+                              Text(
+                                currencyFormat.format(totalAmount),
+                                style: theme.textTheme.headlineMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               );
             }
-            return Center(
+            return const Center(
               child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: LiquidLoader(size: 40),
+                padding: EdgeInsets.all(16),
+                child: CircularProgressIndicator(),
               ),
             );
           },

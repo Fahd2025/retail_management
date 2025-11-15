@@ -1,4 +1,4 @@
-/// A reusable ModalBottomSheet wrapper for form dialogs with Liquid Glass UI
+/// A reusable ModalBottomSheet wrapper for form dialogs with Glassmorphism UI
 ///
 /// This widget provides a consistent design for all Add/Edit bottom sheets
 /// across the application. It includes:
@@ -7,7 +7,7 @@
 /// - Keyboard-aware scrolling
 /// - Consistent button layout
 /// - Smooth animations
-/// - Liquid Glass visual effects
+/// - Glassmorphism visual effects
 ///
 /// Usage:
 /// ```dart
@@ -23,16 +23,16 @@
 /// ```
 
 import 'package:flutter/material.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 
-/// A customizable bottom sheet designed for form inputs with Liquid Glass styling
+/// A customizable bottom sheet designed for form inputs with Glassmorphism styling
 ///
 /// Features:
 /// - Automatic keyboard handling
 /// - Drag-to-dismiss gesture
 /// - Responsive sizing
 /// - Consistent action buttons layout
-/// - Liquid Glass visual effects
+/// - Glassmorphism visual effects
 class FormBottomSheet extends StatelessWidget {
   /// The title displayed at the top of the bottom sheet
   final String title;
@@ -79,8 +79,9 @@ class FormBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final liquidTheme = LiquidTheme.of(context);
+    final colorScheme = theme.colorScheme;
     final mediaQuery = MediaQuery.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     // Calculate responsive height
     // Uses 90% of screen height by default, accounting for system UI
@@ -89,12 +90,33 @@ class FormBottomSheet extends StatelessWidget {
     // Account for keyboard height to ensure form is visible when typing
     final keyboardHeight = mediaQuery.viewInsets.bottom;
 
-    return LiquidCard(
-      // Constrain height but allow keyboard to push content up
+    return GlassmorphicContainer(
+      width: double.infinity,
+      height: maxHeight,
       borderRadius: 20,
-      elevation: 8,
       blur: 25,
-      opacity: 0.18,
+      alignment: Alignment.center,
+      border: 2,
+      linearGradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          isDark
+              ? Colors.white.withOpacity(0.1)
+              : Colors.white.withOpacity(0.2),
+          isDark
+              ? Colors.white.withOpacity(0.05)
+              : Colors.white.withOpacity(0.1),
+        ],
+      ),
+      borderGradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Colors.white.withOpacity(0.2),
+          Colors.white.withOpacity(0.1),
+        ],
+      ),
       child: Container(
         constraints: BoxConstraints(
           maxHeight: maxHeight,
@@ -108,17 +130,14 @@ class FormBottomSheet extends StatelessWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: liquidTheme.textColor.withValues(alpha: 0.4),
+                color: colorScheme.onSurface.withOpacity(0.4),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
 
             // Title section with bottom border
-            LiquidContainer(
+            Container(
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
-              borderRadius: 0,
-              blur: 5,
-              opacity: 0.1,
               child: Column(
                 children: [
                   Row(
@@ -128,18 +147,20 @@ class FormBottomSheet extends StatelessWidget {
                           title,
                           style: theme.textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: liquidTheme.textColor,
+                            color: colorScheme.onSurface,
                           ),
                         ),
                       ),
                       // Close button for accessibility
-                      LiquidButton(
+                      IconButton(
                         onPressed: onCancel ?? () => Navigator.pop(context),
-                        type: LiquidButtonType.icon,
-                        size: LiquidButtonSize.small,
-                        child: Icon(
+                        icon: Icon(
                           Icons.close,
-                          color: liquidTheme.textColor,
+                          color: colorScheme.onSurface,
+                        ),
+                        style: IconButton.styleFrom(
+                          backgroundColor: colorScheme.surface.withOpacity(0.3),
+                          padding: const EdgeInsets.all(8),
                         ),
                       ),
                     ],
@@ -150,9 +171,9 @@ class FormBottomSheet extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          liquidTheme.textColor.withValues(alpha: 0.1),
-                          liquidTheme.textColor.withValues(alpha: 0.3),
-                          liquidTheme.textColor.withValues(alpha: 0.1),
+                          colorScheme.onSurface.withOpacity(0.1),
+                          colorScheme.onSurface.withOpacity(0.3),
+                          colorScheme.onSurface.withOpacity(0.1),
                         ],
                       ),
                     ),
@@ -178,7 +199,7 @@ class FormBottomSheet extends StatelessWidget {
 
             // Action buttons - fixed at bottom
             // Elevated to show separation from content
-            LiquidContainer(
+            Container(
               padding: EdgeInsets.fromLTRB(
                 24,
                 16,
@@ -186,9 +207,6 @@ class FormBottomSheet extends StatelessWidget {
                 // Add bottom padding for safe area (iPhone notch, etc.)
                 16 + mediaQuery.padding.bottom,
               ),
-              borderRadius: 0,
-              blur: 10,
-              opacity: 0.15,
               child: Column(
                 children: [
                   Container(
@@ -196,9 +214,9 @@ class FormBottomSheet extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          liquidTheme.textColor.withValues(alpha: 0.1),
-                          liquidTheme.textColor.withValues(alpha: 0.3),
-                          liquidTheme.textColor.withValues(alpha: 0.1),
+                          colorScheme.onSurface.withOpacity(0.1),
+                          colorScheme.onSurface.withOpacity(0.3),
+                          colorScheme.onSurface.withOpacity(0.1),
                         ],
                       ),
                     ),
@@ -208,17 +226,24 @@ class FormBottomSheet extends StatelessWidget {
                     children: [
                       // Cancel button - outlined style for less emphasis
                       Expanded(
-                        child: LiquidButton(
+                        child: OutlinedButton(
                           onPressed: onCancel ?? () => Navigator.pop(context),
-                          type: LiquidButtonType.outlined,
-                          size: LiquidButtonSize.large,
-                          width: double.infinity,
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            side: BorderSide(
+                              color: colorScheme.outline.withOpacity(0.5),
+                              width: 1.5,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
                           child: Text(
                             cancelButtonText ?? 'Cancel',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
-                              color: liquidTheme.textColor,
+                              color: colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -227,11 +252,17 @@ class FormBottomSheet extends StatelessWidget {
                       // Save button - filled style for emphasis
                       Expanded(
                         flex: 2,
-                        child: LiquidButton(
+                        child: FilledButton(
                           onPressed: isSaveDisabled || isLoading ? null : onSave,
-                          type: LiquidButtonType.filled,
-                          size: LiquidButtonSize.large,
-                          width: double.infinity,
+                          style: FilledButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            backgroundColor: colorScheme.primary,
+                            disabledBackgroundColor:
+                                colorScheme.onSurface.withOpacity(0.12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
                           child: isLoading
                               ? const SizedBox(
                                   height: 20,
@@ -270,7 +301,7 @@ class FormBottomSheet extends StatelessWidget {
 /// - Dismissible by dragging down
 /// - Proper keyboard handling
 /// - Barrier dismissible by tapping outside
-/// - Liquid Glass visual effects
+/// - Glassmorphism visual effects
 ///
 /// Example:
 /// ```dart
@@ -307,11 +338,6 @@ Future<T?> showFormBottomSheet<T>({
     isDismissible: isDismissible,
     // Use transparent barrier to see content behind
     backgroundColor: Colors.transparent,
-    // Smooth animation curve
-    transitionAnimationController: AnimationController(
-      vsync: Navigator.of(context),
-      duration: const Duration(milliseconds: 300),
-    ),
     builder: (context) => FormBottomSheet(
       title: title,
       onSave: onSave,

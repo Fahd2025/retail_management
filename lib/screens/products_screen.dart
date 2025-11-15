@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'package:retail_management/l10n/app_localizations.dart';
 import '../blocs/product/product_bloc.dart';
 import '../blocs/product/product_event.dart';
@@ -81,30 +81,24 @@ class _ProductsScreenState extends State<ProductsScreen> {
   ) async {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final liquidTheme = LiquidTheme.of(context);
 
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => LiquidDialog(
-        title: l10n.deleteProduct,
-        content: Text(
-          l10n.deleteProductConfirm(product.name),
-          style: TextStyle(color: liquidTheme.textColor),
-        ),
+      builder: (context) => AlertDialog(
+        title: Text(l10n.deleteProduct),
+        content: Text(l10n.deleteProductConfirm(product.name)),
         actions: [
-          LiquidButton(
+          TextButton(
             onPressed: () => Navigator.pop(context, false),
-            type: LiquidButtonType.text,
             child: Text(l10n.cancel),
           ),
-          LiquidButton(
+          ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            type: LiquidButtonType.filled,
-            backgroundColor: theme.colorScheme.error,
-            child: Text(
-              l10n.delete,
-              style: const TextStyle(color: Colors.white),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: theme.colorScheme.error,
+              foregroundColor: Colors.white,
             ),
+            child: Text(l10n.delete),
           ),
         ],
       ),
@@ -116,7 +110,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget _buildInfoRow(String label, String value) {
-    final liquidTheme = LiquidTheme.of(context);
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(
@@ -128,7 +122,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 14,
-                color: liquidTheme.textColor,
+                color: theme.colorScheme.onSurface,
               ),
             ),
           ),
@@ -137,7 +131,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               value,
               style: TextStyle(
                 fontSize: 14,
-                color: liquidTheme.textColor.withValues(alpha: 0.8),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
               ),
             ),
           ),
@@ -149,115 +143,169 @@ class _ProductsScreenState extends State<ProductsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final liquidTheme = LiquidTheme.of(context);
 
-    return LiquidScaffold(
-      body: BlocBuilder<ProductBloc, ProductState>(
-        builder: (context, state) {
-          if (state is ProductLoading) {
-            return Center(
-              child: LiquidLoader(size: 60),
-            );
-          }
+    return BlocBuilder<ProductBloc, ProductState>(
+      builder: (context, state) {
+        if (state is ProductLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
 
-          List<models.Product> products = [];
-          if (state is ProductLoaded) {
-            products = state.products;
-          } else if (state is ProductError) {
-            products = state.products;
-          } else if (state is ProductOperationSuccess) {
-            products = state.products;
-          }
+        List<models.Product> products = [];
+        if (state is ProductLoaded) {
+          products = state.products;
+        } else if (state is ProductError) {
+          products = state.products;
+        } else if (state is ProductOperationSuccess) {
+          products = state.products;
+        }
 
-          if (products.isEmpty) {
+        if (products.isEmpty) {
+          final l10n = AppLocalizations.of(context)!;
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GlassmorphicContainer(
+                  width: 120,
+                  height: 120,
+                  borderRadius: 60,
+                  blur: 15,
+                  alignment: Alignment.center,
+                  border: 2,
+                  linearGradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      theme.colorScheme.surface.withValues(alpha: 0.2),
+                      theme.colorScheme.surface.withValues(alpha: 0.05),
+                    ],
+                  ),
+                  borderGradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      theme.colorScheme.primary.withValues(alpha: 0.2),
+                      theme.colorScheme.primary.withValues(alpha: 0.1),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.inventory_2,
+                    size: 64,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.noProductsFound,
+                  style: TextStyle(color: theme.colorScheme.onSurface),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton.icon(
+                  onPressed: () => showProductDialog(),
+                  icon: const Icon(Icons.add),
+                  label: Text(l10n.add),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final isDesktop = constraints.maxWidth >= 800;
             final l10n = AppLocalizations.of(context)!;
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+
+            final configState = context.watch<AppConfigBloc>().state;
+            final vatIncludedInPrice = configState.vatIncludedInPrice;
+            final vatEnabled = configState.vatEnabled;
+
+            if (isDesktop) {
+              // Desktop/Tablet: DataTable layout that fills width
+              return Column(
                 children: [
-                  LiquidContainer(
-                    width: 120,
-                    height: 120,
-                    borderRadius: 60,
-                    blur: 15,
-                    opacity: 0.2,
-                    child: Icon(
-                      Icons.inventory_2,
-                      size: 64,
-                      color: liquidTheme.textColor.withValues(alpha: 0.3),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    l10n.noProductsFound,
-                    style: TextStyle(color: liquidTheme.textColor),
-                  ),
-                  const SizedBox(height: 16),
-                  LiquidButton(
-                    onPressed: () => showProductDialog(),
-                    type: LiquidButtonType.filled,
-                    icon: const Icon(Icons.add, color: Colors.white),
-                    child: Text(
-                      l10n.add,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return LayoutBuilder(
-            builder: (context, constraints) {
-              final isDesktop = constraints.maxWidth >= 800;
-              final l10n = AppLocalizations.of(context)!;
-
-              final configState = context.watch<AppConfigBloc>().state;
-              final vatIncludedInPrice = configState.vatIncludedInPrice;
-              final vatEnabled = configState.vatEnabled;
-
-              if (isDesktop) {
-                // Desktop/Tablet: DataTable layout that fills width
-                return Column(
-                  children: [
-                    // VAT Information Note (only shown when VAT is enabled)
-                    if (vatEnabled)
-                      LiquidBanner(
-                        type: vatIncludedInPrice
-                            ? LiquidBannerType.success
-                            : LiquidBannerType.info,
-                        icon: Icons.info_outline,
-                        title: vatIncludedInPrice
-                            ? l10n.pricesIncludeVatNote
-                            : l10n.pricesExcludeVatNote,
+                  // VAT Information Note (only shown when VAT is enabled)
+                  if (vatEnabled)
+                    Container(
+                      margin: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: vatIncludedInPrice
+                            ? theme.colorScheme.primaryContainer
+                            : theme.colorScheme.secondaryContainer,
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    // DataTable wrapped in LiquidCard
-                    Expanded(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: ConstrainedBox(
-                            constraints: BoxConstraints(
-                              minWidth: constraints.maxWidth,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.info_outline,
+                            color: vatIncludedInPrice
+                                ? theme.colorScheme.onPrimaryContainer
+                                : theme.colorScheme.onSecondaryContainer,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              vatIncludedInPrice
+                                  ? l10n.pricesIncludeVatNote
+                                  : l10n.pricesExcludeVatNote,
+                              style: TextStyle(
+                                color: vatIncludedInPrice
+                                    ? theme.colorScheme.onPrimaryContainer
+                                    : theme.colorScheme.onSecondaryContainer,
+                              ),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: LiquidCard(
-                                elevation: 4,
-                                blur: 20,
-                                opacity: 0.15,
-                                borderRadius: 16,
+                          ),
+                        ],
+                      ),
+                    ),
+                  // DataTable wrapped in GlassmorphicContainer
+                  Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minWidth: constraints.maxWidth,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: GlassmorphicContainer(
+                              width: constraints.maxWidth - 32,
+                              height: null,
+                              borderRadius: 16,
+                              blur: 20,
+                              alignment: Alignment.center,
+                              border: 2,
+                              linearGradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  theme.colorScheme.surface.withValues(alpha: 0.15),
+                                  theme.colorScheme.surface.withValues(alpha: 0.05),
+                                ],
+                              ),
+                              borderGradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  theme.colorScheme.primary.withValues(alpha: 0.2),
+                                  theme.colorScheme.primary.withValues(alpha: 0.1),
+                                ],
+                              ),
+                              child: Padding(
                                 padding: const EdgeInsets.all(16),
                                 child: DataTable(
                                   columnSpacing: 20,
                                   horizontalMargin: 16,
                                   headingTextStyle: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: liquidTheme.textColor,
+                                    color: theme.colorScheme.onSurface,
                                   ),
                                   dataTextStyle: TextStyle(
-                                    color: liquidTheme.textColor.withValues(alpha: 0.9),
+                                    color: theme.colorScheme.onSurface.withValues(alpha: 0.9),
                                   ),
                                   columns: [
                                     DataColumn(label: Text(l10n.name)),
@@ -333,28 +381,18 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                         Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            LiquidButton(
-                                              type: LiquidButtonType.icon,
-                                              size: LiquidButtonSize.small,
+                                            IconButton(
+                                              icon: const Icon(Icons.edit, size: 20),
+                                              color: theme.colorScheme.primary,
                                               onPressed: () =>
                                                   showProductDialog(product),
-                                              child: Icon(
-                                                Icons.edit,
-                                                size: 20,
-                                                color: theme.colorScheme.primary,
-                                              ),
                                             ),
                                             const SizedBox(width: 4),
-                                            LiquidButton(
-                                              type: LiquidButtonType.icon,
-                                              size: LiquidButtonSize.small,
+                                            IconButton(
+                                              icon: const Icon(Icons.delete, size: 20),
+                                              color: theme.colorScheme.error,
                                               onPressed: () =>
                                                   _deleteProduct(context, product),
-                                              child: Icon(
-                                                Icons.delete,
-                                                size: 20,
-                                                color: theme.colorScheme.error,
-                                              ),
                                             ),
                                           ],
                                         ),
@@ -368,205 +406,255 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         ),
                       ),
                     ),
-                  ],
-                );
-              } else {
-                // Mobile: Card with ExpansionTile layout
-                return Column(
-                  children: [
-                    // VAT Information Note (only shown when VAT is enabled)
-                    if (vatEnabled)
-                      LiquidBanner(
-                        type: vatIncludedInPrice
-                            ? LiquidBannerType.success
-                            : LiquidBannerType.info,
-                        icon: Icons.info_outline,
-                        title: vatIncludedInPrice
-                            ? l10n.pricesIncludeVatNote
-                            : l10n.pricesExcludeVatNote,
+                  ),
+                ],
+              );
+            } else {
+              // Mobile: Card with ExpansionTile layout
+              return Column(
+                children: [
+                  // VAT Information Note (only shown when VAT is enabled)
+                  if (vatEnabled)
+                    Container(
+                      margin: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: vatIncludedInPrice
+                            ? theme.colorScheme.primaryContainer
+                            : theme.colorScheme.secondaryContainer,
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    // Product List
-                    Expanded(
-                      child: ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: products.length,
-                        itemBuilder: (context, index) {
-                          final product = products[index];
-
-                          // Calculate VAT breakdown based on inclusion mode
-                          final double priceBeforeVat, vatAmount, priceAfterVat;
-                          if (vatIncludedInPrice) {
-                            // VAT is included in the price
-                            priceAfterVat = product.price;
-                            vatAmount = priceAfterVat -
-                                (priceAfterVat / (1 + product.vatRate / 100));
-                            priceBeforeVat = priceAfterVat - vatAmount;
-                          } else {
-                            // VAT is excluded from the price
-                            priceBeforeVat = product.price;
-                            vatAmount = product.price * (product.vatRate / 100);
-                            priceAfterVat = priceBeforeVat + vatAmount;
-                          }
-
-                          return LiquidCard(
-                            margin: const EdgeInsets.only(bottom: 12),
-                            elevation: 3,
-                            blur: 18,
-                            opacity: 0.15,
-                            borderRadius: 16,
-                            padding: EdgeInsets.zero,
-                            child: ExpansionTile(
-                              leading: LiquidContainer(
-                                width: 40,
-                                height: 40,
-                                borderRadius: 20,
-                                blur: 10,
-                                opacity: 0.15,
-                                child: Icon(
-                                  Icons.inventory_2,
-                                  color: theme.colorScheme.primary,
-                                  size: 20,
-                                ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.info_outline,
+                            color: vatIncludedInPrice
+                                ? theme.colorScheme.onPrimaryContainer
+                                : theme.colorScheme.onSecondaryContainer,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              vatIncludedInPrice
+                                  ? l10n.pricesIncludeVatNote
+                                  : l10n.pricesExcludeVatNote,
+                              style: TextStyle(
+                                color: vatIncludedInPrice
+                                    ? theme.colorScheme.onPrimaryContainer
+                                    : theme.colorScheme.onSecondaryContainer,
                               ),
-                              title: Text(
-                                Localizations.localeOf(context).languageCode ==
-                                        'ar'
-                                    ? (product.nameAr ?? product.name)
-                                    : product.name,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: liquidTheme.textColor,
-                                ),
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '${l10n.category}: ${_getCategoryName(product.category)}',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: liquidTheme.textColor.withValues(alpha: 0.7),
-                                    ),
-                                  ),
-                                  Text(
-                                    (vatEnabled
-                                            ? (vatIncludedInPrice
-                                                ? l10n.priceVatIncluded
-                                                : l10n.priceVatExcluded)
-                                            : l10n.price) +
-                                        ': ${CurrencyHelper.formatCurrencySync(product.price)}',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: theme.colorScheme.primary,
-                                    ),
-                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  // Product List
+                  Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        final product = products[index];
+
+                        // Calculate VAT breakdown based on inclusion mode
+                        final double priceBeforeVat, vatAmount, priceAfterVat;
+                        if (vatIncludedInPrice) {
+                          // VAT is included in the price
+                          priceAfterVat = product.price;
+                          vatAmount = priceAfterVat -
+                              (priceAfterVat / (1 + product.vatRate / 100));
+                          priceBeforeVat = priceAfterVat - vatAmount;
+                        } else {
+                          // VAT is excluded from the price
+                          priceBeforeVat = product.price;
+                          vatAmount = product.price * (product.vatRate / 100);
+                          priceAfterVat = priceBeforeVat + vatAmount;
+                        }
+
+                        return GlassmorphicContainer(
+                          width: double.infinity,
+                          height: null,
+                          borderRadius: 16,
+                          blur: 18,
+                          alignment: Alignment.center,
+                          border: 2,
+                          linearGradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              theme.colorScheme.surface.withValues(alpha: 0.15),
+                              theme.colorScheme.surface.withValues(alpha: 0.05),
+                            ],
+                          ),
+                          borderGradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              theme.colorScheme.primary.withValues(alpha: 0.2),
+                              theme.colorScheme.primary.withValues(alpha: 0.1),
+                            ],
+                          ),
+                          margin: const EdgeInsets.only(bottom: 12),
+                          child: ExpansionTile(
+                            leading: GlassmorphicContainer(
+                              width: 40,
+                              height: 40,
+                              borderRadius: 20,
+                              blur: 10,
+                              alignment: Alignment.center,
+                              border: 2,
+                              linearGradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  theme.colorScheme.surface.withValues(alpha: 0.15),
+                                  theme.colorScheme.surface.withValues(alpha: 0.05),
                                 ],
                               ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  LiquidButton(
-                                    type: LiquidButtonType.icon,
-                                    size: LiquidButtonSize.small,
-                                    onPressed: () => showProductDialog(product),
-                                    child: Icon(
-                                      Icons.edit,
-                                      color: theme.colorScheme.primary,
-                                    ),
-                                  ),
-                                  LiquidButton(
-                                    type: LiquidButtonType.icon,
-                                    size: LiquidButtonSize.small,
-                                    onPressed: () =>
-                                        _deleteProduct(context, product),
-                                    child: Icon(
-                                      Icons.delete,
-                                      color: theme.colorScheme.error,
-                                    ),
-                                  ),
+                              borderGradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  theme.colorScheme.primary.withValues(alpha: 0.2),
+                                  theme.colorScheme.primary.withValues(alpha: 0.1),
                                 ],
                               ),
+                              child: Icon(
+                                Icons.inventory_2,
+                                color: theme.colorScheme.primary,
+                                size: 20,
+                              ),
+                            ),
+                            title: Text(
+                              Localizations.localeOf(context).languageCode ==
+                                      'ar'
+                                  ? (product.nameAr ?? product.name)
+                                  : product.name,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: theme.colorScheme.onSurface,
+                              ),
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      _buildInfoRow(l10n.barcodeRequired,
-                                          product.barcode),
-                                      _buildInfoRow(
-                                          l10n.costRequired,
-                                          CurrencyHelper.formatCurrencySync(
-                                              product.cost)),
-                                      _buildInfoRow(l10n.stock,
-                                          '${product.quantity} ${l10n.units}'),
-                                      if (vatEnabled) ...[
-                                        const SizedBox(height: 8),
-                                        Divider(color: liquidTheme.textColor.withValues(alpha: 0.2)),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          l10n.vatBreakdown,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                            color: liquidTheme.textColor,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        _buildInfoRow(
-                                            l10n.beforeVat,
-                                            CurrencyHelper.formatCurrencySync(
-                                                priceBeforeVat)),
-                                        _buildInfoRow(
-                                            '${l10n.vat} ${l10n.amount}',
-                                            CurrencyHelper.formatCurrencySync(
-                                                vatAmount)),
-                                        _buildInfoRow(
-                                            l10n.afterVat,
-                                            CurrencyHelper.formatCurrencySync(
-                                                priceAfterVat)),
-                                      ],
-                                      if (product.description != null &&
-                                          product.description!.isNotEmpty) ...[
-                                        const SizedBox(height: 8),
-                                        Divider(color: liquidTheme.textColor.withValues(alpha: 0.2)),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          l10n.description,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                            color: liquidTheme.textColor,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          product.description!,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: liquidTheme.textColor.withValues(alpha: 0.7),
-                                          ),
-                                        ),
-                                      ],
-                                    ],
+                                Text(
+                                  '${l10n.category}: ${_getCategoryName(product.category)}',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                  ),
+                                ),
+                                Text(
+                                  (vatEnabled
+                                          ? (vatIncludedInPrice
+                                              ? l10n.priceVatIncluded
+                                              : l10n.priceVatExcluded)
+                                          : l10n.price) +
+                                      ': ${CurrencyHelper.formatCurrencySync(product.price)}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: theme.colorScheme.primary,
                                   ),
                                 ),
                               ],
                             ),
-                          );
-                        },
-                      ),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.edit),
+                                  color: theme.colorScheme.primary,
+                                  onPressed: () => showProductDialog(product),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  color: theme.colorScheme.error,
+                                  onPressed: () =>
+                                      _deleteProduct(context, product),
+                                ),
+                              ],
+                            ),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    _buildInfoRow(l10n.barcodeRequired,
+                                        product.barcode),
+                                    _buildInfoRow(
+                                        l10n.costRequired,
+                                        CurrencyHelper.formatCurrencySync(
+                                            product.cost)),
+                                    _buildInfoRow(l10n.stock,
+                                        '${product.quantity} ${l10n.units}'),
+                                    if (vatEnabled) ...[
+                                      const SizedBox(height: 8),
+                                      Divider(color: theme.colorScheme.onSurface.withValues(alpha: 0.2)),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        l10n.vatBreakdown,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          color: theme.colorScheme.onSurface,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      _buildInfoRow(
+                                          l10n.beforeVat,
+                                          CurrencyHelper.formatCurrencySync(
+                                              priceBeforeVat)),
+                                      _buildInfoRow(
+                                          '${l10n.vat} ${l10n.amount}',
+                                          CurrencyHelper.formatCurrencySync(
+                                              vatAmount)),
+                                      _buildInfoRow(
+                                          l10n.afterVat,
+                                          CurrencyHelper.formatCurrencySync(
+                                              priceAfterVat)),
+                                    ],
+                                    if (product.description != null &&
+                                        product.description!.isNotEmpty) ...[
+                                      const SizedBox(height: 8),
+                                      Divider(color: theme.colorScheme.onSurface.withValues(alpha: 0.2)),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        l10n.description,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          color: theme.colorScheme.onSurface,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        product.description!,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
-                  ],
-                );
-              }
-            },
-          );
-        },
-      ),
+                  ),
+                ],
+              );
+            }
+          },
+        );
+      },
     );
   }
 }
@@ -702,7 +790,6 @@ class _ProductDialogState extends State<_ProductDialog> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    final liquidTheme = LiquidTheme.of(context);
 
     // Build the form content separately for cleaner code
     final formContent = Form(
@@ -711,29 +798,38 @@ class _ProductDialogState extends State<_ProductDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Product Name Field
-          LiquidTextField(
+          TextFormField(
             controller: _nameController,
-            label: l10n.productNameRequired,
-            prefixIcon: const Icon(Icons.inventory_2_outlined),
+            decoration: InputDecoration(
+              labelText: l10n.productNameRequired,
+              prefixIcon: const Icon(Icons.inventory_2_outlined),
+              border: const OutlineInputBorder(),
+            ),
             validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
             textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: 16),
 
           // Product Name (Arabic) Field
-          LiquidTextField(
+          TextFormField(
             controller: _nameArController,
-            label: '${l10n.productName} (عربي)',
-            prefixIcon: const Icon(Icons.translate),
+            decoration: InputDecoration(
+              labelText: '${l10n.productName} (عربي)',
+              prefixIcon: const Icon(Icons.translate),
+              border: const OutlineInputBorder(),
+            ),
             textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: 16),
 
           // Barcode Field
-          LiquidTextField(
+          TextFormField(
             controller: _barcodeController,
-            label: l10n.barcodeRequired,
-            prefixIcon: const Icon(Icons.qr_code),
+            decoration: InputDecoration(
+              labelText: l10n.barcodeRequired,
+              prefixIcon: const Icon(Icons.qr_code),
+              border: const OutlineInputBorder(),
+            ),
             validator: (v) => v?.isEmpty ?? true ? l10n.required : null,
             textInputAction: TextInputAction.next,
           ),
@@ -741,46 +837,38 @@ class _ProductDialogState extends State<_ProductDialog> {
 
           // Category Dropdown with Loading State
           _isLoadingCategories
-              ? Center(
+              ? const Center(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    child: LiquidLoader(size: 40),
+                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                    child: CircularProgressIndicator(),
                   ),
                 )
-              : LiquidContainer(
-                  blur: 15,
-                  opacity: 0.1,
-                  borderRadius: 12,
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  child: DropdownButtonFormField<String>(
-                    initialValue: _selectedCategoryId,
-                    decoration: InputDecoration(
-                      labelText: l10n.categoryRequired,
-                      border: InputBorder.none,
-                      prefixIcon: const Icon(Icons.category_outlined),
-                      labelStyle: TextStyle(color: liquidTheme.textColor.withValues(alpha: 0.7)),
-                    ),
-                    hint: Text(l10n.selectACategory),
-                    isExpanded: true,
-                    validator: (v) => v == null ? l10n.required : null,
-                    dropdownColor: theme.cardColor,
-                    style: TextStyle(color: liquidTheme.textColor),
-                    items: _categories.map((category) {
-                      final isArabic =
-                          Localizations.localeOf(context).languageCode == 'ar';
-                      return DropdownMenuItem<String>(
-                        value: category.id,
-                        child: Text(isArabic
-                            ? (category.nameAr ?? category.name)
-                            : category.name),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedCategoryId = value;
-                      });
-                    },
+              : DropdownButtonFormField<String>(
+                  value: _selectedCategoryId,
+                  decoration: InputDecoration(
+                    labelText: l10n.categoryRequired,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.category_outlined),
                   ),
+                  hint: Text(l10n.selectACategory),
+                  isExpanded: true,
+                  validator: (v) => v == null ? l10n.required : null,
+                  dropdownColor: theme.cardColor,
+                  items: _categories.map((category) {
+                    final isArabic =
+                        Localizations.localeOf(context).languageCode == 'ar';
+                    return DropdownMenuItem<String>(
+                      value: category.id,
+                      child: Text(isArabic
+                          ? (category.nameAr ?? category.name)
+                          : category.name),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedCategoryId = value;
+                    });
+                  },
                 ),
           const SizedBox(height: 16),
 
@@ -788,10 +876,13 @@ class _ProductDialogState extends State<_ProductDialog> {
           Row(
             children: [
               Expanded(
-                child: LiquidTextField(
+                child: TextFormField(
                   controller: _priceController,
-                  label: l10n.priceRequired,
-                  prefixIcon: const Icon(Icons.attach_money),
+                  decoration: InputDecoration(
+                    labelText: l10n.priceRequired,
+                    prefixIcon: const Icon(Icons.attach_money),
+                    border: const OutlineInputBorder(),
+                  ),
                   keyboardType: TextInputType.number,
                   validator: (v) =>
                       double.tryParse(v ?? '') == null ? l10n.invalid : null,
@@ -804,10 +895,13 @@ class _ProductDialogState extends State<_ProductDialog> {
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: LiquidTextField(
+                child: TextFormField(
                   controller: _costController,
-                  label: l10n.costRequired,
-                  prefixIcon: const Icon(Icons.monetization_on_outlined),
+                  decoration: InputDecoration(
+                    labelText: l10n.costRequired,
+                    prefixIcon: const Icon(Icons.monetization_on_outlined),
+                    border: const OutlineInputBorder(),
+                  ),
                   keyboardType: TextInputType.number,
                   validator: (v) =>
                       double.tryParse(v ?? '') == null ? l10n.invalid : null,
@@ -822,10 +916,13 @@ class _ProductDialogState extends State<_ProductDialog> {
           Row(
             children: [
               Expanded(
-                child: LiquidTextField(
+                child: TextFormField(
                   controller: _quantityController,
-                  label: l10n.quantityRequired,
-                  prefixIcon: const Icon(Icons.inventory),
+                  decoration: InputDecoration(
+                    labelText: l10n.quantityRequired,
+                    prefixIcon: const Icon(Icons.inventory),
+                    border: const OutlineInputBorder(),
+                  ),
                   keyboardType: TextInputType.number,
                   validator: (v) =>
                       int.tryParse(v ?? '') == null ? l10n.invalid : null,
@@ -838,52 +935,73 @@ class _ProductDialogState extends State<_ProductDialog> {
                   builder: (context, appConfig) {
                     final price = double.tryParse(_priceController.text) ?? 0.0;
                     final vatAmount = price * (appConfig.vatRate / 100);
-                    return LiquidContainer(
-                      blur: 15,
-                      opacity: 0.08,
+                    return GlassmorphicContainer(
+                      width: double.infinity,
+                      height: 80,
                       borderRadius: 12,
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.account_balance_wallet,
-                                size: 20,
-                                color: liquidTheme.textColor.withValues(alpha: 0.7),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  '${l10n.vat} Amount',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: liquidTheme.textColor.withValues(alpha: 0.7),
+                      blur: 15,
+                      alignment: Alignment.center,
+                      border: 2,
+                      linearGradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          theme.colorScheme.surface.withValues(alpha: 0.08),
+                          theme.colorScheme.surface.withValues(alpha: 0.02),
+                        ],
+                      ),
+                      borderGradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          theme.colorScheme.primary.withValues(alpha: 0.2),
+                          theme.colorScheme.primary.withValues(alpha: 0.1),
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.account_balance_wallet,
+                                  size: 20,
+                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    '${l10n.vat} Amount',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              LiquidTooltip(
-                                message: l10n.vatAmountCalculatedAutomatically(
-                                    appConfig.vatRate.toStringAsFixed(1)),
-                                child: Icon(
-                                  Icons.info_outline,
-                                  size: 18,
-                                  color: theme.colorScheme.primary,
+                                Tooltip(
+                                  message: l10n.vatAmountCalculatedAutomatically(
+                                      appConfig.vatRate.toStringAsFixed(1)),
+                                  child: Icon(
+                                    Icons.info_outline,
+                                    size: 18,
+                                    color: theme.colorScheme.primary,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '${vatAmount.toStringAsFixed(2)} ${CurrencyHelper.getCurrencySymbolSync()}',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: liquidTheme.textColor,
+                              ],
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 4),
+                            Text(
+                              '${vatAmount.toStringAsFixed(2)} ${CurrencyHelper.getCurrencySymbolSync()}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: theme.colorScheme.onSurface,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -894,20 +1012,26 @@ class _ProductDialogState extends State<_ProductDialog> {
           const SizedBox(height: 16),
 
           // Description Field
-          LiquidTextField(
+          TextFormField(
             controller: _descriptionController,
-            label: l10n.description,
-            prefixIcon: const Icon(Icons.description_outlined),
+            decoration: InputDecoration(
+              labelText: l10n.description,
+              prefixIcon: const Icon(Icons.description_outlined),
+              border: const OutlineInputBorder(),
+            ),
             maxLines: 3,
             textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: 16),
 
           // Description (Arabic) Field
-          LiquidTextField(
+          TextFormField(
             controller: _descriptionArController,
-            label: '${l10n.description} (عربي)',
-            prefixIcon: const Icon(Icons.translate),
+            decoration: InputDecoration(
+              labelText: '${l10n.description} (عربي)',
+              prefixIcon: const Icon(Icons.translate),
+              border: const OutlineInputBorder(),
+            ),
             maxLines: 3,
             textInputAction: TextInputAction.done,
           ),

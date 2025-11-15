@@ -2,10 +2,10 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_picker/image_picker.dart';
-import 'package:liquid_glass_ui_design/liquid_glass_ui_design.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import '../services/image_service.dart';
 
-/// Widget for picking and displaying company logo with Liquid Glass UI
+/// Widget for picking and displaying company logo with Glassmorphism UI
 /// Supports both web (base64) and mobile (file storage)
 class CompanyLogoPicker extends StatefulWidget {
   final String? currentLogoPath;
@@ -162,19 +162,43 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
     }
   }
 
-  /// Show options to pick image from gallery or camera with Liquid Glass UI
+  /// Show options to pick image from gallery or camera with Glassmorphism UI
   void _showImageSourceOptions() {
-    final liquidTheme = LiquidTheme.of(context);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
-        return LiquidCard(
+        return GlassmorphicContainer(
+          width: double.infinity,
+          height: null,
           borderRadius: 20,
-          elevation: 8,
           blur: 25,
-          opacity: 0.18,
+          alignment: Alignment.center,
+          border: 2,
+          linearGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              isDark
+                  ? Colors.white.withOpacity(0.1)
+                  : Colors.white.withOpacity(0.2),
+              isDark
+                  ? Colors.white.withOpacity(0.05)
+                  : Colors.white.withOpacity(0.1),
+            ],
+          ),
+          borderGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white.withOpacity(0.2),
+              Colors.white.withOpacity(0.1),
+            ],
+          ),
           child: SafeArea(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -185,27 +209,29 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: liquidTheme.textColor.withValues(alpha: 0.4),
+                    color: colorScheme.onSurface.withOpacity(0.4),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
                 // Gallery option
-                LiquidContainer(
+                Container(
                   margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  borderRadius: 12,
-                  blur: 10,
-                  opacity: 0.1,
+                  decoration: BoxDecoration(
+                    color: colorScheme.surface.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   child: ListTile(
-                    leading: LiquidContainer(
+                    leading: Container(
                       padding: const EdgeInsets.all(8),
-                      borderRadius: 8,
-                      blur: 8,
-                      opacity: 0.2,
+                      decoration: BoxDecoration(
+                        color: Colors.blue.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                       child: const Icon(Icons.photo_library, color: Colors.blue),
                     ),
                     title: Text(
                       'Choose from Gallery',
-                      style: TextStyle(color: liquidTheme.textColor),
+                      style: TextStyle(color: colorScheme.onSurface),
                     ),
                     onTap: () {
                       Navigator.pop(context);
@@ -215,22 +241,25 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
                 ),
                 // Camera option (not available on web)
                 if (!kIsWeb)
-                  LiquidContainer(
-                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                    borderRadius: 12,
-                    blur: 10,
-                    opacity: 0.1,
+                  Container(
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: colorScheme.surface.withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: ListTile(
-                      leading: LiquidContainer(
+                      leading: Container(
                         padding: const EdgeInsets.all(8),
-                        borderRadius: 8,
-                        blur: 8,
-                        opacity: 0.2,
+                        decoration: BoxDecoration(
+                          color: Colors.green.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                         child: const Icon(Icons.camera_alt, color: Colors.green),
                       ),
                       title: Text(
                         'Take a Photo',
-                        style: TextStyle(color: liquidTheme.textColor),
+                        style: TextStyle(color: colorScheme.onSurface),
                       ),
                       onTap: () {
                         Navigator.pop(context);
@@ -240,22 +269,25 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
                   ),
                 // Remove logo option
                 if (_imageBytes != null)
-                  LiquidContainer(
-                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                    borderRadius: 12,
-                    blur: 10,
-                    opacity: 0.1,
+                  Container(
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: colorScheme.surface.withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: ListTile(
-                      leading: LiquidContainer(
+                      leading: Container(
                         padding: const EdgeInsets.all(8),
-                        borderRadius: 8,
-                        blur: 8,
-                        opacity: 0.2,
+                        decoration: BoxDecoration(
+                          color: Colors.red.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                         child: const Icon(Icons.delete, color: Colors.red),
                       ),
                       title: Text(
                         'Remove Logo',
-                        style: TextStyle(color: liquidTheme.textColor),
+                        style: TextStyle(color: colorScheme.onSurface),
                       ),
                       onTap: () {
                         Navigator.pop(context);
@@ -264,22 +296,27 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
                     ),
                   ),
                 // Cancel option
-                LiquidContainer(
+                Container(
                   margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  borderRadius: 12,
-                  blur: 10,
-                  opacity: 0.1,
+                  decoration: BoxDecoration(
+                    color: colorScheme.surface.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   child: ListTile(
-                    leading: LiquidContainer(
+                    leading: Container(
                       padding: const EdgeInsets.all(8),
-                      borderRadius: 8,
-                      blur: 8,
-                      opacity: 0.2,
-                      child: Icon(Icons.cancel, color: liquidTheme.textColor),
+                      decoration: BoxDecoration(
+                        color: colorScheme.surface.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        Icons.cancel,
+                        color: colorScheme.onSurface,
+                      ),
                     ),
                     title: Text(
                       'Cancel',
-                      style: TextStyle(color: liquidTheme.textColor),
+                      style: TextStyle(color: colorScheme.onSurface),
                     ),
                     onTap: () {
                       Navigator.pop(context);
@@ -297,24 +334,46 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
 
   @override
   Widget build(BuildContext context) {
-    final liquidTheme = LiquidTheme.of(context);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
     return Column(
       children: [
-        // Logo preview container with Liquid Glass effect
+        // Logo preview container with glassmorphism effect
         GestureDetector(
           onTap: _isLoading ? null : _showImageSourceOptions,
-          child: LiquidCard(
+          child: GlassmorphicContainer(
             width: widget.size,
             height: widget.size,
             borderRadius: 12,
-            elevation: 4,
             blur: 15,
-            opacity: 0.15,
+            alignment: Alignment.center,
+            border: 2,
+            linearGradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                isDark
+                    ? Colors.white.withOpacity(0.1)
+                    : Colors.white.withOpacity(0.15),
+                isDark
+                    ? Colors.white.withOpacity(0.05)
+                    : Colors.white.withOpacity(0.08),
+              ],
+            ),
+            borderGradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.white.withOpacity(0.2),
+                Colors.white.withOpacity(0.1),
+              ],
+            ),
             child: _isLoading
                 ? Center(
                     child: CircularProgressIndicator(
-                      color: liquidTheme.primaryColor,
+                      color: colorScheme.primary,
                     ),
                   )
                 : _imageBytes != null
@@ -328,22 +387,23 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
                     : Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          LiquidContainer(
+                          Container(
                             padding: const EdgeInsets.all(12),
-                            borderRadius: 12,
-                            blur: 10,
-                            opacity: 0.2,
+                            decoration: BoxDecoration(
+                              color: colorScheme.surface.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                             child: Icon(
                               Icons.add_photo_alternate,
                               size: 48,
-                              color: liquidTheme.textColor.withValues(alpha: 0.6),
+                              color: colorScheme.onSurface.withOpacity(0.6),
                             ),
                           ),
                           const SizedBox(height: 12),
                           Text(
                             'Add Logo',
                             style: TextStyle(
-                              color: liquidTheme.textColor.withValues(alpha: 0.7),
+                              color: colorScheme.onSurface.withOpacity(0.7),
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),
@@ -358,7 +418,7 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.red.withValues(alpha: 0.1),
+              color: Colors.red.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
@@ -370,59 +430,55 @@ class _CompanyLogoPickerState extends State<CompanyLogoPicker> {
               textAlign: TextAlign.center,
             ),
           ),
-        // Action buttons with Liquid Glass styling
+        // Action buttons with glassmorphism styling
         if (!_isLoading)
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              LiquidButton(
+              OutlinedButton.icon(
                 onPressed: _showImageSourceOptions,
-                type: LiquidButtonType.outlined,
-                size: LiquidButtonSize.small,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      _imageBytes != null ? Icons.edit : Icons.upload,
-                      size: 18,
-                      color: liquidTheme.textColor,
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      _imageBytes != null ? 'Change' : 'Upload',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: liquidTheme.textColor,
-                      ),
-                    ),
-                  ],
+                icon: Icon(
+                  _imageBytes != null ? Icons.edit : Icons.upload,
+                  size: 18,
+                  color: colorScheme.onSurface,
+                ),
+                label: Text(
+                  _imageBytes != null ? 'Change' : 'Upload',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: colorScheme.onSurface,
+                  ),
+                ),
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: colorScheme.outline),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
               if (_imageBytes != null) ...[
                 const SizedBox(width: 8),
-                LiquidButton(
+                OutlinedButton.icon(
                   onPressed: _removeLogo,
-                  type: LiquidButtonType.outlined,
-                  size: LiquidButtonSize.small,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.delete,
-                        size: 18,
-                        color: Colors.red,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        'Remove',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.red.shade700,
-                        ),
-                      ),
-                    ],
+                  icon: const Icon(
+                    Icons.delete,
+                    size: 18,
+                    color: Colors.red,
+                  ),
+                  label: Text(
+                    'Remove',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.red.shade700,
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: Colors.red.shade300),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
                 ),
               ],
